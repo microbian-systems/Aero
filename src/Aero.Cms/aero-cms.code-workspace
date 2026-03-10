@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "dbcode.connections": [
+      {
+        "connectionId": "zUyyym0v8uM9lQJeXUk5R",
+        "name": "aero",
+        "driver": "ravendb",
+        "color": "#1AAFFF",
+        "host": "a.bbqchickenrobot.development.run",
+        "port": 80,
+        "ssl": true,
+        "sslCACert": "d:\\ravendb-local-cert\\admin.client.certificate.bbqchickenrobot.crt",
+        "sslClientCert": "d:\\ravendb-local-cert\\admin.client.certificate.bbqchickenrobot.pfx",
+        "sslClientKey": "d:\\ravendb-local-cert\\admin.client.certificate.bbqchickenrobot.key",
+        "sslTrustCertificate": false,
+        "authMethod": "certificate",
+        "driverOptions": {
+          "cert": "d:\\ravendb-local-cert\\admin.client.certificate.bbqchickenrobot.pfx",
+        },
+        "database": "aero",
+        "readOnly": false,
+        "role": "development",
+        "connectionTimeout": 30,
+        "connectionType": "host",
+      },
+    ],
+  },
+}

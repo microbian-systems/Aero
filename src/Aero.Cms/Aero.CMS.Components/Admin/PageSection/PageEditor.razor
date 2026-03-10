@@ -1,0 +1,53 @@
+@page "/admin/page/edit/{PageId}"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject IPageService PageService
+@inject NavigationManager Nav
+@using Microsoft.Extensions.Logging
+@implements IAsyncDisposable
+
+<AdminNavBar PageName="@(_page?.Name ?? "Loading...")" />
+
+@if (_page is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    @* ... rest of the template ... *@
+    <div class="page-editor-header">
+        <div>
+            <h1>@_page.Name</h1>
+            <div class="page-meta">
+                @_page.Slug
+                @if (_saving) { <span>Saving...</span> }
+                else if (_saved) { <span class="saved">Saved</span> }
+            </div>
+        </div>
+        <div class="page-actions">
+            <a href="@($"{_page.Slug}?preview=true")" target="_blank" class="btn btn-ghost">View Page</a>
+            <button class="btn btn-primary" @onclick="SaveNow">Save</button>
+             <button class="btn btn-ghost" @onclick="@(() => Nav.NavigateTo("/admin"))">Back</button>
+        </div>
+    </div>
+
+    <div class="card page-metadata">
+        <div class="form-row">                <label>Page Title</label>
+            <input value="@_page.Properties.GetValueOrDefault("title")?.ToString()"
+                   @oninput='e => { _page.Properties["title"] = e.Value ?? ""; ScheduleSave(); }' />
+            <div class="form-field">
+
+            </div>
+            <div class="form-field">
+                <label>Meta Description</label>
+                <input value="@_page.Properties.GetValueOrDefault("description")?.ToString()"
+                       @oninput='e => { _page.Properties["description"] = e.Value ?? ""; ScheduleSave(); }' />
+            </div>
+        </div>
+    </div>
+
+    @* <BlockCanvas /> *@
+
+    <MyComponent Data="Hi!" />
+
+}
+

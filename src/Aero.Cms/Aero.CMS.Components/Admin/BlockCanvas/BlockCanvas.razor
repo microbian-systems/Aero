@@ -1,0 +1,27 @@
+@using System.Text.Json
+@using Aero.CMS.Components.Admin.Draggable
+
+@inject SectionService SectionSvc
+@inject IBlockRegistry BlockRegistry
+@inject ILogger<BlockCanvas> log;
+
+@* <CascadingValue Value="new object()"> *@
+    <div class="row" style="padding: 5em; background-color: black; color: white;">
+        <div class="col-6">
+            <h6 class="text-center fw-bold">Sortable</h6>
+            <SortableWrapper OnDataChanged="@(() => InvokeAsync(StateHasChanged))">
+                <NestedRecursive Items="items" Depth="1" />
+            </SortableWrapper>
+        </div>ls
+        <div class="col-6">
+            <h6 class="text-center fw-bold">Result</h6>
+            <pre class="bg-info">
+            @System.Text.Json.JsonSerializer.Serialize(items, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
+        </pre>
+        </div>
+    </div>
+@* *@
+@* </CascadingValue> *@

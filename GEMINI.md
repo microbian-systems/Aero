@@ -1,8 +1,8 @@
-# Electra .NET Utilities Framework
+# Aero .NET Utilities Framework
 
 ## Project Overview
 
-Electra is a .NET utilities framework designed to be flexible and powerful. It provides a wide range of features and integrations with various data stores and services. The project is organized into a main solution with many individual projects, each focusing on a specific feature or integration. It also includes the Solnet library as a git submodule, which provides functionality for interacting with the Solana blockchain.
+Aero is a .NET utilities framework designed to be flexible and powerful. It provides a wide range of features and integrations with various data stores and services. The project is organized into a main solution with many individual projects, each focusing on a specific feature or integration. It also includes the Solnet library as a git submodule, which provides functionality for interacting with the Solana blockchain.
 
 **Main Technologies:**
 
@@ -21,7 +21,7 @@ Electra is a .NET utilities framework designed to be flexible and powerful. It p
 
 **Architecture:**
 
-The project follows a modular architecture, with each feature or integration implemented as a separate project. The main solution, `Electra.sln`, brings all these projects together. The `docker-compose.yml` file defines the services that the project can connect to, allowing for a flexible development and deployment environment.
+The project follows a modular architecture, with each feature or integration implemented as a separate project. The main solution, `Aero.slnx`, brings all these projects together. The `docker-compose.yml` file defines the services that the project can connect to, allowing for a flexible development and deployment environment.
 
 ## Building and Running
 
