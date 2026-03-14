@@ -1,0 +1,35 @@
+@import "variables";
+
+.top {
+    .breadcrumb {
+        background: $white;
+        color: $gray-600;
+        padding: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+
+        .breadcrumb-item {
+            &:first-child + .breadcrumb-item::before {
+                content: ":"
+            }
+        }
+    }
+}
+
+.breadcrumb {
+    .folder {
+        display: inline-block;
+        padding: 0 .25rem;
+        &:after {
+            content: "/";
+            padding-left: 0.25rem;
+        }
+        &.first-child {
+            padding-left: 0;
+        }
+
+        i {
+            padding-right: .5rem;
+        }
+    }
+}

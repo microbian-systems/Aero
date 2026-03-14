@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add site" xml:space="preserve">
+    <value>Afegeix un lloc web</value>
+  </data>
+  <data name="Are you really sure?" xml:space="preserve">
+    <value>N'esteu segur?</value>
+  </data>
+  <data name="Edit site" xml:space="preserve">
+    <value>Edita el lloc web</value>
+  </data>
+  <data name="Hostnames" xml:space="preserve">
+    <value>Nom del servidor</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>Logotip</value>
+  </data>
+  <data name="If this should be the default site of the installation." xml:space="preserve">
+    <value>Aquest hauria de ser el lloc web per defecte.</value>
+  </data>
+  <data name="Please type in the name of the site to confirm." xml:space="preserve">
+    <value>Si us plau, escriu el nom del lloc web per confirmar.</value>
+  </data>
+  <data name="ConfirmDelete" xml:space="preserve">
+    <value>Aquesta acció &lt;strong>no es pot desfer&lt;/strong>. S'eliminarà de forma permanent el lloc web {{ title }} i totes les seves &lt;strong>pàgines&lt;/strong>, &lt;strong>arxius&lt;/strong> i &lt;strong>entrades&lt;/strong>.</value>
+  </data>
+</root>

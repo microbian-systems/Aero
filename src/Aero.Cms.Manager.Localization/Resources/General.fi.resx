@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Lisää</value>
+  </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>Lisäasetukset</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Kaikki</value>
+  </data>
+  <data name="An error occurred" xml:space="preserve">
+    <value>Tapahtui virhe</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Peruuta</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Sisältö</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Jatka</value>
+  </data>
+  <data name="Content type" xml:space="preserve">
+    <value>Sisällön tyyppi</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Kopioi</value>
+  </data>
+  <data name="Culture" xml:space="preserve">
+    <value>Kulttuuri</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Oletus</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Poista</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Kuvaus</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Tiedot</value>
+  </data>
+  <data name="Dimensions" xml:space="preserve">
+    <value>Mitat</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Lataa</value>
+  </data>
+  <data name="Draft" xml:space="preserve">
+    <value>Luonnos</value>
+  </data>
+  <data name="Drafts" xml:space="preserve">
+    <value>Luonnokset</value>
+  </data>
+  <data name="Email address" xml:space="preserve">
+    <value>Sähköpostiosoite</value>
+  </data>
+  <data name="Email address is mandatory." xml:space="preserve">
+    <value>Sähköpostiosoite on pakollinen.</value>
+  </data>
+  <data name="Filename" xml:space="preserve">
+    <value>Tiedoston nimi</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Korkeus</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Muokkaa</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>Tyhjä</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Yleiset</value>
+  </data>
+  <data name="General information" xml:space="preserve">
+    <value>Yleiset tiedot</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>Historia</value>
+  </data>
+  <data name="Internal id" xml:space="preserve">
+    <value>Sisäinen id</value>
+  </data>
+  <data name="Is default" xml:space="preserve">
+    <value>On oletus</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Kieli</value>
+  </data>
+  <data name="Languages" xml:space="preserve">
+    <value>Kielet</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Kirjaudu</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Kirjaudu ulos</value>
+  </data>
+  <data name="Looks like there's no items here. Click on the button above to get started!" xml:space="preserve">
+    <value>Näyttää siltä, että täällä ei ole kohteita. Napsauta yllä olevaa painiketta aloittaaksesi!</value>
+  </data>
+  <data name="Looks like there's no items here. Click on the button below to get started!" xml:space="preserve">
+    <value>Näyttää siltä, että täällä ei ole kohteita. Aloita klikkaamalla alla olevaa painiketta!</value>
+  </data>
+  <data name="Looks like there's no items here. Click on the button to the left to get started!" xml:space="preserve">
+    <value>Näyttää siltä, että täällä ei ole kohteita. Klikkaa painiketta vasemmalle päästäksesi alkuun!</value>
+  </data>
+  <data name="Main content" xml:space="preserve">
+    <value>Pääsisältö</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Muokattu</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nimi</value>
+  </data>
+  <data name="Name is mandatory." xml:space="preserve">
+    <value>Nimi on pakollinen.</value>
+  </data>
+  <data name="Open public URL in new tab" xml:space="preserve">
+    <value>Avaa julkinen URL uudessa välilehdessä</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Salasana</value>
+  </data>
+  <data name="Permanent" xml:space="preserve">
+    <value>Pysyvä</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>Käyttöoikeudet</value>
+  </data>
+  <data name="Pixels" xml:space="preserve">
+    <value>Pikseliä</value>
+  </data>
+  <data name="Preview" xml:space="preserve">
+    <value>Esikatselu</value>
+  </data>
+  <data name="Publish" xml:space="preserve">
+    <value>Julkaise</value>
+  </data>
+  <data name="Publish date" xml:space="preserve">
+    <value>Julkaisupäivämäärä</value>
+  </data>
+  <data name="Redirect" xml:space="preserve">
+    <value>Uudelleenohjaus</value>
+  </data>
+  <data name="Redirect Type" xml:space="preserve">
+    <value>Uudelleenohjauksen tyyppi</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>Palauta alkutilaan</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Roolit</value>
+  </data>
+  <data name="Route" xml:space="preserve">
+    <value>Reitti</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Tallenna</value>
+  </data>
+  <data name="Scheduled" xml:space="preserve">
+    <value>Ajastettu</value>
+  </data>
+  <data name="Search..." xml:space="preserve">
+    <value>Etsi...</value>
+  </data>
+  <data name="Select block" xml:space="preserve">
+    <value>Valitse lohko</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Asetukset</value>
+  </data>
+  <data name="SEO" xml:space="preserve">
+    <value>Hakukoneoptimointi SEO</value>
+  </data>
+  <data name="Sharing" xml:space="preserve">
+    <value>Jakaminen</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Koko</value>
+  </data>
+  <data name="Slug" xml:space="preserve">
+    <value>Tunniste</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>Järjestelmä</value>
+  </data>
+  <data name="Temporary" xml:space="preserve">
+    <value>Väliaikainen</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Otsikko</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Päivitä</value>
+  </data>
+  <data name="Update password" xml:space="preserve">
+    <value>Päivitä salasana</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Käyttäjätunnus</value>
+  </data>
+  <data name="Username is mandatory." xml:space="preserve">
+    <value>Käyttäjätunnus on pakollinen.</value>
+  </data>
+  <data name="Title is mandatory." xml:space="preserve">
+    <value>Otsikko on pakollinen.</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tyyppi</value>
+  </data>
+  <data name="Unpublish" xml:space="preserve">
+    <value>Peruuta julkaisu</value>
+  </data>
+  <data name="Unpublished" xml:space="preserve">
+    <value>Julkaisematon</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Käyttäjät</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versio</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Leveys</value>
+  </data>
+  <data name="Archives and Comments" xml:space="preserve">
+    <value>Arkistot ja kommentit</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Kirjoittaja</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Kommentit</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Luotu</value>
+  </data>
+  <data name="Username and/or password are incorrect." xml:space="preserve">
+    <value>Käyttäjätunnus ja/tai salasana on virheellinen.</value>
+  </data>
+</root>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Excerpt" xml:space="preserve">
+    <value>摘要</value>
+  </data>
+  <data name="Meta index" xml:space="preserve">
+    <value>Meta 值索引</value>
+  </data>
+  <data name="Meta follow" xml:space="preserve">
+    <value>Meta 值流程</value>
+  </data>
+  <data name="Meta priority" xml:space="preserve">
+    <value>Meta 值優先</value>
+  </data>
+  <data name="Primary image" xml:space="preserve">
+    <value>主要圖片</value>
+  </data>
+  <data name="Search engine priority, compared to other content in the same site." xml:space="preserve">
+    <value>搜尋引擎優先</value>
+  </data>
+  <data name="The content was successfully deleted" xml:space="preserve">
+    <value>本內容已成功刪除</value>
+  </data>
+  <data name="An error occured while deleting the content" xml:space="preserve">
+    <value>刪除內容時發生錯誤</value>
+  </data>
+  <data name="The content was successfully saved" xml:space="preserve">
+    <value>本內容已成功儲存</value>
+  </data>
+  <data name="An error occured while saving the content" xml:space="preserve">
+    <value>儲存內容時發生錯誤</value>
+  </data>
+</root>

@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add folder" xml:space="preserve">
+    <value>Klasör ekle</value>
+  </data>
+  <data name="Drop files here or click to upload." xml:space="preserve">
+    <value>Dosyaları buraya sürükleyin veya yüklemek için tıklayın.</value>
+  </data>
+  <data name="Download media" xml:space="preserve">
+    <value>Medyayı indir</value>
+  </data>
+  <data name="Folder name" xml:space="preserve">
+    <value>Klasör adı</value>
+  </data>
+  <data name="Folder name is mandatory." xml:space="preserve">
+    <value>Klasör adı zorunludur.</value>
+  </data>
+  <data name="Gallery" xml:space="preserve">
+    <value>Galeri</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Medya</value>
+  </data>
+  <data name="Media preview is not available" xml:space="preserve">
+    <value>Medya önizlemesi mevcut değil</value>
+  </data>
+  <data name="Open media in new tab" xml:space="preserve">
+    <value>Medyayı yeni sekmede aç</value>
+  </data>
+  <data name="Select media" xml:space="preserve">
+    <value>Medya seç</value>
+  </data>
+  <data name="Your browser does not support the video tag." xml:space="preserve">
+    <value>Tarayıcınız video etiketini desteklemiyor.</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Liste</value>
+  </data>
+  <data name="Preferred aspect" xml:space="preserve">
+    <value>Tercih edilen görünüm</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Orijinal</value>
+  </data>
+  <data name="Landscape" xml:space="preserve">
+    <value>Yatay</value>
+  </data>
+  <data name="Portrait" xml:space="preserve">
+    <value>Dikey</value>
+  </data>
+  <data name="Widescreen" xml:space="preserve">
+    <value>Geniş Ekran</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Kare</value>
+  </data>
+  <data name="Are you sure you want to delete selected media?" xml:space="preserve">
+    <value>Seçili medyayı silmek istediğinizden emin misiniz?</value>
+  </data>
+  <data name="Delete selected items" xml:space="preserve">
+    <value>Seçili öğeleri sil</value>
+  </data>
+  <data name="Media file was successfully moved." xml:space="preserve">
+    <value>Medya dosyası başarıyla taşındı.</value>
+  </data>
+  <data name="Media files was successfully moved." xml:space="preserve">
+    <value>Medya dosyaları başarıyla taşındı.</value>
+  </data>
+  <data name="The media file was not found." xml:space="preserve">
+    <value>Medya dosyası bulunamadı.</value>
+  </data>
+  <data name="The media file was successfully deleted" xml:space="preserve">
+    <value>Medya dosyası başarıyla silindi</value>
+  </data>
+  <data name="The media files was successfully deleted" xml:space="preserve">
+    <value>Medya dosyaları başarıyla silindi</value>
+  </data>
+</root>

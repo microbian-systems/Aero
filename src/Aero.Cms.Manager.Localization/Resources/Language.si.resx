@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ChangeDefaultConfirm" xml:space="preserve">
+    <value>පෙරනිමි භාෂාව වෙනස් කිරීම යෙදුම හැසිරෙන ආකාරය කෙරෙහි බලපානු ඇති අතර මූලික සැකසුමේදී වින්‍යාසගත කළ යුතුය.</value>
+  </data>
+  <data name="RemoveLanguageConfirm" xml:space="preserve">
+    <value>මෙම ක්‍රියාව &lt;strong&gt;&lt;/strong&gt; පසුගමනය කළ නොහැක. මෙය භාෂාව {{ currentDelete.title }} සහ එහි ප්‍රබල&gt;පරිවර්තන &lt;/strong&gt; සියල්ල ස්ථිරවම&lt;ඇත. {{ currentDelete.title }} ඔවුන්ගේ භාෂාව ලෙස තෝරාගෙන ඇති ඕනෑම වෙබ් අඩවියකට පෙරනිමි භාෂාව පවරනු ලැබේ.</value>
+  </data>
+  <data name="The language was successfully saved" xml:space="preserve">
+    <value>භාෂාව සාර්ථකව සුරැකිණි</value>
+  </data>
+  <data name="The language was successfully deleted" xml:space="preserve">
+    <value>භාෂාව සාර්ථකව මකා දමන ලදී</value>
+  </data>
+</root>

@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add folder" xml:space="preserve">
+    <value>Lisää kansio</value>
+  </data>
+  <data name="Drop files here or click to upload." xml:space="preserve">
+    <value>Pudota tiedostot tähän tai klikkaa ladataksesi.</value>
+  </data>
+  <data name="Download media" xml:space="preserve">
+    <value>Lataa media</value>
+  </data>
+  <data name="Folder name" xml:space="preserve">
+    <value>Kansion nimi</value>
+  </data>
+  <data name="Folder name is mandatory." xml:space="preserve">
+    <value>Kansion nimi on pakollinen.</value>
+  </data>
+  <data name="Gallery" xml:space="preserve">
+    <value>Galleria</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="Media preview is not available" xml:space="preserve">
+    <value>Median esikatselu ei ole käytettävissä</value>
+  </data>
+  <data name="Open media in new tab" xml:space="preserve">
+    <value>Avaa media uudessa välilehdessä</value>
+  </data>
+  <data name="Select media" xml:space="preserve">
+    <value>Valitse media</value>
+  </data>
+  <data name="Your browser does not support the video tag." xml:space="preserve">
+    <value>Selaimesi ei tue videotunnistetta.</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Lista</value>
+  </data>
+  <data name="Preferred aspect" xml:space="preserve">
+    <value>Ensisijainen näkökohta</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Alkuperäinen</value>
+  </data>
+  <data name="Landscape" xml:space="preserve">
+    <value>Vaakasuunta</value>
+  </data>
+  <data name="Portrait" xml:space="preserve">
+    <value>Pystysuunta</value>
+  </data>
+  <data name="Widescreen" xml:space="preserve">
+    <value>Laajakuva</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Neliö</value>
+  </data>
+  <data name="Are you sure you want to delete selected media?" xml:space="preserve">
+    <value>Oletko varma, että haluat poistaa valitun median?</value>
+  </data>
+  <data name="Delete selected items" xml:space="preserve">
+    <value>Poista valitut kohteet</value>
+  </data>
+  <data name="Media file was successfully moved." xml:space="preserve">
+    <value>Mediatiedosto siirretty onnistuneesti.</value>
+  </data>
+  <data name="Media files was successfully moved." xml:space="preserve">
+    <value>Mediatiedostot siirrettiin onnistuneesti.</value>
+  </data>
+  <data name="The media file was not found." xml:space="preserve">
+    <value>Mediatiedostoa ei löytynyt.</value>
+  </data>
+  <data name="The media file was successfully deleted" xml:space="preserve">
+    <value>Mediatiedosto poistettiin onnistuneesti</value>
+  </data>
+  <data name="The media files was successfully deleted" xml:space="preserve">
+    <value>Mediatiedostot poistettiin onnistuneesti</value>
+  </data>
+</root>

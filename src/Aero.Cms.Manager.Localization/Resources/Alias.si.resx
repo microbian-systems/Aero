@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Aliases" xml:space="preserve">
+    <value>අපනාම</value>
+  </data>
+  <data name="Add new alias" xml:space="preserve">
+    <value>නව අපනාමයක් එකතු කරන්න</value>
+  </data>
+  <data name="Alias URL" xml:space="preserve">
+    <value>අපනාමයේ ඒ.ස.නි.</value>
+  </data>
+  <data name="Alias URL is mandatory." xml:space="preserve">
+    <value>අන්වර්ථ URL අනිවාර්ය වේ.</value>
+  </data>
+  <data name="Redirect URL" xml:space="preserve">
+    <value>හරවා යවන්න URL</value>
+  </data>
+  <data name="Redirect URL is mandatory." xml:space="preserve">
+    <value>යළි-යොමුවීම් URL අනිවාර්ය වේ.</value>
+  </data>
+  <data name="Permanent" xml:space="preserve">
+    <value>ස්ථිර</value>
+  </data>
+  <data name="Are you sure you want to delete this alias?" xml:space="preserve">
+    <value>ඔබට මෙම අන්වර්ථය මැකීමට අවශ්‍ය බව විශ්වාසද?</value>
+  </data>
+  <data name="If the redirect should be permanent" xml:space="preserve">
+    <value>හරවා යැවීම ස්ථිර විය යුතු නම්</value>
+  </data>
+  <data name="The alias was successfully added to the list" xml:space="preserve">
+    <value>අන්වර්ථ නාමය ලැයිස්තුවට සාර්ථකව එක් කරන ලදී</value>
+  </data>
+  <data name="The alias was successfully deleted" xml:space="preserve">
+    <value>අන්වර්ථය සාර්ථකව මකා ඇත</value>
+  </data>
+</root>

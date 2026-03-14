@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Ekle</value>
+  </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>Gelişmiş</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Tümü</value>
+  </data>
+  <data name="An error occurred" xml:space="preserve">
+    <value>Bir hata oluştu</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>İçerik</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Devam</value>
+  </data>
+  <data name="Content type" xml:space="preserve">
+    <value>İçerik türü</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Kopyala</value>
+  </data>
+  <data name="Culture" xml:space="preserve">
+    <value>Dil ve Bölge</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Varsayılan</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Açıklama</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Detaylar</value>
+  </data>
+  <data name="Dimensions" xml:space="preserve">
+    <value>Boyutlar</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>İndir</value>
+  </data>
+  <data name="Draft" xml:space="preserve">
+    <value>Taslak</value>
+  </data>
+  <data name="Drafts" xml:space="preserve">
+    <value>Taslaklar</value>
+  </data>
+  <data name="Email address" xml:space="preserve">
+    <value>E-posta adresi</value>
+  </data>
+  <data name="Email address is mandatory." xml:space="preserve">
+    <value>E-posta adresi zorunludur.</value>
+  </data>
+  <data name="Filename" xml:space="preserve">
+    <value>Dosya adı</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Yükseklik</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Düzenle</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>Boş</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="General information" xml:space="preserve">
+    <value>Genel bilgi</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>Geçmiş</value>
+  </data>
+  <data name="Internal id" xml:space="preserve">
+    <value>Dahili kimlik</value>
+  </data>
+  <data name="Is default" xml:space="preserve">
+    <value>Varsayılan mı</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="Languages" xml:space="preserve">
+    <value>Diller</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Giriş Yap</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Çıkış Yap</value>
+  </data>
+  <data name="Looks like there's no items here. Click on the button above to get started!" xml:space="preserve">
+    <value>Burada hiç öğe yok gibi görünüyor. Başlamak için yukarıdaki düğmeye tıklayın!</value>
+  </data>
+  <data name="Looks like there's no items here. Click on the button below to get started!" xml:space="preserve">
+    <value>Burada hiç öğe yok gibi görünüyor. Başlamak için aşağıdaki düğmeye tıklayın!</value>
+  </data>
+  <data name="Looks like there's no items here. Click on the button to the left to get started!" xml:space="preserve">
+    <value>Burada hiç öğe yok gibi görünüyor. Başlamak için soldaki düğmeye tıklayın!</value>
+  </data>
+  <data name="Main content" xml:space="preserve">
+    <value>Ana içerik</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Değiştirilmiş</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Ad</value>
+  </data>
+  <data name="Name is mandatory." xml:space="preserve">
+    <value>Ad zorunludur.</value>
+  </data>
+  <data name="Open public URL in new tab" xml:space="preserve">
+    <value>Genel bağlantıyı yeni sekmede aç</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Şifre</value>
+  </data>
+  <data name="Permanent" xml:space="preserve">
+    <value>Kalıcı</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>İzinler</value>
+  </data>
+  <data name="Pixels" xml:space="preserve">
+    <value>Pikseller</value>
+  </data>
+  <data name="Preview" xml:space="preserve">
+    <value>Önizleme</value>
+  </data>
+  <data name="Publish" xml:space="preserve">
+    <value>Yayınla</value>
+  </data>
+  <data name="Publish date" xml:space="preserve">
+    <value>Yayın tarihi</value>
+  </data>
+  <data name="Redirect" xml:space="preserve">
+    <value>Yönlendirme</value>
+  </data>
+  <data name="Redirect Type" xml:space="preserve">
+    <value>Yönlendirme Türü</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>Geri Al</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Roller</value>
+  </data>
+  <data name="Route" xml:space="preserve">
+    <value>Rota</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="Scheduled" xml:space="preserve">
+    <value>Planlanmış</value>
+  </data>
+  <data name="Search..." xml:space="preserve">
+    <value>Ara...</value>
+  </data>
+  <data name="Select block" xml:space="preserve">
+    <value>Blok seç</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="SEO" xml:space="preserve">
+    <value>SEO</value>
+  </data>
+  <data name="Sharing" xml:space="preserve">
+    <value>Paylaşım</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Boyut</value>
+  </data>
+  <data name="Slug" xml:space="preserve">
+    <value>Slug</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>Sistem</value>
+  </data>
+  <data name="Temporary" xml:space="preserve">
+    <value>Geçici</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Başlık</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Güncelle</value>
+  </data>
+  <data name="Update password" xml:space="preserve">
+    <value>Şifre güncelle</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Kullanıcı adı</value>
+  </data>
+  <data name="Username is mandatory." xml:space="preserve">
+    <value>Kullanıcı adı zorunludur.</value>
+  </data>
+  <data name="Title is mandatory." xml:space="preserve">
+    <value>Başlık zorunludur.</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tip</value>
+  </data>
+  <data name="Unpublish" xml:space="preserve">
+    <value>Yayından kaldır</value>
+  </data>
+  <data name="Unpublished" xml:space="preserve">
+    <value>Yayından kaldırıldı</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Kullanıcılar</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versiyon</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Genişlik</value>
+  </data>
+  <data name="Archives and Comments" xml:space="preserve">
+    <value>Arşiv ve Yorumlar</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Yazar</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Yorumlar</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Oluşturuldu</value>
+  </data>
+  <data name="Username and/or password are incorrect." xml:space="preserve">
+    <value>Kullanıcı adı ve/veya şifre yanlış.</value>
+  </data>
+</root>

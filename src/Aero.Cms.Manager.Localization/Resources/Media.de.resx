@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add folder" xml:space="preserve">
+    <value>Ordner hinzufügen</value>
+  </data>
+  <data name="Drop files here or click to upload." xml:space="preserve">
+    <value>Zum Hochladen hier klicken oder Datei hier ablegen.</value>
+  </data>
+  <data name="Download media" xml:space="preserve">
+    <value>Medien herunterladen</value>
+  </data>
+  <data name="Folder name" xml:space="preserve">
+    <value>Ordnername</value>
+  </data>
+  <data name="Folder name is mandatory." xml:space="preserve">
+    <value>Ordnername ist erforderlich.</value>
+  </data>
+  <data name="Gallery" xml:space="preserve">
+    <value>Galerie</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Medien</value>
+  </data>
+  <data name="Media preview is not available" xml:space="preserve">
+    <value>Medien-Vorschau ist nicht verfügbar</value>
+  </data>
+  <data name="Open media in new tab" xml:space="preserve">
+    <value>Öffne Medien in neuem Tab</value>
+  </data>
+  <data name="Select media" xml:space="preserve">
+    <value>Medien auswählen</value>
+  </data>
+  <data name="Your browser does not support the video tag." xml:space="preserve">
+    <value>Ihr Browser unterstützt das Video-Tag nicht.</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Liste</value>
+  </data>
+  <data name="Preferred aspect" xml:space="preserve">
+    <value>bevorzugter Bereich</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Original</value>
+  </data>
+  <data name="Landscape" xml:space="preserve">
+    <value>Querformat</value>
+  </data>
+  <data name="Portrait" xml:space="preserve">
+    <value>Hochformat</value>
+  </data>
+  <data name="Widescreen" xml:space="preserve">
+    <value>Breitbild</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Quadratisch</value>
+  </data>
+  <data name="Are you sure you want to delete selected media?" xml:space="preserve">
+    <value>Sind Sie sicher, dass Sie das ausgewählte Medium löschen wollen?</value>
+  </data>
+  <data name="Delete selected items" xml:space="preserve">
+    <value>Löscht ausgewählte Elemente</value>
+  </data>
+  <data name="Media file was successfully moved." xml:space="preserve">
+    <value>Medien Datei wurde erfolgreich verschoben.</value>
+  </data>
+  <data name="Media files was successfully moved." xml:space="preserve">
+    <value>Medien Dateien wurden erfolgreich verschoben.</value>
+  </data>
+  <data name="The media file was not found." xml:space="preserve">
+    <value>Die Medien Datei wurde nicht gefunden.</value>
+  </data>
+  <data name="The media file was successfully deleted" xml:space="preserve">
+    <value>Die Medien Datei wurde erfolgreich entfernt</value>
+  </data>
+  <data name="The media files was successfully deleted" xml:space="preserve">
+    <value>Die Medien Dateien wurden erfolgreich entfernt</value>
+  </data>
+</root>

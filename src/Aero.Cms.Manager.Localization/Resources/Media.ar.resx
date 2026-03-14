@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add folder" xml:space="preserve">
+    <value>إضافة مجلد</value>
+  </data>
+  <data name="Drop files here or click to upload." xml:space="preserve">
+    <value>قم بإسقاط الملفات هنا أو انقر للتحميل.</value>
+  </data>
+  <data name="Download media" xml:space="preserve">
+    <value>تنزيل الوسائط</value>
+  </data>
+  <data name="Folder name" xml:space="preserve">
+    <value>إسم المجلد</value>
+  </data>
+  <data name="Folder name is mandatory." xml:space="preserve">
+    <value>الاسم الأول إجبارى.</value>
+  </data>
+  <data name="Gallery" xml:space="preserve">
+    <value>المعرض</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>الوسائط</value>
+  </data>
+  <data name="Media preview is not available" xml:space="preserve">
+    <value>معاينة الوسائط غير متوفرة</value>
+  </data>
+  <data name="Open media in new tab" xml:space="preserve">
+    <value>فتح في علامة تبويب جديدة</value>
+  </data>
+  <data name="Select media" xml:space="preserve">
+    <value>اختيار وسائط</value>
+  </data>
+  <data name="Your browser does not support the video tag." xml:space="preserve">
+    <value>متصفحك الحالي لا يدعم وسم تشغيل الفيديو.</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>قائمة</value>
+  </data>
+  <data name="Preferred aspect" xml:space="preserve">
+    <value>الجانب المفضل</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>الأصل</value>
+  </data>
+  <data name="Landscape" xml:space="preserve">
+    <value>أفقي</value>
+  </data>
+  <data name="Portrait" xml:space="preserve">
+    <value>عمودي</value>
+  </data>
+  <data name="Widescreen" xml:space="preserve">
+    <value>شاشة عريضة</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>مربع</value>
+  </data>
+  <data name="Are you sure you want to delete selected media?" xml:space="preserve">
+    <value>هل أنت متأكد من أنك تريد حذف الوسائط المحددة؟</value>
+  </data>
+  <data name="Delete selected items" xml:space="preserve">
+    <value>حذف العناصر المحددة</value>
+  </data>
+  <data name="Media file was successfully moved." xml:space="preserve">
+    <value>تم نقل ملف الوسائط بنجاح.</value>
+  </data>
+  <data name="Media files was successfully moved." xml:space="preserve">
+    <value>تم نقل ملفات الوسائط بنجاح.</value>
+  </data>
+  <data name="The media file was not found." xml:space="preserve">
+    <value>لم يتم العثور على ملف الوسائط.</value>
+  </data>
+  <data name="The media file was successfully deleted" xml:space="preserve">
+    <value>تم حذف ملف الوسائط بنجاح</value>
+  </data>
+  <data name="The media files was successfully deleted" xml:space="preserve">
+    <value>تم حذف ملفات الوسائط بنجاح</value>
+  </data>
+</root>

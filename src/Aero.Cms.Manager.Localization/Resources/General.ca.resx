@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add" xml:space="preserve">
+    <value>Afegeix</value>
+  </data>
+  <data name="Advanced" xml:space="preserve">
+    <value>Avançat</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Tot</value>
+  </data>
+  <data name="An error occurred" xml:space="preserve">
+    <value>S'ha produït un error</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel·la</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Contingut</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continua</value>
+  </data>
+  <data name="Content type" xml:space="preserve">
+    <value>Tipus de contingut</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copia</value>
+  </data>
+  <data name="Culture" xml:space="preserve">
+    <value>Cultura</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Per defecte</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Descripció</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Detalls</value>
+  </data>
+  <data name="Dimensions" xml:space="preserve">
+    <value>Mides</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Descarrega</value>
+  </data>
+  <data name="Draft" xml:space="preserve">
+    <value>Esborrany</value>
+  </data>
+  <data name="Drafts" xml:space="preserve">
+    <value>Esborranys</value>
+  </data>
+  <data name="Email address" xml:space="preserve">
+    <value>Adreça de correu electrònic</value>
+  </data>
+  <data name="Email address is mandatory." xml:space="preserve">
+    <value>L'adreça de correu electrònic és obligatòria.</value>
+  </data>
+  <data name="Filename" xml:space="preserve">
+    <value>Nom del fitxer</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Alçada</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edita</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>Buit</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="General information" xml:space="preserve">
+    <value>Informació general</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>Històric</value>
+  </data>
+  <data name="Internal id" xml:space="preserve">
+    <value>Identificador intern</value>
+  </data>
+  <data name="Is default" xml:space="preserve">
+    <value>Opció per defecte</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Idioma</value>
+  </data>
+  <data name="Languages" xml:space="preserve">
+    <value>Idiomes</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Inicia la sessió</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Tanca la sessió</value>
+  </data>
+  <data name="Looks like there's no items here. Click on the button above to get started!" xml:space="preserve">
+    <value>Sembla que no hi han elements. Fes clic al botó de sobre per començar.</value>
+  </data>
+  <data name="Looks like there's no items here. Click on the button below to get started!" xml:space="preserve">
+    <value>Sembla que no hi han elements. Fes clic al botó de sota per començar.</value>
+  </data>
+  <data name="Looks like there's no items here. Click on the button to the left to get started!" xml:space="preserve">
+    <value>Sembla que no hi han elements. Fes clic al botó de l'esquerra per començar.</value>
+  </data>
+  <data name="Main content" xml:space="preserve">
+    <value>Contingut principal</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Modificat</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Name is mandatory." xml:space="preserve">
+    <value>El nom és obligatori.</value>
+  </data>
+  <data name="Open public URL in new tab" xml:space="preserve">
+    <value>Obra la URL pública en una nova pestanya</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Contrasenya</value>
+  </data>
+  <data name="Permanent" xml:space="preserve">
+    <value>Permanent</value>
+  </data>
+  <data name="Permissions" xml:space="preserve">
+    <value>Permisos</value>
+  </data>
+  <data name="Pixels" xml:space="preserve">
+    <value>Píxels</value>
+  </data>
+  <data name="Preview" xml:space="preserve">
+    <value>Previsualitza</value>
+  </data>
+  <data name="Publish" xml:space="preserve">
+    <value>Publica</value>
+  </data>
+  <data name="Publish date" xml:space="preserve">
+    <value>Data de publicació</value>
+  </data>
+  <data name="Redirect" xml:space="preserve">
+    <value>Redirigeix</value>
+  </data>
+  <data name="Redirect Type" xml:space="preserve">
+    <value>Tipus de redirecció</value>
+  </data>
+  <data name="Revert" xml:space="preserve">
+    <value>Desfés</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Rols</value>
+  </data>
+  <data name="Route" xml:space="preserve">
+    <value>Ruta</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Desa</value>
+  </data>
+  <data name="Scheduled" xml:space="preserve">
+    <value>Programat</value>
+  </data>
+  <data name="Search..." xml:space="preserve">
+    <value>Cerca...</value>
+  </data>
+  <data name="Select block" xml:space="preserve">
+    <value>Selecciona un bloc</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Preferències</value>
+  </data>
+  <data name="SEO" xml:space="preserve">
+    <value>SEO</value>
+  </data>
+  <data name="Sharing" xml:space="preserve">
+    <value>Comparteix</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Mida</value>
+  </data>
+  <data name="Slug" xml:space="preserve">
+    <value>URL amigable</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>Sistema</value>
+  </data>
+  <data name="Temporary" xml:space="preserve">
+    <value>Temporal</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Títol</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Actualitza</value>
+  </data>
+  <data name="Update password" xml:space="preserve">
+    <value>Actualitza la contrasenya</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Nom d'usuari</value>
+  </data>
+  <data name="Username is mandatory." xml:space="preserve">
+    <value>El nom d'usuari és obligatori.</value>
+  </data>
+  <data name="Title is mandatory." xml:space="preserve">
+    <value>El títol és obligatori.</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Tipus</value>
+  </data>
+  <data name="Unpublish" xml:space="preserve">
+    <value>Retira</value>
+  </data>
+  <data name="Unpublished" xml:space="preserve">
+    <value>No publicat</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Usuaris</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versió</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Amplada</value>
+  </data>
+  <data name="Archives and Comments" xml:space="preserve">
+    <value>Arxiu i comentaris</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Autor/a</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Comentaris</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Creat</value>
+  </data>
+  <data name="Username and/or password are incorrect." xml:space="preserve">
+    <value>El nom d'usuari o la contrasenya són incorrectes.</value>
+  </data>
+</root>

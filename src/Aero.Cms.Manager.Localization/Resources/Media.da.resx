@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add folder" xml:space="preserve">
+    <value>Tilføj mappe</value>
+  </data>
+  <data name="Drop files here or click to upload." xml:space="preserve">
+    <value>Træk filer hertil eller klik for at overføre.</value>
+  </data>
+  <data name="Download media" xml:space="preserve">
+    <value>Hent mediet</value>
+  </data>
+  <data name="Folder name" xml:space="preserve">
+    <value>Mappenavn</value>
+  </data>
+  <data name="Folder name is mandatory." xml:space="preserve">
+    <value>Indtast venligst et mappenavn.</value>
+  </data>
+  <data name="Gallery" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Mediebibliotek</value>
+  </data>
+  <data name="Media preview is not available" xml:space="preserve">
+    <value>Forhåndsvisning af medier er ikke tilgængeligt</value>
+  </data>
+  <data name="Open media in new tab" xml:space="preserve">
+    <value>Åbn mediet i ny fane</value>
+  </data>
+  <data name="Select media" xml:space="preserve">
+    <value>Vælg medie</value>
+  </data>
+  <data name="Your browser does not support the video tag." xml:space="preserve">
+    <value>Din browser understøtter ikke dette video tag.</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Oversigt</value>
+  </data>
+  <data name="Preferred aspect" xml:space="preserve">
+    <value>Fortrukket billedformat</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Oprindelig</value>
+  </data>
+  <data name="Landscape" xml:space="preserve">
+    <value>Liggende</value>
+  </data>
+  <data name="Portrait" xml:space="preserve">
+    <value>Stående</value>
+  </data>
+  <data name="Widescreen" xml:space="preserve">
+    <value>Widescreen</value>
+  </data>
+  <data name="Square" xml:space="preserve">
+    <value>Kvadrat</value>
+  </data>
+  <data name="Are you sure you want to delete selected media?" xml:space="preserve">
+    <value>Er du sikker på at du vil slette de valgte medier?</value>
+  </data>
+  <data name="Delete selected items" xml:space="preserve">
+    <value>Slet valgte elementer</value>
+  </data>
+  <data name="Media file was successfully moved." xml:space="preserve">
+    <value>Mediefilen blev flyttet.</value>
+  </data>
+  <data name="Media files was successfully moved." xml:space="preserve">
+    <value>Mediefilerne blev flyttet.</value>
+  </data>
+  <data name="The media file was not found." xml:space="preserve">
+    <value>Mediefilen blev ikke fundet.</value>
+  </data>
+  <data name="The media file was successfully deleted" xml:space="preserve">
+    <value>Mediefilen blev slettet</value>
+  </data>
+  <data name="The media files was successfully deleted" xml:space="preserve">
+    <value>Mediefilerne blev slettet</value>
+  </data>
+</root>

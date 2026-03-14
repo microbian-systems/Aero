@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Excerpt" xml:space="preserve">
+    <value>Resumo</value>
+  </data>
+  <data name="Meta index" xml:space="preserve">
+    <value>Meta index</value>
+  </data>
+  <data name="Meta follow" xml:space="preserve">
+    <value>Meta follow</value>
+  </data>
+  <data name="Meta priority" xml:space="preserve">
+    <value>Meta priority</value>
+  </data>
+  <data name="Primary image" xml:space="preserve">
+    <value>Imagem principal</value>
+  </data>
+  <data name="Search engine priority, compared to other content in the same site." xml:space="preserve">
+    <value>Prioridade do motor de busca, em comparação com outros conteúdos do mesmo site.</value>
+  </data>
+  <data name="The content was successfully deleted" xml:space="preserve">
+    <value>O arquivo foi deletado com sucesso</value>
+  </data>
+  <data name="An error occured while deleting the content" xml:space="preserve">
+    <value>Ocorreu um erro ao deletar a página</value>
+  </data>
+  <data name="The content was successfully saved" xml:space="preserve">
+    <value>A página foi salva com sucesso</value>
+  </data>
+  <data name="An error occured while saving the content" xml:space="preserve">
+    <value>Um erro ocorreu enquanto tentava salvar o conteúdo</value>
+  </data>
+</root>
