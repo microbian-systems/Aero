@@ -1,4 +1,4 @@
-using Aero.Persistence.Entities;
+using Aero.Models.Entities;
 using Aero.Common.Commands;
 using Aero.Core.Entities;
 using Aero.Marten;
@@ -24,12 +24,12 @@ public class SaveRefreshTokenCommand : IAsyncCommand<SaveRefreshTokenRequest, bo
             Username = request.Username,
             Password = request.Password
         });
-        var entity = new RefreshTokens
+        var entity = new RefreshToken
         {
-            Token = request.Token, 
+            TokenHash = request.Token, 
             UserId = request.UserId,
-            CreatedOn = DateTime.UtcNow,
-            ModifiedOn =  DateTime.UtcNow
+            CreatedOn = DateTimeOffset.UtcNow,
+            ModifiedOn =  DateTimeOffset.UtcNow
         };
             
         await db.SaveAsync(entity);

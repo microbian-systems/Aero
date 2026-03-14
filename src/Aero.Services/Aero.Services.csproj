@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>Commone services for the Aero Web Platform</Title>
     <Description>Core components for the Aero web application platform</Description>
@@ -37,13 +37,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.3" />
     <PackageReference Include="microsoft.extensions.configuration" Version="10.0.3" />
     <PackageReference Include="NewId" Version="4.0.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Aero.Persistence">
-      <HintPath>..\..\..\microbians.io\Aero\src\Aero.Persistence\bin\Debug\net10.0\Aero.Persistence.dll</HintPath>
-    </Reference>
-    <Reference Include="Aero.Persistence.Core">
-      <HintPath>..\..\..\microbians.io\Aero\src\Aero.Persistence.Core\bin\Debug\net10.0\Aero.Persistence.Core.dll</HintPath>
-    </Reference>
+    <PackageReference Include="FluentValidation" Version="11.13.0" />
   </ItemGroup>
 </Project>

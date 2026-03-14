@@ -81,10 +81,5 @@
     <ProjectReference Include="..\Aero.Services\Aero.Services.csproj" />
     <ProjectReference Include="..\Aero.SignalR\Aero.SignalR.csproj" />
     <ProjectReference Include="..\Aero.Validators\Aero.Validators.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Aero.Persistence">
-      <HintPath>..\..\..\microbians.io\Aero\src\Aero.Persistence\bin\Debug\net10.0\Aero.Persistence.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-</Project>
+    </ItemGroup>
+    </Project>

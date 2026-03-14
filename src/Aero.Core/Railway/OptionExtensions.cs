@@ -342,4 +342,57 @@ public static class OptionExtensions
             Option<T>.Some(var value) => value,
             Option<T>.None => fallback(),
         };
+
+    /// <summary>
+    /// Executes the appropriate function based on whether the Option is Some or None.
+    /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    /// <param name="option">The Option to match on.</param>
+    /// <param name="Some">The function to call if Some.</param>
+    /// <param name="None">The function to call if None.</param>
+    /// <returns>The result of the executed function.</returns>
+    public static TResult Match<T, TResult>(this Option<T> option, Func<T, TResult> Some, Func<TResult> None) =>
+        option switch
+        {
+            Option<T>.Some(var value) => Some(value),
+            Option<T>.None => None(),
+        };
+
+    /// <summary>
+    /// Executes the provided action if the Option is Some.
+    /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
+    /// <param name="option">The Option to check.</param>
+    /// <param name="action">The action to execute if Some.</param>
+    /// <returns>The original Option for chaining.</returns>
+    public static Option<T> IfSome<T>(this Option<T> option, Action<T> action)
+    {
+        if (option is Option<T>.Some(var value)) action(value);
+        return option;
+    }
+
+    /// <summary>
+    /// Executes the provided action if the Option is None.
+    /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
+    /// <param name="option">The Option to check.</param>
+    /// <param name="action">The action to execute if None.</param>
+    /// <returns>The original Option for chaining.</returns>
+    public static Option<T> IfNone<T>(this Option<T> option, Action action)
+    {
+        if (option is Option<T>.None) action();
+        return option;
+    }
+
+    /// <summary>
+    /// Converts an Option to an Enumerable containing zero or one element.
+    /// </summary>
+    /// <typeparam name="T">The type of the value.</typeparam>
+    /// <param name="option">The Option to convert.</param>
+    /// <returns>An enumerable containing the value if Some; otherwise, an empty enumerable.</returns>
+    public static IEnumerable<T> AsEnumerable<T>(this Option<T> option)
+    {
+        if (option is Option<T>.Some(var value)) yield return value;
+    }
 }

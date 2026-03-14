@@ -45,7 +45,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
     <ProjectReference Include="..\Aero.RavenDB\Aero.RavenDB.csproj" />
-    <ProjectReference Include="..\Aero.Persistence\Aero.Persistence.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
     <ProjectReference Include="..\Aero.Web.Core\Aero.Web.Core.csproj" />
     <ProjectReference Include="..\Aero.Web\Aero.Web.csproj" />

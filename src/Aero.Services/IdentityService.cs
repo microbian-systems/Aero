@@ -408,9 +408,9 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
         //throw new NotImplementedException();
         var request = new SaveRefreshTokenRequest(id, token);
         //var success = await saveHandler.ExecuteAsync(request);
-        var entity = new RefreshTokens
+        var entity = new RefreshToken
         {
-            Token = token, 
+            TokenHash = token, 
             UserId = id,
             //DateCreated = DateTime.UtcNow,
             //DateModified =  DateTime.UtcNow

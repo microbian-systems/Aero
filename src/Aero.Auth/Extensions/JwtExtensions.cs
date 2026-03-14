@@ -1,6 +1,10 @@
-﻿
-
-
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Aero.Core.Railway;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Aero.Auth.Extensions;
 
@@ -23,7 +27,7 @@ public static class JwtExtensions
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public static ClaimsPrincipal GetPrincipleFromExpiredToken(this string expiredToken, string secret,
+    public static ClaimsPrincipal? GetPrincipleFromExpiredToken(this string expiredToken, string secret,
         bool validateAudience = false, bool validateIssuer = false)
     {
         var tokenValidationParameters = new TokenValidationParameters
@@ -51,7 +55,6 @@ public static class JwtExtensions
         return Math.Round((src - unixEpoch).TotalSeconds);
     }
 
-    // Method to decode JWT payload from HttpRequest
     public static Option<JwtPayload> DecodeJwtPayload(this HttpRequest request, string secret)
     {
         var token = request.Headers["Authorization"]
@@ -60,7 +63,6 @@ public static class JwtExtensions
         return DecodeJwtPayload(token, secret);
     }
 
-    // Method to decode JWT payload from a token string
     public static Option<JwtPayload> DecodeJwtPayload(this string token, string secret)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -72,21 +74,18 @@ public static class JwtExtensions
             IssuerSigningKey = key,
             ValidateIssuer = false,
             ValidateAudience = false,
-            ValidateLifetime = false // Since we are only decoding, not validating
+            ValidateLifetime = false
         };
 
         try
         {
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out var securityToken);
+            tokenHandler.ValidateToken(token, validationParameters, out var securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
-
-            return jwtSecurityToken?.Payload!;
+            return jwtSecurityToken != null ? Prelude.Some(jwtSecurityToken.Payload) : Prelude.None;
         }
-        catch (SecurityTokenMalformedException ex)
+        catch (Exception)
         {
-            // todo - log the exception here if obtain jwt throws exception or use ThrowGuard
-            var result = Option<JwtPayload>.None;
-            return result;
+            return Prelude.None;
         }
     }
 }

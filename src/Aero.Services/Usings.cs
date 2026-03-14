@@ -18,8 +18,7 @@ global using Aero.Common.Extensions;
 global using Aero.Core.Identity;
 global using Aero.Models;
 global using Aero.Models.ViewModels;
-
-global using Aero.Persistence.Entities;
+global using Aero.Models.Entities;
 global using Aero.Services.Features;
 global using Aero.Services.Geo;
 global using Aero.Services.Models;

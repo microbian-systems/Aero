@@ -7,11 +7,10 @@
   <Folder Name="/Tests/">
     <Project Path="../Tests/Aero.Auth.Tests.WebHost/Aero.Auth.Tests.WebHost.csproj" />
     <Project Path="../Tests/Aero.Auth.Tests/Aero.Auth.Tests.csproj" />
-    <Project Path="../Tests/Aero.Common.Tests/Aero.Common.Tests.csproj" />
     <Project Path="../Tests/Aero.DataStructures.Tests/Aero.DataStructures.Tests.csproj" />
     <Project Path="../Tests/Aero.SendGrid.Tests/Aero.SendGrid.Tests.csproj" />
-    <Project Path="D:/proj/microbians/microbians.io/Aero/Tests/Aero.RavenDB.Tests/Aero.RavenDB.Tests.csproj" />
-    <Project Path="D:/proj/microbians/microbians.io/Aero/Tests/Aero.Social.Twitter/Aero.Social.Twitter.csproj" />
+    <Project Path="../Tests/Aero.RavenDB.Tests/Aero.RavenDB.Tests.csproj" />
+    <Project Path="../Tests/Aero.Social.Twitter/Aero.Social.Twitter.csproj" />
   </Folder>
   <Folder Name="/__Misc__/">
     <File Path="../CLAUDE.md" />

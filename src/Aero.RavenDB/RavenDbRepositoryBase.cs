@@ -4,6 +4,7 @@ using Aero.Core.Entities;
 using Microsoft.Extensions.Logging;
 using static System.GC;
 using Aero.Core.Railway;
+using static Aero.Core.Railway.Prelude;
 
 namespace Aero.RavenDB;
 
@@ -38,7 +39,7 @@ public abstract class RavenDbRepositoryBase<TEntity>
     public override async Task<Option<TEntity>> FindByIdAsync(string id)
     {
         var entity = await session.Query<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
-        var res = entity is not null ? Some(entity) : None;
+        var res = entity is not null ? Some(entity) : Prelude.None;
         return res;
     }
 
@@ -54,7 +55,7 @@ public abstract class RavenDbRepositoryBase<TEntity>
         catch (Exception ex)
         {
             log.LogError(ex, "Failed to upsert entity with id: {id}", entity.Id);
-            return None;
+            return Prelude.None;
         }
     }
 
@@ -70,7 +71,7 @@ public abstract class RavenDbRepositoryBase<TEntity>
         catch (Exception ex)
         {
             log.LogError(ex, "Failed to upsert entity with id: {id}", entity.Id);
-            return None;
+            return Prelude.None;
         }
     }        
     
@@ -85,11 +86,12 @@ public abstract class RavenDbRepositoryBase<TEntity>
         catch (Exception ex)
         {
             log.LogError(ex, "Failed to upsert entity with id: {id}", entity.Id);
-            return None;
+            return Prelude.None;
         }
-    }
+        }
 
-    public override async Task<bool> DeleteAsync(string id)
+        public override async Task<bool> DeleteAsync(string id)
+
     {
         try
         {

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -15,23 +15,11 @@
     
     <ItemGroup>
       <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
+      <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
     </ItemGroup>
-    
+
     <ItemGroup>
-      <Compile Remove="MultipleResultSetWrapper.cs" />
-      <None Include="MultipleResultSetWrapper.cs" />
-      <Compile Remove="MultipleResultSetHelper.cs" />
-      <None Include="MultipleResultSetHelper.cs" />
-      <Compile Remove="BlogDbContext.cs" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Reference Include="Aero.Core">
-        <HintPath>..\..\..\microbians.io\Aero\src\Aero.Core\bin\Debug\net10.0\Aero.Core.dll</HintPath>
-      </Reference>
-      <Reference Include="Aero.Persistence.Core">
-        <HintPath>..\..\..\microbians.io\Aero\src\Aero.Persistence.Core\bin\Debug\net10.0\Aero.Persistence.Core.dll</HintPath>
-      </Reference>
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
 </Project>
