@@ -33,4 +33,9 @@
     <Compile Remove="IInMemoryCacheClient.cs" />
     <Compile Remove="IHybridCacheClient.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Aero.Core">
+      <HintPath>..\..\..\microbians.io\Aero\src\Aero.Core\bin\Debug\net10.0\Aero.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

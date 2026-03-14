@@ -77,11 +77,14 @@
   <ItemGroup>
     <ProjectReference Include="..\Aero.Caching\Aero.Caching.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
-    <ProjectReference Include="..\Aero.Persistence\Aero.Persistence.csproj" />
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
     <ProjectReference Include="..\Aero.Services\Aero.Services.csproj" />
     <ProjectReference Include="..\Aero.SignalR\Aero.SignalR.csproj" />
     <ProjectReference Include="..\Aero.Validators\Aero.Validators.csproj" />
-    <ProjectReference Include="..\Aero.Web.Core\Aero.Web.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Aero.Persistence">
+      <HintPath>..\..\..\microbians.io\Aero\src\Aero.Persistence\bin\Debug\net10.0\Aero.Persistence.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

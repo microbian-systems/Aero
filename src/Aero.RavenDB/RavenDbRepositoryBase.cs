@@ -3,6 +3,7 @@ using Aero.Core.Data.Functional;
 using Aero.Core.Entities;
 using Microsoft.Extensions.Logging;
 using static System.GC;
+using Aero.Core.Railway;
 
 namespace Aero.RavenDB;
 
@@ -41,7 +42,7 @@ public abstract class RavenDbRepositoryBase<TEntity>
         return res;
     }
 
-    public override async Task<Option<TEntity>> InsertAsync(TEntity entity)
+    public override async Task<Core.Railway.Option<TEntity>> InsertAsync(TEntity entity)
     {
         try
         {

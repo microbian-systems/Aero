@@ -20,7 +20,6 @@
     <PackageReference Include="AspNet.Security.OAuth.Apple" Version="10.0.0" />
     <PackageReference Include="AspNet.Security.OAuth.Coinbase" Version="10.0.0" />
     <PackageReference Include="FluentResults" Version="4.0.0" />
-    <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.3.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.3.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.3" />
@@ -49,6 +48,7 @@
     <ProjectReference Include="..\Aero.Persistence\Aero.Persistence.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
     <ProjectReference Include="..\Aero.Web.Core\Aero.Web.Core.csproj" />
+    <ProjectReference Include="..\Aero.Web\Aero.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

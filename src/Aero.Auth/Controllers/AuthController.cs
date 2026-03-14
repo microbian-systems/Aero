@@ -2,7 +2,10 @@ using Aero.Auth.Models.ViewModels;
 using Aero.Web.Core.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 namespace Aero.Auth.Controllers;
 
 /// <summary>

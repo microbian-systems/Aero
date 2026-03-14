@@ -5,7 +5,7 @@ using Aero.Core.Entities;
 using Aero.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Nest;
-using ServiceStack;
+
 
 namespace Aero.Elastic;
 
