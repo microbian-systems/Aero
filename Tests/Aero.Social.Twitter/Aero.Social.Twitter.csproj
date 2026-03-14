@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="C:\Users\bbqch\proj\microbians\microbians.io\Aero\src\Aero.Social\Aero.Social.csproj" />
+    <ProjectReference Include="..\..\src\Aero.Social\Aero.Social.csproj" />
   </ItemGroup>
 
 </Project>
