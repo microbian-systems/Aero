@@ -1,4 +1,4 @@
-# Technology Stack: Electra
+# Technology Stack: Aero
 
 ## Core Environment
 - **Language:** C#
@@ -13,7 +13,7 @@
     - WebAuthn.Net (Passkeys)
 - **UI & Frontend:**
   - Blazor (Server & WASM)
-  - Electra.MerakiUI (Tailwind CSS + AlpineJS)
+  - Aero.MerakiUI (Tailwind CSS + AlpineJS)
   - TypeScript
 - **Persistence & Data:**
   - Entity Framework Core (PostgreSQL)  - Marten (Event Sourcing / Document DB on Postgres)
@@ -31,4 +31,4 @@
   - Cloudflare (DNS/External IP Management)
 - **Communication:**
   - SignalR (Real-time Web)
-  - Electra.Actors (Actor Model)
+  - Aero.Actors (Actor Model)

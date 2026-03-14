@@ -1,11 +1,11 @@
-# Product Guidelines: Electra
+# Product Guidelines: Aero
 
 ## Prose Style & Communication
 - **Friendly & Conversational:** Documentation and user-facing messages should be approachable, clear, and encouraging. We aim to be a helpful partner in the development process, not a dense academic resource.
 - **Clarity over Complexity:** Explain technical concepts in plain language. If a utility simplifies a complex task, the documentation should celebrate that simplicity.
 
 ## Brand Identity: "Developer's Best Friend"
-- **Helpful & Intuitive:** Our core message emphasizes ease of use, eliminating frustration, and making coding joyful. Electra exists to make the developer's day easier.
+- **Helpful & Intuitive:** Our core message emphasizes ease of use, eliminating frustration, and making coding joyful. Aero exists to make the developer's day easier.
 - **Supportive Foundation:** We provide the tools that developers reach for instinctively because they "just work" and save time.
 
 ## Visual Identity
