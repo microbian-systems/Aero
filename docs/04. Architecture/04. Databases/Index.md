@@ -1,10 +1,10 @@
 # Databases
 
-The core library of Piranha is totally **database agnostic**. This means that it could very well use `JSON` files or a `NoSql` database to store it's data. However, we only provide core packages for using `Entity Framework Core` as data access so in the following pages we will focus on this scenario.
+The core library of Aero is totally **database agnostic**. This means that it could very well use `JSON` files or a `NoSql` database to store it's data. However, we only provide core packages for using `Entity Framework Core` as data access so in the following pages we will focus on this scenario.
 
 ## Using Entity Framework Core
 
-All data access in Piranha is implemented using `Linq Queries` over `Entity Framework Core`. In that sense Piranha should be compatible with all databases that have a provider for Entity Framework Core available. We try to keep the schema of Piranha as simple as possible only using:
+All data access in Aero is implemented using `Linq Queries` over `Entity Framework Core`. In that sense Aero should be compatible with all databases that have a provider for Entity Framework Core available. We try to keep the schema of Aero as simple as possible only using:
 
 * Primary Key Constraints
 * Foreign Key Constraints
@@ -15,7 +15,7 @@ This way we try to stay clear of things that we know are implemented differently
 To use the standard repositories for `Entity Framework Core` you must include the following package in your application:
 
 ~~~ csharp
-PM> install-package Piranha.Data.EF
+PM> install-package Aero.Data.EF
 ~~~
 
 ## Official Support

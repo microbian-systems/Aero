@@ -6,9 +6,9 @@ When you create a new application from one the [Project Templates](../basics/pro
 
 ## How To Register Media Storage
 
-To register a storage service you need to register a service that implements `Piranha.IStorage` in your `Startup.cs`. Piranha provides two standard packages available for media storage that you can choose between, you can read more about them in their respective section.
+To register a storage service you need to register a service that implements `Aero.IStorage` in your `Startup.cs`. Aero provides two standard packages available for media storage that you can choose between, you can read more about them in their respective section.
 
 ## Other Types of Storage
 
-You can easily implement your own storage services by implemented the interfaces `Piranha.IStorage` and `Piranha.IStorageSession`. You can read more about this [here](../extensions/media-storage).
+You can easily implement your own storage services by implemented the interfaces `Aero.IStorage` and `Aero.IStorageSession`. You can read more about this [here](../extensions/media-storage).
 

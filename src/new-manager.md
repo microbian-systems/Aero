@@ -124,10 +124,13 @@ System
 
     # Analyze the existing Aero.Cms.Manager project and understand its architecture and implementation details
     # Analyze the existing Aero.Cms.Manager.UI projects and understand their architecture and implementation details
-    # The navigation URL for the new manager should be /cms
+    # The navigation URL for the new manager should be /admin
         - do NOT overwrite existing manager URL or functionality
     # Build the UI blazor components first (no backend integration yet)
+        - Tailwind for css
+        - Alpine.js for client-side interactivity (libman, no npm)
     # Integrate the UI components with the backend services
     # Make sure to seed any new data (i.e. - allowed languages, etc.) at startup (there is a Seed class already)
     # Build the Desktop MAUI app
     # Build the mobile MAUI apps (android and ios)
+    # No NPM - use libman for all client-side dependencies

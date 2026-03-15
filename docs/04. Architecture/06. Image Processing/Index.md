@@ -1,6 +1,6 @@
 # Image Processing
 
-Piranha has built in support for **scaling** and **cropping** uploaded images on demand. The new image is saved in the configured [media storage](media-storage) so that it can be reused on subsequent requests. To enable image processing you need to register a service that implements `Piranha.IImageProcessor`.
+Aero has built in support for **scaling** and **cropping** uploaded images on demand. The new image is saved in the configured [media storage](media-storage) so that it can be reused on subsequent requests. To enable image processing you need to register a service that implements `Aero.IImageProcessor`.
 
 To read more about how the implement custom image processing services for your application, please refer to [Image Processing](../extensions/image-processing) under the Extensions section.
 
@@ -26,7 +26,7 @@ The `ApplicationService` provides wrappers for the methods available in the Medi
 
 ~~~ csharp
 @model MyProject.Models.MyPage
-@inject Piranha.AspNetCore.Services.IApplicationService WebApp
+@inject Aero.AspNetCore.Services.IApplicationService WebApp
 
 <div>
     <img src="@Url.Content(WebApp.Media.ResizeImage(Model.PrimaryImage, 400))">
@@ -39,7 +39,7 @@ The `ImageField` also has a method for scaling & cropping images. This is merely
 
 ~~~ csharp
 @model MyProject.Models.MyPage
-@inject Piranha.IApi Api
+@inject Aero.IApi Api
 
 <div>
     <img src="@Url.Content(Model.PrimaryImage.Resize(Api, 400))">

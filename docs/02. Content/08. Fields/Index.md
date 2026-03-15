@@ -1,6 +1,6 @@
 # Fields
 
-> Fields are the lowest level of content in Piranha CMS and are used to build up **Regions** and **Blocks**. You can think of Fields as the different data types that you can use to build structures with. When defining a field in your Region or Block you can set the following properties with the `FieldAttribute`.
+> Fields are the lowest level of content in Aero CMS and are used to build up **Regions** and **Blocks**. You can think of Fields as the different data types that you can use to build structures with. When defining a field in your Region or Block you can set the following properties with the `FieldAttribute`.
 
 ## Field Configuration
 
@@ -59,14 +59,14 @@ Optional description that is shown above the field in the manager. This can be u
 
 ### Audio
 
-`Piranha.Extend.Fields.AudioField`
+`Aero.Extend.Fields.AudioField`
 
 The Audio Field has a `Guid` reference to the assigned media asset id and **implicit operators** for converting it from and to a Guid and a Media asset.
 
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -89,14 +89,14 @@ The Audio Field works **exactly** like the Document Field except that the media 
 
 ### Checkbox
 
-`Piranha.Extend.Fields.CheckBoxField`
+`Aero.Extend.Fields.CheckBoxField`
 
 The CheckBox Field has a single `bool` value and **implicit operators** for converting it from and to a bool. This means you can easily manipulate your field values like so:
 
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 [PageType]
 public MyPage : Page<MyPage>
@@ -123,14 +123,14 @@ The field is displayed as a checkbox in the manager for content editors. Any tex
 
 ### Color
 
-`Piranha.Extend.Fields.ColorField`
+`Aero.Extend.Fields.ColorField`
 
 The Color Field has a single `string` value and implicit operators for converting it from and to a string. This means you can easily manipulate your field values:
 
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 [PageType]
 public MyPage : Page<MyPage>
@@ -154,7 +154,7 @@ The color field has the following settings that can be configured with the `Colo
 ##### DefaultValue
 
 ~~~ csharp
-using Piranha.Extend.Fields.Settings;
+using Aero.Extend.Fields.Settings;
 
 [Field(Placeholder = "Check me out!")]
 [ColorFieldSettings(DefaultValue = "#fff")]
@@ -166,7 +166,7 @@ Sets the default value of the field for newly created models.
 ##### DisallowInput
 
 ~~~ csharp
-using Piranha.Extend.Fields.Settings;
+using Aero.Extend.Fields.Settings;
 
 [Field(Placeholder = "Check me out!")]
 [ColorFieldSettings(DisallowInput = true)]
@@ -177,7 +177,7 @@ When this setting is set to `true` content editors won't be able to write a valu
 
 ### Data select
 
-`Piranha.Extend.Fields.DataSelectField<T>`
+`Aero.Extend.Fields.DataSelectField<T>`
 
 The Data select Field is used to create a drop down list from an external data source. The item type of the select is provided as type argument.
 
@@ -191,9 +191,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Piranha;
-using Piranha.Extend.Fields;
-using Piranha.Models;
+using Aero;
+using Aero.Extend.Fields;
+using Aero.Models;
 
 public class PageItem
 {
@@ -231,9 +231,9 @@ public class PageItem
 
 #### The Content type
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -256,14 +256,14 @@ The field is displayed as a **select field** in the manager with the text entere
 
 ### Date
 
-`Piranha.Extend.Fields.DateField`
+`Aero.Extend.Fields.DateField`
 
 The Date Field has a single `DateTime` value and **implicit operators** for converting it from and to a DateTime. As no special processing is done on the entered DateTime, this means it is fully possible to actually set a date **and** time when assigning the field.
 
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 [PageType]
 public MyPage : Page<MyPage>
@@ -290,15 +290,15 @@ The field is displayed as a single line textfield with a visual **datepicker** c
 
 ### Document
 
-`Piranha.Extend.Fields.DocumentField`
+`Aero.Extend.Fields.DocumentField`
 
 The Document Field has a `Guid` reference to the assigned media asset id and **implicit operators** for converting it from and to a Guid and a Media asset.
 
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 [PageType]
 public MyPage : Page<MyPage>
@@ -330,7 +330,7 @@ page.MyRegion.MyDocumentValue = document.Id;
 When the page model is loaded from the `MediaRepository` the referenced document is included. This means that after loading the page you have access to all the information of the media file.
 
 ~~~ csharp
-using Piranha;
+using Aero;
 
 var page = await api.Pages.GetByIdAsync<MyPage>(...);
 
@@ -360,14 +360,14 @@ The field is displayed in the manager with the filename of the currently selecte
 
 ### Html
 
-`Piranha.Extend.Fields.HtmlField`
+`Aero.Extend.Fields.HtmlField`
 
 The Html Field has a single `string` value and **implicit operators** for converting it from and to a string.
 
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 [PageType]
 public class MyPage : Page<MyPage>
@@ -396,14 +396,14 @@ The field is displayed as a HTML Editor in the manager. The default editor shipp
 
 ### Image
 
-`Piranha.Extend.Fields.ImageField`
+`Aero.Extend.Fields.ImageField`
 
 The Image Field has a `Guid` reference to the assigned media asset id and **implicit operators** for converting it from and to a Guid and a Media asset.
 
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -439,15 +439,15 @@ The Image Field works **exactly** like the Document Field except that the media 
 
 ### Markdown
 
-`Piranha.Extend.Fields.MarkdownField`
+`Aero.Extend.Fields.MarkdownField`
 
 The Markdown Field has a `single` string value and **implicit operators** for converting the markdown content from and to a string. It also has a help method for converting the value to to **HTML**. When **implicitly** converting the Markdown Field **to** a string it also converts it to HTML.
 
 ~~~ csharp
-using Piranha;
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 [PageType]
 public MyPage : Page<MyPage>
@@ -478,14 +478,14 @@ The field is displayed as a Markdown Editor with HTML preview in the manager. If
 
 ### Media
 
-`Piranha.Extend.Fields.MediaField`
+`Aero.Extend.Fields.MediaField`
 
 The Media Field has a `Guid` reference to the assigned media asset id and **implicit operators** for converting it from and to a Guid and a Media asset.
 
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -508,14 +508,14 @@ The Media Field works **exactly** like the Document Field except that the media 
 
 ### Number
 
-`Piranha.Extend.Fields.NumberField`
+`Aero.Extend.Fields.NumberField`
 
 The Number Field has a single `int` value and **implicit operators** for converting it from and to an int.
 
 ~~~ csharp
-using Piranha;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -552,14 +552,14 @@ The field is displayed as a single line textfield in the manager. The field is *
 
 ### Page
 
-`Piranha.Extend.Fields.PageField`
+`Aero.Extend.Fields.PageField`
 
 The Page Field has a `Guid` reference to the assigned page id and **implicit operators** for converting it from and to a Guid and a Page model.
 
 ~~~ csharp
-using Piranha;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -604,14 +604,14 @@ The field is displayed in the manager with the page title of the currently selec
 
 ### Post
 
-`Piranha.Extend.Fields.PostField`
+`Aero.Extend.Fields.PostField`
 
 The Post Field has a `Guid` reference to the assigned post id and **implicit operators** for converting it from and to a Guid and a Post model.
 
 ~~~ csharp
-using Piranha;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -630,15 +630,15 @@ The Post Field works exactly like the Page Field except that it shows the availa
 
 ### Select
 
-`Piranha.Extend.Fields.SelectField<T>`
+`Aero.Extend.Fields.SelectField<T>`
 
 The Select Field is used to create a dropdown list from an `enum`. The enum type is provided as type argument to the generic type.
 
 ~~~ csharp
 using System.ComponentModel.DataAnnotations;
-using Piranha;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -666,14 +666,14 @@ The field is displayed as a **select field** in the manager with the text entere
 
 ### String
 
-`Piranha.Extend.Fields.StringField`
+`Aero.Extend.Fields.StringField`
 
 The String Field has a single `string` value and **implicit operators** for converting the content from and to a string.
 
 ~~~ csharp
-using Piranha;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -704,7 +704,7 @@ The string field has the following settings that can be configured with the `Str
 ##### DefaultValue
 
 ~~~ csharp
-using Piranha.Extend.Fields.Settings;
+using Aero.Extend.Fields.Settings;
 
 [Field(Placeholder = "Check me out!")]
 [StringFieldSettings(DefaultValue = "Hello world")]
@@ -716,7 +716,7 @@ Sets the default value of the field for newly created models.
 ##### MaxLength
 
 ~~~ csharp
-using Piranha.Extend.Fields.Settings;
+using Aero.Extend.Fields.Settings;
 
 [Field(Placeholder = "Check me out!")]
 [StringFieldSettings(MaxLength = 32)]
@@ -727,14 +727,14 @@ Sets the maximum length the string field should accept.
 
 ### Text
 
-`Piranha.Extend.Fields.TextField`
+`Aero.Extend.Fields.TextField`
 
 The Text Field has a single `string` value and **implicit operators** for converting the content from and to a string.
 
 ~~~ csharp
-using Piranha;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {
@@ -765,7 +765,7 @@ The text field has the following settings that can be configured with the `TextF
 ##### DefaultValue
 
 ~~~ csharp
-using Piranha.Extend.Fields.Settings;
+using Aero.Extend.Fields.Settings;
 
 [Field(Placeholder = "Check me out!")]
 [TextFieldSettings(DefaultValue = "Hello world")]
@@ -777,7 +777,7 @@ Sets the default value of the field for newly created models.
 ##### MaxLength
 
 ~~~ csharp
-using Piranha.Extend.Fields.Settings;
+using Aero.Extend.Fields.Settings;
 
 [Field(Placeholder = "Check me out!")]
 [TextFieldSettings(MaxLength = 32)]
@@ -788,14 +788,14 @@ Sets the maximum length the text field should accept.
 
 ### Video
 
-`Piranha.Extend.Fields.VideoField`
+`Aero.Extend.Fields.VideoField`
 
 The Image Field has a `Guid` reference to the assigned media asset id and **implicit operators** for converting it from and to a Guid and a Media asset.
 
 ~~~ csharp
-using Piranha.AttributeBuilder;
-using Piranha.Models;
-using Piranha.Extend.Fields;
+using Aero.AttributeBuilder;
+using Aero.Models;
+using Aero.Extend.Fields;
 
 public MyPage : Page<MyPage>
 {

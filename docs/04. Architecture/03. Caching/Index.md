@@ -6,16 +6,16 @@ All of the core services have built in support for caching. If enabled, all mode
 
 ## How To Enable Cache
 
-To enable the repository cache, simply register a cache service that implements `Piranha.ICache` in your `Startup.cs`. The following cache enables the standard memory cache:
+To enable the repository cache, simply register a cache service that implements `Aero.ICache` in your `Startup.cs`. The following cache enables the standard memory cache:
 
-using Piranha;
+using Aero;
 
 ~~~ csharp
 public void ConfigureServices(IServiceCollection services)
 {
     ...
 
-    services.AddPiranhaMemoryCache();
+    services.AddAeroMemoryCache();
 
     ...
 }
@@ -25,12 +25,12 @@ This will cause the cache to be injected to all services when they are created. 
 
 ## Setting The Cache Level
 
-By default Piranha caches **everything** when a Cache Service is registered, but you can configure the cache level by setting the property `Piranha.App.CacheLevel`. You can choose between the following levels:
+By default Aero caches **everything** when a Cache Service is registered, but you can configure the cache level by setting the property `Aero.App.CacheLevel`. You can choose between the following levels:
 
 ##### CacheLevel.None
 
 ~~~ csharp
-Piranha.App.CacheLevel = Piranha.Cache.CacheLevel.None;
+Aero.App.CacheLevel = Aero.Cache.CacheLevel.None;
 ~~~
 
 Nothing is cached even if a cache service is registered.
@@ -38,7 +38,7 @@ Nothing is cached even if a cache service is registered.
 ##### CacheLevel.Minimal
 
 ~~~ csharp
-Piranha.App.CacheLevel = Piranha.Cache.CacheLevel.Minimal;
+Aero.App.CacheLevel = Aero.Cache.CacheLevel.Minimal;
 ~~~
 
 The following data is kept in cache:
@@ -49,7 +49,7 @@ The following data is kept in cache:
 ##### CacheLevel.Basic
 
 ~~~ csharp
-Piranha.App.CacheLevel = Piranha.Cache.CacheLevel.Basic;
+Aero.App.CacheLevel = Aero.Cache.CacheLevel.Basic;
 ~~~
 
 The following data is kept in cache:
@@ -62,7 +62,7 @@ The following data is kept in cache:
 ##### CacheLevel.Full
 
 ~~~ csharp
-Piranha.App.CacheLevel = Piranha.Cache.CacheLevel.Full;
+Aero.App.CacheLevel = Aero.Cache.CacheLevel.Full;
 ~~~
 
 Everything is kept in cache, including all Blocks and Fields for Content Types. This is the default cache level.
