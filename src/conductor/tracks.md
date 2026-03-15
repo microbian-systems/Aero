@@ -21,8 +21,3 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## [x] Track: cleanup the code and remove junk, etc... more of maintenance
 *Link: [./tracks/cleanup_refactor_20260314/](./tracks/cleanup_refactor_20260314/)*
-
----
-
-## [x] **Track: I just merged a new set of projects into the sln - fix the build errors**
-*Link: [./tracks/build_stabilization_20260314/](./tracks/build_stabilization_20260314/)*
