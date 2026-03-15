@@ -16,9 +16,9 @@
 
     <PropertyGroup Label="Package information">
         <Version>1.0.0-alpha</Version>
-        <Authors>Aero, Microbians, bbqchickenrobot</Authors>
+        <Authors>Aero, Microbians</Authors>
         <Company>Microbians</Company>
-        <Copyright>Copyright (c) 2023 Microbians</Copyright>
+        <Copyright>Copyright (c) 2023-2026 Microbians</Copyright>
         <PackageTags>asp.net efcore Aero</PackageTags>
 <!--        <PackageIcon>../../assets/Aero2.png</PackageIcon>-->
         <PackageProjectUrl>https://github.com/microbian-systems/Aero</PackageProjectUrl>

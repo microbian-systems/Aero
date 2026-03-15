@@ -1,8 +1,0 @@
-{
-  "track_id": "build_stabilization_20260314",
-  "type": "stabilization",
-  "status": "new",
-  "created_at": "2026-03-14T18:27:00Z",
-  "updated_at": "2026-03-14T18:27:00Z",
-  "description": "I just merged a new set of projects into the sln - fix the build errors"
-}
