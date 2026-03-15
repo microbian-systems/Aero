@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Aero.Social\Aero.Social.csproj" />
+    <ProjectReference Include="..\..\src\Aero.Social\Twitter.Client\Aero.Social.Twitter.Client.csproj" />
   </ItemGroup>
 
 </Project>

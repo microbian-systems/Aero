@@ -47,8 +47,6 @@
       <ProjectReference Include="..\..\src\Aero.Auth\Aero.Auth.csproj" />
       <ProjectReference Include="..\..\src\Aero.Core\Aero.Core.csproj" />
       <ProjectReference Include="..\..\src\Aero.Models\Aero.Models.csproj" />
-      <ProjectReference Include="..\..\src\Aero.Persistence\Aero.Persistence.csproj" />
-      <ProjectReference Include="..\..\src\Aero.Web.Core\Aero.Web.Core.csproj" />
     </ItemGroup>
 
 </Project>
