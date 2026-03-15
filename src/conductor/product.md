@@ -17,6 +17,7 @@ Aero is an open-source library collection designed to accelerate the development
 -   **High-Utility Extensions:** A robust set of helper methods and utilities designed to reduce boilerplate and make common tasks trivial.
 -   **Logic & Pattern Implementations:** Reliable implementations of complex patterns, such as Snowflake ID generation, Secret Sharing schemes, and Actor model support, ready to drop into any project.
 -   **Aero.MerakiUI:** A complete collection of pre-built, accessible Blazor components (Cards, Modals, Dropdowns, etc.) styled with Tailwind CSS and powered by Alpine.js, enabling rapid UI development with a strict 4-file scoped asset pattern. Includes a living documentation showcase for interactive exploration.
+-   **Aero.Cms:** A hybrid CMS suite combining editor flexibility with developer control. Supports multi-site hosting, block-based page composition, and RavenDB/Marten persistence. Includes a dedicated management UI, Web API, and various hosting models (ASP.NET Core, Blazor).
 -   **Cross-Platform Foundation:** Provides the standardized infrastructure needed to get not just web, but also desktop and mobile .NET projects running immediately.
 
 ## Design Philosophy

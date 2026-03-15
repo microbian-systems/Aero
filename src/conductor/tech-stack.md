@@ -15,6 +15,10 @@
   - Blazor (Server & WASM)
   - Aero.MerakiUI (Tailwind CSS + AlpineJS)
   - TypeScript
+- **CMS & Content:**
+  - Aero.Cms (Hybrid CMS)
+  - ImageSharp (Image Processing)
+  - TinyMCE (Rich Text Editing)
 - **Persistence & Data:**
   - Entity Framework Core (PostgreSQL)  - Marten (Event Sourcing / Document DB on Postgres)
   - RavenDB (NoSQL Document Store)
