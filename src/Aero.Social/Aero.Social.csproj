@@ -22,6 +22,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="Twitter.Client\**" />
+      <EmbeddedResource Remove="Twitter.Client\**" />
+      <None Remove="Twitter.Client\**" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
     </ItemGroup>
 

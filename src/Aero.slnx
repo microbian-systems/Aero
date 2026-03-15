@@ -50,6 +50,9 @@
   <Project Path="Aero.Social/Aero.Social.csproj" />
   <Project Path="Aero.Validators/Aero.Validators.csproj" />
   <Project Path="Aero.Web/Aero.Web.csproj" />
+  <Project Path="Aero.Proxy/Aero.Proxy.csproj" />
+  <Project Path="Aero.Cloudflare/Aero.Cloudflare.csproj" />
+  <Project Path="Aero.Social/Twitter.Client/Aero.Social.Twitter.Client.csproj" />
     <Project Path="Aero.Cms.AspNetCore.Hosting/Aero.Cms.AspNetCore.Hosting.csproj" />
   <Project Path="Aero.Cms.AspNetCore.Identity/Aero.Cms.AspNetCore.Identity.csproj" />
   <Project Path="Aero.Cms.AspNetCore/Aero.Cms.AspNetCore.csproj" />
