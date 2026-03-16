@@ -14,12 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Aero.Cms.Manager.LocalAuth\Aero.Cms.Manager.LocalAuth.csproj" />
-      <ProjectReference Include="..\Aero.Cms.Manager\Aero.Cms.Manager.csproj" />
-      <ProjectReference Include="..\Aero.Cms.AspNetCore\Aero.Cms.AspNetCore.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="Extensions\RavenIdentityExtensions.cs" />
       <None Include="Extensions\RavenIdentityExtensions.cs" />
       <Compile Remove="RavenIdentityModule.cs" />
