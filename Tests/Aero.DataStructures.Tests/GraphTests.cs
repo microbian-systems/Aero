@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 
@@ -20,7 +20,7 @@ public class GraphTests
 
         // Assert
         var matrix = graph.GetAdjacencyMatrix();
-        matrix.GetLength(0).Should().Be(1);
+        matrix.GetLength(0).ShouldBe(1);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class GraphTests
 
         // Assert
         var matrix = graph.GetAdjacencyMatrix();
-        matrix.GetLength(0).Should().Be(1);
+        matrix.GetLength(0).ShouldBe(1);
     }
 
     [Fact]
@@ -56,8 +56,8 @@ public class GraphTests
         // A -> B should be 5
         // B -> A should be null (no edge)
         // Assuming A is index 0, B is index 1
-        matrix[0, 1].Should().Be(5);
-        matrix[1, 0].Should().BeNull();
+        matrix[0, 1].ShouldBe(5);
+        matrix[1, 0].ShouldBeNull();
     }
 
     [Fact]
@@ -75,8 +75,8 @@ public class GraphTests
         var matrix = graph.GetAdjacencyMatrix();
         // A -> B should be 5
         // B -> A should be 5
-        matrix[0, 1].Should().Be(5);
-        matrix[1, 0].Should().Be(5);
+        matrix[0, 1].ShouldBe(5);
+        matrix[1, 0].ShouldBe(5);
     }
         
     [Fact]
@@ -90,7 +90,7 @@ public class GraphTests
 
         // Assert
         var matrix = graph.GetAdjacencyMatrix();
-        matrix.GetLength(0).Should().Be(2);
+        matrix.GetLength(0).ShouldBe(2);
     }
 
     [Fact]
@@ -113,10 +113,10 @@ public class GraphTests
         // Order should be A, then neighbors of A (B, D), then neighbors of neighbors (C).
         // Since B and D are neighbors of A, the order between them depends on internal storage (Dictionary).
         // However, A must be first. C must be last (distance 2).
-        result.First().Should().Be("A");
-        result.Last().Should().Be("C");
-        result.Should().Contain(new[] { "A", "B", "C", "D" });
-        result.Count.Should().Be(4);
+        result.First().ShouldBe("A");
+        result.Last().ShouldBe("C");
+        result.ShouldContain(new[] { "A", "B", "C", "D" });
+        result.Count.ShouldBe(4);
     }
 
     [Fact]
@@ -140,9 +140,9 @@ public class GraphTests
         // Neighbors of A are B, D. 
         // If it pushes B then D, it pops D first -> A, D...
         // If it pushes D then B, it pops B first -> A, B, C...
-        result.First().Should().Be("A");
-        result.Should().Contain(new[] { "A", "B", "C", "D" });
-        result.Count.Should().Be(4);
+        result.First().ShouldBe("A");
+        result.ShouldContain(new[] { "A", "B", "C", "D" });
+        result.Count.ShouldBe(4);
     }
 
     [Fact]
@@ -162,9 +162,9 @@ public class GraphTests
         var distances = graph.Dijkstra("A");
 
         // Assert
-        distances["A"].Should().Be(0);
-        distances["B"].Should().Be(1);
-        distances["C"].Should().Be(3);
+        distances["A"].ShouldBe(0);
+        distances["B"].ShouldBe(1);
+        distances["C"].ShouldBe(3);
     }
 
     [Fact]
@@ -180,7 +180,7 @@ public class GraphTests
         var distances = graph.Dijkstra("A");
 
         // Assert
-        distances["A"].Should().Be(0);
-        distances["B"].Should().Be(int.MaxValue);
+        distances["A"].ShouldBe(0);
+        distances["B"].ShouldBe(int.MaxValue);
     }
 }

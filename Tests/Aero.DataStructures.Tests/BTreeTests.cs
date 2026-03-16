@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -20,8 +20,8 @@ public class BTreeTests
         var found = btree.Find(6);
 
         // Assert
-        found.Should().NotBeNull();
-        found.Value.Should().Be(6);
+        found.ShouldNotBeNull();
+        found.Value.ShouldBe(6);
     }
 
     [Fact]
@@ -40,6 +40,6 @@ public class BTreeTests
         var found = btree.Find(6);
 
         // Assert
-        found.Should().BeNull();
+        found.ShouldBeNull();
     }
 }

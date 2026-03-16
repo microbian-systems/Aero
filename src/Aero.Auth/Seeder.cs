@@ -1,5 +1,4 @@
 using Aero.Core.Identity;
-using Aero.MartenDB;
 using Marten;
 
 namespace Aero.Auth;

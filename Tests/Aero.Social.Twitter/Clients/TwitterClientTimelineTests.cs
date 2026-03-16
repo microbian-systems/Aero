@@ -23,7 +23,7 @@ public class TwitterClientTimelineTests
         _logger = Substitute.For<ILogger<TwitterClient>>();
     }
 
-    #region GetUserTweetsAsync Tests
+    //#region GetUserTweetsAsync Tests
 
     [Fact]
     public async Task GetUserTweetsAsync_WithValidUserId_ReturnsTweets()
@@ -198,9 +198,9 @@ public class TwitterClientTimelineTests
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
 
-    #endregion
+    //#endregion
 
-    #region GetUserMentionsAsync Tests
+    //#region GetUserMentionsAsync Tests
 
     [Fact]
     public async Task GetUserMentionsAsync_WithValidUserId_ReturnsMentions()
@@ -346,7 +346,7 @@ public class TwitterClientTimelineTests
         Assert.Equal(0, result.Meta?.ResultCount);
     }
 
-    #endregion
+    //#endregion
 
     private class TestHttpMessageHandler : HttpMessageHandler
     {

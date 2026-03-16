@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using Aero.Core.Identity;
+using JasperFx;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Raven.Client.Exceptions;
 
 namespace Aero.MartenDB.Identity;
 
@@ -17,12 +17,12 @@ public class RoleStore<TRole> : RoleStore<TRole, IdentityRoleClaim<string>>
     /// <summary>
     /// Constructs a new instance of <see cref="RoleStore{TRole}"/>.
     /// </summary>
-    /// <param name="context">The <see cref="IAsyncDocumentSession"/>.</param>
+    /// <param name="context">The <see cref="IDocumentSession"/>.</param>
     /// <param name="options"></param>
     /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-    public RoleStore(IAsyncDocumentSession context, IOptions<RavenDbIdentityOptions> options,
+    public RoleStore(IDocumentSession db, IOptions<RavenDbIdentityOptions> options,
         IdentityErrorDescriber? describer = null)
-        : base(context, options, describer)
+        : base(db, options, describer)
     {
     }
 
@@ -51,15 +51,16 @@ public abstract class RoleStore<TRole, TRoleClaim> :
     where TRoleClaim : IdentityRoleClaim<string>
 {
     private readonly IOptions<RavenDbIdentityOptions> options;
+
     /// <summary>
     /// Constructs a new instance of <see cref="RoleStore{TRole, TRoleClaim}"/>.
     /// </summary>
-    /// <param name="context">The <see cref="IAsyncDocumentSession"/>.</param>
+    /// <param name="db">The <see cref="IDocumentSession"/>.</param>
     /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-    public RoleStore(IAsyncDocumentSession context, IOptions<RavenDbIdentityOptions> options,
+    public RoleStore(IDocumentSession db, IOptions<RavenDbIdentityOptions> options,
         IdentityErrorDescriber? describer = null)
     {
-        AsyncSession = context ?? throw new ArgumentNullException(nameof(context));
+        this.db = db ?? throw new ArgumentNullException(nameof(db));
         this.options = options ?? throw new ArgumentNullException(nameof(options));
         ErrorDescriber = describer ?? new IdentityErrorDescriber();
     }
@@ -70,7 +71,7 @@ public abstract class RoleStore<TRole, TRoleClaim> :
     /// <summary>
     /// Gets the database context for this store.
     /// </summary>
-    public IAsyncDocumentSession AsyncSession { get; private set; }
+    public IDocumentSession db { get; private set; }
 
     /// <summary>
     /// Gets or sets the <see cref="IdentityErrorDescriber"/> for any error that occurred with the current operation.
@@ -87,18 +88,18 @@ public abstract class RoleStore<TRole, TRoleClaim> :
     {
         if (options.Value.AutoSaveChanges)
         {
-            await AsyncSession.SaveChangesAsync(cancellationToken);
+            await db.SaveChangesAsync(cancellationToken);
         }
     }
 
-    #region IQueryableRoleStore
+    //#region IQueryableRoleStore
 
     /// <summary>
     /// Gets the roles as an IQueryable.
     /// </summary>
-    public virtual IQueryable<TRole> Roles => this.AsyncSession.Query<TRole>();
+    public virtual IQueryable<TRole> Roles => this.db.Query<TRole>();
 
-    #endregion
+    //#endregion
 
     /// <summary>
     /// Creates a new role in a store as an asynchronous operation.
@@ -119,8 +120,8 @@ public abstract class RoleStore<TRole, TRoleClaim> :
             throw new ArgumentNullException(nameof(role.Name));
         }
 
-        var roleId = GetRavenIdFromRoleName(role.Name, AsyncSession.Advanced.DocumentStore);
-        await AsyncSession.StoreAsync(role, roleId, cancellationToken);
+        var roleId = GetRavenIdFromRoleName(role.Name, db.DocumentStore);
+        db.Store(role);
         await SaveChanges(cancellationToken);
         return IdentityResult.Success;
     }
@@ -168,7 +169,7 @@ public abstract class RoleStore<TRole, TRoleClaim> :
         {
             throw new ArgumentNullException(nameof(role));
         }
-        AsyncSession.Delete(role.Id);
+        db.Delete(role.Id);
         try
         {
             await SaveChanges(cancellationToken);
@@ -244,7 +245,7 @@ public abstract class RoleStore<TRole, TRoleClaim> :
     {
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
-        return AsyncSession.LoadAsync<TRole>(id, cancellationToken);
+        return db.LoadAsync<TRole>(id, cancellationToken);
     }
 
     /// <summary>
@@ -258,8 +259,8 @@ public abstract class RoleStore<TRole, TRoleClaim> :
         cancellationToken.ThrowIfCancellationRequested();
         ThrowIfDisposed();
 
-        var roleId = GetRavenIdFromRoleName(normalizedName, AsyncSession.Advanced.DocumentStore);
-        return AsyncSession.LoadAsync<TRole>(roleId, cancellationToken);
+        var roleId = GetRavenIdFromRoleName(normalizedName, db.DocumentStore);
+        return db.LoadAsync<TRole>(roleId, cancellationToken);
     }
 
     /// <summary>
@@ -400,9 +401,11 @@ public abstract class RoleStore<TRole, TRoleClaim> :
 
     internal static string GetRavenIdFromRoleName(string role, IDocumentStore docStore)
     {
-        var roleCollection = docStore.Conventions.GetCollectionName(typeof(TRole));
-        var prefix = docStore.Conventions.TransformTypeCollectionNameToDocumentIdPrefix(roleCollection);
-        var partSeparator = docStore.Conventions.IdentityPartsSeparator;
-        return prefix + partSeparator + role;
+        // todo - translate this to marten
+        // var roleCollection = docStore.Conventions.GetCollectionName(typeof(TRole));
+        // var prefix = docStore.Conventions.TransformTypeCollectionNameToDocumentIdPrefix(roleCollection);
+        // var partSeparator = docStore.Conventions.IdentityPartsSeparator;
+        // return prefix + partSeparator + role;
+        throw new NotImplementedException();
     }
 }

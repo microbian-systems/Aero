@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Electra.DataStructures.Trees;
 
 public enum DfsTraversalOrder

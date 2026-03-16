@@ -1,5 +1,5 @@
 using System.Net;
-using FluentAssertions;
+using Shouldly;
 
 namespace Aero.Auth.Tests;
 
@@ -21,7 +21,7 @@ public class UsernamelessControllerIntegrationTests : IClassFixture<TestWebAppFa
         var response = await _client.GetAsync("/Usernameless");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public class UsernamelessControllerIntegrationTests : IClassFixture<TestWebAppFa
         var response = await _client.GetAsync("/Usernameless/Index");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
     [Theory]
@@ -45,7 +45,7 @@ public class UsernamelessControllerIntegrationTests : IClassFixture<TestWebAppFa
 
         // Assert
         // Most endpoints will return NotFound if not implemented, which is expected
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized, HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized, HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class UsernamelessControllerIntegrationTests : IClassFixture<TestWebAppFa
         var response = await _client.PostAsync("/Usernameless/authenticate", content);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
     [Theory]
@@ -74,7 +74,7 @@ public class UsernamelessControllerIntegrationTests : IClassFixture<TestWebAppFa
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class UsernamelessControllerIntegrationTests : IClassFixture<TestWebAppFa
 
         // Assert
         // Should handle WebAuthn-specific requests appropriately
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -101,6 +101,6 @@ public class UsernamelessControllerIntegrationTests : IClassFixture<TestWebAppFa
         var response = await _client.PostAsync("/Usernameless/discovery", discoverableContent);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 }

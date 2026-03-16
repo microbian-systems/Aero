@@ -351,7 +351,7 @@ public class YouTubeProvider : SocialProviderBase
     private string GetClientSecret() => _configuration["YOUTUBE_CLIENT_SECRET"] ?? throw new InvalidOperationException("YOUTUBE_CLIENT_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class GoogleTokenResponse
     {
@@ -443,5 +443,5 @@ public class YouTubeProvider : SocialProviderBase
         public string SubscriberCount { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Aero.Common.Extensions;
+﻿namespace Aero.Common.Extensions;
 
 public static class Base64Extensions
 {

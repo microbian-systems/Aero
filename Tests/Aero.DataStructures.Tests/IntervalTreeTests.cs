@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -20,8 +20,8 @@ public class IntervalTreeTests
 
         // Assert
         overlapping.Should().HaveCount(3);
-        overlapping.Should().Contain(i => i.Start == 15 && i.End == 20);
-        overlapping.Should().Contain(i => i.Start == 10 && i.End == 30);
-        overlapping.Should().Contain(i => i.Start == 5 && i.End == 20);
+        overlapping.ShouldContain(i => i.Start == 15 && i.End == 20);
+        overlapping.ShouldContain(i => i.Start == 10 && i.End == 30);
+        overlapping.ShouldContain(i => i.Start == 5 && i.End == 20);
     }
 }

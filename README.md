@@ -265,7 +265,7 @@ public class ProductRepository : GenericEntityFrameworkRepository<Product>
 // Or using RavenDB
 public class ProductRepository : RavenDbRepositoryBase<Product>
 {
-    public ProductRepository(IAsyncDocumentSession session) 
+    public ProductRepository(IDocumentSession session) 
         : base(session) { }
 }
 ```

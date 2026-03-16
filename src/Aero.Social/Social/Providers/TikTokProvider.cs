@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Social.Abstractions;
@@ -373,7 +372,7 @@ public class TikTokProvider : SocialProviderBase
     private string GetClientSecret() => _configuration["TIKTOK_CLIENT_SECRET"] ?? throw new InvalidOperationException("TIKTOK_CLIENT_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class TikTokTokenResponse
     {
@@ -441,5 +440,5 @@ public class TikTokProvider : SocialProviderBase
         public List<long>? PublicalyAvailablePostId { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

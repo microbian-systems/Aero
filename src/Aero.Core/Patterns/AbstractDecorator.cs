@@ -1,6 +1,4 @@
 
-using Microsoft.Extensions.Logging;
-
 namespace Aero.Common.Patterns;
 
 public abstract class AbstractDecorator : IDecorator

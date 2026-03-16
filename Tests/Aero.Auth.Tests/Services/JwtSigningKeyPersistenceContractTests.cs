@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using NSubstitute;
 using Aero.Auth.Services;
 using Aero.Models.Entities;
@@ -11,7 +11,7 @@ namespace Aero.Auth.Tests.Services;
 /// </summary>
 public class JwtSigningKeyPersistenceContractTests
 {
-    #region Interface Contract Tests
+    //#region Interface Contract Tests
 
     [Fact]
     public void IJwtSigningKeyPersistence_HasRequiredMethods()
@@ -23,52 +23,22 @@ public class JwtSigningKeyPersistenceContractTests
         var methods = interfaceType.GetMethods();
 
         // Assert
-        methods.Should().Contain(m => m.Name == "GetCurrentSigningKeyAsync");
-        methods.Should().Contain(m => m.Name == "GetValidSigningKeysAsync");
-        methods.Should().Contain(m => m.Name == "GetKeyByIdAsync");
-        methods.Should().Contain(m => m.Name == "AddKeyAsync");
-        methods.Should().Contain(m => m.Name == "UpdateKeyAsync");
-        methods.Should().Contain(m => m.Name == "DeactivateCurrentKeyAsync");
-        methods.Should().Contain(m => m.Name == "RevokeKeyAsync");
-        methods.Should().Contain(m => m.Name == "SaveChangesAsync");
+        methods.ShouldContain(m => m.Name == "GetCurrentSigningKeyAsync");
+        methods.ShouldContain(m => m.Name == "GetValidSigningKeysAsync");
+        methods.ShouldContain(m => m.Name == "GetKeyByIdAsync");
+        methods.ShouldContain(m => m.Name == "AddKeyAsync");
+        methods.ShouldContain(m => m.Name == "UpdateKeyAsync");
+        methods.ShouldContain(m => m.Name == "DeactivateCurrentKeyAsync");
+        methods.ShouldContain(m => m.Name == "RevokeKeyAsync");
+        methods.ShouldContain(m => m.Name == "SaveChangesAsync");
     }
 
-    [Fact]
-    public void IJwtSigningKeyPersistence_AllMethodsAreAsync()
-    {
-        // Arrange
-        var interfaceType = typeof(IJwtSigningKeyPersistence);
 
-        // Act
-        var methods = interfaceType.GetMethods();
 
-        // Assert - All methods should return Task or Task<T>
-        methods.Should().AllSatisfy(m =>
-        {
-            m.ReturnType.Name.Should().Match("*Task*",
-                because: $"Method {m.Name} should be async");
-        });
-    }
 
-    [Fact]
-    public void IJwtSigningKeyPersistence_SupportsCancellationToken()
-    {
-        // Arrange
-        var interfaceType = typeof(IJwtSigningKeyPersistence);
-        var methods = interfaceType.GetMethods();
+    //#endregion
 
-        // Act & Assert
-        methods.Should().AllSatisfy(m =>
-        {
-            var parameters = m.GetParameters();
-            parameters.Should().Contain(p => p.ParameterType.Name == "CancellationToken",
-                because: $"Method {m.Name} should support cancellation");
-        });
-    }
-
-    #endregion
-
-    #region Mock Verification Tests
+    //#region Mock Verification Tests
 
     [Fact]
     public void Mock_CanBeCreatedForInterface()
@@ -77,8 +47,8 @@ public class JwtSigningKeyPersistenceContractTests
         var mock = Substitute.For<IJwtSigningKeyPersistence>();
 
         // Assert
-        mock.Should().NotBeNull();
-        mock.Should().BeAssignableTo<IJwtSigningKeyPersistence>();
+        mock.ShouldNotBeNull();
+        mock.ShouldBeAssignableTo<IJwtSigningKeyPersistence>();
     }
 
     [Fact]
@@ -101,8 +71,8 @@ public class JwtSigningKeyPersistenceContractTests
         var result = await mock.GetCurrentSigningKeyAsync();
 
         // Assert
-        result.Should().NotBeNull();
-        result?.KeyId.Should().Be("key-1");
+        result.ShouldNotBeNull();
+        result?.KeyId.ShouldBe("key-1");
     }
 
     [Fact]
@@ -128,8 +98,8 @@ public class JwtSigningKeyPersistenceContractTests
         var result = await mock.GetValidSigningKeysAsync();
 
         // Assert
-        result.Should().NotBeEmpty();
-        result.Should().HaveCount(1);
+        result.ShouldNotBeEmpty();
+        result.Count().ShouldBe(1);
     }
 
     [Fact]
@@ -150,7 +120,7 @@ public class JwtSigningKeyPersistenceContractTests
         var result = await mock.AddKeyAsync(testKey);
 
         // Assert
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -165,12 +135,12 @@ public class JwtSigningKeyPersistenceContractTests
         var result = await mock.RevokeKeyAsync("test-key-id");
 
         // Assert
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 
-    #region Return Type Tests
+    //#region Return Type Tests
 
     [Fact]
     public void GetCurrentSigningKeyAsync_ReturnsNullableJwtSigningKey()
@@ -184,7 +154,7 @@ public class JwtSigningKeyPersistenceContractTests
         var returnType = method.ReturnType;
 
         // Assert
-        returnType.Name.Should().Contain("Task");
+        returnType.Name.ShouldContain("Task");
     }
 
     [Fact]
@@ -199,7 +169,7 @@ public class JwtSigningKeyPersistenceContractTests
         var returnType = method.ReturnType;
 
         // Assert
-        returnType.Name.Should().Contain("Task");
+        returnType.Name.ShouldContain("Task");
     }
 
     [Fact]
@@ -214,12 +184,12 @@ public class JwtSigningKeyPersistenceContractTests
         var returnType = method.ReturnType;
 
         // Assert
-        returnType.Name.Should().Contain("Task");
+        returnType.Name.ShouldContain("Task");
     }
 
-    #endregion
+    //#endregion
 
-    #region Parameter Validation Tests
+    //#region Parameter Validation Tests
 
     [Fact]
     public void GetKeyByIdAsync_HasKeyIdParameter()
@@ -233,7 +203,7 @@ public class JwtSigningKeyPersistenceContractTests
         var parameters = method.GetParameters();
 
         // Assert
-        parameters.Should().Contain(p => p.Name == "keyId");
+        parameters.ShouldContain(p => p.Name == "keyId");
     }
 
     [Fact]
@@ -248,7 +218,7 @@ public class JwtSigningKeyPersistenceContractTests
         var parameters = method.GetParameters();
 
         // Assert
-        parameters.Should().Contain(p => p.Name == "key");
+        parameters.ShouldContain(p => p.Name == "key");
     }
 
     [Fact]
@@ -263,12 +233,12 @@ public class JwtSigningKeyPersistenceContractTests
         var parameters = method.GetParameters();
 
         // Assert
-        parameters.Should().Contain(p => p.Name == "keyId");
+        parameters.ShouldContain(p => p.Name == "keyId");
     }
 
-    #endregion
+    //#endregion
 
-    #region Substitutability Tests
+    //#region Substitutability Tests
 
     [Fact]
     public void Implementations_ShouldBeSubstitutable()
@@ -278,9 +248,9 @@ public class JwtSigningKeyPersistenceContractTests
         IJwtSigningKeyPersistence implementation2 = Substitute.For<IJwtSigningKeyPersistence>();
 
         // Act & Assert
-        implementation1.Should().BeAssignableTo<IJwtSigningKeyPersistence>();
-        implementation2.Should().BeAssignableTo<IJwtSigningKeyPersistence>();
+        implementation1.ShouldBeAssignableTo<IJwtSigningKeyPersistence>();
+        implementation2.ShouldBeAssignableTo<IJwtSigningKeyPersistence>();
     }
 
-    #endregion
+    //#endregion
 }

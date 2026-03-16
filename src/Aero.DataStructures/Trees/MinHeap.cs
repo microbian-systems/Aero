@@ -1,5 +1,3 @@
-using System;
-
 namespace Aero.DataStructures.Trees;
 
 /// <summary>

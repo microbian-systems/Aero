@@ -132,7 +132,7 @@ Layer 3: Database-Specific Implementation
 Layer 4: Database Client
 ┌─────────────────────────────────────────┐
 │       RavenDB Client Library            │
-│  (IAsyncDocumentSession from UoW)       │
+│  (IDocumentSession from UoW)       │
 └─────────────────────────────────────────┘
 ```
 
@@ -230,7 +230,7 @@ services.AddScoped<IJwtSigningKeyPersistence, EfCoreJwtSigningKeyPersistence>();
 The RavenDB implementation has a placeholder `GetSession()` method:
 
 ```csharp
-private IAsyncDocumentSession GetSession()
+private IDocumentSession GetSession()
 {
     throw new NotImplementedException(
         "Session access needs to be exposed via IRavenDbUnitOfWork.");
@@ -238,7 +238,7 @@ private IAsyncDocumentSession GetSession()
 ```
 
 ### To Complete RavenDB Integration
-1. Add `IAsyncDocumentSession Session { get; }` property to `IRavenDbUnitOfWork`
+1. Add `IDocumentSession Session { get; }` property to `IRavenDbUnitOfWork`
 2. Implement the property in `RavenDbUnitOfWork` class
 3. Update `GetSession()` to return `_uow.Session`
 

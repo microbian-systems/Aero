@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using FluentAssertions;
+using Shouldly;
 
 namespace Aero.Auth.Tests;
 
@@ -18,7 +18,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         _client = factory.CreateClient();
     }
 
-    #region Registration Tests
+    //#region Registration Tests
 
     [Fact]
     public async Task Registration_ShouldRejectInvalidEmail()
@@ -31,7 +31,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -45,12 +45,12 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    #endregion
+    //#endregion
 
-    #region Login Tests
+    //#region Login Tests
 
     [Fact]
     public async Task Login_ShouldRejectInvalidCredentials()
@@ -63,7 +63,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/Auth/login", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -77,12 +77,12 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/Auth/login", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    #endregion
+    //#endregion
 
-    #region Token Exchange Tests
+    //#region Token Exchange Tests
 
     [Fact]
     public async Task TokenExchange_ShouldRejectUnsupportedGrantType()
@@ -99,7 +99,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/connect/token", formData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -117,12 +117,12 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/connect/token", formData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }
 
-    #endregion
+    //#endregion
 
-    #region Passkey/WebAuthn Tests
+    //#region Passkey/WebAuthn Tests
 
     [Fact]
     public async Task Passwordless_ShouldBeAccessible()
@@ -131,7 +131,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.GetAsync("/Passwordless");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -141,7 +141,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.GetAsync("/Usernameless");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -154,16 +154,16 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/Passwordless/authenticate", content);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(
+        response.StatusCode.ShouldBeOneOf(
             HttpStatusCode.BadRequest, 
             HttpStatusCode.NotFound, 
             HttpStatusCode.Unauthorized
         );
     }
 
-    #endregion
+    //#endregion
 
-    #region Account Management Tests
+    //#region Account Management Tests
 
     [Fact]
     public async Task AccountList_ShouldRequireAuthentication()
@@ -172,7 +172,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.GetAsync("/Account/list");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -185,12 +185,12 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/Account/Logout", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    #endregion
+    //#endregion
 
-    #region Security Tests
+    //#region Security Tests
 
     [Fact]
     public async Task UserInfo_ShouldRequireAuthentication()
@@ -199,7 +199,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.GetAsync("/connect/userinfo");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -215,7 +215,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/connect/revoke", formData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK); // Per OAuth 2.0 spec
+        response.StatusCode.ShouldBe(HttpStatusCode.OK); // Per OAuth 2.0 spec
     }
 
     [Fact]
@@ -228,7 +228,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+        response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
     [Fact]
@@ -241,8 +241,8 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+        response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    #endregion
+    //#endregion
 }

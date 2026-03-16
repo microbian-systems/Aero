@@ -4,7 +4,7 @@ namespace Aero.Social.Twitter.Models;
 
 public class ExpansionResolverTests
 {
-    #region ResolveAuthor Tests
+    //#region ResolveAuthor Tests
 
     [Fact]
     public void ResolveAuthor_WithValidAuthorId_ReturnsUser()
@@ -93,9 +93,9 @@ public class ExpansionResolverTests
         Assert.Null(author);
     }
 
-    #endregion
+    //#endregion
 
-    #region ResolveUser Tests
+    //#region ResolveUser Tests
 
     [Fact]
     public void ResolveUser_WithValidUserId_ReturnsUser()
@@ -150,9 +150,9 @@ public class ExpansionResolverTests
         Assert.Null(user);
     }
 
-    #endregion
+    //#endregion
 
-    #region ResolveTweet Tests
+    //#region ResolveTweet Tests
 
     [Fact]
     public void ResolveTweet_WithValidTweetId_ReturnsTweet()
@@ -194,9 +194,9 @@ public class ExpansionResolverTests
         Assert.Null(tweet);
     }
 
-    #endregion
+    //#endregion
 
-    #region ResolveMedia (Single) Tests
+    //#region ResolveMedia (Single) Tests
 
     [Fact]
     public void ResolveMedia_WithValidMediaKey_ReturnsMedia()
@@ -238,9 +238,9 @@ public class ExpansionResolverTests
         Assert.Null(media);
     }
 
-    #endregion
+    //#endregion
 
-    #region ResolveMedia (Multiple) Tests
+    //#region ResolveMedia (Multiple) Tests
 
     [Fact]
     public void ResolveMedia_WithMultipleKeys_ReturnsMatchingMedia()
@@ -314,9 +314,9 @@ public class ExpansionResolverTests
         Assert.Equal("media_1", media[0].MediaKey);
     }
 
-    #endregion
+    //#endregion
 
-    #region ResolveUsersByUsername Tests
+    //#region ResolveUsersByUsername Tests
 
     [Fact]
     public void ResolveUsersByUsername_WithValidUsernames_ReturnsUsers()
@@ -389,9 +389,9 @@ public class ExpansionResolverTests
         Assert.Empty(users); // Should not match "User1" due to case sensitivity
     }
 
-    #endregion
+    //#endregion
 
-    #region Integration Tests
+    //#region Integration Tests
 
     [Fact]
     public void ExpansionResolver_ResolvesCompleteExpansionScenario()
@@ -431,5 +431,5 @@ public class ExpansionResolverTests
         Assert.Equal(2, resolvedUsers.Count);
     }
 
-    #endregion
+    //#endregion
 }

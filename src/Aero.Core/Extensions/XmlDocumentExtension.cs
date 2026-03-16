@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -13,7 +9,7 @@ namespace Aero.Common.Extensions;
 
 public static class XmlDocumentExtension
 {
-    #region Validation Methods
+    //#region Validation Methods
 
     public static bool ValidateXmlInMemory(this XmlDocument doc, string schemaName = "")
     {
@@ -121,9 +117,9 @@ public static class XmlDocumentExtension
         }
     }
 
-    #endregion
+    //#endregion
 
-    #region Conversion Methods
+    //#region Conversion Methods
 
     /// <summary>
     /// Converts an XmlDocument to an XDocument
@@ -183,9 +179,9 @@ public static class XmlDocumentExtension
         return xmlDoc.DocumentElement;
     }
 
-    #endregion
+    //#endregion
 
-    #region Serialization Methods
+    //#region Serialization Methods
 
     /// <summary>
     /// Serializes an object to an XmlDocument
@@ -295,9 +291,9 @@ public static class XmlDocumentExtension
         }
     }
 
-    #endregion
+    //#endregion
 
-    #region Formatting Methods
+    //#region Formatting Methods
 
     /// <summary>
     /// Formats an XmlDocument with proper indentation
@@ -394,9 +390,9 @@ public static class XmlDocumentExtension
         }
     }
 
-    #endregion
+    //#endregion
 
-    #region XPath Methods
+    //#region XPath Methods
 
     /// <summary>
     /// Selects a single node using XPath and returns it as an XElement
@@ -468,9 +464,9 @@ public static class XmlDocumentExtension
         return element?.Value ?? defaultValue;
     }
 
-    #endregion
+    //#endregion
 
-    #region Utility Methods
+    //#region Utility Methods
 
     /// <summary>
     /// Checks if an XML string is well-formed
@@ -543,5 +539,5 @@ public static class XmlDocumentExtension
         }
     }
 
-    #endregion
+    //#endregion
 }

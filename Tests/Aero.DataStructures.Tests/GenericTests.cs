@@ -1,5 +1,5 @@
 using Aero.DataStructures.Graphs;
-using FluentAssertions;
+using Shouldly;
 
 namespace Aero.DataStructures.Tests;
 
@@ -36,8 +36,8 @@ public class GenericTests
             // Assert
             var matrix = graph.GetAdjacencyMatrix();
             // Since we added A and B, matrix should be 2x2
-            matrix.GetLength(0).Should().Be(2); 
-            matrix.GetLength(1).Should().Be(2);
+            matrix.GetLength(0).ShouldBe(2); 
+            matrix.GetLength(1).ShouldBe(2);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ public class GenericTests
 
             // Assert
             // Expected: Root (A) -> Layer 1 (B, C) -> Layer 2 (D, E)
-            result.Should().ContainInOrder("A", "B", "C", "D", "E");
+            result.ShouldBeInOrder("A", "B", "C", "D", "E");
         }
 
         [Fact]
@@ -81,10 +81,10 @@ public class GenericTests
             var result = graph.Bfs("A");
 
             // Assert
-            result.Should().Contain("A");
-            result.Should().Contain("B");
-            result.Should().NotContain("Z");
-            result.Should().NotContain("Y");
+            result.ShouldContain("A");
+            result.ShouldContain("B");
+            result.ShouldNotContain("Z");
+            result.ShouldNotContain("Y");
         }
 
         [Fact]
@@ -116,7 +116,7 @@ public class GenericTests
             // Visit B. Neighbor C. Push C. Pop C.
             // Visit C. Neighbor D. Push D. Pop D.
             // Pop E.
-            result.Should().ContainInOrder("A", "B", "C", "D", "E");
+            result.ShouldContainInOrder("A", "B", "C", "D", "E");
         }
 
         [Fact]
@@ -139,8 +139,8 @@ public class GenericTests
             // Assert
             // Path Start->End cost 100.
             // Path Start->A->B->End cost 30.
-            distances.Should().ContainKey("End");
-            distances["End"].Should().Be(30);
+            distances.ShouldContainKey("End");
+            distances["End"].ShouldBe(30);
         }
 
         [Fact]
@@ -155,8 +155,8 @@ public class GenericTests
             var distances = graph.Dijkstra("A");
 
             // Assert
-            distances.Should().ContainKey("C");
-            distances["C"].Should().Be(int.MaxValue);
+            distances.ShouldContainKey("C");
+            distances["C"].ShouldBe(int.MaxValue);
         }
 
         [Fact]
@@ -175,19 +175,19 @@ public class GenericTests
 
             // Assert
             // A -> B = 5 (row 0, col 1)
-            matrix[0, 1].Should().Be(5);
+            matrix[0, 1].ShouldBe(5);
             
             // B -> A = 3 (row 1, col 0)
-            matrix[1, 0].Should().Be(3);
+            matrix[1, 0].ShouldBe(3);
             
             // C -> A = 1 (row 2, col 0)
-            matrix[2, 0].Should().Be(1);
+            matrix[2, 0].ShouldBe(1);
 
             // No self loop A->A
-            matrix[0, 0].Should().BeNull();
+            matrix[0, 0].ShouldBeNull();
             
             // No connection A->C
-            matrix[0, 2].Should().BeNull();
+            matrix[0, 2].ShouldBeNull();
         }
         
         [Fact]
@@ -202,7 +202,7 @@ public class GenericTests
             var result = graph.Bfs(1);
 
             // Assert
-            result.Should().ContainInOrder(1, 2, 3);
+            result.ShouldContainInOrder(1, 2, 3);
         }
         
     // [Fact]

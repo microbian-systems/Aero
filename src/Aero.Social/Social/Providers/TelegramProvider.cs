@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
@@ -356,7 +355,7 @@ public class TelegramProvider : SocialProviderBase
 
     private string GetBotToken() => _configuration["TELEGRAM_TOKEN"] ?? throw new InvalidOperationException("TELEGRAM_TOKEN not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class TelegramChatResponse
     {
@@ -427,5 +426,5 @@ public class TelegramProvider : SocialProviderBase
         public int MessageId { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

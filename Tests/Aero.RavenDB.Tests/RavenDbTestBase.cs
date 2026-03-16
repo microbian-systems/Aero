@@ -1,3 +1,4 @@
+using Marten;
 using Raven.Client.Documents;
 using Raven.Client.ServerWide.Operations;
 using Raven.Embedded;

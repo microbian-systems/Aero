@@ -1,5 +1,4 @@
-using Raven.Client.Documents;
-using Raven.Client.Documents.Session;
+using Marten;
 using System.Security.Cryptography;
 
 namespace Aero.Auth.Services;
@@ -11,13 +10,13 @@ namespace Aero.Auth.Services;
 /// </summary>
 public class RefreshTokenService : IRefreshTokenService
 {
-    private readonly IAsyncDocumentSession session;
+    private readonly IDocumentSession session;
     readonly ILogger<RefreshTokenService> logger;
     readonly IConfiguration config;
     readonly int refreshTokenLifetimeDays;
 
     public RefreshTokenService(
-        IAsyncDocumentSession session,
+        IDocumentSession session,
         ILogger<RefreshTokenService> logger,
         IConfiguration config)
     {
@@ -50,7 +49,7 @@ public class RefreshTokenService : IRefreshTokenService
         };
 
         
-        await session.StoreAsync(refreshToken);
+        session.Store(refreshToken);
         await session.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation(
@@ -128,7 +127,7 @@ public class RefreshTokenService : IRefreshTokenService
             };
 
             oldTokenRecord.ReplacedByTokenId = newRefreshToken.Id;
-            await session.StoreAsync(newRefreshToken);
+            session.Store(newRefreshToken);
             await session.SaveChangesAsync(cancellationToken);
 
             logger.LogInformation(

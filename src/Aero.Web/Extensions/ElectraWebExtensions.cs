@@ -2,7 +2,6 @@ using Aero.Common.Web.Exceptions;
 using Aero.Common.Web.Middleware;
 using Aero.Services;
 using Aero.Common.Web.Services;
-using Aero.Core.Extensions;
 using Aero.Services.Geo;
 using Aero.Services.Mail;
 using Microsoft.AspNetCore.Authentication.Cookies;

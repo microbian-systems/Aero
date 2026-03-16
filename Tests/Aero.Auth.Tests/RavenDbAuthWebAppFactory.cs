@@ -1,12 +1,9 @@
-using Aero.Auth.Tests.WebHost;
+using Marten;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Raven.Client.Documents;
-using Raven.TestDriver;
-using Raven.Embedded;
 
 namespace Aero.Auth.Tests;
 
@@ -18,7 +15,7 @@ public class RavenDbAuthWebAppFactory : WebApplicationFactory<Program>
     public RavenDbAuthWebAppFactory()
     {
         _driverHelper = new RavenTestDriverHelper();
-        _driverHelper.Configure();
+        //_driverHelper.Configure();
         _documentStore = _driverHelper.GetStore();
     }
 
@@ -39,7 +36,7 @@ public class RavenDbAuthWebAppFactory : WebApplicationFactory<Program>
             // Override the Scoped session to ensure it uses the test store
             services.AddScoped(sp => 
             {
-                var s = _documentStore.OpenAsyncSession();
+                var s = _documentStore.LightweightSession();
                 // Ensure indexes are up to date for tests
                 // s.Advanced.WaitForIndexesAfterSaveChanges(); // Can be expensive, use selectively or globally if needed
                 return s;
@@ -61,29 +58,15 @@ public class RavenDbAuthWebAppFactory : WebApplicationFactory<Program>
 // Helper class to access RavenTestDriver functionality since we can't inherit multiple classes
 public class RavenTestDriverHelper : RavenTestDriver, IDisposable
 {
-    public void Configure()
-    {
-        ConfigureServer(new Raven.TestDriver.TestServerOptions
-        {
-            FrameworkVersion = null,
-            Licensing = new ServerOptions.LicensingOptions
-            {
-                ThrowOnInvalidOrMissingLicense = false
-            },
-            CommandLineArgs = new List<string>
-            {
-                "--RunInMemory=true"
-            }
-        });
-    }
-
+    // todo - find postgres embedded (forgot name) and configure here
     public IDocumentStore GetStore()
     {
-        return GetDocumentStore();
+        // todo - get conn stirng for martem
+        return DocumentStore.For(opts => {});
     }
 
-    public new void Dispose()
+    public void Dispose()
     {
-        base.Dispose();
+        // TODO release managed resources here
     }
 }

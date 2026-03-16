@@ -333,7 +333,7 @@ public class NostrProvider : SocialProviderBase
         return payload?["password"]?.ToString() ?? "";
     }
 
-    #region DTOs
+    //#region DTOs
 
     private class NostrAuthBody
     {
@@ -353,5 +353,5 @@ public class NostrProvider : SocialProviderBase
         public string? Picture { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-
 namespace Aero.DataStructures.Trees.Persistence.Concurrency;
 
 public static class TransactionContext

@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Social.Abstractions;
@@ -378,7 +377,7 @@ public class LinkedInProvider : SocialProviderBase
     protected string GetClientSecret() => _configuration["LINKEDIN_CLIENT_SECRET"] ?? throw new InvalidOperationException("LINKEDIN_CLIENT_SECRET not configured");
     protected string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     protected class LinkedInTokenResponse
     {
@@ -434,5 +433,5 @@ public class LinkedInProvider : SocialProviderBase
         public string Object { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

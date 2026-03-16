@@ -1,10 +1,8 @@
 using System.Reflection;
-using System.Text.Json;
 using Aero.Core.Http;
 using Aero.Social.Models;
 using Aero.Social.Plugs;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Http.Resilience;
 using Polly;
 
 namespace Aero.Social.Abstractions;
@@ -337,7 +335,7 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 
-    #region Plug Support
+    //#region Plug Support
 
     /// <summary>
     /// Discovers all plug methods defined in this provider using reflection.
@@ -477,5 +475,5 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
             : Attribute?.Description ?? string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

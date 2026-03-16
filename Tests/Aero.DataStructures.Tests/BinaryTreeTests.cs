@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 using Bogus;
 
@@ -19,7 +19,7 @@ public class BinaryTreeTests
         tree.Insert(value);
 
         // Assert
-        tree.Root.Should().NotBeNull();
-        tree.Root.Value.Should().Be(value);
+        tree.Root.ShouldNotBeNull();
+        tree.Root.Value.ShouldBe(value);
     }
 }

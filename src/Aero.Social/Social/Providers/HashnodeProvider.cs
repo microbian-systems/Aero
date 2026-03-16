@@ -228,7 +228,7 @@ public class HashnodeProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    #region DTOs
+    //#region DTOs
 
     private class HashnodeAuthBody
     {
@@ -329,5 +329,5 @@ public class HashnodeProvider : SocialProviderBase
         public string Name { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

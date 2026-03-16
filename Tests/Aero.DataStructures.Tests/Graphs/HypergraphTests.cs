@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
@@ -11,7 +11,7 @@ public class HypergraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Vertex Tests
+    //#region Vertex Tests
 
     [Fact]
     public void AddVertex_ShouldIncreaseCount()
@@ -21,7 +21,7 @@ public class HypergraphTests
 
         graph.AddVertex(vertex);
 
-        graph.VertexCount.Should().Be(1);
+        graph.VertexCount.ShouldBe(1);
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class HypergraphTests
 
         var result = graph.AddVertex(vertex);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public class HypergraphTests
 
         var result = graph.AddVertex("existing");
 
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class HypergraphTests
 
         graph.AddVertices(vertices);
 
-        graph.VertexCount.Should().Be(3);
+        graph.VertexCount.ShouldBe(3);
     }
 
     [Fact]
@@ -64,12 +64,12 @@ public class HypergraphTests
         graph.AddVertex("a");
         graph.AddVertex("b");
 
-        graph.Vertices.Should().Contain(new[] { "a", "b" });
+        graph.Vertices.ShouldContain(new[] { "a", "b" });
     }
 
-    #endregion
+    //#endregion
 
-    #region Hyperedge Tests
+    //#region Hyperedge Tests
 
     [Fact]
     public void AddHyperedge_ShouldConnectMultipleVertices()
@@ -79,9 +79,9 @@ public class HypergraphTests
 
         var edge = graph.AddHyperedge(1, vertices, "Co-authorship".Humanize());
 
-        edge.Should().NotBeNull();
-        edge!.Vertices.Should().Contain(vertices);
-        edge.Cardinality.Should().Be(3);
+        edge.ShouldNotBeNull();
+        edge!.Vertices.ShouldContain(vertices);
+        edge.Cardinality.ShouldBe(3);
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public class HypergraphTests
 
         graph.AddHyperedge(1, new[] { "new1", "new2" });
 
-        graph.VertexCount.Should().Be(2);
+        graph.VertexCount.ShouldBe(2);
     }
 
     [Fact]
@@ -102,7 +102,7 @@ public class HypergraphTests
 
         var edge = graph.AddHyperedge(1, new[] { "a", "b" }, data);
 
-        edge!.Data.Should().Be(data);
+        edge!.Data.ShouldBe(data);
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class HypergraphTests
 
         var result = graph.AddHyperedge(1, new[] { "c", "d" });
 
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public class HypergraphTests
 
         var act = () => graph.AddHyperedge(1, Array.Empty<string>());
 
-        act.Should().Throw<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -133,12 +133,12 @@ public class HypergraphTests
 
         var edge = graph.AddHyperedge(1, new[] { "a", "b" }, weight: 2.5);
 
-        edge!.Weight.Should().Be(2.5);
+        edge!.Weight.ShouldBe(2.5);
     }
 
-    #endregion
+    //#endregion
 
-    #region Incidence Tests
+    //#region Incidence Tests
 
     [Fact]
     public void GetIncidentHyperedges_ShouldReturnEdgesContainingVertex()
@@ -150,8 +150,8 @@ public class HypergraphTests
 
         var aliceEdges = graph.GetIncidentHyperedges("alice");
 
-        aliceEdges.Select(e => e.Id).Should().Contain(new[] { 1, 2 });
-        aliceEdges.Select(e => e.Id).Should().NotContain(3);
+        aliceEdges.Select(e => e.Id).ShouldContain(new[] { 1, 2 });
+        aliceEdges.Select(e => e.Id).ShouldNotContain(3);
     }
 
     [Fact]
@@ -162,12 +162,12 @@ public class HypergraphTests
         graph.AddHyperedge(2, new[] { "x", "b" });
         graph.AddHyperedge(3, new[] { "x", "c" });
 
-        graph.GetDegree("x").Should().Be(3);
+        graph.GetDegree("x").ShouldBe(3);
     }
 
-    #endregion
+    //#endregion
 
-    #region Neighbor Tests
+    //#region Neighbor Tests
 
     [Fact]
     public void GetNeighbors_ShouldReturnVerticesInSameHyperedges()
@@ -178,13 +178,13 @@ public class HypergraphTests
 
         var neighbors = graph.GetNeighbors("alice");
 
-        neighbors.Should().Contain(new[] { "bob", "charlie", "diana" });
-        neighbors.Should().NotContain("alice");
+        neighbors.ShouldContain(new[] { "bob", "charlie", "diana" });
+        neighbors.ShouldNotContain("alice");
     }
 
-    #endregion
+    //#endregion
 
-    #region Cardinality Tests
+    //#region Cardinality Tests
 
     [Fact]
     public void GetHyperedgesByCardinality_ShouldFilter()
@@ -196,8 +196,8 @@ public class HypergraphTests
 
         var size2 = graph.GetHyperedgesByCardinality(2).ToList();
 
-        size2.Select(e => e.Id).Should().Contain(new[] { 1, 3 });
-        size2.Select(e => e.Id).Should().NotContain(2);
+        size2.Select(e => e.Id).ShouldContain(new[] { 1, 3 });
+        size2.Select(e => e.Id).ShouldNotContain(2);
     }
 
     [Fact]
@@ -208,12 +208,12 @@ public class HypergraphTests
         graph.AddHyperedge(2, new[] { "a", "b", "c", "d" });
         graph.AddHyperedge(3, new[] { "x", "y", "z" });
 
-        graph.Rank.Should().Be(4);
+        graph.Rank.ShouldBe(4);
     }
 
-    #endregion
+    //#endregion
 
-    #region Lookup Tests
+    //#region Lookup Tests
 
     [Fact]
     public void HasHyperedge_ShouldCheckExactMatch()
@@ -221,8 +221,8 @@ public class HypergraphTests
         var graph = new Hypergraph<string, int>();
         graph.AddHyperedge(1, new[] { "a", "b", "c" });
 
-        graph.HasHyperedge(new[] { "a", "b", "c" }).Should().BeTrue();
-        graph.HasHyperedge(new[] { "a", "b" }).Should().BeFalse();
+        graph.HasHyperedge(new[] { "a", "b", "c" }).ShouldBeTrue();
+        graph.HasHyperedge(new[] { "a", "b" }).ShouldBeFalse();
     }
 
     [Fact]
@@ -231,13 +231,13 @@ public class HypergraphTests
         var graph = new Hypergraph<string, int>();
         graph.AddHyperedge(1, new[] { "a", "b", "c" });
 
-        graph.HasHyperedgeContaining(new[] { "a", "b" }).Should().BeTrue();
-        graph.HasHyperedgeContaining(new[] { "a", "d" }).Should().BeFalse();
+        graph.HasHyperedgeContaining(new[] { "a", "b" }).ShouldBeTrue();
+        graph.HasHyperedgeContaining(new[] { "a", "d" }).ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Conversion Tests
+    //#region Conversion Tests
 
     [Fact]
     public void ToCliqueGraph_ShouldConvertToRegularGraph()
@@ -247,9 +247,9 @@ public class HypergraphTests
 
         var cliqueGraph = graph.ToCliqueGraph();
 
-        cliqueGraph.ContainsEdge("a", "b").Should().BeTrue();
-        cliqueGraph.ContainsEdge("b", "c").Should().BeTrue();
-        cliqueGraph.ContainsEdge("a", "c").Should().BeTrue();
+        cliqueGraph.ContainsEdge("a", "b").ShouldBeTrue();
+        cliqueGraph.ContainsEdge("b", "c").ShouldBeTrue();
+        cliqueGraph.ContainsEdge("a", "c").ShouldBeTrue();
     }
 
     [Fact]
@@ -261,13 +261,13 @@ public class HypergraphTests
 
         var dual = graph.GetDual();
 
-        dual.VertexCount.Should().Be(2);
-        dual.HyperedgeCount.Should().Be(3);
+        dual.VertexCount.ShouldBe(2);
+        dual.HyperedgeCount.ShouldBe(3);
     }
 
-    #endregion
+    //#endregion
 
-    #region Traversal Tests
+    //#region Traversal Tests
 
     [Fact]
     public void BreadthFirstTraversal_ShouldVisitConnectedVertices()
@@ -278,12 +278,12 @@ public class HypergraphTests
 
         var result = graph.BreadthFirstTraversal("a").ToList();
 
-        result.Should().Contain(new[] { "a", "b", "c", "d" });
+        result.ShouldContain(new[] { "a", "b", "c", "d" });
     }
 
-    #endregion
+    //#endregion
 
-    #region Connected Components Tests
+    //#region Connected Components Tests
 
     [Fact]
     public void GetConnectedComponents_ShouldGroupCorrectly()
@@ -297,9 +297,9 @@ public class HypergraphTests
         components.Should().HaveCount(2);
     }
 
-    #endregion
+    //#endregion
 
-    #region Remove Tests
+    //#region Remove Tests
 
     [Fact]
     public void RemoveVertex_ShouldRemoveIncidentHyperedges()
@@ -309,7 +309,7 @@ public class HypergraphTests
 
         graph.RemoveVertex("remove");
 
-        graph.HyperedgeCount.Should().Be(0);
+        graph.HyperedgeCount.ShouldBe(0);
     }
 
     [Fact]
@@ -320,13 +320,13 @@ public class HypergraphTests
 
         graph.RemoveHyperedge(1);
 
-        graph.VertexCount.Should().Be(2);
-        graph.HyperedgeCount.Should().Be(0);
+        graph.VertexCount.ShouldBe(2);
+        graph.HyperedgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Clear Tests
+    //#region Clear Tests
 
     [Fact]
     public void Clear_ShouldResetGraph()
@@ -337,13 +337,13 @@ public class HypergraphTests
 
         graph.Clear();
 
-        graph.VertexCount.Should().Be(0);
-        graph.HyperedgeCount.Should().Be(0);
+        graph.VertexCount.ShouldBe(0);
+        graph.HyperedgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Real-World Scenario Tests
+    //#region Real-World Scenario Tests
 
     [Fact]
     public void CoAuthorshipScenario_ShouldWorkCorrectly()
@@ -357,14 +357,14 @@ public class HypergraphTests
         var paper3 = graph.AddHyperedge(3, new[] { "Charlie", "Diana" }, 
             "Paper 3: Two authors".Humanize());
 
-        graph.VertexCount.Should().Be(4);
-        graph.HyperedgeCount.Should().Be(3);
+        graph.VertexCount.ShouldBe(4);
+        graph.HyperedgeCount.ShouldBe(3);
         
         var alicePapers = graph.GetIncidentHyperedges("Alice");
         alicePapers.Should().HaveCount(2);
         
         var aliceCoauthors = graph.GetNeighbors("Alice");
-        aliceCoauthors.Should().Contain(new[] { "Bob", "Charlie" });
+        aliceCoauthors.ShouldContain(new[] { "Bob", "Charlie" });
     }
 
     [Fact]
@@ -377,8 +377,8 @@ public class HypergraphTests
         graph.AddHyperedge("committee", new[] { "emp1", "emp3", "emp5" });
 
         var emp1Groups = graph.GetIncidentHyperedges("emp1");
-        emp1Groups.Select(e => e.Id).Should().Contain(new[] { "team-a", "committee" });
+        emp1Groups.Select(e => e.Id).ShouldContain(new[] { "team-a", "committee" });
     }
 
-    #endregion
+    //#endregion
 }

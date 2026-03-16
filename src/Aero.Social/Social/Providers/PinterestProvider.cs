@@ -494,7 +494,7 @@ public class PinterestProvider : SocialProviderBase
     private string GetClientSecret() => _configuration["PINTEREST_CLIENT_SECRET"] ?? throw new InvalidOperationException("PINTEREST_CLIENT_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class PinterestTokenResponse
     {
@@ -628,5 +628,5 @@ public class PinterestProvider : SocialProviderBase
         public long? Save { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

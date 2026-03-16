@@ -1,4 +1,3 @@
-using System;
 using Aero.DataStructures.Trees.Persistence.Linq.Translation;
 using Microsoft.Extensions.Logging;
 

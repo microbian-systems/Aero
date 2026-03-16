@@ -1,5 +1,3 @@
-using System;
-
 namespace Electra.DataStructures.Trees;
 
 /// <summary>

@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -14,9 +14,9 @@ public class TrieTests
         trie.Insert("app");
             
         // Assert
-        trie.Search("app").Should().BeTrue();
-        trie.Search("apple").Should().BeTrue();
-        trie.Search("appl").Should().BeFalse();
+        trie.Search("app").ShouldBeTrue();
+        trie.Search("apple").ShouldBeTrue();
+        trie.Search("appl").ShouldBeFalse();
     }
 
     [Fact]
@@ -29,9 +29,9 @@ public class TrieTests
         trie.Insert("banana");
             
         // Assert
-        trie.StartsWith("ap").Should().BeTrue();
-        trie.StartsWith("ban").Should().BeTrue();
-        trie.StartsWith("can").Should().BeFalse();
+        trie.StartsWith("ap").ShouldBeTrue();
+        trie.StartsWith("ban").ShouldBeTrue();
+        trie.StartsWith("can").ShouldBeFalse();
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class TrieTests
         trie.Delete("apple");
 
         // Assert
-        trie.Search("apple").Should().BeFalse();
-        trie.Search("app").Should().BeTrue();
+        trie.Search("apple").ShouldBeFalse();
+        trie.Search("app").ShouldBeTrue();
     }
 }

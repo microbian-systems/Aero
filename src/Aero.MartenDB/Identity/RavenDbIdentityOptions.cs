@@ -16,7 +16,7 @@ public class RavenDbIdentityOptions
 
     /// <summary>
     ///   If set, changes detected in <see cref="RoleStore{TRole}" /> and <see cref="UserStore{TUser,TRole}"/>
-    ///   will be saved to Raven immediately (by calling <see cref="IAsyncDocumentSession.SaveChangesAsync"/>).
+    ///   will be saved to Raven immediately (by calling <see cref="IDocumentSession.SaveChangesAsync"/>).
     ///   Leave false (the default) if you've implemented the save changes call in middleware. 
     /// </summary>
     public bool AutoSaveChanges { get; set; }

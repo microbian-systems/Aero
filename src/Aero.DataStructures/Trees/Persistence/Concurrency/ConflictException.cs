@@ -1,5 +1,3 @@
-using System;
-
 namespace Aero.DataStructures.Trees.Persistence.Concurrency;
 
 public sealed class ConflictException : Exception

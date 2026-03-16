@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -20,7 +20,7 @@ public class BPlusTreeTests
         var found = bptree.Find(30);
 
         // Assert
-        found.Should().Be(30);
+        found.ShouldBe(30);
     }
 
     [Fact]
@@ -39,6 +39,6 @@ public class BPlusTreeTests
 
         // Assert
         range.Should().HaveCount(3);
-        range.Should().ContainInOrder(20, 30, 40);
+        range.ShouldContainInOrder(20, 30, 40);
     }
 }

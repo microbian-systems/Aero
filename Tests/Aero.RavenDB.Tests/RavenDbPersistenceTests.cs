@@ -1,9 +1,6 @@
 using Aero.Models.Entities;
-using Aero.Core.Railway;
 using FakeItEasy;
-using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Raven.Client.Documents;
 
 namespace Aero.RavenDB.Tests;
 
@@ -19,7 +16,7 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         _loggerFactory = A.Fake<ILoggerFactory>();
         A.CallTo(() => _loggerFactory.CreateLogger(A<string>._)).Returns(A.Fake<ILogger>());
 
-        _unitOfWork = new RavenDbUnitOfWork(DocumentStore.OpenAsyncSession(), _uowLogger, _loggerFactory);
+        _unitOfWork = new RavenDbUnitOfWork(DocumentStore.LightweightSession(), _uowLogger, _loggerFactory);
     }
 
     [Fact]
@@ -41,12 +38,12 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         var savedCount = await _unitOfWork.SaveChangesAsync();
 
         // Assert
-        savedCount.Should().BeGreaterThan(0);
+        savedCount.ShouldBeGreaterThan(0);
 
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var persistedUser = await session.LoadAsync<AeroUser>(user.Id);
-        persistedUser.Should().NotBeNull();
-        persistedUser.UserName.Should().Be("uowuser");
+        persistedUser.ShouldNotBeNull();
+        persistedUser.UserName.ShouldBe("uowuser");
     }
 
     [Fact]
@@ -72,8 +69,8 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         var result = await _unitOfWork.Users.FindByIdAsync(user.Id);
 
         // Assert
-        result.IsSome.Should().BeTrue();
-        result.IfSome(u => u.Id.Should().Be(user.Id));
+        result.IsSome.ShouldBeTrue();
+        result.IfSome(u => u.Id.ShouldBe(user.Id));
     }
 
     [Fact]
@@ -90,11 +87,11 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         var savedCount = await _unitOfWork.SaveChangesAsync();
 
         // Assert
-        savedCount.Should().BeGreaterThanOrEqualTo(2);
+        savedCount.ShouldBeGreaterThanOrEqualTo(2);
 
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var count = await session.Query<AeroUser>().CountAsync();
-        count.Should().Be(2);
+        count.ShouldBe(2);
     }
 
     [Fact]
@@ -118,10 +115,10 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         await _unitOfWork.SaveChangesAsync();
 
         // Assert
-        deleted.Should().BeTrue();
-        using var session = DocumentStore.OpenAsyncSession();
+        deleted.ShouldBeTrue();
+        using var session = DocumentStore.LightweightSession();
         var persistedUser = await session.LoadAsync<AeroUser>(user.Id);
-        persistedUser.Should().BeNull();
+        persistedUser.ShouldBeNull();
     }
 
     [Fact]
@@ -139,7 +136,7 @@ public class RavenDbPersistenceTests : RavenDbTestBase
 
         // Assert
         results.Should().HaveCount(1);
-        results.First().UserName.Should().Be("find1");
+        results.First().UserName.ShouldBe("find1");
     }
 
     [Fact]
@@ -154,6 +151,6 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         var exists = await _unitOfWork.Users.ExistsAsync(user.Id);
 
         // Assert
-        exists.Should().BeTrue();
+        exists.ShouldBeTrue();
     }
 }

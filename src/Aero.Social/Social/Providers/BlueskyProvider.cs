@@ -490,7 +490,7 @@ public class BlueskyProvider : SocialProviderBase
             ?? throw new InvalidOperationException("Invalid auth body");
     }
 
-    #region DTOs
+    //#region DTOs
 
     private class BlueskyAuthBody
     {
@@ -652,5 +652,5 @@ public class BlueskyProvider : SocialProviderBase
         public string? Cid { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

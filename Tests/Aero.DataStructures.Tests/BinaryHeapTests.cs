@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -19,8 +19,8 @@ public class BinaryHeapTests
         var min = heap.Extract();
 
         // Assert
-        min.Should().Be(1);
-        heap.Peek().Should().Be(3);
+        min.ShouldBe(1);
+        heap.Peek().ShouldBe(3);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class BinaryHeapTests
         var max = heap.Extract();
 
         // Assert
-        max.Should().Be(8);
-        heap.Peek().Should().Be(5);
+        max.ShouldBe(8);
+        heap.Peek().ShouldBe(5);
     }
 }

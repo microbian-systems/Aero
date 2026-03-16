@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -17,8 +17,8 @@ public class AvlTreeTests
         avl.Insert(30); // This should trigger a left rotation
 
         // Assert
-        avl.Root.Value.Should().Be(20);
-        ((AvlTreeNode<int>)avl.Root.Left).Value.Should().Be(10);
-        ((AvlTreeNode<int>)avl.Root.Right).Value.Should().Be(30);
+        avl.Root.Value.ShouldBe(20);
+        ((AvlTreeNode<int>)avl.Root.Left).Value.ShouldBe(10);
+        ((AvlTreeNode<int>)avl.Root.Right).Value.ShouldBe(30);
     }
 }

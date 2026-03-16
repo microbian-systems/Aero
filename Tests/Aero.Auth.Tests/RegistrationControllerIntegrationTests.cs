@@ -1,5 +1,5 @@
 using System.Net;
-using FluentAssertions;
+using Shouldly;
 
 namespace Aero.Auth.Tests;
 
@@ -21,7 +21,7 @@ public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFa
         var response = await _client.GetAsync("/Registration");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFa
 
         // Assert
         // Response depends on whether endpoint exists and how it's configured
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound, HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound, HttpStatusCode.BadRequest);
     }
 
     [Theory]
@@ -49,7 +49,7 @@ public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFa
 
         // Assert
         // Most endpoints will return NotFound if not implemented, which is expected
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
     [Theory]
@@ -65,6 +65,6 @@ public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFa
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
     }
 }

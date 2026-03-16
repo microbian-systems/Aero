@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
@@ -276,7 +275,7 @@ public class MastodonProvider : SocialProviderBase
     private string GetClientSecret() => _configuration["MASTODON_CLIENT_SECRET"] ?? throw new InvalidOperationException("MASTODON_CLIENT_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class MastodonTokenResponse
     {
@@ -329,5 +328,5 @@ public class MastodonProvider : SocialProviderBase
         public string? Url { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

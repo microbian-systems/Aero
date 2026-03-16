@@ -187,7 +187,7 @@ public class MediumProvider : SocialProviderBase
         public string? ApiKey { get; set; }
     }
 
-    #region DTOs
+    //#region DTOs
 
     private class MediumUserResponse
     {
@@ -243,5 +243,5 @@ public class MediumProvider : SocialProviderBase
         public string Url { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

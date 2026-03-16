@@ -1,28 +1,19 @@
-using Aero.Core.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Aero.MartenDB;
 
-public interface IRavenDbUnitOfWork : IAsyncUnitOfWork
+public class AeroUnitOfWork : IAeroDbUnitOfWork
 {
-    // Add your repository property here
-    IAeroUserRepository Users { get; }
-    IAsyncDocumentSession Session { get; }
-}
-
-
-public class RavenDbUnitOfWork : IRavenDbUnitOfWork
-{
-    private readonly IAsyncDocumentSession _session;
-    private readonly ILogger<RavenDbUnitOfWork> _log;
+    private readonly IDocumentSession _session;
+    private readonly ILogger<AeroUnitOfWork> _log;
     private readonly ILoggerFactory _loggerFactory;
 
     // Backing field for the repository
     private IAeroUserRepository? _users;
 
-    public RavenDbUnitOfWork(
-        IAsyncDocumentSession session, 
-        ILogger<RavenDbUnitOfWork> log,
+    public AeroUnitOfWork(
+        IDocumentSession session, 
+        ILogger<AeroUnitOfWork> log,
         ILoggerFactory loggerFactory) 
     {
         _session = session;
@@ -30,7 +21,7 @@ public class RavenDbUnitOfWork : IRavenDbUnitOfWork
         _loggerFactory = loggerFactory;
     }
 
-    public IAsyncDocumentSession Session => _session;
+    public IDocumentSession Session => _session;
 
     // Lazy initialization ensures the repo is only created when accessed
     // and guarantees it uses the UoW's specific session.
@@ -50,20 +41,21 @@ public class RavenDbUnitOfWork : IRavenDbUnitOfWork
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         // Your existing logic
-        var changes = _session.Advanced.WhatChanged();
-        var count = changes.Count;
-        
+        // var changes = _session.Advanced.WhatChanged();
+        // var count = changes.Count;
         try
         {
+            var count = _session.PendingChanges.Deletions().Count()
+                + _session.PendingChanges.Inserts().Count()
+                + _session.PendingChanges.Updates().Count();
             await _session.SaveChangesAsync(cancellationToken);
+            return count;
         }
         catch (Exception ex)
         {
             _log.LogError(ex, "Failed to save changes to RavenDB");
             return 0; // Or re-throw, depending on your error handling strategy
         }
-
-        return count;
     }
 
     public Task StartTransactionAsync(CancellationToken cancellationToken = default)
@@ -82,7 +74,8 @@ public class RavenDbUnitOfWork : IRavenDbUnitOfWork
     public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
         // To rollback in RavenDB session, we clear the session state.
-        _session.Advanced.Clear();
+        // todo - rollback marten transaction
+        //_session.Advanced.Clear();
         return Task.CompletedTask;
     }
 

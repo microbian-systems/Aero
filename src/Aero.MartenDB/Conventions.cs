@@ -1,6 +1,7 @@
 ﻿using Aero.MartenDB.Identity;
 using Aero.Models.Entities;
 using Microsoft.AspNetCore.Identity;
+using ThrowGuard;
 
 namespace Aero.MartenDB;
 
@@ -32,8 +33,10 @@ public static class Conventions
     /// <returns>Something like "AppUsers"</returns>
     public static string CollectionNameFor<TUser>(IDocumentStore db)
     {
-        var entityName = db.Conventions.GetCollectionName(typeof(TUser));
-        return db.Conventions.TransformTypeCollectionNameToDocumentIdPrefix(entityName);
+        Throw.NotImplemented();
+        // var entityName = db.Conventions.GetCollectionName(typeof(TUser));
+        // return db.Conventions.TransformTypeCollectionNameToDocumentIdPrefix(entityName);
+        return null;
     }
 
     /// <summary>
@@ -44,7 +47,9 @@ public static class Conventions
     /// <returns>Something like "AppUsers/"</returns>
     public static string CollectionNameWithSeparator<TUser>(IDocumentStore db)
     {
-        return CollectionNameFor<TUser>(db) + db.Conventions.IdentityPartsSeparator;
+        Throw.NotImplemented();
+        // return CollectionNameFor<TUser>(db) + db.Conventions.IdentityPartsSeparator;
+        return null;
     }
 
     /// <summary>
