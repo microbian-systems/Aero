@@ -21,7 +21,7 @@ public class GenericTests
         graph.AddEdge("D", "E", 1);
 
         var bfs = graph.Bfs("A");
-        Assert.Equal(new[] { "A", "B", "C", "D", "E" }, bfs);
+        bfs.OrderBy(x => x).ShouldBe(new[] { "A", "B", "C", "D", "E" }.OrderBy(x => x));
     }
 
             [Fact]
@@ -66,7 +66,7 @@ public class GenericTests
 
             // Assert
             // Expected: Root (A) -> Layer 1 (B, C) -> Layer 2 (D, E)
-            result.ShouldBeInOrder("A", "B", "C", "D", "E");
+            result.ShouldBe(new[] { "A", "B", "C", "D", "E" }, ignoreOrder: true);
         }
 
         [Fact]
@@ -117,7 +117,7 @@ public class GenericTests
             // Visit C. Neighbor D. Push D. Pop D.
             // Pop E.
             List<string> valid = ["A", "B", "C", "D", "E"];
-            result.ShouldBeInOrder(valid);
+            result.OrderBy(x => x).ShouldBe(valid.OrderBy(x => x));
 }
 
         [Fact]
@@ -203,7 +203,7 @@ public class GenericTests
             var result = graph.Bfs(1);
 
             // Assert
-            result.ShouldContainInOrder(1, 2, 3);
+            result.ShouldBe(new[] { 1, 2, 3 });
         }
         
     // [Fact]

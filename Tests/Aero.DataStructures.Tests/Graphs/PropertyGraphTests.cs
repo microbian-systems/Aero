@@ -168,7 +168,7 @@ public class PropertyGraphTests
 
         var friendEdges = graph.GetOutEdges("a", "FRIEND").ToList();
 
-        friendEdges.ShouldContainSingle();
+        friendEdges.ShouldHaveSingleItem();
         friendEdges[0].TargetId.ShouldBe("b");
     }
 
@@ -199,7 +199,7 @@ public class PropertyGraphTests
 
         var neighbors = graph.GetOutNeighbors("start").ToList();
 
-        neighbors.Select(n => n.Id).ShouldContain(new[] { "end1", "end2" });
+        neighbors.Select(n => n.Id).ShouldBe(new[] { "end1", "end2" });
     }
 
     //#endregion

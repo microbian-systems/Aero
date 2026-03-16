@@ -115,7 +115,7 @@ public class GraphTests
         // However, A must be first. C must be last (distance 2).
         result.First().ShouldBe("A");
         result.Last().ShouldBe("C");
-        result.ShouldContain(new[] { "A", "B", "C", "D" });
+        result.OrderBy(x => x).ShouldBe(new[] { "A", "B", "C", "D" }.OrderBy(x => x));
         result.Count.ShouldBe(4);
     }
 
@@ -141,7 +141,7 @@ public class GraphTests
         // If it pushes B then D, it pops D first -> A, D...
         // If it pushes D then B, it pops B first -> A, B, C...
         result.First().ShouldBe("A");
-        result.ShouldContain(new[] { "A", "B", "C", "D" });
+        result.OrderBy(x => x).ShouldBe(new[] { "A", "B", "C", "D" }.OrderBy(x => x));
         result.Count.ShouldBe(4);
     }
 

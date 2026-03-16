@@ -29,10 +29,15 @@ public class JwtTokenServiceSimplifiedTests
     public void Constructor_WithValidConfig_ShouldSetAccessTokenLifetime()
     {
         // Arrange
-        _mockConfig["Auth:AccessTokenLifetimeSeconds"].Returns("600");
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "Auth:AccessTokenLifetimeSeconds", "600" }
+            })
+            .Build();
 
         // Act
-        var service = new JwtTokenService(_mockKeyStore, _mockLogger, _mockConfig);
+        var service = new JwtTokenService(_mockKeyStore, _mockLogger, config);
 
         // Assert
         service.AccessTokenLifetime.ShouldBe(600);
@@ -42,10 +47,10 @@ public class JwtTokenServiceSimplifiedTests
     public void Constructor_WithoutAccessTokenConfig_ShouldUseDefault()
     {
         // Arrange
-        _mockConfig["Auth:AccessTokenLifetimeSeconds"].Returns((string?)null);
+        var config = new ConfigurationBuilder().Build();
 
         // Act
-        var service = new JwtTokenService(_mockKeyStore, _mockLogger, _mockConfig);
+        var service = new JwtTokenService(_mockKeyStore, _mockLogger, config);
 
         // Assert
         service.AccessTokenLifetime.ShouldBe(300);
@@ -130,8 +135,13 @@ public class JwtTokenServiceSimplifiedTests
     public void AccessTokenLifetime_WithVariousConfigs_ShouldReturnCorrectValue(string configValue)
     {
         // Arrange
-        _mockConfig["Auth:AccessTokenLifetimeSeconds"].Returns(configValue);
-        var service = new JwtTokenService(_mockKeyStore, _mockLogger, _mockConfig);
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "Auth:AccessTokenLifetimeSeconds", configValue }
+            })
+            .Build();
+        var service = new JwtTokenService(_mockKeyStore, _mockLogger, config);
 
         // Act
         var lifetime = service.AccessTokenLifetime;

@@ -80,7 +80,7 @@ public class WeightedGraphTests
     public void AddEdge_ShouldIncreaseEdgeCount()
     {
         var graph = new WeightedGraph<string, int>();
-        
+
         graph.AddEdge("A", "B", 5);
 
         graph.EdgeCount.ShouldBe(1);
@@ -154,8 +154,10 @@ public class WeightedGraphTests
 
         var neighbors = graph.GetNeighborsWithWeights("center");
 
-        neighbors.ShouldContainKey("n1").WhoseValue.ShouldBe(10);
-        neighbors.ShouldContainKey("n2").WhoseValue.ShouldBe(20);
+        neighbors.ShouldContainKey("n1"); //.ShouldBe(10);
+        neighbors.ShouldContainKeyAndValue("n1", 10);
+        neighbors.ShouldContainKey("n2");
+        neighbors.ShouldContainKeyAndValue("n2", 20);
     }
 
     //#endregion
@@ -294,7 +296,7 @@ public class WeightedGraphTests
     public void WeightedGraph_ShouldWorkWithDoubleWeights()
     {
         var graph = new WeightedGraph<string, double>();
-        
+
         graph.AddEdge("A", "B", 1.5);
         graph.AddEdge("B", "C", 2.7);
 

@@ -5,14 +5,14 @@ using Shouldly;
 
 namespace Aero.Auth.Tests;
 
-public class RavenDbAuthIntegrationTests(RavenDbAuthWebAppFactory factory) : IClassFixture<RavenDbAuthWebAppFactory>
+public class MartenAuthIntegrationTests(TestWebAppFactory factory) : IClassFixture<TestWebAppFactory>
 {
     private readonly HttpClient _client = factory.CreateClient();
 
     [Fact]
-    public async Task Registration_And_Login_ShouldWork_WithRavenDB()
+    public async Task Registration_And_Login_ShouldWork_WithMarten()
     {
-        var email = $"raven_test_{Guid.NewGuid()}@example.com";
+        var email = $"marten_test_{Guid.NewGuid()}@example.com";
         var password = "Password123!";
 
         // 1. Register

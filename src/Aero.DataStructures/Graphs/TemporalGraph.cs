@@ -61,7 +61,7 @@ namespace Aero.DataStructures.Graphs;
 public class TemporalGraph<TVertex, TEdgeId, TTime>
     where TVertex : notnull
     where TEdgeId : notnull
-    where TTime : IComparable<TTime>
+    where TTime : struct, IComparable<TTime>
 {
     private readonly Dictionary<TVertex, TemporalVertex> _vertices = new();
     private readonly Dictionary<TEdgeId, TemporalEdge> _edges = new();
@@ -105,7 +105,7 @@ public class TemporalGraph<TVertex, TEdgeId, TTime>
             if (time.CompareTo(Start) < 0)
                 return false;
 
-            if (End != null && time.CompareTo(End) >= 0)
+            if (End.HasValue && time.CompareTo(End.Value) >= 0)
                 return false;
 
             return true;
@@ -116,10 +116,10 @@ public class TemporalGraph<TVertex, TEdgeId, TTime>
         /// </summary>
         public bool Overlaps(TimeInterval other)
         {
-            if (End != null && other.Start.CompareTo(End) >= 0)
+            if (End.HasValue && other.Start.CompareTo(End.Value) >= 0)
                 return false;
 
-            if (other.End != null && Start.CompareTo(other.End) >= 0)
+            if (other.End.HasValue && Start.CompareTo(other.End.Value) >= 0)
                 return false;
 
             return true;
@@ -538,15 +538,15 @@ public class TemporalGraph<TVertex, TEdgeId, TTime>
         foreach (var vertex in _vertices.Values)
         {
             points.Add(vertex.Lifetime.Start);
-            if (vertex.Lifetime.End != null)
-                points.Add(vertex.Lifetime.End);
+            if (vertex.Lifetime.End.HasValue)
+                points.Add(vertex.Lifetime.End.Value);
         }
 
         foreach (var edge in _edges.Values)
         {
             points.Add(edge.Lifetime.Start);
-            if (edge.Lifetime.End != null)
-                points.Add(edge.Lifetime.End);
+            if (edge.Lifetime.End.HasValue)
+                points.Add(edge.Lifetime.End.Value);
         }
 
         return points.OrderBy(p => p).ToList();

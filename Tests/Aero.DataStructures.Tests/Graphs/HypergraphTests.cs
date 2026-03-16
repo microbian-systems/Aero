@@ -64,7 +64,7 @@ public class HypergraphTests
         graph.AddVertex("a");
         graph.AddVertex("b");
 
-        graph.Vertices.ShouldContain(new[] { "a", "b" });
+        graph.Vertices.ShouldBe(new[] { "a", "b" });
     }
 
     //#endregion
@@ -80,7 +80,7 @@ public class HypergraphTests
         var edge = graph.AddHyperedge(1, vertices, "Co-authorship".Humanize());
 
         edge.ShouldNotBeNull();
-        edge!.Vertices.ShouldContain(vertices);
+        edge!.Vertices.ShouldBe(vertices);
         edge.Cardinality.ShouldBe(3);
     }
 
@@ -150,7 +150,7 @@ public class HypergraphTests
 
         var aliceEdges = graph.GetIncidentHyperedges("alice");
 
-        aliceEdges.Select(e => e.Id).ShouldContain(new[] { 1, 2 });
+        aliceEdges.Select(e => e.Id).ShouldBe(new[] { 1, 2 });
         aliceEdges.Select(e => e.Id).ShouldNotContain(3);
     }
 
@@ -178,7 +178,7 @@ public class HypergraphTests
 
         var neighbors = graph.GetNeighbors("alice");
 
-        neighbors.ShouldContain(new[] { "bob", "charlie", "diana" });
+        neighbors.ShouldBe(new[] { "bob", "charlie", "diana" });
         neighbors.ShouldNotContain("alice");
     }
 
@@ -196,7 +196,7 @@ public class HypergraphTests
 
         var size2 = graph.GetHyperedgesByCardinality(2).ToList();
 
-        size2.Select(e => e.Id).ShouldContain(new[] { 1, 3 });
+        size2.Select(e => e.Id).ShouldBe(new[] { 1, 3 });
         size2.Select(e => e.Id).ShouldNotContain(2);
     }
 
@@ -278,7 +278,7 @@ public class HypergraphTests
 
         var result = graph.BreadthFirstTraversal("a").ToList();
 
-        result.ShouldContain(new[] { "a", "b", "c", "d" });
+        result.ShouldBe(new[] { "a", "b", "c", "d" });
     }
 
     //#endregion
@@ -364,7 +364,7 @@ public class HypergraphTests
         alicePapers.Count().ShouldBe(2);
         
         var aliceCoauthors = graph.GetNeighbors("Alice");
-        aliceCoauthors.ShouldContain(new[] { "Bob", "Charlie" });
+        aliceCoauthors.ShouldBe(new[] { "Bob", "Charlie" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -377,7 +377,7 @@ public class HypergraphTests
         graph.AddHyperedge("committee", new[] { "emp1", "emp3", "emp5" });
 
         var emp1Groups = graph.GetIncidentHyperedges("emp1");
-        emp1Groups.Select(e => e.Id).ShouldContain(new[] { "team-a", "committee" });
+        emp1Groups.Select(e => e.Id).ShouldBe(new[] { "team-a", "committee" }, ignoreOrder: true);
     }
 
     //#endregion

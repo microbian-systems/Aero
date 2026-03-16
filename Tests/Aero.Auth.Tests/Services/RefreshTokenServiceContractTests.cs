@@ -10,7 +10,7 @@ namespace Aero.Auth.Tests.Services;
 /// <summary>
 /// Unit tests for refresh token service focusing on interface contracts and behavior
 /// </summary>
-public class RefreshTokenServiceContractTests : RavenTestDriver
+public class RefreshTokenServiceContractTests : AeroDbTestDriver
 {
     private readonly ILogger<RefreshTokenService> _mockLogger;
     private readonly IConfiguration _config;
@@ -98,7 +98,6 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
     public async Task GenerateRefreshToken_WithValidParameters_ShouldReturnNonEmptyToken()
     {
         // Arrange
-        using var store = GetDocumentStore();
         using var session = store.LightweightSession();
 
         var service = new RefreshTokenService(session, _mockLogger, _config);
@@ -146,7 +145,6 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
     public async Task RotateRefreshToken_WithInvalidToken_ShouldThrowInvalidOperationException()
     {
         // Arrange
-        using var store = GetDocumentStore();
         using var session = store.LightweightSession();
 
         var service = new RefreshTokenService(session, _mockLogger, _config);
@@ -155,7 +153,7 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
         Func<Task> act = async () => await service.RotateRefreshTokenAsync("invalid-token", "mobile");
 
         // Assert
-        act.ShouldThrow<InvalidOperationException>();
+        await act.ShouldThrowAsync<InvalidOperationException>();
     }
 
     // Token Revocation Tests
@@ -171,6 +169,6 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
         Func<Task> act = async () => await service.RevokeRefreshTokenAsync(null!);
 
         // Assert
-        act.ShouldThrow<ArgumentNullException>();
+        await act.ShouldThrowAsync<ArgumentNullException>();
     }
 }

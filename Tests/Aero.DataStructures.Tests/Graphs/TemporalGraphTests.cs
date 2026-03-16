@@ -219,7 +219,7 @@ public class TemporalGraphTests
 
         var arrival = graph.GetEarliestArrival("isolated", "target", DateTime.Now);
 
-        arrival.Equals(default(DateTime)).ShouldBeTrue();
+        arrival.ShouldBeNull();
     }
 
     //#endregion
@@ -241,7 +241,7 @@ public class TemporalGraphTests
 
         var edges = graph.GetEdgesInInterval(baseTime, baseTime.AddDays(7)).ToList();
 
-        edges.Select(e => e.Id).ShouldContain(new[] { 1, 2 });
+        edges.Select(e => e.Id).ShouldBe(new[] { 1, 2 });
         edges.Select(e => e.Id).ShouldNotContain(3);
     }
 
@@ -258,7 +258,7 @@ public class TemporalGraphTests
 
         var changePoints = graph.GetChangePoints();
 
-        changePoints.ShouldContain(new[] { t1, t2, t3 });
+        changePoints.ShouldBe(new[] { t1, t2, t3 });
     }
 
     //#endregion

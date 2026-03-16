@@ -180,7 +180,7 @@ public class DirectedAcyclicGraphTests
         var result = dag.TopologicalSort();
 
         result.Count().ShouldBe(3);
-        result.ShouldContain(new[] { "A", "B", "C" });
+        result.ShouldBe(new[] { "A", "B", "C" });
     }
 
     [Fact]
@@ -239,7 +239,7 @@ public class DirectedAcyclicGraphTests
 
         var sources = dag.GetSources().ToList();
 
-        sources.ShouldContainSingle("root");
+        sources.ShouldHaveSingleItem().ShouldBe("root");
     }
 
     [Fact]
@@ -251,7 +251,7 @@ public class DirectedAcyclicGraphTests
 
         var sinks = dag.GetSinks().ToList();
 
-        sinks.ShouldContain(new[] { "leaf1", "leaf2" });
+        sinks.ShouldBe(new[] { "leaf1", "leaf2" });
     }
 
     //#endregion
@@ -285,7 +285,7 @@ public class DirectedAcyclicGraphTests
 
         var path = dag.GetLongestPath();
 
-        path.ShouldContainInOrder("A", "B", "C");
+        path.ShouldBe(new[] { "A", "B", "C" });
     }
 
     //#endregion
@@ -302,7 +302,7 @@ public class DirectedAcyclicGraphTests
 
         var ancestors = dag.GetAncestors("C");
 
-        ancestors.ShouldContain(new[] { "A", "B", "X" });
+        ancestors.OrderBy(x => x).ShouldBe(new[] { "A", "B", "X" }.OrderBy(x => x));
     }
 
     [Fact]
@@ -315,7 +315,7 @@ public class DirectedAcyclicGraphTests
 
         var descendants = dag.GetDescendants("A");
 
-        descendants.ShouldContain(new[] { "B", "C", "D" });
+        descendants.OrderBy(x => x).ShouldBe(new[] { "B", "C", "D" }.OrderBy(x => x));
     }
 
     //#endregion
@@ -333,7 +333,7 @@ public class DirectedAcyclicGraphTests
 
         var lcas = dag.GetLowestCommonAncestors("left", "right");
 
-        lcas.ShouldContainSingle("root");
+        lcas.ShouldHaveSingleItem().ShouldBe("root");
     }
 
     //#endregion

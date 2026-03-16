@@ -139,7 +139,7 @@ public class BipartiteGraphTests
 
         var neighbors = graph.GetNeighbors("worker");
 
-        neighbors.ShouldContain(new[] { "job1", "job2" });
+        neighbors.ShouldBe(new[] { "job1", "job2" });
     }
 
     //#endregion

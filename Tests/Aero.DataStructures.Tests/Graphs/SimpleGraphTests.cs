@@ -228,7 +228,7 @@ public class SimpleGraphTests
 
         var neighbors = graph.GetNeighbors("center");
 
-        neighbors.ShouldContain(new[] { "n1", "n2", "n3" });
+        neighbors.ShouldBe(new[] { "n1", "n2", "n3" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -239,7 +239,7 @@ public class SimpleGraphTests
         graph.AddVertex(2);
         graph.AddVertex(3);
 
-        graph.GetVertices().ShouldContain(new[] { 1, 2, 3 });
+        graph.GetVertices().ShouldBe(new[] { 1, 2, 3 }, ignoreOrder: true);
     }
 
     //#endregion
@@ -638,7 +638,7 @@ public class SimpleGraphTests
         graph.VertexCount.ShouldBe(3);
         graph.EdgeCount.ShouldBe(4);
         
-        graph.GetNeighbors("alice").ShouldContain(new[] { "bob", "charlie" });
+        graph.GetNeighbors("alice").ShouldBe(new[] { "bob", "charlie" }, ignoreOrder: true);
     }
 
     //#endregion
