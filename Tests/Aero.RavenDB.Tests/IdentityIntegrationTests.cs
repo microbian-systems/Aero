@@ -1,7 +1,7 @@
 using Aero.Core;
 using Aero.Core.Identity;
 using Aero.Models.Entities;
-using Aero.RavenDB.Extensions;
+using Aero.MartenDB.Extensions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

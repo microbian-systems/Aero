@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Aero.Core;
 using Aero.Core.Identity;
 using Aero.Models.Entities;
-using Aero.RavenDB.Identity;
+using Aero.MartenDB.Identity;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;

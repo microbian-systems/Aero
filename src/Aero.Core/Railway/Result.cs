@@ -9,7 +9,7 @@ public abstract record Result<TError, TValue>
 {
     public sealed record Ok(TValue Value) : Result<TError, TValue>;
     public sealed record Failure(TError Error) : Result<TError, TValue>;
-    
+
     public static implicit operator Result<TError, TValue>(TValue value) => new Ok(value);
     public static implicit operator Result<TError, TValue>(TError error) => new Failure(error);
 
@@ -46,7 +46,7 @@ public abstract record Option<T>
     /// Gets a value indicating whether this Option has no value (None case).
     /// </summary>
     public bool IsNone => this is None;
-    
+
     public static implicit operator Option<T>(T value) =>
         value is not null ? new Some(value) : new None();
 
@@ -64,3 +64,4 @@ public abstract record Option<T>
 /// Represents the absence of a value, used primarily for type inference in generic contexts.
 /// </summary>
 public readonly struct None { }
+

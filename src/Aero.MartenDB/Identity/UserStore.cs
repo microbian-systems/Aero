@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Operations.CompareExchange;
 
-namespace Aero.RavenDB.Identity;
+namespace Aero.MartenDB.Identity;
 
 /// <summary>
 /// UserStore for entities in a RavenDB database.

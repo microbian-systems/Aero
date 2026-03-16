@@ -1,4 +1,4 @@
-﻿namespace Aero.RavenDB.Identity;
+﻿namespace Aero.MartenDB.Identity;
 
 /// <summary>
 /// The type of ID to create for users.

@@ -1,4 +1,4 @@
-namespace Aero.RavenDB;
+namespace Aero.MartenDB;
 
 /// <summary>
 /// Configuration settings for RavenDB persistence

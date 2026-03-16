@@ -1,7 +1,7 @@
 using Aero.Core.Data;
 using Microsoft.Extensions.Logging;
 
-namespace Aero.RavenDB;
+namespace Aero.MartenDB;
 
 public interface IRavenDbUnitOfWork : IAsyncUnitOfWork
 {

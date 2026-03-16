@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Aero.RavenDB.Identity;
+namespace Aero.MartenDB.Identity;
 
 /// <summary>
 /// A authorization token created by a login provider.

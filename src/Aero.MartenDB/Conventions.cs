@@ -1,8 +1,8 @@
-﻿using Aero.RavenDB.Identity;
+﻿using Aero.MartenDB.Identity;
 using Aero.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Aero.RavenDB;
+namespace Aero.MartenDB;
 
 /// <summary>
 /// Contains constants and methods that deal with the conventions of RavenDB.Identity.

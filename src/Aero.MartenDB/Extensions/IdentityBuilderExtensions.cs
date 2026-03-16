@@ -1,10 +1,10 @@
-﻿using Aero.RavenDB.Identity;
-using Aero.Core.Identity;
+﻿using Aero.Core.Identity;
+using Aero.MartenDB.Identity;
 using Aero.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aero.RavenDB.Extensions;
+namespace Aero.MartenDB.Extensions;
 
 /// <summary>
 /// Extends <see cref="IdentityBuilder"/> so that RavenDB services can be registered through it.

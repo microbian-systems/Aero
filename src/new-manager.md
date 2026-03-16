@@ -64,6 +64,11 @@ Site Management:
     - Aliases
 
 Content (analyze existing implementation):
+    - NavBars
+        - Menu Items
+            - drop down
+            - search
+            - icon
     - Pages
         - Page List
         - Page Editor
@@ -116,6 +121,7 @@ Localization
 System
     - Settings / configuration
     - Modules
+        - Import
 
 
 ----------

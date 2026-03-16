@@ -1,4 +1,4 @@
-namespace Aero.RavenDB.Identity;
+namespace Aero.MartenDB.Identity;
 
 /// <summary>
 /// Options for initializing RavenDB.Identity.

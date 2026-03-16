@@ -1,12 +1,9 @@
 using System.Reflection;
-using Aero.RavenDB.Indexes;
-using Microsoft.AspNetCore.Builder;
+using Marten;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Raven.Client.Documents.Indexes;
-using Raven.Embedded;
 
-namespace Aero.RavenDB.Extensions;
+namespace Aero.MartenDB.Extensions;
 
 public static class RavenDbExtensions
 {
@@ -20,24 +17,24 @@ public static class RavenDbExtensions
         // It is expensive to create and should exist once for the lifetime of the app.
         services.AddSingleton<IDocumentStore>(ctx =>
         {
-            IDocumentStore store;
+            IDocumentStore store = null;
 
             if (ravenDbSettings.UseEmbedded)
             {
                 // For embedded RavenDB, you need to add RavenDB.Embedded NuGet package
                 // and uncomment the code below:
 
-                var embeddedOptions = new ServerOptions();
+                //var embeddedOptions = new ServerOptions();
 
                 if (!string.IsNullOrWhiteSpace(ravenDbSettings.EmbeddedPath))
                 {
                     //embeddedOptions.DataDirectory = ravenDbSettings.EmbeddedPath;
                 }
 
-                EmbeddedServer.Instance.StartServer(embeddedOptions);
+                //EmbeddedServer.Instance.StartServer(embeddedOptions);
 
-                store = EmbeddedServer.Instance.GetDocumentStore(
-                    new DatabaseOptions(ravenDbSettings.DatabaseName));
+                // store = EmbeddedServer.Instance.GetDocumentStore(
+                //     new DatabaseOptions(ravenDbSettings.DatabaseName));
             }
             else
             {
@@ -47,14 +44,13 @@ public static class RavenDbExtensions
                     .Select(u => u.Trim())
                     .ToArray() ?? ["http://localhost:8080"];
 
-                store = new DocumentStore
+                store = DocumentStore.For(opts =>
                 {
-                    Urls = urls,
-                    Database = ravenDbSettings.DatabaseName
-                };
+
+                });
             }
 
-            store.Initialize();
+            //store.Initialize();
             return store;
         });
 
@@ -63,12 +59,12 @@ public static class RavenDbExtensions
         services.AddScoped<IDocumentSession>(sp =>
         {
             var store = sp.GetRequiredService<IDocumentStore>();
-            return store.OpenSession();
+            return store.LightweightSession();
         });
-        services.AddScoped<IAsyncDocumentSession>(ctx =>
+        services.AddScoped<IDocumentSession>(ctx =>
         {
             var store = ctx.GetRequiredService<IDocumentStore>();
-            return store.OpenAsyncSession();
+            return store.LightweightSession();
         });
 
         // 3. Register your Unit of Work as SCOPED
@@ -78,20 +74,5 @@ public static class RavenDbExtensions
             ctx.GetRequiredService<IRavenDbUnitOfWork>().Users);
 
         return services;
-    }
-
-    // todo - ensure to call RegisterRavenIndexes()
-    public static WebApplication RegisterRavenIndexes(this WebApplication app)
-        => RegisterRavenIndexes(app, typeof(Users_ByRoleName).Assembly);
-    
-    public static WebApplication RegisterRavenIndexes(this WebApplication app, params Assembly[] assemblies)
-    {
-        var sp = app.Services;
-        var store = sp.GetRequiredService<IDocumentStore>();
-        
-        foreach (var ass in assemblies)
-            IndexCreation.CreateIndexes(ass, store);
-        
-        return app;
     }
 }

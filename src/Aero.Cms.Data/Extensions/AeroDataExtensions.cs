@@ -1,7 +1,9 @@
+
 using Aero.Cms.Data.Repositories;
 using Aero.Cms.Data.Services;
 using Aero.Cms.Data.Services.Internal;
 using Aero.Cms.Repositories;
+using Aero.Cms.Services;
 using JasperFx;
 using Marten;
 using Microsoft.Extensions.Configuration;
@@ -91,6 +93,22 @@ public static class AeroDataExtensions
         services.AddScoped<IPostTypeRepository, PostTypeRepository>();
         services.AddScoped<ISiteRepository, SiteRepository>();
         services.AddScoped<ISiteTypeRepository, SiteTypeRepository>();
+
+        // Register core services from IApi
+        services.AddScoped<IAliasService>(sp => sp.GetRequiredService<IApi>().Aliases);
+        services.AddScoped<IArchiveService>(sp => sp.GetRequiredService<IApi>().Archives);
+        services.AddScoped<IContentGroupService>(sp => sp.GetRequiredService<IApi>().ContentGroups);
+        services.AddScoped<IContentService>(sp => sp.GetRequiredService<IApi>().Content);
+        services.AddScoped<IContentTypeService>(sp => sp.GetRequiredService<IApi>().ContentTypes);
+        services.AddScoped<ILanguageService>(sp => sp.GetRequiredService<IApi>().Languages);
+        services.AddScoped<IMediaService>(sp => sp.GetRequiredService<IApi>().Media);
+        services.AddScoped<IPageService>(sp => sp.GetRequiredService<IApi>().Pages);
+        services.AddScoped<IPageTypeService>(sp => sp.GetRequiredService<IApi>().PageTypes);
+        services.AddScoped<IParamService>(sp => sp.GetRequiredService<IApi>().Params);
+        services.AddScoped<IPostService>(sp => sp.GetRequiredService<IApi>().Posts);
+        services.AddScoped<IPostTypeService>(sp => sp.GetRequiredService<IApi>().PostTypes);
+        services.AddScoped<ISiteService>(sp => sp.GetRequiredService<IApi>().Sites);
+        services.AddScoped<ISiteTypeService>(sp => sp.GetRequiredService<IApi>().SiteTypes);
 
         // Register services
         services.AddSingleton<IContentServiceFactory, ContentServiceFactory>();

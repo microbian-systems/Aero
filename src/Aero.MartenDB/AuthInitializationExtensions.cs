@@ -2,7 +2,7 @@ using Aero.Models.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Aero.RavenDB;
+namespace Aero.MartenDB;
 
 /// <summary>
 /// Helper to initialize authentication infrastructure on app startup

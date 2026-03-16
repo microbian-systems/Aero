@@ -4,17 +4,18 @@ using Aero.Core.Entities;
 using Microsoft.Extensions.Logging;
 using static System.GC;
 using Aero.Core.Railway;
+using Marten;
 using static Aero.Core.Railway.Prelude;
 
-namespace Aero.RavenDB;
+namespace Aero.MartenDB;
 
 public abstract class RavenDbRepositoryBase<TEntity> 
     : GenericRepositoryOption<TEntity>
     where TEntity : IEntity, new()
 {
-    protected readonly IAsyncDocumentSession session;
+    protected readonly IDocumentSession session;
 
-    public RavenDbRepositoryBase(IAsyncDocumentSession session, ILogger<GenericRepositoryOption<TEntity>> log) : base(log)
+    public RavenDbRepositoryBase(IDocumentSession session, ILogger<GenericRepositoryOption<TEntity>> log) : base(log)
     {
         this.session = session;
     }
@@ -49,7 +50,7 @@ public abstract class RavenDbRepositoryBase<TEntity>
         {
             var existing = await FindByIdAsync(entity.Id);
             if (existing.IsSome) throw new Exception($"Entity with id: {entity.Id} already exists");
-            await session.StoreAsync(entity);
+            session.Store(entity);
             return Some(entity);
         }
         catch (Exception ex)
@@ -65,7 +66,7 @@ public abstract class RavenDbRepositoryBase<TEntity>
         {
             var existing = await FindByIdAsync(entity.Id);
             if (existing.IsNone) throw new Exception($"Update failed - Entity with id: {entity.Id} does not exist");
-            await session.StoreAsync(entity);
+            session.Store(entity);
             return Some(entity);
         }
         catch (Exception ex)
@@ -80,7 +81,7 @@ public abstract class RavenDbRepositoryBase<TEntity>
     {
         try
         {
-            await session.StoreAsync(entity);
+            session.Store(entity);
             return Some(entity);
         }
         catch (Exception ex)

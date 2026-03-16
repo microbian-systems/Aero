@@ -3,7 +3,7 @@ using Aero.Core.Railway;
 using Aero.Models.Entities;
 using Microsoft.Extensions.Logging;
 
-namespace Aero.RavenDB;
+namespace Aero.MartenDB;
 
 public interface IAeroUserRepository
 {

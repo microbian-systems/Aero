@@ -5,6 +5,28 @@
     <Title>Aero.Caching</Title>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- The unique ID for your package on NuGet.org -->
+    <PackageId>Aero.Caching</PackageId>
+
+    <!-- Increment this version every time you push a new update -->
+    <Version>0.0.5-alpha</Version>
+
+    <!-- Your name or organization -->
+    <Authors>Microbians</Authors>
+
+    <!-- A brief description shown in the NuGet gallery -->
+    <Description>Aero core library with useful utility tools for any project</Description>
+
+    <!-- Optional: High-quality metadata for better discoverability -->
+    <PackageTags>aero;utils;netcore</PackageTags>
+    <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Optional: Automatically creates a package on every build -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Automatonymous" Version="5.1.3" />
     <PackageReference Include="DotNext" Version="5.26.3" />

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Raven.Client.Exceptions;
 
-namespace Aero.RavenDB.Identity;
+namespace Aero.MartenDB.Identity;
 
 
 /// <summary>
