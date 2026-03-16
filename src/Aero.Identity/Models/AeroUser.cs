@@ -5,7 +5,7 @@ namespace Aero.Identity.Models;
 /// <summary>
 /// RavenDB document model for an identity user.
 /// </summary>
-public class AeroUser : IdentityUser
+public class AeroUser : IdentityUser<string>
 {
     /// <summary>
     /// Gets or sets the list of roles associated with the user.

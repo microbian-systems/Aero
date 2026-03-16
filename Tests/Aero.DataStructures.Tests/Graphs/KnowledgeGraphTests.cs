@@ -204,7 +204,7 @@ public class KnowledgeGraphTests
 
         var knowsFacts = kg.GetFacts("knows").ToList();
 
-        knowsFacts.ShouldContainSingle();
+        knowsFacts.ShouldHaveSingleItem();
         knowsFacts[0].Object.ShouldBe("b");
     }
 
@@ -221,7 +221,7 @@ public class KnowledgeGraphTests
 
         var xKnows = kg.GetFacts("x", "knows").ToList();
 
-        xKnows.ShouldContainSingle();
+        xKnows.ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -237,7 +237,7 @@ public class KnowledgeGraphTests
 
         var connected = kg.GetConnectedEntities("center").ToList();
 
-        connected.Select(e => e.Id).ShouldContain(new[] { "neighbor1", "neighbor2" });
+        connected.Select(e => e.Id).ShouldBe(new[] { "neighbor1", "neighbor2" });
     }
 
     //#endregion
@@ -278,7 +278,7 @@ public class KnowledgeGraphTests
 
         var nycResidents = kg.FindEntities("city", "NYC").ToList();
 
-        nycResidents.Select(e => e.Id).ShouldContain(new[] { "alice", "charlie" });
+        nycResidents.Select(e => e.Id).ShouldBe(new[] { "alice", "charlie" });
     }
 
     //#endregion
@@ -296,7 +296,7 @@ public class KnowledgeGraphTests
 
         var triples = kg.ExportTriples().ToList();
 
-        triples.ShouldContainSingle();
+        triples.ShouldHaveSingleItem();
         triples[0].Subject.ShouldBe("a");
         triples[0].Predicate.ShouldBe("relates");
         triples[0].Object.ShouldBe("b");
@@ -350,7 +350,7 @@ public class KnowledgeGraphTests
         kg.TripleCount.ShouldBe(2);
         
         var einsteinPapers = kg.GetFacts("einstein", "authored").ToList();
-        einsteinPapers.ShouldContainSingle();
+        einsteinPapers.ShouldHaveSingleItem();
     }
 
     //#endregion

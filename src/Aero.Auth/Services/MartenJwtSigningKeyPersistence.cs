@@ -1,21 +1,22 @@
 using Aero.MartenDB;
 using Marten;
 using Marten.Patching;
+using Microsoft.Extensions.Logging;
 
 namespace Aero.Auth.Services;
 
 /// <summary>
-/// RavenDB implementation of JWT signing key persistence.
+/// Marten implementation of JWT signing key persistence.
 /// </summary>
-public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
+public class MartenJwtSigningKeyPersistence : IJwtSigningKeyPersistence
 {
     private readonly IAeroDbUnitOfWork _uow;
-    private readonly ILogger<RavenDbJwtSigningKeyPersistence> _logger;
+    private readonly ILogger<MartenJwtSigningKeyPersistence> _logger;
     private const string KeyCollectionName = "JwtSigningKeys";
 
-    public RavenDbJwtSigningKeyPersistence(
+    public MartenJwtSigningKeyPersistence(
         IAeroDbUnitOfWork uow,
-        ILogger<RavenDbJwtSigningKeyPersistence> logger)
+        ILogger<MartenJwtSigningKeyPersistence> logger)
     {
         _uow = uow ?? throw new ArgumentNullException(nameof(uow));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -133,7 +134,7 @@ public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
                 return true;
             }
 
-            session.Patch<JwtSigningKey>(currentKey.Id) // Fixed: was missing closing >
+            session.Patch<JwtSigningKey>(currentKey.Id)
                    .Set(x => x.IsCurrentSigningKey, false)
                    .Set(x => x.ModifiedOn, DateTimeOffset.UtcNow);
 

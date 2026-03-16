@@ -176,7 +176,7 @@ public class HeterogeneousGraphTests
 
         var neighbors = graph.GetNeighbors("center").ToList();
 
-        neighbors.Select(n => n.Id).ShouldContain(new[] { "n1", "n2" });
+        neighbors.Select(n => n.Id).ShouldBe(new[] { "n1", "n2" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -191,7 +191,7 @@ public class HeterogeneousGraphTests
 
         var friends = graph.GetNeighbors("center", "FRIEND").ToList();
 
-        friends.ShouldContainSingle();
+        friends.ShouldHaveSingleItem();
         friends[0].Id.ShouldBe("friend1");
     }
 
@@ -217,8 +217,8 @@ public class HeterogeneousGraphTests
 
         var paths = graph.FindMetaPaths("user1", metaPath).ToList();
 
-        paths.ShouldContainSingle();
-        paths[0].Select(n => n.Id).ShouldContainInOrder("user1", "prod1", "cat1");
+        paths.ShouldHaveSingleItem();
+        paths[0].Select(n => n.Id).ShouldBe(new[] { "user1", "prod1", "cat1" });
     }
 
     [Fact]
@@ -334,7 +334,7 @@ public class HeterogeneousGraphTests
         graph.EdgeCount.ShouldBe(3);
         
         var aliceNeighbors = graph.GetNeighbors("alice", "PURCHASED").ToList();
-        aliceNeighbors.ShouldContainSingle();
+        aliceNeighbors.ShouldHaveSingleItem();
         aliceNeighbors[0].Id.ShouldBe("laptop");
     }
 

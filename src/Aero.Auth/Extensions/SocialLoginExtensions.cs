@@ -1,6 +1,7 @@
 using System.IO;
 using Aero.Core.Identity;
 using Aero.MartenDB.Extensions;
+using Aero.Auth.Services;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.DataProtection;
 
@@ -153,7 +154,7 @@ public static class SocialLoginExtensions
         // Register persistence based on configuration
         if (useRavenDb)
         {
-            services.AddScoped<IJwtSigningKeyPersistence, RavenDbJwtSigningKeyPersistence>();
+            services.AddScoped<IJwtSigningKeyPersistence, MartenJwtSigningKeyPersistence>();
         }
         else
         {

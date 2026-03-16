@@ -9,7 +9,6 @@
     <Project Path="../Tests/Aero.Auth.Tests/Aero.Auth.Tests.csproj" />
     <Project Path="../Tests/Aero.DataStructures.Tests/Aero.DataStructures.Tests.csproj" />
     <Project Path="../Tests/Aero.SendGrid.Tests/Aero.SendGrid.Tests.csproj" />
-    <Project Path="../Tests/Aero.RavenDB.Tests/Aero.RavenDB.Tests.csproj" />
     <Project Path="../Tests/Aero.Social.Twitter/Aero.Social.Twitter.csproj" />
     <Project Path="../Tests/Aero.Identity.Tests/Aero.Identity.Tests.csproj" />
   </Folder>

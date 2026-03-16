@@ -171,7 +171,7 @@ public class DirectedGraphTests
 
         var neighbors = graph.GetOutNeighbors("A");
 
-        neighbors.ShouldContain(new[] { "B", "C" });
+        neighbors.ShouldBe(new[] { "B", "C" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -183,7 +183,7 @@ public class DirectedGraphTests
 
         var neighbors = graph.GetInNeighbors("A");
 
-        neighbors.ShouldContain(new[] { "B", "C" });
+        neighbors.ShouldBe(new[] { "B", "C" }, ignoreOrder: true);
     }
 
     //#endregion
@@ -242,7 +242,7 @@ public class DirectedGraphTests
         var result = graph.BreadthFirstSearch("A").ToList();
 
         result.First().ShouldBe("A");
-        result.ShouldContain(new[] { "B", "C", "D" });
+        result.ShouldBe(new[] { "B", "C", "D", "A" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -268,7 +268,7 @@ public class DirectedGraphTests
 
         var result = graph.BreadthFirstSearch("A").ToList();
 
-        result.ShouldContainSingle("A");
+        result.ShouldHaveSingleItem().ShouldBe("A");
     }
 
     //#endregion
@@ -367,7 +367,7 @@ public class DirectedGraphTests
 
         var reachable = graph.GetReachableVertices("A");
 
-        reachable.ShouldContain(new[] { "A", "B", "C", "D" });
+        reachable.ShouldBe(new[] { "A", "B", "C", "D" }, ignoreOrder: true);
         reachable.ShouldNotContain("E");
     }
 
@@ -387,8 +387,8 @@ public class DirectedGraphTests
         var sccs = graph.GetStronglyConnectedComponents().ToList();
 
         sccs.Count().ShouldBe(2);
-        sccs.ShouldContainSingle(c => c.Contains("A") && c.Contains("B") && c.Contains("C"));
-        sccs.ShouldContainSingle(c => c.Contains("D"));
+        sccs.Single(c => c.Contains("A") && c.Contains("B") && c.Contains("C")).ShouldNotBeNull();
+        sccs.Single(c => c.Contains("D")).ShouldNotBeNull();
     }
 
     //#endregion

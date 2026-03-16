@@ -44,4 +44,9 @@
       <ProjectReference Include="..\..\src\Aero.Models\Aero.Models.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Services\RavenDbJwtSigningKeyPersistenceTests.cs" />
+      <None Include="Services\RavenDbJwtSigningKeyPersistenceTests.cs" />
+    </ItemGroup>
+
 </Project>

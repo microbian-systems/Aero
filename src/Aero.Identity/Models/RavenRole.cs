@@ -14,7 +14,7 @@ public class RavenRoleClaim
 /// <summary>
 /// RavenDB document model for an identity role.
 /// </summary>
-public class RavenRole : IdentityRole
+public class RavenRole : IdentityRole<string>
 {
     /// <summary>
     /// Gets or sets the list of claims associated with the role.

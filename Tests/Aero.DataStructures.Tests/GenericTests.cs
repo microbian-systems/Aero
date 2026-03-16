@@ -92,14 +92,14 @@ public class GenericTests
         {
             // Arrange
             var graph = new Graph<string>();
-            
+
             // A connects to B and E
             graph.AddEdge("A", "B", 1);
             graph.AddEdge("A", "E", 1);
-            
+
             // B connects to C
             graph.AddEdge("B", "C", 1);
-            
+
             // C connects to D
             graph.AddEdge("C", "D", 1);
 
@@ -111,13 +111,14 @@ public class GenericTests
 
             // Act
             var result = graph.Dfs("A");
-            
+
             // Expectation: Visit A. Neighbors are B, E. Push E, Push B. Pop B.
             // Visit B. Neighbor C. Push C. Pop C.
             // Visit C. Neighbor D. Push D. Pop D.
             // Pop E.
-            result.ShouldContainInOrder("A", "B", "C", "D", "E");
-        }
+            List<string> valid = ["A", "B", "C", "D", "E"];
+            result.ShouldBeInOrder(valid);
+}
 
         [Fact]
         public void Dijkstra_ShouldFindCheapestPath_NotFewestEdges()

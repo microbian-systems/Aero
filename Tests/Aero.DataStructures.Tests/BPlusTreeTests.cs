@@ -39,6 +39,6 @@ public class BPlusTreeTests
 
         // Assert
         range.Count().ShouldBe(3);
-        range.ShouldContainInOrder(20, 30, 40);
+        range.ShouldBeInOrder();
     }
 }

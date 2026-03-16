@@ -10,6 +10,7 @@
       <PackageReference Include="IdGen" Version="3.0.7" />
       <PackageReference Include="Marten" Version="8.23.0" />
       <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.4" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="10.0.4" />
       <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.200" />
     </ItemGroup>
 

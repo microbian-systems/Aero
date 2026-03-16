@@ -21,7 +21,7 @@ public class TreapTests
         // Assert
         // This is a probabilistic test, but we can check the BST property
         var inorder = GetInorder(treap.Root);
-        inorder.ShouldBeInAscendingOrder();
+        inorder.ShouldBeInOrder();
     }
 
     private System.Collections.Generic.IEnumerable<int> GetInorder(TreapNode<int> node)

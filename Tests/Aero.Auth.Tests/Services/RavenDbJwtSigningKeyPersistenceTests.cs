@@ -345,12 +345,12 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         if (invalidValue == null)
         {
             await persistence.Invoking(p => p.GetKeyByIdAsync(invalidValue!))
-                .ShouldThrow()Async<ArgumentException>();
+                .ShouldThrow<ArgumentException>();
         }
         else
         {
             await persistence.Invoking(p => p.GetKeyByIdAsync(invalidValue))
-                .ShouldThrow()Async<ArgumentException>();
+                .ShouldThrow<ArgumentException>();
         }
     }
 

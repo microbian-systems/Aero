@@ -232,7 +232,7 @@ public class UndirectedGraphTests
         var result = graph.BreadthFirstSearch("A").ToList();
 
         result.Count().ShouldBe(4);
-        result.ShouldContain(new[] { "A", "B", "C", "D" });
+        result.ShouldBe(new[] { "A", "B", "C", "D" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -281,7 +281,7 @@ public class UndirectedGraphTests
 
         var path = graph.GetShortestPath("A", "B");
 
-        path.ShouldContainInOrder("A", "B");
+        path.ShouldBe(new[] { "A", "B" });
     }
 
     [Fact]
@@ -294,7 +294,7 @@ public class UndirectedGraphTests
 
         var path = graph.GetShortestPath("A", "D");
 
-        path.ShouldContainInOrder("A", "B", "C", "D");
+        path.ShouldBe(new[] { "A", "B", "C", "D" });
         path.Count.ShouldBe(4);
     }
 
@@ -319,7 +319,7 @@ public class UndirectedGraphTests
 
         var path = graph.GetShortestPath(vertex, vertex);
 
-        path.ShouldContainSingle().Which.ShouldBe(vertex);
+        path.ShouldHaveSingleItem().ShouldBe(vertex);
     }
 
     //#endregion
@@ -378,7 +378,7 @@ public class UndirectedGraphTests
         var components = graph.GetConnectedComponents().ToList();
 
         components.Count().ShouldBe(1);
-        components[0].ShouldContain(new[] { "A", "B", "C" });
+        components[0].ShouldBe(new[] { "A", "B", "C" }, ignoreOrder: true);
     }
 
     [Fact]

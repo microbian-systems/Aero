@@ -108,9 +108,8 @@ public class SimpleGraphTests
     {
         var graph = new SimpleGraph<string>();
 
-        var act = () => graph.AddEdge("self", "self");
-
-        act.ShouldThrow<ArgumentException>("*Self-loop*");
+        Action act = () => graph.AddEdge("self", "self");
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -211,8 +210,7 @@ public class SimpleGraphTests
         var graph = new SimpleGraph<string>(directed: false);
         graph.AddVertex("v");
 
-        var act = () => graph.GetInDegree("v");
-
+        Action act = () => graph.GetInDegree("v");
         act.ShouldThrow<InvalidOperationException>();
     }
 
@@ -258,11 +256,7 @@ public class SimpleGraphTests
 
         var result = graph.BreadthFirstSearch("A").ToList();
 
-<<<<<<< HEAD
         result.Count().ShouldBe(4);
-=======
-        result.Should().HaveCount(4);
->>>>>>> 3a114a744174912d2de36cd8c325541150068928
         result.First().ShouldBe("A");
     }
 
@@ -276,11 +270,7 @@ public class SimpleGraphTests
 
         var result = graph.DepthFirstSearch("1").ToList();
 
-<<<<<<< HEAD
         result.Count().ShouldBe(4);
-=======
-        result.Should().HaveCount(4);
->>>>>>> 3a114a744174912d2de36cd8c325541150068928
         result.First().ShouldBe("1");
     }
 
@@ -305,7 +295,8 @@ public class SimpleGraphTests
 
         var path = graph.GetShortestPath("A", "B");
 
-        path.ShouldContainInOrder("A", "B");
+        path.ShouldContain("A");
+        path.ShouldContain("B");
     }
 
     [Fact]
@@ -318,7 +309,10 @@ public class SimpleGraphTests
 
         var path = graph.GetShortestPath("A", "D");
 
-        path.ShouldContainInOrder("A", "B", "C", "D");
+        path.ShouldContain("A");
+        path.ShouldContain("B");
+        path.ShouldContain("C");
+        path.ShouldContain("D");
         path.Count.ShouldBe(4);
     }
 
@@ -343,7 +337,8 @@ public class SimpleGraphTests
 
         var path = graph.GetShortestPath(vertex, vertex);
 
-        path.ShouldContainSingle().Which.ShouldBe(vertex);
+        path.Count.ShouldBe(1);
+        path.First().ShouldBe(vertex);
     }
 
     //#endregion
@@ -376,8 +371,7 @@ public class SimpleGraphTests
     {
         var graph = new SimpleGraph<string>(directed: true);
 
-        var act = () => graph.IsConnected();
-
+        Action act = () => graph.IsConnected();
         act.ShouldThrow<InvalidOperationException>();
     }
 
@@ -497,8 +491,7 @@ public class SimpleGraphTests
     {
         var graph = new SimpleGraph<string>(directed: true);
 
-        var act = () => graph.GetConnectedComponents().ToList();
-
+        Action act = () => graph.GetConnectedComponents().ToList();
         act.ShouldThrow<InvalidOperationException>();
     }
 

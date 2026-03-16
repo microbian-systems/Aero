@@ -120,7 +120,7 @@ public class WeightedGraphTests
         graph.AddEdge("from", "to", expectedWeight);
 
         graph.TryGetWeight("from", "to", out var weight).ShouldBeTrue();
-        weight.ShouldBeApproximately(expectedWeight, 0.0001);
+        weight.ShouldBe(expectedWeight, 0.0001);
     }
 
     //#endregion
@@ -182,7 +182,7 @@ public class WeightedGraphTests
     {
         var graph = new WeightedGraph<string, int>();
 
-        var act = () => graph.Dijkstra("nonexistent");
+        Action act = () => graph.Dijkstra("nonexistent");
 
         act.ShouldThrow<ArgumentException>();
     }
@@ -213,7 +213,7 @@ public class WeightedGraphTests
 
         var (path, weight) = graph.GetShortestPath("A", "C");
 
-        path.ShouldContainInOrder("A", "B", "C");
+        path.ShouldBe(new[] { "A", "B", "C" });
         weight.ShouldBe(2);
     }
 
@@ -253,7 +253,7 @@ public class WeightedGraphTests
     {
         var graph = new WeightedGraph<string, int>(directed: true);
 
-        var act = () => graph.GetMinimumSpanningTree();
+        Action act = () => graph.GetMinimumSpanningTree();
 
         act.ShouldThrow<InvalidOperationException>();
     }
@@ -299,7 +299,7 @@ public class WeightedGraphTests
         graph.AddEdge("B", "C", 2.7);
 
         var distances = graph.Dijkstra("A");
-        distances["C"].ShouldBeApproximately(4.2, 0.0001);
+        distances["C"].ShouldBe(4.2, 0.0001);
     }
 
     [Fact]
