@@ -258,7 +258,11 @@ public class SimpleGraphTests
 
         var result = graph.BreadthFirstSearch("A").ToList();
 
+<<<<<<< HEAD
         result.Count().ShouldBe(4);
+=======
+        result.Should().HaveCount(4);
+>>>>>>> 3a114a744174912d2de36cd8c325541150068928
         result.First().ShouldBe("A");
     }
 
@@ -272,7 +276,11 @@ public class SimpleGraphTests
 
         var result = graph.DepthFirstSearch("1").ToList();
 
+<<<<<<< HEAD
         result.Count().ShouldBe(4);
+=======
+        result.Should().HaveCount(4);
+>>>>>>> 3a114a744174912d2de36cd8c325541150068928
         result.First().ShouldBe("1");
     }
 
