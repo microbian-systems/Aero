@@ -19,4 +19,11 @@
       <ProjectReference Include="..\Aero.Cms.AspNetCore\Aero.Cms.AspNetCore.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Extensions\RavenIdentityExtensions.cs" />
+      <None Include="Extensions\RavenIdentityExtensions.cs" />
+      <Compile Remove="RavenIdentityModule.cs" />
+      <None Include="RavenIdentityModule.cs" />
+    </ItemGroup>
+
 </Project>

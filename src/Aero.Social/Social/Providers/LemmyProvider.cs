@@ -328,7 +328,7 @@ public class LemmyProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    #region DTOs
+    //#region DTOs
 
     private class LemmyAuthBody
     {
@@ -457,5 +457,5 @@ public class LemmyProvider : SocialProviderBase
         public string? Url { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

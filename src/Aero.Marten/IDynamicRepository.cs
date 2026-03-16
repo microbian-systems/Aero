@@ -26,7 +26,7 @@ public interface IDynamicRepositoryAsync<TKey> : IDynamicReadOnlyRepositoryAsync
     Task DeleteAsync<T>(IEnumerable<T> documents) where T : class, IEntity<TKey>, new();
     //Task<long> DeleteAllAsync<T>();
         
-    #region "unused from Foundatio.Repositories
+    //#region "unused from Foundatio.Repositories
 // todo - impl AsyncEvents like Foundatio.Repositories e.g. below
 //        AsyncEvent<BeforeQueryEventArgs<T>> BeforeQuery { get; set; }
 //        AsyncEvent<DocumentsEventArgs<T>> DocumentsAdding { get; set; }
@@ -37,5 +37,5 @@ public interface IDynamicRepositoryAsync<TKey> : IDynamicReadOnlyRepositoryAsync
 //        AsyncEvent<DocumentsEventArgs<T>> DocumentsRemoved { get; set; }
 //        AsyncEvent<DocumentsChangeEventArgs<T>> DocumentsChanging { get; set; }
 //        AsyncEvent<DocumentsChangeEventArgs<T>> DocumentsChanged { get; set; }
-    #endregion
+    //#endregion
 }

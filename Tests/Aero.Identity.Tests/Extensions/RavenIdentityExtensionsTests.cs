@@ -20,7 +20,8 @@ public class RavenIdentityExtensionsTests
         // Act
         services.AddIdentityCore<AeroUser>()
             .AddRoles<RavenRole>()
-            .AddRavenDbStores();
+            //.AddRavenDbStores()
+            ;
 
         var serviceProvider = services.BuildServiceProvider();
 
@@ -44,7 +45,8 @@ public class RavenIdentityExtensionsTests
 
         // Act
         services.AddIdentityCore<AeroUser>()
-            .AddRavenDbStores();
+            //.AddRavenDbStores()
+            ;
 
         var serviceProvider = services.BuildServiceProvider();
 

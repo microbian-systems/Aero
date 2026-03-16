@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
@@ -11,7 +11,7 @@ public class KnowledgeGraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Ontology Tests
+    //#region Ontology Tests
 
     [Fact]
     public void DefineClass_ShouldAddToOntology()
@@ -20,9 +20,9 @@ public class KnowledgeGraphTests
 
         var entityClass = kg.DefineClass("Person", "A human being");
 
-        entityClass.Name.Should().Be("Person");
-        entityClass.Description.Should().Be("A human being");
-        kg.ClassCount.Should().Be(1);
+        entityClass.Name.ShouldBe("Person");
+        entityClass.Description.ShouldBe("A human being");
+        kg.ClassCount.ShouldBe(1);
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class KnowledgeGraphTests
         
         var dogClass = kg.DefineClass("Dog", "Canine animal", "Animal");
 
-        dogClass.ParentClasses.Should().Contain("Animal");
+        dogClass.ParentClasses.ShouldContain("Animal");
     }
 
     [Fact]
@@ -45,9 +45,9 @@ public class KnowledgeGraphTests
 
         var relation = kg.DefineRelation("bornIn", "Person", "City", "Birthplace");
 
-        relation.Name.Should().Be("bornIn");
-        relation.Domain.Should().Contain("Person");
-        relation.Range.Should().Contain("City");
+        relation.Name.ShouldBe("bornIn");
+        relation.Domain.ShouldContain("Person");
+        relation.Range.ShouldContain("City");
     }
 
     [Fact]
@@ -59,14 +59,14 @@ public class KnowledgeGraphTests
             "Ancestry relation", inverseRelation: "descendantOf", 
             isTransitive: true, isSymmetric: false);
 
-        relation.IsTransitive.Should().BeTrue();
-        relation.IsSymmetric.Should().BeFalse();
-        relation.InverseRelation.Should().Be("descendantOf");
+        relation.IsTransitive.ShouldBeTrue();
+        relation.IsSymmetric.ShouldBeFalse();
+        relation.InverseRelation.ShouldBe("descendantOf");
     }
 
-    #endregion
+    //#endregion
 
-    #region Entity Tests
+    //#region Entity Tests
 
     [Fact]
     public void AddEntity_ShouldCreateEntity()
@@ -76,9 +76,9 @@ public class KnowledgeGraphTests
 
         var entity = kg.AddEntity("einstein", "Person", new { name = "Albert Einstein" });
 
-        entity.Id.Should().Be("einstein");
-        entity.Class.Should().Be("Person");
-        entity.Properties["name"].Should().Be("Albert Einstein");
+        entity.Id.ShouldBe("einstein");
+        entity.Class.ShouldBe("Person");
+        entity.Properties["name"].ShouldBe("Albert Einstein");
     }
 
     [Fact]
@@ -92,9 +92,9 @@ public class KnowledgeGraphTests
             confidence: 0.95, 
             source: "test");
 
-        entity.Label.Should().Be("Test user");
-        entity.Confidence.Should().Be(0.95);
-        entity.Source.Should().Be("test");
+        entity.Label.ShouldBe("Test user");
+        entity.Confidence.ShouldBe(0.95);
+        entity.Source.ShouldBe("test");
     }
 
     [Fact]
@@ -107,8 +107,8 @@ public class KnowledgeGraphTests
 
         var entity = kg.GetEntity(id);
 
-        entity.Should().NotBeNull();
-        entity!.Id.Should().Be(id);
+        entity.ShouldNotBeNull();
+        entity!.Id.ShouldBe(id);
     }
 
     [Fact]
@@ -123,13 +123,13 @@ public class KnowledgeGraphTests
 
         var persons = kg.GetEntitiesByClass("Person").ToList();
 
-        persons.Should().HaveCount(2);
-        persons.All(e => e.Class == "Person").Should().BeTrue();
+        persons.Count().ShouldBe(2);
+        persons.All(e => e.Class == "Person").ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 
-    #region Fact Tests
+    //#region Fact Tests
 
     [Fact]
     public void AddFact_ShouldCreateTriple()
@@ -142,10 +142,10 @@ public class KnowledgeGraphTests
 
         var fact = kg.AddFact("alice", "bornIn", "paris");
 
-        fact.Subject.Should().Be("alice");
-        fact.Predicate.Should().Be("bornIn");
-        fact.Object.Should().Be("paris");
-        kg.TripleCount.Should().Be(1);
+        fact.Subject.ShouldBe("alice");
+        fact.Predicate.ShouldBe("bornIn");
+        fact.Object.ShouldBe("paris");
+        kg.TripleCount.ShouldBe(1);
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public class KnowledgeGraphTests
 
         var act = () => kg.AddFact("unknown1", "relates", "unknown2");
 
-        act.Should().Throw<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -170,13 +170,13 @@ public class KnowledgeGraphTests
 
         kg.AddFact("alice", "friendOf", "bob");
 
-        kg.TripleCount.Should().Be(2);
-        kg.HasFact("bob", "friendOf", "alice").Should().BeTrue();
+        kg.TripleCount.ShouldBe(2);
+        kg.HasFact("bob", "friendOf", "alice").ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 
-    #region Query Tests
+    //#region Query Tests
 
     [Fact]
     public void HasFact_ShouldReturnCorrectResult()
@@ -187,8 +187,8 @@ public class KnowledgeGraphTests
         kg.AddEntity("b", "Person");
         kg.AddFact("a", "knows", "b");
 
-        kg.HasFact("a", "knows", "b").Should().BeTrue();
-        kg.HasFact("b", "knows", "a").Should().BeFalse();
+        kg.HasFact("a", "knows", "b").ShouldBeTrue();
+        kg.HasFact("b", "knows", "a").ShouldBeFalse();
     }
 
     [Fact]
@@ -204,8 +204,8 @@ public class KnowledgeGraphTests
 
         var knowsFacts = kg.GetFacts("knows").ToList();
 
-        knowsFacts.Should().ContainSingle();
-        knowsFacts[0].Object.Should().Be("b");
+        knowsFacts.ShouldContainSingle();
+        knowsFacts[0].Object.ShouldBe("b");
     }
 
     [Fact]
@@ -221,7 +221,7 @@ public class KnowledgeGraphTests
 
         var xKnows = kg.GetFacts("x", "knows").ToList();
 
-        xKnows.Should().ContainSingle();
+        xKnows.ShouldContainSingle();
     }
 
     [Fact]
@@ -237,12 +237,12 @@ public class KnowledgeGraphTests
 
         var connected = kg.GetConnectedEntities("center").ToList();
 
-        connected.Select(e => e.Id).Should().Contain(new[] { "neighbor1", "neighbor2" });
+        connected.Select(e => e.Id).ShouldContain(new[] { "neighbor1", "neighbor2" });
     }
 
-    #endregion
+    //#endregion
 
-    #region Inference Tests
+    //#region Inference Tests
 
     [Fact]
     public void InferTransitiveFacts_ShouldDeriveNewFacts()
@@ -259,13 +259,13 @@ public class KnowledgeGraphTests
 
         var inferred = kg.InferTransitiveFacts("ancestorOf").ToList();
 
-        inferred.Should().Contain(f => 
+        inferred.ShouldContain(f => 
             f.Subject == "grandparent" && f.Object == "child");
     }
 
-    #endregion
+    //#endregion
 
-    #region Find Entities Tests
+    //#region Find Entities Tests
 
     [Fact]
     public void FindEntities_ShouldFindByProperty()
@@ -278,12 +278,12 @@ public class KnowledgeGraphTests
 
         var nycResidents = kg.FindEntities("city", "NYC").ToList();
 
-        nycResidents.Select(e => e.Id).Should().Contain(new[] { "alice", "charlie" });
+        nycResidents.Select(e => e.Id).ShouldContain(new[] { "alice", "charlie" });
     }
 
-    #endregion
+    //#endregion
 
-    #region Export Tests
+    //#region Export Tests
 
     [Fact]
     public void ExportTriples_ShouldReturnAllFacts()
@@ -296,15 +296,15 @@ public class KnowledgeGraphTests
 
         var triples = kg.ExportTriples().ToList();
 
-        triples.Should().ContainSingle();
-        triples[0].Subject.Should().Be("a");
-        triples[0].Predicate.Should().Be("relates");
-        triples[0].Object.Should().Be("b");
+        triples.ShouldContainSingle();
+        triples[0].Subject.ShouldBe("a");
+        triples[0].Predicate.ShouldBe("relates");
+        triples[0].Object.ShouldBe("b");
     }
 
-    #endregion
+    //#endregion
 
-    #region Clear Tests
+    //#region Clear Tests
 
     [Fact]
     public void Clear_ShouldRemoveAllData()
@@ -317,15 +317,15 @@ public class KnowledgeGraphTests
 
         kg.Clear();
 
-        kg.EntityCount.Should().Be(0);
-        kg.TripleCount.Should().Be(0);
-        kg.ClassCount.Should().Be(0);
-        kg.RelationCount.Should().Be(0);
+        kg.EntityCount.ShouldBe(0);
+        kg.TripleCount.ShouldBe(0);
+        kg.ClassCount.ShouldBe(0);
+        kg.RelationCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Real-World Scenario Tests
+    //#region Real-World Scenario Tests
 
     [Fact]
     public void ScientificKnowledgeGraph_ShouldModelCorrectly()
@@ -346,12 +346,12 @@ public class KnowledgeGraphTests
         kg.AddFact("einstein", "authored", "relativity");
         kg.AddFact("relativity", "covers", "physics");
 
-        kg.EntityCount.Should().Be(3);
-        kg.TripleCount.Should().Be(2);
+        kg.EntityCount.ShouldBe(3);
+        kg.TripleCount.ShouldBe(2);
         
         var einsteinPapers = kg.GetFacts("einstein", "authored").ToList();
-        einsteinPapers.Should().ContainSingle();
+        einsteinPapers.ShouldContainSingle();
     }
 
-    #endregion
+    //#endregion
 }

@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Social.Abstractions;
@@ -220,7 +219,7 @@ public class DribbbleProvider : SocialProviderBase
     private string GetClientSecret() => _configuration["DRIBBBLE_CLIENT_SECRET"] ?? throw new InvalidOperationException("DRIBBBLE_CLIENT_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class DribbbleTokenResponse
     {
@@ -270,5 +269,5 @@ public class DribbbleProvider : SocialProviderBase
         public string Name { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

@@ -16,9 +16,9 @@ Base repository implementation for RavenDB:
 public abstract class RavenDbRepositoryBase<TEntity> : GenericRepository<TEntity, string>
     where TEntity : Entity
 {
-    protected readonly IAsyncDocumentSession Session;
+    protected readonly IDocumentSession Session;
 
-    protected RavenDbRepositoryBase(IAsyncDocumentSession session, ILogger log) 
+    protected RavenDbRepositoryBase(IDocumentSession session, ILogger log) 
         : base(log)
     {
         Session = session;
@@ -55,7 +55,7 @@ User management with RavenDB:
 ```csharp
 public class AeroUserRepository : RavenDbRepositoryBase<AeroUser>, IAeroUserRepository
 {
-    public AeroUserRepository(IAsyncDocumentSession session, ILogger<AeroUserRepository> log) 
+    public AeroUserRepository(IDocumentSession session, ILogger<AeroUserRepository> log) 
         : base(session, log) { }
 
     public async Task<AeroUser> FindByEmailAsync(string email)
@@ -107,7 +107,7 @@ public static IServiceCollection AddRavenDb(this IServiceCollection services, IC
     documentStore.Initialize();
     
     services.AddSingleton<IDocumentStore>(documentStore);
-    services.AddScoped<IAsyncDocumentSession>(sp => 
+    services.AddScoped<IDocumentSession>(sp => 
         sp.GetRequiredService<IDocumentStore>().OpenAsyncSession());
     
     services.AddScoped(typeof(IGenericRepository<>), typeof(RavenDbRepository<>));
@@ -261,7 +261,7 @@ RavenDB provides excellent support for event sourcing patterns.
 public class AggregateRepository<TAggregate> : IAggregateRepository<TAggregate>
     where TAggregate : AggregateBase, new()
 {
-    private readonly IAsyncDocumentSession _session;
+    private readonly IDocumentSession _session;
 
     public async Task<TAggregate> LoadAsync(string id)
     {
@@ -377,7 +377,7 @@ await worker.Run(async batch =>
 
 ## Best Practices
 
-1. **Use Async Session** - Always use `IAsyncDocumentSession` for async operations
+1. **Use Async Session** - Always use `IDocumentSession` for async operations
 2. **Save Changes** - Call `SaveChangesAsync()` after write operations
 3. **Index Strategically** - Create static indexes for frequent queries
 4. **Batch Operations** - Use bulk insert for large data imports

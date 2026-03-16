@@ -1,5 +1,3 @@
-using System;
-
 namespace Electra.DataStructures.Trees;
 
 public class RedBlackTree<T> : ITree<T> where T : IComparable<T>

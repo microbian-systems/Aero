@@ -18,8 +18,8 @@ public static class AuthInitializationExtensions
         CancellationToken cancellationToken = default)
     {
         using var scope = serviceProvider.CreateScope();
-        var session = scope.ServiceProvider.GetRequiredService<IAsyncDocumentSession>();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<IAsyncDocumentSession>>();
+        var session = scope.ServiceProvider.GetRequiredService<IDocumentSession>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<IDocumentSession>>();
 
         // Check if any signing keys exist
         var existingKeys = await session.Query<JwtSigningKey>()
@@ -39,7 +39,7 @@ public static class AuthInitializationExtensions
                 Algorithm = "HS256"
             };
 
-            await session.StoreAsync(initialKey);
+            session.Store(initialKey);
             await session.SaveChangesAsync(cancellationToken);
 
             logger.LogInformation("JWT signing key initialized: {KeyId}", initialKey.KeyId);

@@ -1,10 +1,11 @@
 using System.Security.Claims;
 using Aero.Core;
 using Aero.Core.Identity;
+using Aero.MartenDB;
 using Aero.Models.Entities;
 using Aero.MartenDB.Identity;
 using FakeItEasy;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -27,7 +28,7 @@ public class UserStoreTests : RavenDbTestBase
             UseStaticIndexes = false
         });
 
-        _userStore = new UserStore<AeroUser, AeroRole>(DocumentStore.OpenAsyncSession(), _logger, _options);
+        _userStore = new UserStore<AeroUser, AeroRole>(DocumentStore.LightweightSession(), _logger, _options);
     }
 
     [Fact]
@@ -48,17 +49,17 @@ public class UserStoreTests : RavenDbTestBase
         var result = await _userStore.CreateAsync(user, CancellationToken.None);
 
         // Assert
-        result.Succeeded.Should().BeTrue();
+        result.Succeeded.ShouldBeTrue();
         
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var savedUser = await session.LoadAsync<AeroUser>(user.Id);
-        savedUser.Should().NotBeNull();
-        savedUser.Email.Should().Be("test@example.com");
+        savedUser.ShouldNotBeNull();
+        savedUser.Email.ShouldBe("test@example.com");
 
         var compareExchangeKey = Conventions.CompareExchangeKeyFor("test@example.com");
         var reservation = await DocumentStore.Operations.SendAsync(new Raven.Client.Documents.Operations.CompareExchange.GetCompareExchangeValueOperation<string>(compareExchangeKey));
-        reservation.Should().NotBeNull();
-        reservation.Value.Should().Be(user.Id);
+        reservation.ShouldNotBeNull();
+        reservation.Value.ShouldBe(user.Id);
     }
 
     [Fact]
@@ -90,8 +91,8 @@ public class UserStoreTests : RavenDbTestBase
         var result = await _userStore.CreateAsync(user2, CancellationToken.None);
 
         // Assert
-        result.Succeeded.Should().BeFalse();
-        result.Errors.Should().Contain(e => e.Code == "DuplicateEmail");
+        result.Succeeded.ShouldBeFalse();
+        result.Errors.ShouldContain(e => e.Code == "DuplicateEmail");
     }
 
     [Fact]
@@ -113,8 +114,8 @@ public class UserStoreTests : RavenDbTestBase
         var foundUser = await _userStore.FindByIdAsync(user.Id, CancellationToken.None);
 
         // Assert
-        foundUser.Should().NotBeNull();
-        foundUser.Id.Should().Be(user.Id);
+        foundUser.ShouldNotBeNull();
+        foundUser.Id.ShouldBe(user.Id);
     }
 
     [Fact]
@@ -140,24 +141,24 @@ public class UserStoreTests : RavenDbTestBase
         var result = await _userStore.UpdateAsync(user, CancellationToken.None);
 
         // Assert
-        result.Succeeded.Should().BeTrue();
+        result.Succeeded.ShouldBeTrue();
         
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var updatedUser = await session.LoadAsync<AeroUser>(user.Id);
-        updatedUser.Email.Should().Be("new@example.com");
-        updatedUser.UserName.Should().Be("new@example.com");
-        updatedUser.FirstName.Should().Be("New");
+        updatedUser.Email.ShouldBe("new@example.com");
+        updatedUser.UserName.ShouldBe("new@example.com");
+        updatedUser.FirstName.ShouldBe("New");
 
         // Verify old reservation is gone and new exists
         var oldKey = Conventions.CompareExchangeKeyFor("old@example.com");
         var newKey = Conventions.CompareExchangeKeyFor("new@example.com");
         
         var oldReservation = await DocumentStore.Operations.SendAsync(new Raven.Client.Documents.Operations.CompareExchange.GetCompareExchangeValueOperation<string>(oldKey));
-        oldReservation.Should().BeNull();
+        oldReservation.ShouldBeNull();
 
         var newReservation = await DocumentStore.Operations.SendAsync(new Raven.Client.Documents.Operations.CompareExchange.GetCompareExchangeValueOperation<string>(newKey));
-        newReservation.Should().NotBeNull();
-        newReservation.Value.Should().Be(user.Id);
+        newReservation.ShouldNotBeNull();
+        newReservation.Value.ShouldBe(user.Id);
     }
 
     [Fact]
@@ -179,15 +180,15 @@ public class UserStoreTests : RavenDbTestBase
         var result = await _userStore.DeleteAsync(user, CancellationToken.None);
 
         // Assert
-        result.Succeeded.Should().BeTrue();
+        result.Succeeded.ShouldBeTrue();
 
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var deletedUser = await session.LoadAsync<AeroUser>(user.Id);
-        deletedUser.Should().BeNull();
+        deletedUser.ShouldBeNull();
 
         var compareExchangeKey = Conventions.CompareExchangeKeyFor("delete@example.com");
         var reservation = await DocumentStore.Operations.SendAsync(new Raven.Client.Documents.Operations.CompareExchange.GetCompareExchangeValueOperation<string>(compareExchangeKey));
-        reservation.Should().BeNull();
+        reservation.ShouldBeNull();
     }
 
     [Fact]
@@ -209,13 +210,13 @@ public class UserStoreTests : RavenDbTestBase
         await _userStore.AddToRoleAsync(user, "Admin", CancellationToken.None);
 
         // Assert
-        user.GetRolesList().Should().Contain("admin"); // Store implementation lowers it if role doesn't exist
+        user.GetRolesList().ShouldContain("admin"); // Store implementation lowers it if role doesn't exist
 
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var roleId = Conventions.RoleIdFor<AeroRole>("Admin", DocumentStore);
         var role = await session.LoadAsync<AeroRole>(roleId);
-        role.Should().NotBeNull();
-        role.Users.Should().Contain(user.Id);
+        role.ShouldNotBeNull();
+        role.Users.ShouldContain(user.Id);
     }
 
     [Fact]
@@ -230,12 +231,12 @@ public class UserStoreTests : RavenDbTestBase
         await _userStore.AddClaimsAsync(user, new[] { claim }, default);
 
         // Assert - Add
-        user.Claims.Should().HaveCount(1);
-        using (var session = DocumentStore.OpenAsyncSession())
+        user.Claims.Count().ShouldBe(1);
+        using (var session = DocumentStore.LightweightSession())
         {
             var refreshedUser = await session.LoadAsync<AeroUser>(user.Id);
-            refreshedUser.Claims.Should().HaveCount(1);
-            refreshedUser.Claims.First().ClaimType.Should().Be("type1");
+            refreshedUser.Claims.Count().ShouldBe(1);
+            refreshedUser.Claims.First().ClaimType.ShouldBe("type1");
         }
 
         // Act - Replace
@@ -243,14 +244,14 @@ public class UserStoreTests : RavenDbTestBase
         await _userStore.ReplaceClaimAsync(user, claim, newClaim, default);
 
         // Assert - Replace
-        user.Claims.Should().HaveCount(1);
-        user.Claims.First().ClaimValue.Should().Be("value2");
+        user.Claims.Count().ShouldBe(1);
+        user.Claims.First().ClaimValue.ShouldBe("value2");
 
         // Act - Remove
         await _userStore.RemoveClaimsAsync(user, new[] { newClaim }, default);
 
         // Assert - Remove
-        user.Claims.Should().BeEmpty();
+        user.Claims.ShouldBeEmpty();
     }
 
     [Fact]
@@ -265,19 +266,19 @@ public class UserStoreTests : RavenDbTestBase
         await _userStore.AddLoginAsync(user, login, default);
 
         // Assert - Add
-        user.Logins.Should().HaveCount(1);
-        using (var session = DocumentStore.OpenAsyncSession())
+        user.Logins.Count().ShouldBe(1);
+        using (var session = DocumentStore.LightweightSession())
         {
             var refreshedUser = await session.LoadAsync<AeroUser>(user.Id);
-            refreshedUser.Logins.Should().HaveCount(1);
-            refreshedUser.Logins.First().LoginProvider.Should().Be("Google");
+            refreshedUser.Logins.Count().ShouldBe(1);
+            refreshedUser.Logins.First().LoginProvider.ShouldBe("Google");
         }
 
         // Act - Remove
         await _userStore.RemoveLoginAsync(user, "Google", "g123", default);
 
         // Assert - Remove
-        user.Logins.Should().BeEmpty();
+        user.Logins.ShouldBeEmpty();
     }
 
     [Fact]
@@ -291,18 +292,18 @@ public class UserStoreTests : RavenDbTestBase
         await _userStore.SetTokenAsync(user, "p1", "n1", "v1", default);
 
         // Assert - Set
-        user.Tokens.Should().HaveCount(1);
-        using (var session = DocumentStore.OpenAsyncSession())
+        user.Tokens.Count().ShouldBe(1);
+        using (var session = DocumentStore.LightweightSession())
         {
             var refreshedUser = await session.LoadAsync<AeroUser>(user.Id);
-            refreshedUser.Tokens.Should().HaveCount(1);
-            refreshedUser.Tokens.First().Value.Should().Be("v1");
+            refreshedUser.Tokens.Count().ShouldBe(1);
+            refreshedUser.Tokens.First().Value.ShouldBe("v1");
         }
 
         // Act - Remove
         await _userStore.RemoveTokenAsync(user, "p1", "n1", default);
 
         // Assert - Remove
-        user.Tokens.Should().BeEmpty();
+        user.Tokens.ShouldBeEmpty();
     }
 }

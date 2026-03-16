@@ -28,7 +28,7 @@ public class TwitterApiIntegrationTests : IDisposable
         _fixture.Reset();
     }
 
-    #region Happy Path Tests
+    //#region Happy Path Tests
 
     [Fact]
     public async Task GetTweetAsync_WithValidId_ReturnsTweet()
@@ -168,9 +168,9 @@ public class TwitterApiIntegrationTests : IDisposable
         result.PublicMetrics.QuoteCount.ShouldBe(12);
     }
 
-    #endregion
+    //#endregion
 
-    #region Error Handling Tests
+    //#region Error Handling Tests
 
     [Fact]
     public async Task GetTweetAsync_WithInvalidOAuth1_ThrowsAuthenticationException()
@@ -285,9 +285,9 @@ public class TwitterApiIntegrationTests : IDisposable
         exception.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
     }
 
-    #endregion
+    //#endregion
 
-    #region Request Validation Tests
+    //#region Request Validation Tests
 
     [Fact]
     public async Task GetTweetAsync_MakesRequestToCorrectEndpoint()
@@ -348,9 +348,9 @@ public class TwitterApiIntegrationTests : IDisposable
             entry.RequestMessage.Method == "GET");
     }
 
-    #endregion
+    //#endregion
 
-    #region Retry Behavior Tests
+    //#region Retry Behavior Tests
 
     [Fact]
     public async Task GetTweetAsync_WithTransientFailure_RetriesAndSucceeds()
@@ -381,7 +381,7 @@ public class TwitterApiIntegrationTests : IDisposable
         _fixture.Server.LogEntries.Count().ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    #endregion
+    //#endregion
 
     public void Dispose()
     {

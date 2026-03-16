@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -25,7 +25,7 @@ public class JwtSigningKeyStoreIntegrationTests
         _mockPersistence = Substitute.For<IJwtSigningKeyPersistence>();
     }
 
-    #region GetCurrentSigningKey Tests
+    //#region GetCurrentSigningKey Tests
 
     [Fact]
     public void GetCurrentSigningKeyAsync_WithValidKey_ShouldReturnSecurityKey()
@@ -46,7 +46,7 @@ public class JwtSigningKeyStoreIntegrationTests
         var store = new JwtSigningKeyStore(_mockPersistence, _mockLogger, _memoryCache);
 
         // Act & Assert
-        store.GetCurrentSigningKeyAsync().Result.Should().NotBeNull();
+        store.GetCurrentSigningKeyAsync().Result.ShouldNotBeNull();
     }
 
     [Fact]
@@ -62,13 +62,12 @@ public class JwtSigningKeyStoreIntegrationTests
         Func<Task> act = () => store.GetCurrentSigningKeyAsync();
 
         // Assert
-        await act.Should().ThrowAsync<InvalidOperationException>()
-            .WithMessage("*No current signing key found*");
+        act.ShouldThrow<InvalidOperationException>("*No current signing key found*");
     }
 
-    #endregion
+    //#endregion
 
-    #region GetCurrentKeyId Tests
+    //#region GetCurrentKeyId Tests
 
     [Fact]
     public async Task GetCurrentKeyIdAsync_WithValidKey_ShouldReturnKeyId()
@@ -92,7 +91,7 @@ public class JwtSigningKeyStoreIntegrationTests
         var result = await store.GetCurrentKeyIdAsync();
 
         // Assert
-        result.Should().Be(expectedKeyId);
+        result.ShouldBe(expectedKeyId);
     }
 
     [Fact]
@@ -118,14 +117,14 @@ public class JwtSigningKeyStoreIntegrationTests
         var result2 = await store.GetCurrentKeyIdAsync();
 
         // Assert
-        result1.Should().Be(result2);
+        result1.ShouldBe(result2);
         // Verify persistence was only called once due to caching
         await _mockPersistence.Received(1).GetCurrentSigningKeyAsync(Arg.Any<CancellationToken>());
     }
 
-    #endregion
+    //#endregion
 
-    #region GetValidationKeys Tests
+    //#region GetValidationKeys Tests
 
     [Fact]
     public async Task GetValidationKeysAsync_WithMultipleKeys_ShouldReturnAllKeys()
@@ -158,9 +157,9 @@ public class JwtSigningKeyStoreIntegrationTests
         var result = await store.GetValidationKeysAsync();
 
         // Assert
-        result.Should().NotBeEmpty();
-        result.Should().HaveCount(2);
-        result.Should().AllBeOfType<SymmetricSecurityKey>();
+        result.ShouldNotBeEmpty();
+        result.Count().ShouldBe(2);
+        result.ShouldBeOfType<SymmetricSecurityKey>();
     }
 
     [Fact]
@@ -187,14 +186,14 @@ public class JwtSigningKeyStoreIntegrationTests
         var result2 = await store.GetValidationKeysAsync();
 
         // Assert
-        result1.Should().HaveCount(result2.Count());
+        result1.Count().ShouldBe(result2.Count());
         // Verify persistence was only called once due to caching
         await _mockPersistence.Received(1).GetValidSigningKeysAsync(Arg.Any<CancellationToken>());
     }
 
-    #endregion
+    //#endregion
 
-    #region RotateSigningKey Tests
+    //#region RotateSigningKey Tests
 
     [Fact]
     public async Task RotateSigningKeyAsync_ShouldCreateNewKey()
@@ -215,7 +214,7 @@ public class JwtSigningKeyStoreIntegrationTests
         var newKeyId = await store.RotateSigningKeyAsync();
 
         // Assert
-        newKeyId.Should().NotBeNullOrEmpty();
+        newKeyId.ShouldNotBeNullOrEmpty();
         await _mockPersistence.Received(1).DeactivateCurrentKeyAsync(Arg.Any<CancellationToken>());
         await _mockPersistence.Received(1).AddKeyAsync(Arg.Any<JwtSigningKey>(), Arg.Any<CancellationToken>());
         await _mockPersistence.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
@@ -244,13 +243,13 @@ public class JwtSigningKeyStoreIntegrationTests
         await store.RotateSigningKeyAsync();
 
         // Assert
-        _memoryCache.TryGetValue("jwt:current_key_id", out _).Should().BeFalse();
-        _memoryCache.TryGetValue("jwt:all_keys", out _).Should().BeFalse();
+        _memoryCache.TryGetValue("jwt:current_key_id", out _).ShouldBeFalse();
+        _memoryCache.TryGetValue("jwt:all_keys", out _).ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region RevokeKey Tests
+    //#region RevokeKey Tests
 
     [Fact]
     public async Task RevokeKeyAsync_WithValidKeyId_ShouldRevokeKey()
@@ -284,7 +283,7 @@ public class JwtSigningKeyStoreIntegrationTests
         Func<Task> act = () => store.RevokeKeyAsync(null!);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -297,12 +296,12 @@ public class JwtSigningKeyStoreIntegrationTests
         Func<Task> act = () => store.RevokeKeyAsync(string.Empty);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region GetKeyById Tests
+    //#region GetKeyById Tests
 
     [Fact]
     public async Task GetKeyByIdAsync_WithValidKeyId_ShouldReturnKey()
@@ -326,8 +325,8 @@ public class JwtSigningKeyStoreIntegrationTests
         var result = await store.GetKeyByIdAsync(keyId);
 
         // Assert
-        result.Should().NotBeNull();
-        result.Should().BeOfType<SymmetricSecurityKey>();
+        result.ShouldNotBeNull();
+        result.ShouldBeOfType<SymmetricSecurityKey>();
     }
 
     [Fact]
@@ -343,7 +342,7 @@ public class JwtSigningKeyStoreIntegrationTests
         var result = await store.GetKeyByIdAsync("nonexistent");
 
         // Assert
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -356,12 +355,12 @@ public class JwtSigningKeyStoreIntegrationTests
         Func<Task> act = () => store.GetKeyByIdAsync(null!);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region GetSigningCredentials Tests
+    //#region GetSigningCredentials Tests
 
     [Fact]
     public async Task GetSigningCredentialsAsync_WithValidKey_ShouldReturnCredentials()
@@ -384,10 +383,10 @@ public class JwtSigningKeyStoreIntegrationTests
         var credentials = await store.GetSigningCredentialsAsync();
 
         // Assert
-        credentials.Should().NotBeNull();
-        credentials.Key.Should().NotBeNull();
-        credentials.Algorithm.Should().Be("HS256");
+        credentials.ShouldNotBeNull();
+        credentials.Key.ShouldNotBeNull();
+        credentials.Algorithm.ShouldBe("HS256");
     }
 
-    #endregion
+    //#endregion
 }

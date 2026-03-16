@@ -4,7 +4,6 @@ using Aero.Core.Entities;
 using Microsoft.Extensions.Logging;
 using static System.GC;
 using Aero.Core.Railway;
-using Marten;
 using static Aero.Core.Railway.Prelude;
 
 namespace Aero.MartenDB;

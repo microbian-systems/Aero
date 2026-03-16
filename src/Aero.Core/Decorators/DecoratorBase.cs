@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Aero.Common.Commands;
-using Microsoft.Extensions.Logging;
+﻿using Aero.Common.Commands;
 
 namespace Aero.Common.Decorators;
 

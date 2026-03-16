@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -21,6 +21,6 @@ public class SplayTreeTests
         splay.Find(20); // Splay 20 to the root
 
         // Assert
-        splay.Root.Value.Should().Be(20);
+        splay.Root.Value.ShouldBe(20);
     }
 }

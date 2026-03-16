@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Aero.DataStructures.Trees.Persistence.Interfaces;
-
 namespace Aero.DataStructures.Trees.Persistence.Indexes;
 
 public interface IIndexUpdater<TDocument>

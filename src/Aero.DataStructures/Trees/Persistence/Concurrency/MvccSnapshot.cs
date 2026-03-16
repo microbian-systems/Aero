@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Aero.DataStructures.Trees.Persistence.Concurrency;
 
 public sealed class MvccSnapshot : IReadSnapshot

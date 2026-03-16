@@ -1,5 +1,3 @@
-using System;
-
 namespace Aero.DataStructures.Trees.Persistence.Heap;
 
 public sealed class RecordDeletedException : Exception

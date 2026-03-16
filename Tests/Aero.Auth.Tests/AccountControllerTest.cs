@@ -1,6 +1,6 @@
 // Basic Account Controller tests - main tests are in ElectraAuthIntegrationTests.cs
 using System.Net;
-using FluentAssertions;
+using Shouldly;
 
 namespace Aero.Auth.Tests;
 
@@ -20,7 +20,7 @@ public class AccountControllerIntegrationTests : IClassFixture<TestWebAppFactory
         var response = await _client.GetAsync("/Account/list");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -33,6 +33,6 @@ public class AccountControllerIntegrationTests : IClassFixture<TestWebAppFactory
         var response = await _client.PostAsync("/Account/Logout", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 }

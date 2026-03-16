@@ -1,7 +1,6 @@
 using Aero.MartenDB;
-using Raven.Client.Documents;
-using Raven.Client.Documents.Linq;
-using Raven.Client.Documents.Session;
+using Marten;
+using Marten.Patching;
 
 namespace Aero.Auth.Services;
 
@@ -10,12 +9,12 @@ namespace Aero.Auth.Services;
 /// </summary>
 public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
 {
-    private readonly IRavenDbUnitOfWork _uow;
+    private readonly IAeroDbUnitOfWork _uow;
     private readonly ILogger<RavenDbJwtSigningKeyPersistence> _logger;
     private const string KeyCollectionName = "JwtSigningKeys";
 
     public RavenDbJwtSigningKeyPersistence(
-        IRavenDbUnitOfWork uow,
+        IAeroDbUnitOfWork uow,
         ILogger<RavenDbJwtSigningKeyPersistence> logger)
     {
         _uow = uow ?? throw new ArgumentNullException(nameof(uow));
@@ -25,7 +24,7 @@ public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
     public async Task<JwtSigningKey?> GetCurrentSigningKeyAsync(CancellationToken cancellationToken = default)
     {
         var session = GetSession();
-        
+
         var key = await session
             .Query<JwtSigningKey>()
             .Where(k => k.IsCurrentSigningKey && k.RevokedAt == null)
@@ -38,7 +37,7 @@ public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
     public async Task<IEnumerable<JwtSigningKey>> GetValidSigningKeysAsync(CancellationToken cancellationToken = default)
     {
         var session = GetSession();
-        
+
         var keys = await session
             .Query<JwtSigningKey>()
             .Where(k => k.RevokedAt == null)
@@ -56,7 +55,7 @@ public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         }
 
         var session = GetSession();
-        
+
         var key = await session
             .Query<JwtSigningKey>()
             .Where(k => k.KeyId == keyId && k.RevokedAt == null)
@@ -74,12 +73,11 @@ public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         }
 
         var session = GetSession();
-        
+
         try
         {
             key.Id ??= $"{KeyCollectionName}/{Guid.NewGuid()}";
-            await session.StoreAsync(key, cancellationToken);
-            
+            session.Store(key); // Store does not accept a CancellationToken
             _logger.LogInformation("Added new signing key: {KeyId}", key.KeyId);
             return true;
         }
@@ -100,23 +98,16 @@ public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         try
         {
             var session = GetSession();
-            session.Advanced.Patch<JwtSigningKey, bool>(
-                key.Id,
-                x => x.IsCurrentSigningKey,
-                key.IsCurrentSigningKey);
+
+            session.Patch<JwtSigningKey>(key.Id)
+                   .Set(x => x.IsCurrentSigningKey, key.IsCurrentSigningKey)
+                   .Set(x => x.ModifiedOn, key.ModifiedOn);
 
             if (key.RevokedAt.HasValue)
             {
-                session.Advanced.Patch<JwtSigningKey, DateTimeOffset?>(
-                    key.Id,
-                    x => x.RevokedAt,
-                    key.RevokedAt);
+                session.Patch<JwtSigningKey>(key.Id)
+                       .Set(x => x.RevokedAt, key.RevokedAt);
             }
-
-            session.Advanced.Patch<JwtSigningKey, DateTimeOffset?>(
-                key.Id,
-                x => x.ModifiedOn,
-                key.ModifiedOn);
 
             _logger.LogInformation("Updated signing key: {KeyId}", key.KeyId);
             return true;
@@ -131,26 +122,20 @@ public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
     public async Task<bool> DeactivateCurrentKeyAsync(CancellationToken cancellationToken = default)
     {
         var session = GetSession();
-        
+
         try
         {
             var currentKey = await GetCurrentSigningKeyAsync(cancellationToken);
-            
+
             if (currentKey == null)
             {
                 _logger.LogWarning("No current signing key to deactivate");
                 return true;
             }
 
-            session.Advanced.Patch<JwtSigningKey, bool>(
-                currentKey.Id,
-                x => x.IsCurrentSigningKey,
-                false);
-
-            session.Advanced.Patch<JwtSigningKey, DateTimeOffset?>(
-                currentKey.Id,
-                x => x.ModifiedOn,
-                DateTimeOffset.UtcNow);
+            session.Patch<JwtSigningKey>(currentKey.Id) // Fixed: was missing closing >
+                   .Set(x => x.IsCurrentSigningKey, false)
+                   .Set(x => x.ModifiedOn, DateTimeOffset.UtcNow);
 
             _logger.LogInformation("Deactivated current signing key: {KeyId}", currentKey.KeyId);
             return true;
@@ -170,26 +155,20 @@ public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         }
 
         var session = GetSession();
-        
+
         try
         {
             var key = await GetKeyByIdAsync(keyId, cancellationToken);
-            
+
             if (key == null)
             {
                 _logger.LogWarning("Key not found for revocation: {KeyId}", keyId);
                 return false;
             }
 
-            session.Advanced.Patch<JwtSigningKey, DateTimeOffset?>(
-                key.Id,
-                x => x.RevokedAt,
-                DateTimeOffset.UtcNow);
-
-            session.Advanced.Patch<JwtSigningKey, DateTimeOffset?>(
-                key.Id,
-                x => x.ModifiedOn,
-                DateTimeOffset.UtcNow);
+            session.Patch<JwtSigningKey>(key.Id)
+                   .Set(x => x.RevokedAt, DateTimeOffset.UtcNow)
+                   .Set(x => x.ModifiedOn, DateTimeOffset.UtcNow);
 
             _logger.LogInformation("Revoked signing key: {KeyId}", keyId);
             return true;
@@ -217,9 +196,9 @@ public class RavenDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
     }
 
     /// <summary>
-    /// Gets the current RavenDB async document session.
+    /// Gets the current Marten document session.
     /// </summary>
-    private IAsyncDocumentSession GetSession()
+    private IDocumentSession GetSession()
     {
         return _uow.Session;
     }

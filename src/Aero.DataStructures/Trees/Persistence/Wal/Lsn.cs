@@ -1,5 +1,3 @@
-using System;
-
 namespace Aero.DataStructures.Trees.Persistence.Wal;
 
 public readonly record struct Lsn(ulong Value) : IComparable<Lsn>

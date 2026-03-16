@@ -1,5 +1,3 @@
-using System.Reflection;
-using Marten;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -69,9 +67,9 @@ public static class RavenDbExtensions
 
         // 3. Register your Unit of Work as SCOPED
         // It depends on the Scoped session above.
-        services.AddScoped<IRavenDbUnitOfWork, RavenDbUnitOfWork>();
+        services.AddScoped<IAeroDbUnitOfWork, AeroUnitOfWork>();
         services.AddScoped<IAeroUserRepository>(ctx => 
-            ctx.GetRequiredService<IRavenDbUnitOfWork>().Users);
+            ctx.GetRequiredService<IAeroDbUnitOfWork>().Users);
 
         return services;
     }

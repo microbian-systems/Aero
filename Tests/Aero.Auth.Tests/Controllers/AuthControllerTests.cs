@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using FluentAssertions;
+using Shouldly;
 using Aero.Auth.Models;
 
 namespace Aero.Auth.Tests.Controllers;
@@ -19,7 +19,7 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         _client = factory.CreateClient();
     }
 
-    #region Web Login Tests
+    //#region Web Login Tests
 
     [Fact]
     public async Task LoginWeb_WithValidCredentials_ShouldReturnSuccess()
@@ -41,9 +41,9 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-web", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
-        body.Should().Contain("success");
+        body.ShouldContain("success");
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-web", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -89,7 +89,7 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-web", content);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -112,14 +112,14 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-web", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        response.Headers.Should().Contain(h => 
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        response.Headers.ShouldContain(h => 
             h.Key == "Set-Cookie" || h.Key == "set-cookie");
     }
 
-    #endregion
+    //#endregion
 
-    #region App Login Tests
+    //#region App Login Tests
 
     [Fact]
     public async Task LoginApp_WithValidCredentials_ShouldReturnTokens()
@@ -141,10 +141,10 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-app", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
-        body.Should().Contain("accessToken");
-        body.Should().Contain("refreshToken");
+        body.ShouldContain("accessToken");
+        body.ShouldContain("refreshToken");
     }
 
     [Fact]
@@ -167,7 +167,7 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-app", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -190,7 +190,7 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-app", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -213,14 +213,14 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-app", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var body = await response.Content.ReadAsStringAsync();
-        body.Should().Contain("accessTokenExpiresIn");
+        body.ShouldContain("accessTokenExpiresIn");
     }
 
-    #endregion
+    //#endregion
 
-    #region Logout Tests
+    //#region Logout Tests
 
     [Fact]
     public async Task Logout_RequiresAuthentication()
@@ -229,7 +229,7 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/logout", null);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -260,12 +260,12 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/logout-app", null);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
 
-    #endregion
+    //#endregion
 
-    #region Sessions Tests
+    //#region Sessions Tests
 
     [Fact]
     public async Task GetSessions_RequiresAuthentication()
@@ -274,7 +274,7 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.GetAsync("/api/auth/sessions");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -284,12 +284,12 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/sessions/session-id/revoke", null);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    #endregion
+    //#endregion
 
-    #region Error Response Format Tests
+    //#region Error Response Format Tests
 
     [Fact]
     public async Task LoginWeb_ErrorResponse_HasCorrectFormat()
@@ -312,8 +312,8 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var body = await response.Content.ReadAsStringAsync();
 
         // Assert
-        body.Should().Contain("success");
-        body.Should().Contain("message");
+        body.ShouldContain("success");
+        body.ShouldContain("message");
     }
 
     [Fact]
@@ -337,13 +337,13 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var body = await response.Content.ReadAsStringAsync();
 
         // Assert
-        body.Should().Contain("success");
-        body.Should().Contain("message");
+        body.ShouldContain("success");
+        body.ShouldContain("message");
     }
 
-    #endregion
+    //#endregion
 
-    #region Request Validation Tests
+    //#region Request Validation Tests
 
     [Fact]
     public async Task LoginWeb_WithNullRequest_ShouldReturnBadRequest()
@@ -358,7 +358,7 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-web", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -374,8 +374,8 @@ public class AuthControllerIntegrationTests : IClassFixture<TestWebAppFactory>
         var response = await _client.PostAsync("/api/auth/login-app", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    #endregion
+    //#endregion
 }

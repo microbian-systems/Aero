@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using FluentAssertions;
+using Shouldly;
 
 namespace Aero.Auth.Tests;
 
@@ -26,7 +26,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/api/Auth/login", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -83,7 +83,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/api/Auth/login", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/connect/token", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -114,7 +114,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/connect/token", formData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/connect/token", formData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }
 
     [Fact]
@@ -142,7 +142,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.GetAsync("/connect/userinfo");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/connect/userinfo", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -171,7 +171,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/connect/revoke", formData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -187,7 +187,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
 
         // Assert
         // Per OAuth 2.0 spec, should return success even if token doesn't exist
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
 
     [Theory]
@@ -204,7 +204,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+        response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
     [Theory]
@@ -221,7 +221,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+        response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
     [Theory]
@@ -238,7 +238,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+        response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
     [Theory]
@@ -254,7 +254,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+        response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
     [Fact]
@@ -273,7 +273,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -297,7 +297,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         // Assert
         // First registration might succeed or fail depending on test setup
         // The important thing is that it returns a valid HTTP status
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.InternalServerError);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.InternalServerError);
     }
 
     [Theory]
@@ -313,7 +313,7 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.UnsupportedMediaType, HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.UnsupportedMediaType, HttpStatusCode.BadRequest);
     }
 
     [Theory]
@@ -329,6 +329,6 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory) : IClassF
         var response = await _client.PostAsync("/api/Auth/login", content);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.UnsupportedMediaType, HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.UnsupportedMediaType, HttpStatusCode.BadRequest);
     }
 }

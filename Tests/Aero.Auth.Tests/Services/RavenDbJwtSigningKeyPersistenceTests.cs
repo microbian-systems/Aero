@@ -1,14 +1,11 @@
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Aero.Auth.Services;
 using Aero.Models.Entities;
-using Aero.RavenDB;
-using Aero.RavenDB;
-using Raven.TestDriver;
-using Raven.Client.Documents;
-using Raven.Client.Documents.Session;
-using Raven.Embedded;
+using Marten;
+using Microsoft.AspNetCore.TestHost;
+
 
 namespace Aero.Auth.Tests.Services;
 
@@ -44,7 +41,7 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         _mockLogger = Substitute.For<ILogger<RavenDbJwtSigningKeyPersistence>>();
     }
 
-    #region Constructor Tests
+    //#region Constructor Tests
 
     [Fact]
     public void Constructor_WithValidDependencies_ShouldNotThrow()
@@ -53,7 +50,7 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         Action act = () => new RavenDbJwtSigningKeyPersistence(_mockUow, _mockLogger);
 
         // Assert
-        act.Should().NotThrow();
+        act.ShouldNotThrow();
     }
 
     [Fact]
@@ -63,7 +60,7 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         Action act = () => new RavenDbJwtSigningKeyPersistence(null!, _mockLogger);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>()
+        act.ShouldThrow<ArgumentNullException>()
             .WithParameterName("uow");
     }
 
@@ -74,13 +71,13 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         Action act = () => new RavenDbJwtSigningKeyPersistence(_mockUow, null!);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>()
+        act.ShouldThrow<ArgumentNullException>()
             .WithParameterName("logger");
     }
 
-    #endregion
+    //#endregion
 
-    #region Interface Implementation Tests
+    //#region Interface Implementation Tests
 
     [Fact]
     public void RavenDbJwtSigningKeyPersistence_ImplementsInterface()
@@ -89,7 +86,7 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         IJwtSigningKeyPersistence persistence = new RavenDbJwtSigningKeyPersistence(_mockUow, _mockLogger);
 
         // Assert
-        persistence.Should().BeAssignableTo<IJwtSigningKeyPersistence>();
+        persistence.ShouldBeAssignableTo<IJwtSigningKeyPersistence>();
     }
 
     [Fact]
@@ -106,22 +103,22 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         // Assert
         foreach (var method in interfaceMethods)
         {
-            implementationMethods.Should().Contain(m =>
+            implementationMethods.ShouldContain(m =>
                 m.Name == method.Name && m.ReturnType == method.ReturnType,
                 because: $"Implementation should have method {method.Name}");
         }
     }
 
-    #endregion
+    //#endregion
 
-    #region AddKey Tests
+    //#region AddKey Tests
 
     [Fact]
     public async Task AddKeyAsync_WithValidKey_ShouldReturnTrue()
     {
         // Arrange
         using var store = GetDocumentStore();
-        using var session = store.OpenAsyncSession();
+        using var session = store.LightweightSession();
         var uow = new RavenDbUnitOfWork(session, Substitute.For<ILogger<RavenDbUnitOfWork>>(), Substitute.For<ILoggerFactory>());
         var persistence = new RavenDbJwtSigningKeyPersistence(uow, _mockLogger);
         
@@ -135,16 +132,16 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         // Act
         var result = await persistence.AddKeyAsync(keyToAdd);
         await uow.SaveChangesAsync(); // Ensure it persists
-        WaitForIndexing(store);
+        
 
         // Assert
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
 
         // Verify it was actually added
-        using var verifySession = store.OpenAsyncSession();
+        using var verifySession = store.LightweightSession();
         var savedKey = await verifySession.Query<JwtSigningKey>().FirstOrDefaultAsync(k => k.KeyId == "new-key");
-        savedKey.Should().NotBeNull();
-        savedKey!.IsCurrentSigningKey.Should().BeTrue();
+        savedKey.ShouldNotBeNull();
+        savedKey!.IsCurrentSigningKey.ShouldBeTrue();
     }
 
     [Fact]
@@ -157,19 +154,19 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         Func<Task> act = () => persistence.AddKeyAsync(null!);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentNullException>();
+        act.ShouldThrow<ArgumentNullException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region UpdateKey Tests
+    //#region UpdateKey Tests
 
     [Fact]
     public async Task UpdateKeyAsync_WithValidKey_ShouldReturnTrue()
     {
         // Arrange
         using var store = GetDocumentStore();
-        using var session = store.OpenAsyncSession();
+        using var session = store.LightweightSession();
         var uow = new RavenDbUnitOfWork(session, Substitute.For<ILogger<RavenDbUnitOfWork>>(), Substitute.For<ILoggerFactory>());
         var persistence = new RavenDbJwtSigningKeyPersistence(uow, _mockLogger);
 
@@ -181,7 +178,7 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         };
         await persistence.AddKeyAsync(existingKey);
         await uow.SaveChangesAsync();
-        WaitForIndexing(store);
+        
 
         var keyToUpdate = new JwtSigningKey
         {
@@ -197,14 +194,14 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         // But UpdateKeyAsync uses GetSession() which calls _uow.Session.
         var result = await persistence.UpdateKeyAsync(keyToUpdate);
         await uow.SaveChangesAsync();
-        WaitForIndexing(store);
+        
 
         // Assert
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
         
-        using var verifySession = store.OpenAsyncSession();
+        using var verifySession = store.LightweightSession();
         var updatedKey = await verifySession.LoadAsync<JwtSigningKey>(existingKey.Id);
-        updatedKey.IsCurrentSigningKey.Should().BeFalse();
+        updatedKey.IsCurrentSigningKey.ShouldBeFalse();
     }
 
     [Fact]
@@ -217,19 +214,19 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         Func<Task> act = () => persistence.UpdateKeyAsync(null!);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentNullException>();
+        act.ShouldThrow<ArgumentNullException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region RevokeKey Tests
+    //#region RevokeKey Tests
 
     [Fact]
     public async Task RevokeKeyAsync_WithValidKeyId_ShouldReturnTrue()
     {
         // Arrange
         using var store = GetDocumentStore();
-        using var session = store.OpenAsyncSession();
+        using var session = store.LightweightSession();
         var uow = new RavenDbUnitOfWork(session, Substitute.For<ILogger<RavenDbUnitOfWork>>(), Substitute.For<ILoggerFactory>());
         var persistence = new RavenDbJwtSigningKeyPersistence(uow, _mockLogger);
 
@@ -241,19 +238,18 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         };
         await persistence.AddKeyAsync(existingKey);
         await uow.SaveChangesAsync();
-        WaitForIndexing(store);
+        
 
         // Act
         var result = await persistence.RevokeKeyAsync("valid-key-id");
         await uow.SaveChangesAsync();
-        WaitForIndexing(store);
 
         // Assert
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
 
-        using var verifySession = store.OpenAsyncSession();
+        using var verifySession = store.LightweightSession();
         var revokedKey = await verifySession.LoadAsync<JwtSigningKey>(existingKey.Id);
-        revokedKey.RevokedAt.Should().NotBeNull();
+        revokedKey.RevokedAt.ShouldNotBeNull();
     }
 
     [Fact]
@@ -266,7 +262,7 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         Func<Task> act = () => persistence.RevokeKeyAsync(null!);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -279,12 +275,12 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         Func<Task> act = () => persistence.RevokeKeyAsync(string.Empty);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region GetKeyById Tests
+    //#region GetKeyById Tests
 
     [Fact]
     public async Task GetKeyByIdAsync_WithNullKeyId_ShouldThrowArgumentException()
@@ -296,7 +292,7 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         Func<Task> act = () => persistence.GetKeyByIdAsync(null!);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -309,12 +305,12 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         Func<Task> act = () => persistence.GetKeyByIdAsync(string.Empty);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region SaveChanges Tests
+    //#region SaveChanges Tests
 
     [Fact]
     public async Task SaveChangesAsync_ShouldCallUowSaveChanges()
@@ -329,13 +325,13 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         var result = await persistence.SaveChangesAsync();
 
         // Assert
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
         await _mockUow.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
-    #endregion
+    //#endregion
 
-    #region Input Validation Tests
+    //#region Input Validation Tests
 
     [Theory]
     [InlineData(null)]
@@ -349,34 +345,34 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         if (invalidValue == null)
         {
             await persistence.Invoking(p => p.GetKeyByIdAsync(invalidValue!))
-                .Should().ThrowAsync<ArgumentException>();
+                .ShouldThrow()Async<ArgumentException>();
         }
         else
         {
             await persistence.Invoking(p => p.GetKeyByIdAsync(invalidValue))
-                .Should().ThrowAsync<ArgumentException>();
+                .ShouldThrow()Async<ArgumentException>();
         }
     }
 
-    #endregion
+    //#endregion
 
-    #region Error Handling Tests
+    //#region Error Handling Tests
 
     [Fact]
     public async Task AddKeyAsync_ShouldReturnFalseOnException()
     {
         // Arrange
         using var store = GetDocumentStore();
-        using var session = store.OpenAsyncSession();
+        using var session = store.LightweightSession();
         // Force disposal of session to cause exception? 
         // Or mock internal behavior? 
         // The original test mocked UOW to verify error handling.
         // We can use the mock UOW here since we want to simulate exception from underlying storage which is hard with real DB unless we break connection.
         
         var mockUow = Substitute.For<IRavenDbUnitOfWork>();
-        var mockSession = Substitute.For<IAsyncDocumentSession>();
+        var mockSession = Substitute.For<IDocumentSession>();
         mockUow.Session.Returns(mockSession);
-        mockSession.StoreAsync(Arg.Any<JwtSigningKey>(), Arg.Any<CancellationToken>())
+        mockSession.Store(Arg.Any<JwtSigningKey>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromException(new Exception("Database error")));
             
         var persistence = new RavenDbJwtSigningKeyPersistence(mockUow, _mockLogger);
@@ -391,8 +387,8 @@ public class RavenDbJwtSigningKeyPersistenceTests : RavenTestDriver
         var result = await persistence.AddKeyAsync(keyToAdd);
 
         // Assert
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 }

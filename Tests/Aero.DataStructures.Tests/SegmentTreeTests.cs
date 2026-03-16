@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -16,7 +16,7 @@ public class SegmentTreeTests
         var sum = segTree.Query(1, 3);
 
         // Assert
-        sum.Should().Be(15); // 3 + 5 + 7
+        sum.ShouldBe(15); // 3 + 5 + 7
     }
 
     [Fact]
@@ -31,6 +31,6 @@ public class SegmentTreeTests
         var sum = segTree.Query(1, 3);
 
         // Assert
-        sum.Should().Be(16); // 3 + 6 + 7
+        sum.ShouldBe(16); // 3 + 6 + 7
     }
 }

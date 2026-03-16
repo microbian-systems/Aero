@@ -434,7 +434,7 @@ public class FacebookProvider : SocialProviderBase
     private string GetAppSecret() => _configuration["FACEBOOK_APP_SECRET"] ?? throw new InvalidOperationException("FACEBOOK_APP_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class FacebookAccessTokenResponse
     {
@@ -532,5 +532,5 @@ public class FacebookProvider : SocialProviderBase
         public FacebookPicture? Picture { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

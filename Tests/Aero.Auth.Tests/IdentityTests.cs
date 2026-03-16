@@ -2,11 +2,11 @@ using Bogus;
 using Aero.Core;
 using Aero.Models;
 using Aero.Models.Entities;
-using FluentAssertions;
+using Shouldly;
+using Marten;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Raven.Client.Documents;
-using Raven.Client.Documents.Session;
+
 
 namespace Aero.Auth.Tests;
 
@@ -16,14 +16,14 @@ public class IdentityTests : IClassFixture<TestWebAppFactory>, IDisposable
     private readonly UserManager<AeroUser> userManager;
     private readonly IServiceScope scope;
     readonly Faker faker = new();
-    private readonly IAsyncDocumentSession db;
+    private readonly IDocumentSession db;
 
     public IdentityTests(TestWebAppFactory factory)
     {
         scope = factory.Services.CreateScope();
         client = factory.CreateClient(); 
         userManager = scope.ServiceProvider.GetRequiredService<UserManager<AeroUser>>();
-        db = scope.ServiceProvider.GetRequiredService<IAsyncDocumentSession>();
+        db = scope.ServiceProvider.GetRequiredService<IDocumentSession>();
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class IdentityTests : IClassFixture<TestWebAppFactory>, IDisposable
             }
         };
         var res = await userManager.CreateAsync(user);
-        res.Succeeded.Should().BeTrue();
+        res.Succeeded.ShouldBeTrue();
 
         var saved = await userManager.FindByEmailAsync(user.Email);
         var saved2 = await userManager.FindByIdAsync(user.Id.ToString());

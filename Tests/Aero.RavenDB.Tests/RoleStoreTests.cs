@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Aero.Core.Identity;
 using Aero.MartenDB.Identity;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.Options;
 
 namespace Aero.RavenDB.Tests;
@@ -18,7 +18,7 @@ public class RoleStoreTests : RavenDbTestBase
             AutoSaveChanges = true
         });
 
-        _roleStore = new RoleStore<AeroRole>(DocumentStore.OpenAsyncSession(), _options);
+        _roleStore = new RoleStore<AeroRole>(DocumentStore.LightweightSession(), _options);
     }
 
     [Fact]
@@ -31,12 +31,12 @@ public class RoleStoreTests : RavenDbTestBase
         var result = await _roleStore.CreateAsync(role, CancellationToken.None);
 
         // Assert
-        result.Succeeded.Should().BeTrue();
+        result.Succeeded.ShouldBeTrue();
         
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var savedRole = await session.LoadAsync<AeroRole>(role.Id);
-        savedRole.Should().NotBeNull();
-        savedRole.Name.Should().Be("Admin");
+        savedRole.ShouldNotBeNull();
+        savedRole.Name.ShouldBe("Admin");
     }
 
     [Fact]
@@ -50,8 +50,8 @@ public class RoleStoreTests : RavenDbTestBase
         var foundRole = await _roleStore.FindByNameAsync("Manager", CancellationToken.None);
 
         // Assert
-        foundRole.Should().NotBeNull();
-        foundRole.Name.Should().Be("Manager");
+        foundRole.ShouldNotBeNull();
+        foundRole.Name.ShouldBe("Manager");
     }
 
     [Fact]
@@ -66,11 +66,11 @@ public class RoleStoreTests : RavenDbTestBase
         var result = await _roleStore.UpdateAsync(role, CancellationToken.None);
 
         // Assert
-        result.Succeeded.Should().BeTrue();
+        result.Succeeded.ShouldBeTrue();
         
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var updatedRole = await session.LoadAsync<AeroRole>(role.Id);
-        updatedRole.Name.Should().Be("NewRole");
+        updatedRole.Name.ShouldBe("NewRole");
     }
 
     [Fact]
@@ -84,11 +84,11 @@ public class RoleStoreTests : RavenDbTestBase
         var result = await _roleStore.DeleteAsync(role, CancellationToken.None);
 
         // Assert
-        result.Succeeded.Should().BeTrue();
+        result.Succeeded.ShouldBeTrue();
 
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var deletedRole = await session.LoadAsync<AeroRole>(role.Id);
-        deletedRole.Should().BeNull();
+        deletedRole.ShouldBeNull();
     }
 
     [Fact]
@@ -103,8 +103,8 @@ public class RoleStoreTests : RavenDbTestBase
         await _roleStore.AddClaimAsync(role, claim, CancellationToken.None);
 
         // Assert
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var updatedRole = await session.LoadAsync<AeroRole>(role.Id);
-        updatedRole.Claims.Should().Contain(c => c.ClaimType == "Permission" && c.ClaimValue == "ViewReports");
+        updatedRole.Claims.ShouldContain(c => c.ClaimType == "Permission" && c.ClaimValue == "ViewReports");
     }
 }

@@ -1,6 +1,5 @@
 using Aero.Identity.Models;
 using Marten;
-using Marten.Linq;
 using Microsoft.AspNetCore.Identity;
 
 

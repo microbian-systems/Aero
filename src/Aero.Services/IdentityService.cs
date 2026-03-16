@@ -1,6 +1,5 @@
 using Aero.Core;
 using Aero.Core.Extensions;
-using Aero.Models.Entities;
 
 namespace Aero.Services;
 

@@ -21,7 +21,7 @@ public static class IdentityBuilderExtensions
 	public static IdentityBuilder AddRavenDbIdentityStores<TUser>(this IdentityBuilder builder, Action<RavenDbIdentityOptions>? configure = null) 
 		where TUser : AeroUser, new()
 	{
-		return builder.AddRavenDbIdentityStores<TUser, AeroRole>(configure);
+		return builder.AddAerodentityStores<TUser, AeroRole>(configure);
 	}
 
 	/// <summary>
@@ -32,7 +32,9 @@ public static class IdentityBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="configure">Options configuration callback for identity integration.</param>
 	/// <returns>The builder.</returns>
-	public static IdentityBuilder AddRavenDbIdentityStores<TUser, TRole>(this IdentityBuilder builder, Action<RavenDbIdentityOptions>? configure = null)
+	public static IdentityBuilder AddAerodentityStores<TUser, TRole>(
+		this IdentityBuilder builder,
+		Action<RavenDbIdentityOptions>? configure = null)
 		where TUser : AeroUser, new()
 		where TRole : AeroRole, new()
 	{

@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
@@ -491,7 +489,7 @@ public class ThreadsProvider : SocialProviderBase
     private string GetAppSecret() => _configuration["THREADS_APP_SECRET"] ?? throw new InvalidOperationException("THREADS_APP_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class ThreadsTokenResponse
     {
@@ -574,5 +572,5 @@ public class ThreadsProvider : SocialProviderBase
         public DateTime? EndTime { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

@@ -333,7 +333,7 @@ public class TwitchProvider : SocialProviderBase
     private string GetClientSecret() => _configuration["TWITCH_CLIENT_SECRET"] ?? throw new InvalidOperationException("TWITCH_CLIENT_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class TwitchTokenResponse
     {
@@ -400,5 +400,5 @@ public class TwitchProvider : SocialProviderBase
         public bool IsSent { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

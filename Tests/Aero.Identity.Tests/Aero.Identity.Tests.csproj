@@ -27,4 +27,13 @@
       <ProjectReference Include="..\..\src\Aero.Cms.AspNetCore.Identity\Aero.Cms.AspNetCore.Identity.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="IdentityIntegrationTests.cs" />
+      <None Include="IdentityIntegrationTests.cs" />
+      <Compile Remove="IdentityManagementTests.cs" />
+      <None Include="IdentityManagementTests.cs" />
+      <Compile Remove="RavenIdentityModuleTests.cs" />
+      <None Include="RavenIdentityModuleTests.cs" />
+    </ItemGroup>
+
 </Project>

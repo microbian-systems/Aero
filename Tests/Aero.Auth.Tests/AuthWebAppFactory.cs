@@ -1,12 +1,9 @@
 // Fixtures/TestWebAppFactory.cs
 
-using Aero.Auth.Tests.WebHost;
+using Marten;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Raven.Client.Documents;
-using Raven.Client.Documents.Session;
-using Raven.TestDriver;
 
 namespace Aero.Auth.Tests;
 
@@ -35,9 +32,9 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
             var env = ctx.HostingEnvironment;
             var config = ctx.Configuration;
             services.AddSingleton<IDocumentStore>(store);
-            services.AddScoped<IAsyncDocumentSession>(sp =>
+            services.AddScoped<IDocumentSession>(sp =>
             {
-                var session = store.OpenAsyncSession();
+                var session = store.LightweightSession();
                 return session;
             });
         });

@@ -1,5 +1,3 @@
-using System;
-
 namespace Aero.DataStructures.Trees.Persistence.Serialization;
 
 /// <summary>

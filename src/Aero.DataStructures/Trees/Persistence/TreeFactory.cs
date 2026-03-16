@@ -1,4 +1,3 @@
-using System;
 using Aero.DataStructures.Trees.Persistence.Interfaces;
 using Aero.DataStructures.Trees.Persistence.Serialization;
 using Aero.DataStructures.Trees.Persistence.Storage;

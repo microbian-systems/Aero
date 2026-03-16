@@ -400,7 +400,7 @@ public class DiscordProvider : SocialProviderBase
         return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(credentials));
     }
 
-    #region DTOs
+    //#region DTOs
 
     private class DiscordTokenResponse
     {
@@ -489,5 +489,5 @@ public class DiscordProvider : SocialProviderBase
         public string Avatar { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

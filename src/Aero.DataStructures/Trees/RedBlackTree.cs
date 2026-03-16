@@ -1,5 +1,3 @@
-using System;
-
 namespace Aero.DataStructures.Trees;
 
 public class RedBlackTree<T> : ITree<T> where T : IComparable<T>

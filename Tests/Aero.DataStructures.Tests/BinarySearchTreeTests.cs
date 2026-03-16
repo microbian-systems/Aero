@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 using Bogus;
 
@@ -24,8 +24,8 @@ public class BinarySearchTreeTests
         // Assert
         foreach (var value in values)
         {
-            bst.Find(value).Should().NotBeNull();
-            bst.Find(value).Value.Should().Be(value);
+            bst.Find(value).ShouldNotBeNull();
+            bst.Find(value).Value.ShouldBe(value);
         }
     }
 
@@ -42,7 +42,7 @@ public class BinarySearchTreeTests
         var result = bst.Find(999);
 
         // Assert
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -58,10 +58,10 @@ public class BinarySearchTreeTests
         bst.Delete(5);
 
         // Assert
-        bst.Find(5).Should().BeNull();
-        bst.Root.Left.Should().BeNull();
-        bst.Root.Value.Should().Be(10);
-        bst.Root.Right.Value.Should().Be(15);
+        bst.Find(5).ShouldBeNull();
+        bst.Root.Left.ShouldBeNull();
+        bst.Root.Value.ShouldBe(10);
+        bst.Root.Right.Value.ShouldBe(15);
     }
 
     [Fact]
@@ -77,9 +77,9 @@ public class BinarySearchTreeTests
         bst.Delete(5);
 
         // Assert
-        bst.Find(5).Should().BeNull();
-        bst.Find(3).Should().NotBeNull();
-        bst.Root.Left.Value.Should().Be(3);
+        bst.Find(5).ShouldBeNull();
+        bst.Find(3).ShouldNotBeNull();
+        bst.Root.Left.Value.ShouldBe(3);
     }
 
     [Fact]
@@ -95,9 +95,9 @@ public class BinarySearchTreeTests
         bst.Delete(5);
 
         // Assert
-        bst.Find(5).Should().BeNull();
-        bst.Find(7).Should().NotBeNull();
-        bst.Root.Left.Value.Should().Be(7);
+        bst.Find(5).ShouldBeNull();
+        bst.Find(7).ShouldNotBeNull();
+        bst.Root.Left.Value.ShouldBe(7);
     }
 
     [Fact]
@@ -114,12 +114,12 @@ public class BinarySearchTreeTests
         bst.Delete(5);
 
         // Assert
-        bst.Find(5).Should().BeNull();
+        bst.Find(5).ShouldBeNull();
         // The successor of 5 (two children) should be the min value of right subtree (7).
         // Or if standard implementation, replaces value.
-        bst.Root.Left.Value.Should().Be(7); 
-        bst.Find(3).Should().NotBeNull();
-        bst.Find(7).Should().NotBeNull();
+        bst.Root.Left.Value.ShouldBe(7); 
+        bst.Find(3).ShouldNotBeNull();
+        bst.Find(7).ShouldNotBeNull();
     }
 
     [Fact]
@@ -133,8 +133,8 @@ public class BinarySearchTreeTests
         bst.Delete(10);
 
         // Assert
-        bst.Find(10).Should().BeNull();
-        bst.Root.Should().BeNull();
+        bst.Find(10).ShouldBeNull();
+        bst.Root.ShouldBeNull();
     }
 
     [Fact]
@@ -149,8 +149,8 @@ public class BinarySearchTreeTests
         bst.Delete(10);
 
         // Assert
-        bst.Find(10).Should().BeNull();
-        bst.Root.Value.Should().Be(15);
+        bst.Find(10).ShouldBeNull();
+        bst.Root.Value.ShouldBe(15);
     }
 
     [Fact]
@@ -168,11 +168,11 @@ public class BinarySearchTreeTests
         bst.Delete(10);
 
         // Assert
-        bst.Find(10).Should().BeNull();
+        bst.Find(10).ShouldBeNull();
         // Successor of 10 is min of right subtree (15's subtree), which is 12.
-        bst.Root.Value.Should().Be(12);
-        bst.Root.Right.Value.Should().Be(15);
-        bst.Root.Left.Value.Should().Be(5);
+        bst.Root.Value.ShouldBe(12);
+        bst.Root.Right.Value.ShouldBe(15);
+        bst.Root.Left.Value.ShouldBe(5);
     }
 
     [Fact]
@@ -187,9 +187,9 @@ public class BinarySearchTreeTests
         bst.Delete(99);
 
         // Assert
-        bst.Find(10).Should().NotBeNull();
-        bst.Find(5).Should().NotBeNull();
-        bst.Root.Value.Should().Be(10);
+        bst.Find(10).ShouldNotBeNull();
+        bst.Find(5).ShouldNotBeNull();
+        bst.Root.Value.ShouldBe(10);
     }
 
     [Fact]
@@ -205,7 +205,7 @@ public class BinarySearchTreeTests
         var node = bst.Find("banana");
 
         // Assert
-        node.Should().NotBeNull();
-        node.Value.Should().Be("banana");
+        node.ShouldNotBeNull();
+        node.Value.ShouldBe("banana");
     }
 }

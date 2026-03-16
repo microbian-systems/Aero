@@ -1,6 +1,3 @@
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-
 namespace Aero.Common.Patterns;
 
 public abstract  class AbstractAsyncDecorator : IAsyncDecorator

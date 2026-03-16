@@ -1,4 +1,3 @@
-using System;
 using System.Buffers.Binary;
 
 namespace Aero.DataStructures.Trees.Persistence.Serialization;

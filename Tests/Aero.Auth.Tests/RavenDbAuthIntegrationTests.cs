@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using FluentAssertions;
+using Shouldly;
 
 namespace Aero.Auth.Tests;
 
@@ -24,7 +24,7 @@ public class RavenDbAuthIntegrationTests(RavenDbAuthWebAppFactory factory) : ICl
         };
         
         var regResponse = await _client.PostAsJsonAsync("/api/Auth/register", registerRequest);
-        regResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        regResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
         // 2. Login
         var loginRequest = new
@@ -34,9 +34,9 @@ public class RavenDbAuthIntegrationTests(RavenDbAuthWebAppFactory factory) : ICl
         };
         
         var loginResponse = await _client.PostAsJsonAsync("/api/Auth/login", loginRequest);
-        loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        loginResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
         
         var loginResult = await loginResponse.Content.ReadFromJsonAsync<JsonElement>();
-        loginResult.TryGetProperty("accessToken", out _).Should().BeTrue();
+        loginResult.TryGetProperty("accessToken", out _).ShouldBeTrue();
     }
 }

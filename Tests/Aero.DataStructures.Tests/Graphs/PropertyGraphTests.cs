@@ -1,9 +1,8 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
 using Humanizer;
-using NSubstitute;
 
 namespace Aero.DataStructures.Tests;
 
@@ -12,7 +11,7 @@ public class PropertyGraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Vertex Tests
+    //#region Vertex Tests
 
     [Fact]
     public void AddVertex_ShouldCreateVertexWithLabel()
@@ -23,9 +22,9 @@ public class PropertyGraphTests
 
         var vertex = graph.AddVertex(id, label);
 
-        vertex.Should().NotBeNull();
-        vertex!.Id.Should().Be(id);
-        vertex.Label.Should().Be(label);
+        vertex.ShouldNotBeNull();
+        vertex!.Id.ShouldBe(id);
+        vertex.Label.ShouldBe(label);
     }
 
     [Fact]
@@ -40,8 +39,8 @@ public class PropertyGraphTests
 
         var vertex = graph.AddVertex("v1", "Person", props);
 
-        vertex!.Properties["name"].Should().Be("Alice");
-        vertex!.Properties["age"].Should().Be(30);
+        vertex!.Properties["name"].ShouldBe("Alice");
+        vertex!.Properties["age"].ShouldBe(30);
     }
 
     [Fact]
@@ -52,7 +51,7 @@ public class PropertyGraphTests
 
         var result = graph.AddVertex("duplicate", "OtherType");
 
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -64,8 +63,8 @@ public class PropertyGraphTests
 
         var vertex = graph.GetVertex(id);
 
-        vertex.Should().NotBeNull();
-        vertex!.Id.Should().Be(id);
+        vertex.ShouldNotBeNull();
+        vertex!.Id.ShouldBe(id);
     }
 
     [Fact]
@@ -78,13 +77,13 @@ public class PropertyGraphTests
 
         var persons = graph.GetVerticesByLabel("Person").ToList();
 
-        persons.Should().HaveCount(2);
-        persons.All(p => p.Label == "Person").Should().BeTrue();
+        persons.Count().ShouldBe(2);
+        persons.All(p => p.Label == "Person").ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 
-    #region Edge Tests
+    //#region Edge Tests
 
     [Fact]
     public void AddEdge_ShouldCreateEdgeWithLabel()
@@ -95,10 +94,10 @@ public class PropertyGraphTests
 
         var edge = graph.AddEdge("a", "b", 1, "KNOWS");
 
-        edge.Should().NotBeNull();
-        edge!.SourceId.Should().Be("a");
-        edge.TargetId.Should().Be("b");
-        edge.Label.Should().Be("KNOWS");
+        edge.ShouldNotBeNull();
+        edge!.SourceId.ShouldBe("a");
+        edge.TargetId.ShouldBe("b");
+        edge.Label.ShouldBe("KNOWS");
     }
 
     [Fact]
@@ -111,7 +110,7 @@ public class PropertyGraphTests
 
         var edge = graph.AddEdge("a", "b", 1, "FRIEND", props);
 
-        edge!.Properties["since"].Should().Be(2020);
+        edge!.Properties["since"].ShouldBe(2020);
     }
 
     [Fact]
@@ -121,7 +120,7 @@ public class PropertyGraphTests
 
         var edge = graph.AddEdge("nonexistent1", "nonexistent2", 1, "EDGE");
 
-        edge.Should().BeNull();
+        edge.ShouldBeNull();
     }
 
     [Fact]
@@ -134,13 +133,13 @@ public class PropertyGraphTests
 
         var edge = graph.GetEdge(42);
 
-        edge.Should().NotBeNull();
-        edge!.Id.Should().Be(42);
+        edge.ShouldNotBeNull();
+        edge!.Id.ShouldBe(42);
     }
 
-    #endregion
+    //#endregion
 
-    #region Traversal Tests
+    //#region Traversal Tests
 
     [Fact]
     public void GetOutEdges_ShouldReturnOutgoingEdges()
@@ -154,7 +153,7 @@ public class PropertyGraphTests
 
         var outEdges = graph.GetOutEdges("center").ToList();
 
-        outEdges.Should().HaveCount(2);
+        outEdges.Count().ShouldBe(2);
     }
 
     [Fact]
@@ -169,8 +168,8 @@ public class PropertyGraphTests
 
         var friendEdges = graph.GetOutEdges("a", "FRIEND").ToList();
 
-        friendEdges.Should().ContainSingle();
-        friendEdges[0].TargetId.Should().Be("b");
+        friendEdges.ShouldContainSingle();
+        friendEdges[0].TargetId.ShouldBe("b");
     }
 
     [Fact]
@@ -185,7 +184,7 @@ public class PropertyGraphTests
 
         var inEdges = graph.GetInEdges("target").ToList();
 
-        inEdges.Should().HaveCount(2);
+        inEdges.Count().ShouldBe(2);
     }
 
     [Fact]
@@ -200,12 +199,12 @@ public class PropertyGraphTests
 
         var neighbors = graph.GetOutNeighbors("start").ToList();
 
-        neighbors.Select(n => n.Id).Should().Contain(new[] { "end1", "end2" });
+        neighbors.Select(n => n.Id).ShouldContain(new[] { "end1", "end2" });
     }
 
-    #endregion
+    //#endregion
 
-    #region Query Tests
+    //#region Query Tests
 
     [Fact]
     public void FindVertices_ShouldFindByProperty()
@@ -217,7 +216,7 @@ public class PropertyGraphTests
 
         var nycResidents = graph.FindVertices("city", "NYC").ToList();
 
-        nycResidents.Should().HaveCount(2);
+        nycResidents.Count().ShouldBe(2);
     }
 
     [Fact]
@@ -233,12 +232,12 @@ public class PropertyGraphTests
 
         var weight5Edges = graph.FindEdges("weight", 5).ToList();
 
-        weight5Edges.Should().HaveCount(2);
+        weight5Edges.Count().ShouldBe(2);
     }
 
-    #endregion
+    //#endregion
 
-    #region Pattern Matching Tests
+    //#region Pattern Matching Tests
 
     [Fact]
     public void MatchPattern_ShouldReturnMatchingTriples()
@@ -252,8 +251,8 @@ public class PropertyGraphTests
 
         var patterns = graph.MatchPattern("alice", "KNOWS").ToList();
 
-        patterns.Should().HaveCount(2);
-        patterns.All(p => p.Source.Id == "alice").Should().BeTrue();
+        patterns.Count().ShouldBe(2);
+        patterns.All(p => p.Source.Id == "alice").ShouldBeTrue();
     }
 
     [Fact]
@@ -270,12 +269,12 @@ public class PropertyGraphTests
 
         var results = graph.MatchTwoHop("a", "FIRST", "SECOND").ToList();
 
-        results.Should().HaveCount(2);
+        results.Count().ShouldBe(2);
     }
 
-    #endregion
+    //#endregion
 
-    #region Remove Tests
+    //#region Remove Tests
 
     [Fact]
     public void RemoveVertex_ShouldRemoveIncidentEdges()
@@ -288,7 +287,7 @@ public class PropertyGraphTests
 
         graph.RemoveVertex("remove");
 
-        graph.EdgeCount.Should().Be(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
     [Fact]
@@ -301,13 +300,13 @@ public class PropertyGraphTests
 
         graph.RemoveEdge(1);
 
-        graph.VertexCount.Should().Be(2);
-        graph.EdgeCount.Should().Be(0);
+        graph.VertexCount.ShouldBe(2);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Count Tests
+    //#region Count Tests
 
     [Fact]
     public void Counts_ShouldBeAccurate()
@@ -322,13 +321,13 @@ public class PropertyGraphTests
         for (int i = 0; i < numEdges; i++)
             graph.AddEdge(i, i + 1, i, "LINKS");
 
-        graph.VertexCount.Should().Be(numVertices);
-        graph.EdgeCount.Should().Be(numEdges);
+        graph.VertexCount.ShouldBe(numVertices);
+        graph.EdgeCount.ShouldBe(numEdges);
     }
 
-    #endregion
+    //#endregion
 
-    #region Clear Tests
+    //#region Clear Tests
 
     [Fact]
     public void Clear_ShouldRemoveAllData()
@@ -340,9 +339,9 @@ public class PropertyGraphTests
 
         graph.Clear();
 
-        graph.VertexCount.Should().Be(0);
-        graph.EdgeCount.Should().Be(0);
+        graph.VertexCount.ShouldBe(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 }

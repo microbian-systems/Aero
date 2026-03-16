@@ -1,5 +1,3 @@
-using System.Collections;
-
 namespace Aero.Core.Validation;
 
 public class Examples

@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -21,9 +21,9 @@ public class KdTreeTests
         var inRange = kdTree.RangeSearch(range).ToList();
 
         // Assert
-        inRange.Should().HaveCount(2);
-        inRange.Should().Contain(p => p.X == 13 && p.Y == 15);
-        inRange.Should().Contain(p => p.X == 6 && p.Y == 12);
+        inRange.Count().ShouldBe(2);
+        inRange.ShouldContain(p => p.X == 13 && p.Y == 15);
+        inRange.ShouldContain(p => p.X == 6 && p.Y == 12);
     }
         
     [Fact]
@@ -40,7 +40,7 @@ public class KdTreeTests
         var nearest = kdTree.NearestNeighbor(new Point(5, 11));
 
         // Assert
-        nearest.X.Should().Be(6);
-        nearest.Y.Should().Be(12);
+        nearest.X.ShouldBe(6);
+        nearest.Y.ShouldBe(12);
     }
 }

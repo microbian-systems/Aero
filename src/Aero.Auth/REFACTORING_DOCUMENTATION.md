@@ -219,16 +219,16 @@ public class AuthService
 The `GetSession()` method currently throws `NotImplementedException`:
 
 ```csharp
-private IAsyncDocumentSession GetSession()
+private IDocumentSession GetSession()
 {
     throw new NotImplementedException(
         "Session access needs to be exposed via IRavenDbUnitOfWork. " +
-        "Add a public IAsyncDocumentSession property to IRavenDbUnitOfWork.");
+        "Add a public IDocumentSession property to IRavenDbUnitOfWork.");
 }
 ```
 
 **To Fix:**
-1. Add `IAsyncDocumentSession Session { get; }` property to `IRavenDbUnitOfWork`
+1. Add `IDocumentSession Session { get; }` property to `IRavenDbUnitOfWork`
 2. Implement the property in `RavenDbUnitOfWork`
 3. Update `GetSession()` to return `_uow.Session`
 
@@ -377,7 +377,7 @@ public async Task RotateSigningKey_WithRavenDb_ShouldWork()
 
 ## Next Steps
 
-1. ✅ Expose `IAsyncDocumentSession` in `IRavenDbUnitOfWork`
+1. ✅ Expose `IDocumentSession` in `IRavenDbUnitOfWork`
 2. ⏳ Create Entity Framework Core implementation (when needed)
 3. ⏳ Create unit tests with mock implementations
 4. ⏳ Performance benchmark against other providers

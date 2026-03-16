@@ -1,5 +1,4 @@
 using Aero.Social.Abstractions;
-using Aero.Social.Models;
 using Aero.Social.Providers;
 using Microsoft.Extensions.DependencyInjection;
 

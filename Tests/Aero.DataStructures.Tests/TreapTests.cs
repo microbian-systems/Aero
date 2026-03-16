@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -21,7 +21,7 @@ public class TreapTests
         // Assert
         // This is a probabilistic test, but we can check the BST property
         var inorder = GetInorder(treap.Root);
-        inorder.Should().BeInAscendingOrder();
+        inorder.ShouldBeInAscendingOrder();
     }
 
     private System.Collections.Generic.IEnumerable<int> GetInorder(TreapNode<int> node)

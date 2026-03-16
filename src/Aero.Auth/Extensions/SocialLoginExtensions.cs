@@ -35,7 +35,7 @@ public static class SocialLoginExtensions
         });
 
         services.AddRavenPersistence(config);
-        identityBuilder.AddRavenDbIdentityStores<AeroUser, AeroRole>(options =>
+        identityBuilder.AddAerodentityStores<AeroUser, AeroRole>(options =>
         {
             options.AutoSaveChanges = true;
         });

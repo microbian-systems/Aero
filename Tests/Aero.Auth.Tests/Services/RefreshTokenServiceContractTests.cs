@@ -1,10 +1,9 @@
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Aero.Auth.Services;
-using Raven.Client.Documents.Session;
-using Raven.TestDriver;
+using Marten;
 
 namespace Aero.Auth.Tests.Services;
 
@@ -18,11 +17,6 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
 
     public RefreshTokenServiceContractTests()
     {
-        ConfigureServer(new TestServerOptions
-        {
-            FrameworkVersion = null
-        });
-
         _mockLogger = Substitute.For<ILogger<RefreshTokenService>>();
         
         // Create a real configuration with test values
@@ -40,14 +34,14 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
     public void RefreshTokenService_ImplementsInterface()
     {
         // Arrange
-        var mockSession = Substitute.For<IAsyncDocumentSession>();
+        var mockSession = Substitute.For<IDocumentSession>();
 
         // Act
         IRefreshTokenService service = new RefreshTokenService(mockSession, _mockLogger, _config);
 
         // Assert
-        service.Should().NotBeNull();
-        service.Should().BeAssignableTo<IRefreshTokenService>();
+        service.ShouldNotBeNull();
+        service.ShouldBeAssignableTo<IRefreshTokenService>();
     }
 
     [Fact]
@@ -60,12 +54,12 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
         var methods = interfaceType.GetMethods();
 
         // Assert
-        methods.Should().Contain(m => m.Name == "GenerateRefreshTokenAsync");
-        methods.Should().Contain(m => m.Name == "ValidateRefreshTokenAsync");
-        methods.Should().Contain(m => m.Name == "RotateRefreshTokenAsync");
-        methods.Should().Contain(m => m.Name == "RevokeRefreshTokenAsync");
-        methods.Should().Contain(m => m.Name == "RevokeAllUserTokensAsync");
-        methods.Should().Contain(m => m.Name == "GetActiveTokensAsync");
+        methods.ShouldContain(m => m.Name == "GenerateRefreshTokenAsync");
+        methods.ShouldContain(m => m.Name == "ValidateRefreshTokenAsync");
+        methods.ShouldContain(m => m.Name == "RotateRefreshTokenAsync");
+        methods.ShouldContain(m => m.Name == "RevokeRefreshTokenAsync");
+        methods.ShouldContain(m => m.Name == "RevokeAllUserTokensAsync");
+        methods.ShouldContain(m => m.Name == "GetActiveTokensAsync");
     }
 
     // Dependency Injection Tests
@@ -74,13 +68,13 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
     public void Constructor_WithValidDependencies_ShouldNotThrow()
     {
         // Arrange
-        var mockSession = Substitute.For<IAsyncDocumentSession>();
+        var mockSession = Substitute.For<IDocumentSession>();
 
         // Act
         Action act = () => new RefreshTokenService(mockSession, _mockLogger, _config);
 
         // Assert
-        act.Should().NotThrow();
+        act.ShouldNotThrow();
     }
 
     // Configuration Tests
@@ -89,13 +83,13 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
     public void RefreshTokenLifetime_ShouldUseConfiguredValue()
     {
         // Arrange
-        var mockSession = Substitute.For<IAsyncDocumentSession>();
+        var mockSession = Substitute.For<IDocumentSession>();
 
         // Act
         var service = new RefreshTokenService(mockSession, _mockLogger, _config);
 
         // Assert
-        service.Should().NotBeNull();
+        service.ShouldNotBeNull();
     }
 
     // Token Generation Tests
@@ -105,7 +99,7 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
     {
         // Arrange
         using var store = GetDocumentStore();
-        using var session = store.OpenAsyncSession();
+        using var session = store.LightweightSession();
 
         var service = new RefreshTokenService(session, _mockLogger, _config);
 
@@ -113,7 +107,7 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
         var token = await service.GenerateRefreshTokenAsync("user-123", "mobile");
 
         // Assert
-        token.Should().NotBeNullOrEmpty();
+        token.ShouldNotBeNullOrEmpty();
     }
 
     // Token Validation Tests
@@ -122,28 +116,28 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
     public async Task ValidateRefreshToken_WithNullToken_ShouldReturnNull()
     {
         // Arrange
-        var mockSession = Substitute.For<IAsyncDocumentSession>();
+        var mockSession = Substitute.For<IDocumentSession>();
         var service = new RefreshTokenService(mockSession, _mockLogger, _config);
 
         // Act
         var result = await service.ValidateRefreshTokenAsync(null!);
 
         // Assert
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
     public async Task ValidateRefreshToken_WithEmptyToken_ShouldReturnNull()
     {
         // Arrange
-        var mockSession = Substitute.For<IAsyncDocumentSession>();
+        var mockSession = Substitute.For<IDocumentSession>();
         var service = new RefreshTokenService(mockSession, _mockLogger, _config);
 
         // Act
         var result = await service.ValidateRefreshTokenAsync(string.Empty);
 
         // Assert
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     // Token Rotation Tests
@@ -153,7 +147,7 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
     {
         // Arrange
         using var store = GetDocumentStore();
-        using var session = store.OpenAsyncSession();
+        using var session = store.LightweightSession();
 
         var service = new RefreshTokenService(session, _mockLogger, _config);
 
@@ -161,7 +155,7 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
         Func<Task> act = async () => await service.RotateRefreshTokenAsync("invalid-token", "mobile");
 
         // Assert
-        await act.Should().ThrowAsync<InvalidOperationException>();
+        act.ShouldThrow<InvalidOperationException>();
     }
 
     // Token Revocation Tests
@@ -170,13 +164,13 @@ public class RefreshTokenServiceContractTests : RavenTestDriver
     public async Task RevokeRefreshToken_WithNullToken_ShouldThrowArgumentNullException()
     {
         // Arrange
-        var mockSession = Substitute.For<IAsyncDocumentSession>();
+        var mockSession = Substitute.For<IDocumentSession>();
         var service = new RefreshTokenService(mockSession, _mockLogger, _config);
 
         // Act
         Func<Task> act = async () => await service.RevokeRefreshTokenAsync(null!);
 
         // Assert
-        await act.Should().ThrowAsync<ArgumentNullException>();
+        act.ShouldThrow<ArgumentNullException>();
     }
 }

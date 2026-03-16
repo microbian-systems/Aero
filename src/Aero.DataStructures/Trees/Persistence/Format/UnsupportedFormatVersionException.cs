@@ -1,5 +1,3 @@
-using System;
-
 namespace Aero.DataStructures.Trees.Persistence.Format;
 
 public sealed class UnsupportedFormatVersionException : Exception

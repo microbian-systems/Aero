@@ -1,9 +1,7 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
-using Humanizer;
-using Moq;
 
 namespace Aero.DataStructures.Tests;
 
@@ -12,14 +10,14 @@ public class WeightedGraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Constructor Tests
+    //#region Constructor Tests
 
     [Fact]
     public void Constructor_ShouldCreateDirectedGraph_WhenSpecified()
     {
         var graph = new WeightedGraph<string, int>(directed: true);
 
-        graph.IsDirected.Should().BeTrue();
+        graph.IsDirected.ShouldBeTrue();
     }
 
     [Fact]
@@ -27,12 +25,12 @@ public class WeightedGraphTests
     {
         var graph = new WeightedGraph<string, int>(directed: false);
 
-        graph.IsDirected.Should().BeFalse();
+        graph.IsDirected.ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Edge Tests
+    //#region Edge Tests
 
     [Fact]
     public void AddEdge_ShouldStoreWeight()
@@ -42,8 +40,8 @@ public class WeightedGraphTests
 
         graph.AddEdge("A", "B", weight);
 
-        graph.TryGetWeight("A", "B", out var storedWeight).Should().BeTrue();
-        storedWeight.Should().Be(weight);
+        graph.TryGetWeight("A", "B", out var storedWeight).ShouldBeTrue();
+        storedWeight.ShouldBe(weight);
     }
 
     [Fact]
@@ -55,7 +53,7 @@ public class WeightedGraphTests
 
         graph.AddEdge(v1, v2, 1.5);
 
-        graph.VertexCount.Should().Be(2);
+        graph.VertexCount.ShouldBe(2);
     }
 
     [Fact]
@@ -64,8 +62,8 @@ public class WeightedGraphTests
         var graph = new WeightedGraph<string, int>(directed: false);
         graph.AddEdge("X", "Y", 10);
 
-        graph.ContainsEdge("X", "Y").Should().BeTrue();
-        graph.ContainsEdge("Y", "X").Should().BeTrue();
+        graph.ContainsEdge("X", "Y").ShouldBeTrue();
+        graph.ContainsEdge("Y", "X").ShouldBeTrue();
     }
 
     [Fact]
@@ -74,8 +72,8 @@ public class WeightedGraphTests
         var graph = new WeightedGraph<string, int>(directed: true);
         graph.AddEdge("X", "Y", 10);
 
-        graph.ContainsEdge("X", "Y").Should().BeTrue();
-        graph.ContainsEdge("Y", "X").Should().BeFalse();
+        graph.ContainsEdge("X", "Y").ShouldBeTrue();
+        graph.ContainsEdge("Y", "X").ShouldBeFalse();
     }
 
     [Fact]
@@ -85,7 +83,7 @@ public class WeightedGraphTests
         
         graph.AddEdge("A", "B", 5);
 
-        graph.EdgeCount.Should().Be(1);
+        graph.EdgeCount.ShouldBe(1);
     }
 
     [Theory]
@@ -98,20 +96,20 @@ public class WeightedGraphTests
 
         graph.AddEdge("A", "B", weight);
 
-        graph.TryGetWeight("A", "B", out var w).Should().BeTrue();
-        w.Should().Be(weight);
+        graph.TryGetWeight("A", "B", out var w).ShouldBeTrue();
+        w.ShouldBe(weight);
     }
 
-    #endregion
+    //#endregion
 
-    #region Weight Retrieval Tests
+    //#region Weight Retrieval Tests
 
     [Fact]
     public void TryGetWeight_ShouldReturnFalse_WhenEdgeDoesNotExist()
     {
         var graph = new WeightedGraph<string, int>();
 
-        graph.TryGetWeight("nonexistent", "edge", out _).Should().BeFalse();
+        graph.TryGetWeight("nonexistent", "edge", out _).ShouldBeFalse();
     }
 
     [Fact]
@@ -121,13 +119,13 @@ public class WeightedGraphTests
         var expectedWeight = _faker.Random.Double(0.1, 100.0);
         graph.AddEdge("from", "to", expectedWeight);
 
-        graph.TryGetWeight("from", "to", out var weight).Should().BeTrue();
-        weight.Should().BeApproximately(expectedWeight, 0.0001);
+        graph.TryGetWeight("from", "to", out var weight).ShouldBeTrue();
+        weight.ShouldBeApproximately(expectedWeight, 0.0001);
     }
 
-    #endregion
+    //#endregion
 
-    #region GetEdges Tests
+    //#region GetEdges Tests
 
     [Fact]
     public void GetEdges_ShouldReturnAllEdgesWithWeights()
@@ -138,14 +136,14 @@ public class WeightedGraphTests
 
         var edges = graph.GetEdges().ToList();
 
-        edges.Should().HaveCount(2);
-        edges.Should().Contain(e => e.Source == "A" && e.Destination == "B" && e.Weight == 1);
-        edges.Should().Contain(e => e.Source == "B" && e.Destination == "C" && e.Weight == 2);
+        edges.Count().ShouldBe(2);
+        edges.ShouldContain(e => e.Source == "A" && e.Destination == "B" && e.Weight == 1);
+        edges.ShouldContain(e => e.Source == "B" && e.Destination == "C" && e.Weight == 2);
     }
 
-    #endregion
+    //#endregion
 
-    #region Neighbors Tests
+    //#region Neighbors Tests
 
     [Fact]
     public void GetNeighborsWithWeights_ShouldReturnCorrectData()
@@ -156,13 +154,13 @@ public class WeightedGraphTests
 
         var neighbors = graph.GetNeighborsWithWeights("center");
 
-        neighbors.Should().ContainKey("n1").WhoseValue.Should().Be(10);
-        neighbors.Should().ContainKey("n2").WhoseValue.Should().Be(20);
+        neighbors.ShouldContainKey("n1").WhoseValue.ShouldBe(10);
+        neighbors.ShouldContainKey("n2").WhoseValue.ShouldBe(20);
     }
 
-    #endregion
+    //#endregion
 
-    #region Dijkstra Tests
+    //#region Dijkstra Tests
 
     [Fact]
     public void Dijkstra_ShouldFindShortestPaths()
@@ -174,9 +172,9 @@ public class WeightedGraphTests
 
         var distances = graph.Dijkstra("A");
 
-        distances["A"].Should().Be(0);
-        distances["B"].Should().Be(1);
-        distances["C"].Should().Be(3);
+        distances["A"].ShouldBe(0);
+        distances["B"].ShouldBe(1);
+        distances["C"].ShouldBe(3);
     }
 
     [Fact]
@@ -186,7 +184,7 @@ public class WeightedGraphTests
 
         var act = () => graph.Dijkstra("nonexistent");
 
-        act.Should().Throw<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -198,12 +196,12 @@ public class WeightedGraphTests
 
         var distances = graph.Dijkstra("A");
 
-        distances["B"].Should().Be(int.MaxValue);
+        distances["B"].ShouldBe(int.MaxValue);
     }
 
-    #endregion
+    //#endregion
 
-    #region Shortest Path Tests
+    //#region Shortest Path Tests
 
     [Fact]
     public void GetShortestPath_ShouldReturnCorrectPath()
@@ -215,8 +213,8 @@ public class WeightedGraphTests
 
         var (path, weight) = graph.GetShortestPath("A", "C");
 
-        path.Should().ContainInOrder("A", "B", "C");
-        weight.Should().Be(2);
+        path.ShouldContainInOrder("A", "B", "C");
+        weight.ShouldBe(2);
     }
 
     [Fact]
@@ -228,12 +226,12 @@ public class WeightedGraphTests
 
         var (path, _) = graph.GetShortestPath("A", "B");
 
-        path.Should().BeEmpty();
+        path.ShouldBeEmpty();
     }
 
-    #endregion
+    //#endregion
 
-    #region MST Tests
+    //#region MST Tests
 
     [Fact]
     public void GetMinimumSpanningTree_ShouldReturnCorrectEdges()
@@ -245,9 +243,9 @@ public class WeightedGraphTests
 
         var mst = graph.GetMinimumSpanningTree();
 
-        mst.EdgeCount.Should().Be(2);
-        mst.ContainsEdge("A", "B").Should().BeTrue();
-        mst.ContainsEdge("B", "C").Should().BeTrue();
+        mst.EdgeCount.ShouldBe(2);
+        mst.ContainsEdge("A", "B").ShouldBeTrue();
+        mst.ContainsEdge("B", "C").ShouldBeTrue();
     }
 
     [Fact]
@@ -257,12 +255,12 @@ public class WeightedGraphTests
 
         var act = () => graph.GetMinimumSpanningTree();
 
-        act.Should().Throw<InvalidOperationException>();
+        act.ShouldThrow<InvalidOperationException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region Remove Tests
+    //#region Remove Tests
 
     [Fact]
     public void RemoveEdge_ShouldRemoveWeight()
@@ -272,7 +270,7 @@ public class WeightedGraphTests
 
         graph.RemoveEdge("A", "B");
 
-        graph.TryGetWeight("A", "B", out _).Should().BeFalse();
+        graph.TryGetWeight("A", "B", out _).ShouldBeFalse();
     }
 
     [Fact]
@@ -284,13 +282,13 @@ public class WeightedGraphTests
 
         graph.RemoveVertex("A");
 
-        graph.ContainsEdge("X", "A").Should().BeFalse();
-        graph.ContainsEdge("A", "Y").Should().BeFalse();
+        graph.ContainsEdge("X", "A").ShouldBeFalse();
+        graph.ContainsEdge("A", "Y").ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Generic Weight Type Tests
+    //#region Generic Weight Type Tests
 
     [Fact]
     public void WeightedGraph_ShouldWorkWithDoubleWeights()
@@ -301,7 +299,7 @@ public class WeightedGraphTests
         graph.AddEdge("B", "C", 2.7);
 
         var distances = graph.Dijkstra("A");
-        distances["C"].Should().BeApproximately(4.2, 0.0001);
+        distances["C"].ShouldBeApproximately(4.2, 0.0001);
     }
 
     [Fact]
@@ -314,9 +312,9 @@ public class WeightedGraphTests
         graph.AddEdge(1, 2, w1);
         graph.AddEdge(2, 3, w2);
 
-        graph.TryGetWeight(1, 2, out var stored).Should().BeTrue();
-        stored.Should().Be(w1);
+        graph.TryGetWeight(1, 2, out var stored).ShouldBeTrue();
+        stored.ShouldBe(w1);
     }
 
-    #endregion
+    //#endregion
 }

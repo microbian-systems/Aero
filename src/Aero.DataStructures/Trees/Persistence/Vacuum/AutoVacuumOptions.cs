@@ -1,5 +1,3 @@
-using System;
-
 namespace Aero.DataStructures.Trees.Persistence.Vacuum;
 
 public sealed class AutoVacuumOptions

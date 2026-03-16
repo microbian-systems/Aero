@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
 using Aero.Common.Commands;
-using Microsoft.Extensions.Logging;
 
 namespace Aero.Common.Patterns;
 
