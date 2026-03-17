@@ -11,9 +11,9 @@ public static class Snowflake
     {
         SnowflakeGuid.SetMachineID(MachineId);
     }
-    public static string NewId()
+    public static ulong NewId()
     {
         var snowflake = SnowflakeGuid.Create();
-        return snowflake.Id.ToString(); // for ef core / db reasons
+        return snowflake.Id; // for ef core / db reasons
     }
 }

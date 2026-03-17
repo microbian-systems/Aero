@@ -94,7 +94,9 @@ public class UserStore<TUser, TRole> :
     public virtual Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken)
     {
         if (user == null) throw new ArgumentNullException(nameof(user));
-        var id = user.Id?.ToString() ?? Snowflake.NewId();
+        var id = user.Id  ==  0
+            ?Snowflake.NewId();
+            : user.Id;
         return Task.FromResult(id);
     }
 
