@@ -45,7 +45,7 @@ public interface IAeroIdentityService<T, TKey>
     Task<bool> VerifyPassword(string username, string password);
 }
 
-public class AeroIdentityService : AeroIdentityService<AeroUser, string>, IAeroIdentityService
+public class AeroIdentityService : AeroIdentityService<AeroUser, long>, IAeroIdentityService
 {
     public AeroIdentityService(
         // SignInManager<AeroUser> signinManager,
@@ -107,7 +107,7 @@ public abstract class AeroIdentityService<T>(
     IHttpContextAccessor contextAccessor,
     IFluentEmail fluentEmail,
     IZipApiService zipService,
-    ILogger<AeroIdentityService<T, string>> log)
+    ILogger<AeroIdentityService<T>> log)
     : AeroIdentityService<T, string>(signinManager, userManager, roleManager, passwordService, contextAccessor,
         fluentEmail, zipService, log)
     where T : AeroUser, new();

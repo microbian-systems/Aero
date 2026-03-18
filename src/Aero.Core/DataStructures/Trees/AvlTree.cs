@@ -1,4 +1,4 @@
-namespace Electra.DataStructures.Trees;
+namespace Aero.DataStructures.Trees;
 
 /// <summary>
 /// Represents an AVL Tree, a self-balancing binary search tree.

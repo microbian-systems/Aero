@@ -1,25 +1,23 @@
-using Aero.Cms;
 using Aero.Identity.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Aero.Identity;
+namespace Aero.Identity.Extensions;
 
 /// <summary>
-/// Contains extension methods for registering RavenDB-based Identity stores.
+/// Contains extension methods for registering AeroDB-based Identity stores.
 /// </summary>
-public static class RavenIdentityExtensions
+public static class AeroIdentityExtensions
 {
     /// <summary>
-    /// Adds the Aero.Cms RavenDB identity module.
+    /// Adds the Aero.Cms AeroDB identity module.
     /// </summary>
     /// <param name="services">The current service collection</param>
     /// <param name="identityOptions">Optional options for identity</param>
     /// <param name="cookieOptions">Optional options for cookies</param>
     /// <returns>The service collection</returns>
-    public static IServiceCollection AddAeroRavenDbIdentity(this IServiceCollection services,
+    public static IServiceCollection AddAeroAeroDbIdentity(this IServiceCollection services,
         Action<IdentityOptions>? identityOptions = null,
         Action<CookieAuthenticationOptions>? cookieOptions = null)
     {
@@ -31,7 +29,7 @@ public static class RavenIdentityExtensions
             });
 
         // Add the identity module
-        App.Modules.Register<RavenIdentityModule>();
+        App.Modules.Register<AeroIdentityModule>();
 
         // Setup authorization policies
         services.AddAuthorization(o =>
@@ -89,23 +87,23 @@ public static class RavenIdentityExtensions
             });
         });
 
-        services.AddIdentity<AeroUser, RavenRole>()
-            .AddRavenDbStores()
+        services.AddIdentity<AeroUser, AeroRole>()
+            .AddAeroDbStores()
             .AddDefaultTokenProviders();
 
         services.Configure(identityOptions ?? SetDefaultOptions);
         services.ConfigureApplicationCookie(cookieOptions ?? SetDefaultCookieOptions);
-        //services.AddScoped<ISecurity, RavenIdentitySecurity>();
+        //services.AddScoped<ISecurity, AeroIdentitySecurity>();
 
         return services;
     }
 
     /// <summary>
-    /// Adds RavenDB implementations of Identity stores.
+    /// Adds AeroDB implementations of Identity stores.
     /// </summary>
     /// <param name="builder">The Identity builder.</param>
     /// <returns>The Identity builder.</returns>
-    public static IdentityBuilder AddRavenDbStores(this IdentityBuilder builder)
+    public static IdentityBuilder AddAeroDbStores(this IdentityBuilder builder)
     {
         if (builder == null) throw new ArgumentNullException(nameof(builder));
 
@@ -123,15 +121,15 @@ public static class RavenIdentityExtensions
             Type userStoreType;
             Type roleStoreType;
 
-            if (roleType == typeof(RavenRole))
+            if (roleType == typeof(AeroRole))
             {
-                userStoreType = typeof(RavenUserStore<>).MakeGenericType(userType);
-                roleStoreType = typeof(RavenRoleStore<>).MakeGenericType(roleType);
+                userStoreType = typeof(AeroUserStore<>).MakeGenericType(userType);
+                roleStoreType = typeof(AeroRoleStore<>).MakeGenericType(roleType);
             }
             else
             {
-                userStoreType = typeof(RavenUserStore<,>).MakeGenericType(userType, roleType);
-                roleStoreType = typeof(RavenRoleStore<>).MakeGenericType(roleType);
+                userStoreType = typeof(AeroUserStore<,>).MakeGenericType(userType, roleType);
+                roleStoreType = typeof(AeroRoleStore<>).MakeGenericType(roleType);
             }
 
             services.TryAddScoped(
@@ -144,7 +142,7 @@ public static class RavenIdentityExtensions
         }
         else
         {
-            var userStoreType = typeof(RavenUserStore<>).MakeGenericType(userType);
+            var userStoreType = typeof(AeroUserStore<>).MakeGenericType(userType);
 
             services.TryAddScoped(
                 typeof(IUserStore<>).MakeGenericType(userType),

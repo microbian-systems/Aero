@@ -1,3 +1,4 @@
+using Aero.Identity.Extensions;
 using Aero.Identity.Models;
 using Marten;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         services.AddLogging(builder => builder.AddConsole());
 
         services.AddIdentityCore<AeroUser>()
-            .AddRavenDbStores();
+            .AddAeroDbStores();
 
         var serviceProvider = services.BuildServiceProvider();
         using var scope = serviceProvider.CreateScope();
@@ -60,17 +61,17 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         services.AddScoped(s => s.GetRequiredService<IDocumentStore>().LightweightSession());
 
         services.AddIdentityCore<AeroUser>()
-            .AddRoles<RavenRole>()
-            .AddRavenDbStores();
+            .AddRoles<AeroRole>()
+            .AddAeroDbStores();
 
         var serviceProvider = services.BuildServiceProvider();
         using var scope = serviceProvider.CreateScope();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AeroUser>>();
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<RavenRole>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AeroRole>>();
         var session = scope.ServiceProvider.GetRequiredService<IDocumentSession>();
 
         var user = new AeroUser { UserName = "roleuser" };
-        var role = new RavenRole { Name = "Tester" };
+        var role = new AeroRole { Name = "Tester" };
 
         // Act
         await userManager.CreateAsync(user);
@@ -80,7 +81,7 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         // Wait for index
         using (var waitSession = store.LightweightSession())
         {
-            await waitSession.Query<RavenRole>()
+            await waitSession.Query<AeroRole>()
                 
                 .FirstOrDefaultAsync(r => r.Name == "Tester");
         }
@@ -114,17 +115,17 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         services.AddScoped(s => s.GetRequiredService<IDocumentStore>().LightweightSession());
 
         services.AddIdentityCore<AeroUser>()
-            .AddRoles<RavenRole>()
-            .AddRavenDbStores();
+            .AddRoles<AeroRole>()
+            .AddAeroDbStores();
 
         var serviceProvider = services.BuildServiceProvider();
         using var scope = serviceProvider.CreateScope();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AeroUser>>();
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<RavenRole>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AeroRole>>();
         var session = scope.ServiceProvider.GetRequiredService<IDocumentSession>();
 
         // Create a role
-        await roleManager.CreateAsync(new RavenRole { Name = "PowerUser" });
+        await roleManager.CreateAsync(new AeroRole { Name = "PowerUser" });
 
 
 
@@ -218,19 +219,19 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         services.AddScoped(s => s.GetRequiredService<IDocumentStore>().LightweightSession());
 
         services.AddIdentityCore<AeroUser>()
-            .AddRoles<RavenRole>()
-            .AddRavenDbStores();
+            .AddRoles<AeroRole>()
+            .AddAeroDbStores();
 
         var serviceProvider = services.BuildServiceProvider();
         using var scope = serviceProvider.CreateScope();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AeroUser>>();
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<RavenRole>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AeroRole>>();
         var session = scope.ServiceProvider.GetRequiredService<IDocumentSession>();
 
         var roleNames = new[] { "RoleA", "RoleB", "RoleC" };
         foreach (var roleName in roleNames)
         {
-            await roleManager.CreateAsync(new RavenRole { Name = roleName });
+            await roleManager.CreateAsync(new AeroRole { Name = roleName });
         }
 
         // Create 25 users. 

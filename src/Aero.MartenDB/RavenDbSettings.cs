@@ -1,15 +1,15 @@
 namespace Aero.MartenDB;
 
 /// <summary>
-/// Configuration settings for RavenDB persistence
+/// Configuration settings for AeroDB persistence
 /// </summary>
-public class RavenDbSettings
+public class AeroDbSettings
 {
-    public const string SectionName = "RavenDb";
+    public const string SectionName = "AeroDb";
     
     /// <summary>
-    /// Whether to use embedded RavenDB mode.
-    /// Note: For actual embedded mode, RavenDB.Embedded NuGet package is required.
+    /// Whether to use embedded AeroDB mode.
+    /// Note: For actual embedded mode, AeroDB.Embedded NuGet package is required.
     /// When false, uses standard server connection.
     /// </summary>
     public bool UseEmbedded { get; set; } = false;
@@ -21,7 +21,7 @@ public class RavenDbSettings
     public string? EmbeddedPath { get; set; }
     
     /// <summary>
-    /// RavenDB server URL(s) - can be comma-separated for multiple nodes
+    /// AeroDB server URL(s) - can be comma-separated for multiple nodes
     /// </summary>
     public string? Urls { get; set; } = "http://localhost:8080";
     

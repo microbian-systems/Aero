@@ -3,10 +3,10 @@ using Xunit;
 
 namespace Aero.Identity.Tests.Models;
 
-public class RavenUserTests
+public class AeroUserTests
 {
     [Fact]
-    public void CanInitializeRavenUser()
+    public void CanInitializeAeroUser()
     {
         // Arrange & Act
         var user = new AeroUser();
@@ -18,7 +18,7 @@ public class RavenUserTests
     }
 
     [Fact]
-    public void CanAddPasskeyToRavenUser()
+    public void CanAddPasskeyToAeroUser()
     {
         // Arrange
         var user = new AeroUser();

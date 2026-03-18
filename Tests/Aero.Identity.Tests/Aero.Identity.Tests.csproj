@@ -23,16 +23,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Aero.Identity\Aero.Identity.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="IdentityIntegrationTests.cs" />
       <None Include="IdentityIntegrationTests.cs" />
       <Compile Remove="IdentityManagementTests.cs" />
       <None Include="IdentityManagementTests.cs" />
-      <Compile Remove="RavenIdentityModuleTests.cs" />
-      <None Include="RavenIdentityModuleTests.cs" />
+      <Compile Remove="AeroIdentityModuleTests.cs" />
+      <None Include="AeroIdentityModuleTests.cs" />
     </ItemGroup>
 
 </Project>

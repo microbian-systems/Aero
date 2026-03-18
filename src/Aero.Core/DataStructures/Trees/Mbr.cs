@@ -1,4 +1,4 @@
-namespace Electra.DataStructures.Trees;
+namespace Aero.DataStructures.Trees;
 
 /// <summary>
 /// Represents the minimum bounding rectangle (MBR) for an R-Tree node.

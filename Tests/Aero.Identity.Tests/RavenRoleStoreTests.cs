@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Aero.Identity.Tests;
 
-public class RavenRoleStoreTests : AeroDbTestDriver
+public class AeroRoleStoreTests : AeroDbTestDriver
 {
     [Fact]
     public async Task CanCreateRole()
@@ -11,8 +11,8 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
-        var role = new RavenRole { Name = "Admin", NormalizedName = "ADMIN" };
+        var roleStore = new AeroRoleStore<AeroRole>(session);
+        var role = new AeroRole { Name = "Admin", NormalizedName = "ADMIN" };
 
         // Act
         var result = await roleStore.CreateAsync(role, CancellationToken.None);
@@ -22,7 +22,7 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         Assert.True(result.Succeeded);
         
         using var assertSession = store.LightweightSession();
-        var dbRole = await assertSession.LoadAsync<RavenRole>(role.Id);
+        var dbRole = await assertSession.LoadAsync<AeroRole>(role.Id);
         Assert.NotNull(dbRole);
         Assert.Equal("Admin", dbRole.Name);
     }
@@ -33,11 +33,11 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var role = new RavenRole { Name = "Admin" };
+        var role = new AeroRole { Name = "Admin" };
         session.Store(role);
         await session.SaveChangesAsync();
 
-        var roleStore = new RavenRoleStore<RavenRole>(session);
+        var roleStore = new AeroRoleStore<AeroRole>(session);
 
         // Act
         var dbRole = await roleStore.FindByIdAsync(role.Id, CancellationToken.None);
@@ -53,11 +53,11 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var role = new RavenRole { Name = "Admin", NormalizedName = "ADMIN" };
+        var role = new AeroRole { Name = "Admin", NormalizedName = "ADMIN" };
         session.Store(role);
         await session.SaveChangesAsync();
 
-        var roleStore = new RavenRoleStore<RavenRole>(session);
+        var roleStore = new AeroRoleStore<AeroRole>(session);
 
         // Act
         var dbRole = await roleStore.FindByNameAsync("ADMIN", CancellationToken.None);
@@ -73,11 +73,11 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var role = new RavenRole { Name = "DeleteMe" };
+        var role = new AeroRole { Name = "DeleteMe" };
         session.Store(role);
         await session.SaveChangesAsync();
 
-        var roleStore = new RavenRoleStore<RavenRole>(session);
+        var roleStore = new AeroRoleStore<AeroRole>(session);
 
         // Act
         var result = await roleStore.DeleteAsync(role, CancellationToken.None);
@@ -86,7 +86,7 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Assert
         Assert.True(result.Succeeded);
         using var assertSession = store.LightweightSession();
-        var dbRole = await assertSession.LoadAsync<RavenRole>(role.Id);
+        var dbRole = await assertSession.LoadAsync<AeroRole>(role.Id);
         Assert.Null(dbRole);
     }
 
@@ -96,8 +96,8 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
-        var role = new RavenRole { Name = "Admin" };
+        var roleStore = new AeroRoleStore<AeroRole>(session);
+        var role = new AeroRole { Name = "Admin" };
 
         // Act
         var result = await roleStore.UpdateAsync(role, CancellationToken.None);
@@ -112,7 +112,7 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
+        var roleStore = new AeroRoleStore<AeroRole>(session);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => roleStore.CreateAsync(null!, CancellationToken.None));
@@ -124,7 +124,7 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
+        var roleStore = new AeroRoleStore<AeroRole>(session);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => roleStore.UpdateAsync(null!, CancellationToken.None));
@@ -136,7 +136,7 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
+        var roleStore = new AeroRoleStore<AeroRole>(session);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => roleStore.DeleteAsync(null!, CancellationToken.None));
@@ -148,8 +148,8 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
-        var role = new RavenRole { Id = "roles/1" };
+        var roleStore = new AeroRoleStore<AeroRole>(session);
+        var role = new AeroRole { Id = "roles/1" };
 
         // Act
         var result = await roleStore.GetRoleIdAsync(role, CancellationToken.None);
@@ -164,8 +164,8 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
-        var role = new RavenRole { Name = "Admin" };
+        var roleStore = new AeroRoleStore<AeroRole>(session);
+        var role = new AeroRole { Name = "Admin" };
 
         // Act
         var result = await roleStore.GetRoleNameAsync(role, CancellationToken.None);
@@ -180,8 +180,8 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
-        var role = new RavenRole();
+        var roleStore = new AeroRoleStore<AeroRole>(session);
+        var role = new AeroRole();
 
         // Act
         await roleStore.SetRoleNameAsync(role, "Admin", CancellationToken.None);
@@ -196,8 +196,8 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
-        var role = new RavenRole { NormalizedName = "ADMIN" };
+        var roleStore = new AeroRoleStore<AeroRole>(session);
+        var role = new AeroRole { NormalizedName = "ADMIN" };
 
         // Act
         var result = await roleStore.GetNormalizedRoleNameAsync(role, CancellationToken.None);
@@ -212,8 +212,8 @@ public class RavenRoleStoreTests : AeroDbTestDriver
         // Arrange
         
         using var session = store.LightweightSession();
-        var roleStore = new RavenRoleStore<RavenRole>(session);
-        var role = new RavenRole();
+        var roleStore = new AeroRoleStore<AeroRole>(session);
+        var role = new AeroRole();
 
         // Act
         await roleStore.SetNormalizedRoleNameAsync(role, "ADMIN", CancellationToken.None);

@@ -53,14 +53,14 @@ public class AeroUnitOfWork : IAeroDbUnitOfWork
         }
         catch (Exception ex)
         {
-            _log.LogError(ex, "Failed to save changes to RavenDB");
+            _log.LogError(ex, "Failed to save changes to AeroDB");
             return 0; // Or re-throw, depending on your error handling strategy
         }
     }
 
     public Task StartTransactionAsync(CancellationToken cancellationToken = default)
     {
-        // RavenDB sessions are transactional by default. 
+        // AeroDB sessions are transactional by default. 
         // We could use ClusterTransaction if needed, but for standard session-level transactions,
         // just having the session is enough.
         return Task.CompletedTask;
@@ -73,7 +73,7 @@ public class AeroUnitOfWork : IAeroDbUnitOfWork
 
     public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
-        // To rollback in RavenDB session, we clear the session state.
+        // To rollback in AeroDB session, we clear the session state.
         // todo - rollback marten transaction
         //_session.Advanced.Clear();
         return Task.CompletedTask;

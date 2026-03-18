@@ -1,4 +1,4 @@
-namespace Electra.DataStructures.Trees;
+namespace Aero.DataStructures.Trees;
 
 public enum DfsTraversalOrder
 {

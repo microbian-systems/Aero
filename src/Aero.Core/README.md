@@ -523,5 +523,5 @@ else
 - `Aero.Persistence` - Repositories used by commands
 - `Aero.Persistence.Core` - Repository interfaces and abstractions
 - `Aero.EfCore` - Entity Framework implementation
-- `Aero.RavenDB` - RavenDB implementation
+- `Aero.AeroDB` - AeroDB implementation
 - `Aero.Marten` - Marten implementation

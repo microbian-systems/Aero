@@ -1,24 +1,24 @@
-# Aero.RavenDB
+# Aero.AeroDB
 
-RavenDB document store integration for the Aero framework with event sourcing support.
+AeroDB document store integration for the Aero framework with event sourcing support.
 
 ## Overview
 
-`Aero.RavenDB` provides RavenDB implementations of the Aero repository interfaces. RavenDB is a NoSQL document database that offers ACID transactions, advanced querying, and built-in event sourcing capabilities.
+`Aero.AeroDB` provides AeroDB implementations of the Aero repository interfaces. AeroDB is a NoSQL document database that offers ACID transactions, advanced querying, and built-in event sourcing capabilities.
 
 ## Key Components
 
-### RavenDbRepositoryBase<T>
+### AeroDbRepositoryBase<T>
 
-Base repository implementation for RavenDB:
+Base repository implementation for AeroDB:
 
 ```csharp
-public abstract class RavenDbRepositoryBase<TEntity> : GenericRepository<TEntity, string>
+public abstract class AeroDbRepositoryBase<TEntity> : GenericRepository<TEntity, string>
     where TEntity : Entity
 {
     protected readonly IDocumentSession Session;
 
-    protected RavenDbRepositoryBase(IDocumentSession session, ILogger log) 
+    protected AeroDbRepositoryBase(IDocumentSession session, ILogger log) 
         : base(log)
     {
         Session = session;
@@ -50,10 +50,10 @@ public abstract class RavenDbRepositoryBase<TEntity> : GenericRepository<TEntity
 
 ### AeroUserRepository
 
-User management with RavenDB:
+User management with AeroDB:
 
 ```csharp
-public class AeroUserRepository : RavenDbRepositoryBase<AeroUser>, IAeroUserRepository
+public class AeroUserRepository : AeroDbRepositoryBase<AeroUser>, IAeroUserRepository
 {
     public AeroUserRepository(IDocumentSession session, ILogger<AeroUserRepository> log) 
         : base(session, log) { }
@@ -79,7 +79,7 @@ public class AeroUserRepository : RavenDbRepositoryBase<AeroUser>, IAeroUserRepo
 ```csharp
 // appsettings.json
 {
-  "RavenDB": {
+  "AeroDB": {
     "Urls": ["http://localhost:8080"],
     "DatabaseName": "Aero",
     "CertificatePath": null
@@ -87,13 +87,13 @@ public class AeroUserRepository : RavenDbRepositoryBase<AeroUser>, IAeroUserRepo
 }
 
 // Program.cs
-builder.Services.AddRavenDb(builder.Configuration);
+builder.Services.AddAeroDb(builder.Configuration);
 
 // Extension method
-public static IServiceCollection AddRavenDb(this IServiceCollection services, IConfiguration config)
+public static IServiceCollection AddAeroDb(this IServiceCollection services, IConfiguration config)
 {
-    var urls = config.GetSection("RavenDB:Urls").Get<string[]>();
-    var databaseName = config["RavenDB:DatabaseName"];
+    var urls = config.GetSection("AeroDB:Urls").Get<string[]>();
+    var databaseName = config["AeroDB:DatabaseName"];
     
     var documentStore = new DocumentStore
     {
@@ -110,7 +110,7 @@ public static IServiceCollection AddRavenDb(this IServiceCollection services, IC
     services.AddScoped<IDocumentSession>(sp => 
         sp.GetRequiredService<IDocumentStore>().OpenAsyncSession());
     
-    services.AddScoped(typeof(IGenericRepository<>), typeof(RavenDbRepository<>));
+    services.AddScoped(typeof(IGenericRepository<>), typeof(AeroDbRepository<>));
     
     return services;
 }
@@ -125,7 +125,7 @@ public class Product
     public string Name { get; set; }
     public decimal Price { get; set; }
     
-    // RavenDB-specific: ignore for serialization
+    // AeroDB-specific: ignore for serialization
     [JsonIgnore]
     public string ComputedProperty => $"{Name} - ${Price}";
 }
@@ -251,9 +251,9 @@ using (var stream = attachment.Stream)
 }
 ```
 
-## Event Sourcing (RavenDB.ES)
+## Event Sourcing (AeroDB.ES)
 
-RavenDB provides excellent support for event sourcing patterns.
+AeroDB provides excellent support for event sourcing patterns.
 
 ### Aggregate Repository
 
@@ -387,6 +387,6 @@ await worker.Run(async batch =>
 ## Related Packages
 
 - `Aero.Persistence.Core` - Repository interfaces
-- `Aero.RavenDB.ES` - Event sourcing extensions
+- `Aero.AeroDB.ES` - Event sourcing extensions
 - `Aero.Events` - Domain events integration
 - `Aero.Caching` - Caching decorators

@@ -50,7 +50,4 @@
   <ItemGroup>
     <Content Include=".gitignore" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataStructures\Trees\" />
-  </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-namespace Electra.DataStructures.Trees;
+namespace Aero.DataStructures.Trees;
 
 /// <summary>
 /// Represents an Interval Tree for storing intervals and finding overlaps.

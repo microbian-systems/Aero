@@ -7,10 +7,10 @@ using Xunit;
 
 namespace Aero.Identity.Tests.Extensions;
 
-public class RavenIdentityExtensionsTests
+public class AeroIdentityExtensionsTests
 {
     [Fact]
-    public void AddRavenDbIdentity_RegistersStores()
+    public void AddAeroDbIdentity_RegistersStores()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -19,24 +19,24 @@ public class RavenIdentityExtensionsTests
 
         // Act
         services.AddIdentityCore<AeroUser>()
-            .AddRoles<RavenRole>()
-            //.AddRavenDbStores()
+            .AddRoles<AeroRole>()
+            //.AddAeroDbStores()
             ;
 
         var serviceProvider = services.BuildServiceProvider();
 
         // Assert
         var userStore = serviceProvider.GetService<IUserStore<AeroUser>>();
-        var roleStore = serviceProvider.GetService<IRoleStore<RavenRole>>();
+        var roleStore = serviceProvider.GetService<IRoleStore<AeroRole>>();
 
         Assert.NotNull(userStore);
-        Assert.IsType<RavenUserStore<AeroUser>>(userStore);
+        Assert.IsType<AeroUserStore<AeroUser>>(userStore);
         Assert.NotNull(roleStore);
-        Assert.IsType<RavenRoleStore<RavenRole>>(roleStore);
+        Assert.IsType<AeroRoleStore<AeroRole>>(roleStore);
     }
 
     [Fact]
-    public void AddRavenDbIdentity_WithoutRoles_RegistersUserStoreOnly()
+    public void AddAeroDbIdentity_WithoutRoles_RegistersUserStoreOnly()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -45,23 +45,23 @@ public class RavenIdentityExtensionsTests
 
         // Act
         services.AddIdentityCore<AeroUser>()
-            //.AddRavenDbStores()
+            //.AddAeroDbStores()
             ;
 
         var serviceProvider = services.BuildServiceProvider();
 
         // Assert
         var userStore = serviceProvider.GetService<IUserStore<AeroUser>>();
-        var roleStore = serviceProvider.GetService<IRoleStore<RavenRole>>();
+        var roleStore = serviceProvider.GetService<IRoleStore<AeroRole>>();
 
         Assert.NotNull(userStore);
-        Assert.IsType<RavenUserStore<AeroUser>>(userStore);
+        Assert.IsType<AeroUserStore<AeroUser>>(userStore);
         Assert.Null(roleStore);
     }
 
     /*
     [Fact]
-    public void AddAeroRavenDbIdentity_RegistersEverything()
+    public void AddAeroAeroDbIdentity_RegistersEverything()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -71,21 +71,21 @@ public class RavenIdentityExtensionsTests
         services.AddScoped(_ => mockSession.Object);
 
         // Act
-        services.AddAeroRavenDbIdentity();
+        services.AddAeroAeroDbIdentity();
 
         var serviceProvider = services.BuildServiceProvider();
 
         // Assert
-        var userStore = serviceProvider.GetService<IUserStore<RavenUser>>();
+        var userStore = serviceProvider.GetService<IUserStore<AeroUser>>();
         var security = serviceProvider.GetService<ISecurity>();
 
         Assert.NotNull(userStore);
-        Assert.IsType<RavenUserStore<RavenUser>>(userStore);
+        Assert.IsType<AeroUserStore<AeroUser>>(userStore);
         Assert.NotNull(security);
-        Assert.IsType<RavenIdentitySecurity>(security);
+        Assert.IsType<AeroIdentitySecurity>(security);
 
         // Verify module registration
-        Assert.True(App.Modules.Any(m => m.Instance is RavenIdentityModule));
+        Assert.True(App.Modules.Any(m => m.Instance is AeroIdentityModule));
     }
     */
 }

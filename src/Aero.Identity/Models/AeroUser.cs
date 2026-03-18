@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 namespace Aero.Identity.Models;
 
 /// <summary>
-/// RavenDB document model for an identity user.
+/// AeroDB document model for an identity user.
 /// </summary>
-public class AeroUser : IdentityUser<string>
+public class AeroUser : IdentityUser<long>
 {
     /// <summary>
     /// Gets or sets the list of roles associated with the user.
@@ -15,12 +15,12 @@ public class AeroUser : IdentityUser<string>
     /// <summary>
     /// Gets or sets the list of external logins associated with the user.
     /// </summary>
-    public List<RavenUserLogin> Logins { get; set; } = [];
+    public List<AeroUserLogin> Logins { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the list of claims associated with the user.
     /// </summary>
-    public List<RavenUserClaim> Claims { get; set; } = [];
+    public List<AeroUserClaim> Claims { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the authenticator key for the user.

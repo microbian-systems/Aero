@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 
 
 using Aero.Cms.AspNetCore.Identity.Data;
+using Aero.Identity.Extensions;
 using Marten;
 using Xunit;
 
@@ -20,7 +21,7 @@ public class IdentityManagementTests : AeroDbTestDriver
 
         services.AddIdentityCore<User>()
             .AddRoles<Role>()
-            .AddRavenDbStores();
+            .AddAeroDbStores();
 
         var serviceProvider = services.BuildServiceProvider();
         var scope = serviceProvider.CreateScope();
@@ -103,7 +104,7 @@ public class IdentityManagementTests : AeroDbTestDriver
         var roles = await userManager.GetRolesAsync(dbUser);
         Assert.Contains(roleName.ToUpperInvariant(), roles);
         
-        // Verify claims sync (fixed via generic RavenUserStore)
+        // Verify claims sync (fixed via generic AeroUserStore)
         Assert.NotEmpty(dbUser.Claims);
         Assert.Contains(dbUser.Claims, c => c.ClaimType == "Permission" && c.ClaimValue == "ViewDashboard");
     }

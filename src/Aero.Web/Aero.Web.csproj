@@ -8,11 +8,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Extensions\IdentityServerExtensions.cs" />
-    <Compile Remove="Identity\IdentityServerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Extensions\IdentityServerExtensions.cs" />
-    <None Include="Identity\IdentityServerSettings.cs" />
     <Compile Remove="Services\ApiKeyService.cs" />
     <None Include="Services\ApiKeyService.cs" />
     <Compile Remove="Extensions\ApiKeyExtensions.cs" />

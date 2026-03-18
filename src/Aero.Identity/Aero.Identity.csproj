@@ -15,10 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Extensions\RavenIdentityExtensions.cs" />
-      <None Include="Extensions\RavenIdentityExtensions.cs" />
-      <Compile Remove="RavenIdentityModule.cs" />
-      <None Include="RavenIdentityModule.cs" />
+      <Compile Remove="Extensions\AeroIdentityExtensions.cs" />
+      <None Include="Extensions\AeroIdentityExtensions.cs" />
     </ItemGroup>
 
 </Project>

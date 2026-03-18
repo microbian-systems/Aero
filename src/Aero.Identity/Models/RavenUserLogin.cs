@@ -1,9 +1,9 @@
 namespace Aero.Identity.Models;
 
 /// <summary>
-/// RavenDB document model for a user login.
+/// AeroDB document model for a user login.
 /// </summary>
-public class RavenUserLogin
+public class AeroUserLogin
 {
     /// <summary>
     /// Gets or sets the login provider (e.g. Facebook, Google).
@@ -22,9 +22,9 @@ public class RavenUserLogin
 }
 
 /// <summary>
-/// RavenDB document model for a user claim.
+/// AeroDB document model for a user claim.
 /// </summary>
-public class RavenUserClaim
+public class AeroUserClaim
 {
     /// <summary>
     /// Gets or sets the claim type.

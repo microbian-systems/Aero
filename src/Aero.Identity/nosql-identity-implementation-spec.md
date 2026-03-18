@@ -1,6 +1,6 @@
-# RavenDB ASP.NET Identity Full Implementation Spec
+# AeroDB ASP.NET Identity Full Implementation Spec
 
-This document describes how to implement a **fully-featured ASP.NET Core Identity** using **RavenDB**, including roles, claims, logins, tokens, 2FA, and **passkeys** (ASP.NET Core 10+).
+This document describes how to implement a **fully-featured ASP.NET Core Identity** using **AeroDB**, including roles, claims, logins, tokens, 2FA, and **passkeys** (ASP.NET Core 10+).
 
 ---
 
@@ -53,65 +53,65 @@ public class PasskeyCredential
 }
 ```
 
-> In RavenDB, store this as a **list property inside the `TUser` document**.
+> In AeroDB, store this as a **list property inside the `TUser` document**.
 
 ---
 
 ## 3️⃣ Recommended Base Classes
 
 ```csharp
-public class RavenUser : IdentityUser
+public class AeroUser : IdentityUser
 {
-    public string Id { get; set; } // RavenDB document key
+    public string Id { get; set; } // AeroDB document key
     public List<PasskeyCredential> Passkeys { get; set; } = new();
 }
 
-public class RavenRole : IdentityRole
+public class AeroRole : IdentityRole
 {
     public string Id { get; set; }
 }
 ```
 
-* Implement the interfaces in `RavenUserStore` and `RavenRoleStore` classes.
+* Implement the interfaces in `AeroUserStore` and `AeroRoleStore` classes.
 
 ---
 
 ## 4️⃣ Minimal Interfaces to Implement for Core Features
 
 ```csharp
-public class RavenUserStore : 
-    IUserStore<RavenUser>,
-    IUserPasswordStore<RavenUser>,
-    IUserEmailStore<RavenUser>,
-    IUserPhoneNumberStore<RavenUser>,
-    IUserLoginStore<RavenUser>,
-    IUserClaimStore<RavenUser>,
-    IUserRoleStore<RavenUser>,
-    IUserSecurityStampStore<RavenUser>,
-    IUserTwoFactorStore<RavenUser>,
-    IUserAuthenticatorKeyStore<RavenUser>,
-    IUserAuthenticationTokenStore<RavenUser>,
-    IUserRecoveryCodeStore<RavenUser>,
-    IUserPasskeyStore<RavenUser>
+public class AeroUserStore : 
+    IUserStore<AeroUser>,
+    IUserPasswordStore<AeroUser>,
+    IUserEmailStore<AeroUser>,
+    IUserPhoneNumberStore<AeroUser>,
+    IUserLoginStore<AeroUser>,
+    IUserClaimStore<AeroUser>,
+    IUserRoleStore<AeroUser>,
+    IUserSecurityStampStore<AeroUser>,
+    IUserTwoFactorStore<AeroUser>,
+    IUserAuthenticatorKeyStore<AeroUser>,
+    IUserAuthenticationTokenStore<AeroUser>,
+    IUserRecoveryCodeStore<AeroUser>,
+    IUserPasskeyStore<AeroUser>
 {
-    // Implement each method using RavenDB operations
+    // Implement each method using AeroDB operations
 }
 
-public class RavenRoleStore : IRoleStore<RavenRole>
+public class AeroRoleStore : IRoleStore<AeroRole>
 {
-    // Implement role CRUD in RavenDB
+    // Implement role CRUD in AeroDB
 }
 ```
 
 ---
 
-## 5️⃣ Implementation Notes for RavenDB
+## 5️⃣ Implementation Notes for AeroDB
 
 * **IDs:** Use string IDs (`users/1-A`) as Identity keys.
-* **Indexes:** Create RavenDB indexes on normalized username/email for fast lookups.
+* **Indexes:** Create AeroDB indexes on normalized username/email for fast lookups.
 * **Collections:** `Users` and `Roles` collections.
 * **Transactions:** Use `IDocumentSession` per request.
-* **Concurrency:** Use RavenDB **ETags** for optimistic concurrency.
+* **Concurrency:** Use AeroDB **ETags** for optimistic concurrency.
 
 ---
 
@@ -129,29 +129,29 @@ public class RavenRoleStore : IRoleStore<RavenRole>
 You can instruct AI agents (like GPT or other code generation agents) as follows:
 
 ```text
-Task: Implement a full ASP.NET Core Identity store using RavenDB.
+Task: Implement a full ASP.NET Core Identity store using AeroDB.
 
 Requirements:
 1. User and Role stores implementing all necessary interfaces.
 2. Full Identity features: roles, claims, logins, tokens, 2FA.
 3. ASP.NET Core 10 passkey support via IUserPasskeyStore.
-4. Use RavenDB collections: Users and Roles.
-5. Use RavenDB document IDs and session-based operations.
+4. Use AeroDB collections: Users and Roles.
+5. Use AeroDB document IDs and session-based operations.
 6. Implement concurrency using ETags.
 7. Include indexes for normalized username/email.
-8. Provide code skeletons for RavenUserStore and RavenRoleStore.
-9. Include RavenUser and RavenRole base classes with Passkeys property.
+8. Provide code skeletons for AeroUserStore and AeroRoleStore.
+9. Include AeroUser and AeroRole base classes with Passkeys property.
 10. Output ready-to-use C# files with all methods stubbed or fully implemented.
 ```
 
-> ✅ Each method in the store classes should be implemented using **RavenDB async API** with `IDocumentSession` for proper async I/O and transactions.
+> ✅ Each method in the store classes should be implemented using **AeroDB async API** with `IDocumentSession` for proper async I/O and transactions.
 
 ---
 
-**This spec can serve as a guide for developers or AI agents to implement a fully-featured ASP.NET Core Identity system backed by RavenDB, including modern passkey support.**
+**This spec can serve as a guide for developers or AI agents to implement a fully-featured ASP.NET Core Identity system backed by AeroDB, including modern passkey support.**
 
 ---
 
-You can copy this text and save it as `RavenDB_ASPNet_Identity_FullSpec.md` to make it downloadable.
+You can copy this text and save it as `AeroDB_ASPNet_Identity_FullSpec.md` to make it downloadable.
 
-If you want, I can also create a **ready-to-use code skeleton with all interfaces implemented as stubs** for RavenDB so you can start coding immediately. Do you want me to do that next?
+If you want, I can also create a **ready-to-use code skeleton with all interfaces implemented as stubs** for AeroDB so you can start coding immediately. Do you want me to do that next?

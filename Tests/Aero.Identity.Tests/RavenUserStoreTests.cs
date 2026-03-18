@@ -4,14 +4,14 @@ using Xunit;
 
 namespace Aero.Identity.Tests;
 
-public class RavenUserStoreTests : AeroDbTestDriver
+public class AeroUserStoreTests : AeroDbTestDriver
 {
     [Fact]
     public async Task CanCreateUser()
     {
         // Arrange
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { UserName = "testuser", Email = "test@example.com" };
 
         // Act
@@ -36,7 +36,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         session.Store(user);
         await session.SaveChangesAsync();
 
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act
         var dbUser = await userStore.FindByIdAsync(user.Id, CancellationToken.None);
@@ -56,7 +56,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         session.Store(user);
         await session.SaveChangesAsync();
 
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act
         var dbUser = await userStore.FindByNameAsync("TESTUSER", CancellationToken.None);
@@ -72,7 +72,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
         var hash = "hashedpassword";
 
@@ -89,7 +89,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var hash = "hashedpassword";
         var user = new AeroUser { PasswordHash = hash };
 
@@ -106,7 +106,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
         var stamp = Guid.NewGuid().ToString();
 
@@ -123,7 +123,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { Id = "users/1" };
 
         // Act
@@ -139,7 +139,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { UserName = "test" };
 
         // Act
@@ -155,7 +155,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
 
         // Act
@@ -171,7 +171,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { NormalizedUserName = "TEST" };
 
         // Act
@@ -187,7 +187,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
 
         // Act
@@ -203,7 +203,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { PasswordHash = "hash" };
 
         // Act
@@ -219,7 +219,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
 
         // Act
@@ -235,7 +235,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { SecurityStamp = "stamp" };
 
         // Act
@@ -255,7 +255,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         session.Store(user);
         await session.SaveChangesAsync();
 
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act
         var result = await userStore.DeleteAsync(user, CancellationToken.None);
@@ -274,7 +274,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { UserName = "test" };
 
         // Act
@@ -290,7 +290,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => userStore.CreateAsync(null!, CancellationToken.None));
@@ -302,7 +302,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => userStore.UpdateAsync(null!, CancellationToken.None));
@@ -314,7 +314,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => userStore.DeleteAsync(null!, CancellationToken.None));
@@ -326,7 +326,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
         var cts = new CancellationTokenSource();
         cts.Cancel();
@@ -341,7 +341,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
         var email = "test@example.com";
 
@@ -358,7 +358,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var email = "test@example.com";
         var user = new AeroUser { Email = email };
 
@@ -375,7 +375,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
 
         // Act
@@ -391,7 +391,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { EmailConfirmed = true };
 
         // Act
@@ -412,7 +412,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         session.Store(user);
         await session.SaveChangesAsync();
 
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act
         var dbUser = await userStore.FindByEmailAsync("TEST@EXAMPLE.COM", CancellationToken.None);
@@ -428,7 +428,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
         var phone = "123456789";
 
@@ -445,7 +445,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var phone = "123456789";
         var user = new AeroUser { PhoneNumber = phone };
 
@@ -462,7 +462,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
 
         // Act
@@ -478,7 +478,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { PhoneNumberConfirmed = true };
 
         // Act
@@ -494,7 +494,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { UserName = "test" };
         session.Store(user);
         await session.SaveChangesAsync();
@@ -512,7 +512,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { UserName = "test", Roles = new List<string> { "ADMIN" } };
         session.Store(user);
         await session.SaveChangesAsync();
@@ -530,7 +530,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var roles = new List<string> { "ADMIN", "USER" };
         var user = new AeroUser { UserName = "test", Roles = roles };
 
@@ -547,7 +547,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { UserName = "test", Roles = new List<string> { "ADMIN" } };
 
         // Act
@@ -569,7 +569,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         session.Store(user2);
         await session.SaveChangesAsync();
 
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act
         var result = await userStore.GetUsersInRoleAsync("Admin", CancellationToken.None);
@@ -585,7 +585,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { UserName = "test" };
         var login = new UserLoginInfo("Google", "key1", "Google Display");
 
@@ -604,11 +604,11 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser
         {
             UserName = "test",
-            Logins = new List<RavenUserLogin> { new RavenUserLogin { LoginProvider = "Google", ProviderKey = "key1" } }
+            Logins = new List<AeroUserLogin> { new AeroUserLogin { LoginProvider = "Google", ProviderKey = "key1" } }
         };
 
         // Act
@@ -624,11 +624,11 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser
         {
             UserName = "test",
-            Logins = new List<RavenUserLogin> { new RavenUserLogin { LoginProvider = "Google", ProviderKey = "key1" } }
+            Logins = new List<AeroUserLogin> { new AeroUserLogin { LoginProvider = "Google", ProviderKey = "key1" } }
         };
 
         // Act
@@ -648,12 +648,12 @@ public class RavenUserStoreTests : AeroDbTestDriver
         var user = new AeroUser
         {
             UserName = "test",
-            Logins = new List<RavenUserLogin> { new RavenUserLogin { LoginProvider = "Google", ProviderKey = "key1" } }
+            Logins = new List<AeroUserLogin> { new AeroUserLogin { LoginProvider = "Google", ProviderKey = "key1" } }
         };
         session.Store(user);
         await session.SaveChangesAsync();
 
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act
         var dbUser = await userStore.FindByLoginAsync("Google", "key1", CancellationToken.None);
@@ -669,7 +669,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { UserName = "test" };
         var claims = new List<System.Security.Claims.Claim> { new System.Security.Claims.Claim("type1", "value1") };
 
@@ -688,11 +688,11 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser
         {
             UserName = "test",
-            Claims = new List<RavenUserClaim> { new RavenUserClaim { ClaimType = "type1", ClaimValue = "value1" } }
+            Claims = new List<AeroUserClaim> { new AeroUserClaim { ClaimType = "type1", ClaimValue = "value1" } }
         };
 
         // Act
@@ -710,14 +710,14 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser
         {
             UserName = "test",
-            Claims = new List<RavenUserClaim>
+            Claims = new List<AeroUserClaim>
             {
-                new RavenUserClaim { ClaimType = "type1", ClaimValue = "value1" },
-                new RavenUserClaim { ClaimType = "type2", ClaimValue = "value2" }
+                new AeroUserClaim { ClaimType = "type1", ClaimValue = "value1" },
+                new AeroUserClaim { ClaimType = "type2", ClaimValue = "value2" }
             }
         };
         var claimsToRemove = new List<System.Security.Claims.Claim>
@@ -737,11 +737,11 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser
         {
             UserName = "test",
-            Claims = new List<RavenUserClaim> { new RavenUserClaim { ClaimType = "type1", ClaimValue = "value1" } }
+            Claims = new List<AeroUserClaim> { new AeroUserClaim { ClaimType = "type1", ClaimValue = "value1" } }
         };
         var oldClaim = new System.Security.Claims.Claim("type1", "value1");
         var newClaim = new System.Security.Claims.Claim("type1", "updated");
@@ -763,18 +763,18 @@ public class RavenUserStoreTests : AeroDbTestDriver
         var user1 = new AeroUser
         {
             UserName = "user1",
-            Claims = new List<RavenUserClaim> { new RavenUserClaim { ClaimType = "type1", ClaimValue = "value1" } }
+            Claims = new List<AeroUserClaim> { new AeroUserClaim { ClaimType = "type1", ClaimValue = "value1" } }
         };
         var user2 = new AeroUser
         {
             UserName = "user2",
-            Claims = new List<RavenUserClaim> { new RavenUserClaim { ClaimType = "type2", ClaimValue = "value2" } }
+            Claims = new List<AeroUserClaim> { new AeroUserClaim { ClaimType = "type2", ClaimValue = "value2" } }
         };
         session.Store(user1);
         session.Store(user2);
         await session.SaveChangesAsync();
 
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act
         var result = await userStore.GetUsersForClaimAsync(new System.Security.Claims.Claim("type1", "value1"),
@@ -791,7 +791,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
 
         // Act
@@ -807,7 +807,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { TwoFactorEnabled = true };
 
         // Act
@@ -823,7 +823,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
         var key = "authkey";
 
@@ -840,7 +840,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var key = "authkey";
         var user = new AeroUser { AuthenticatorKey = key };
 
@@ -857,7 +857,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
         var codes = new List<string> { "code1", "code2" };
 
@@ -874,7 +874,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { RecoveryCodes = "code1;code2" };
 
         // Act
@@ -891,7 +891,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser { RecoveryCodes = "code1;code2" };
 
         // Act
@@ -907,7 +907,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
         var passkey = new UserPasskeyInfo(new byte[] { 1 }, new byte[] { 2 }, DateTimeOffset.UtcNow, 1, null, false,
             false, false, new byte[] { 3 }, new byte[] { 4 });
@@ -926,7 +926,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser
         {
             Passkeys = new List<PasskeyCredential>
@@ -953,7 +953,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser
             { Passkeys = new List<PasskeyCredential> { new PasskeyCredential { CredentialId = new byte[] { 1 } } } };
 
@@ -985,7 +985,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         session.Store(user);
         await session.SaveChangesAsync();
 
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
 
         // Act
         var dbUser = await userStore.FindByPasskeyIdAsync(new byte[] { 1 }, CancellationToken.None);
@@ -1001,7 +1001,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser
         {
             Passkeys = new List<PasskeyCredential>
@@ -1028,7 +1028,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
         // Arrange
 
         using var session = store.LightweightSession();
-        var userStore = new RavenUserStore<AeroUser>(session);
+        var userStore = new AeroUserStore<AeroUser>(session);
         var user = new AeroUser();
 
         // Act
@@ -1048,7 +1048,7 @@ public class RavenUserStoreTests : AeroDbTestDriver
     //     string userId;
     //     using (var session = store.LightweightSession())
     //     {
-    //         var user = new RavenUser { UserName = "concurrent" };
+    //         var user = new AeroUser { UserName = "concurrent" };
     //         session.Store(user);
     //         await session.SaveChangesAsync();
     //         userId = user.Id;
@@ -1058,17 +1058,17 @@ public class RavenUserStoreTests : AeroDbTestDriver
     //     using var session1 = store.LightweightSession();
     //     using var session2 = store.LightweightSession();
     //
-    //     var user1 = await session1.LoadAsync<RavenUser>(userId);
-    //     var user2 = await session2.LoadAsync<RavenUser>(userId);
+    //     var user1 = await session1.LoadAsync<AeroUser>(userId);
+    //     var user2 = await session2.LoadAsync<AeroUser>(userId);
     //
     //     // Update in session 1
-    //     var userStore1 = new RavenUserStore<RavenUser>(session1);
+    //     var userStore1 = new AeroUserStore<AeroUser>(session1);
     //     user1.UserName = "updated1";
     //     await userStore1.UpdateAsync(user1, CancellationToken.None);
     //     await session1.SaveChangesAsync();
     //
     //     // Update in session 2 (should fail on SaveChangesAsync, not UpdateAsync)
-    //     var userStore2 = new RavenUserStore<RavenUser>(session2);
+    //     var userStore2 = new AeroUserStore<AeroUser>(session2);
     //     user2.UserName = "updated2";
     //     await userStore2.UpdateAsync(user2, CancellationToken.None);
     //

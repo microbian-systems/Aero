@@ -3,13 +3,13 @@ using Xunit;
 
 namespace Aero.Identity.Tests.Models;
 
-public class RavenRoleTests
+public class AeroRoleTests
 {
     [Fact]
-    public void CanInitializeRavenRole()
+    public void CanInitializeAeroRole()
     {
         // Arrange & Act
-        var role = new RavenRole();
+        var role = new AeroRole();
 
         // Assert
         Assert.NotNull(role);
@@ -19,7 +19,7 @@ public class RavenRoleTests
     public void CanSetRoleProperties()
     {
         // Arrange
-        var role = new RavenRole();
+        var role = new AeroRole();
         var roleId = "roles/1";
         var roleName = "Admin";
         var normalizedName = "ADMIN";

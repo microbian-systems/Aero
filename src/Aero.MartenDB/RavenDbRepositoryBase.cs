@@ -8,13 +8,13 @@ using static Aero.Core.Railway.Prelude;
 
 namespace Aero.MartenDB;
 
-public abstract class RavenDbRepositoryBase<TEntity> 
+public abstract class AeroDbRepositoryBase<TEntity> 
     : GenericRepositoryOption<TEntity>
     where TEntity : IEntity, new()
 {
     protected readonly IDocumentSession session;
 
-    public RavenDbRepositoryBase(IDocumentSession session, ILogger<GenericRepositoryOption<TEntity>> log) : base(log)
+    public AeroDbRepositoryBase(IDocumentSession session, ILogger<GenericRepositoryOption<TEntity>> log) : base(log)
     {
         this.session = session;
     }

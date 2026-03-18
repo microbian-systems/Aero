@@ -1,7 +1,7 @@
 namespace Aero.Identity.Models;
 
 /// <summary>
-/// RavenDB document model for a passkey credential.
+/// AeroDB document model for a passkey credential.
 /// </summary>
 public class PasskeyCredential
 {

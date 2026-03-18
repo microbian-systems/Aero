@@ -1,4 +1,4 @@
-namespace Electra.DataStructures.Trees;
+namespace Aero.DataStructures.Trees;
 
 /// <summary>
 /// Performs a Breadth-First Search (Level-Order) on a binary tree.

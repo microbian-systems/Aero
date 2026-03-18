@@ -4,22 +4,16 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Folder Name="/Tests/">
-    <Project Path="../Tests/Aero.Auth.Tests.WebHost/Aero.Auth.Tests.WebHost.csproj" />
-    <Project Path="../Tests/Aero.Auth.Tests/Aero.Auth.Tests.csproj" />
-    <Project Path="../Tests/Aero.DataStructures.Tests/Aero.DataStructures.Tests.csproj" />
-    <Project Path="../Tests/Aero.SendGrid.Tests/Aero.SendGrid.Tests.csproj" />
-    <Project Path="../Tests/Aero.Social.Twitter/Aero.Social.Twitter.csproj" />
-    <Project Path="../Tests/Aero.Identity.Tests/Aero.Identity.Tests.csproj" />
+  <Folder Name="/.global/">
+    <File Path="Directory.Build.props" />
   </Folder>
-  <Folder Name="/__Misc__/">
+  <Folder Name="/.misc/">
     <File Path="../CLAUDE.md" />
     <File Path="../clean.cs" />
     <File Path="../README.md" />
     <File Path="../submod.cs" />
     <File Path="../upgrade.cs" />
     <File Path=".gitignore" />
-    <File Path="Directory.Build.props" />
     <File Path="garnet.conf.dev" />
     <File Path="nuget-publish.sh" />
     <File Path="nuget-update.sh" />
@@ -28,12 +22,18 @@
     <File Path="upgrade-packages.ps1" />
     <File Path="upgrade.ps1" />
   </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="../Tests/Aero.Auth.Tests.WebHost/Aero.Auth.Tests.WebHost.csproj" />
+    <Project Path="../Tests/Aero.Auth.Tests/Aero.Auth.Tests.csproj" />
+    <Project Path="../Tests/Aero.DataStructures.Tests/Aero.DataStructures.Tests.csproj" />
+    <Project Path="../Tests/Aero.SendGrid.Tests/Aero.SendGrid.Tests.csproj" />
+    <Project Path="../Tests/Aero.Social.Twitter/Aero.Social.Twitter.csproj" />
+  </Folder>
   <Project Path="Aero.Actors/Aero.Actors.csproj" />
   <Project Path="Aero.Auth/Aero.Auth.csproj" />
   <Project Path="Aero.Caching/Aero.Caching.csproj" />
   <Project Path="Aero.Core.Ai/Aero.Core.Ai.csproj" />
   <Project Path="Aero.Core/Aero.Core.csproj" />
-  <Project Path="Aero.DataStructures/Aero.DataStructures.csproj" />
   <Project Path="Aero.Elastic/Aero.Elastic.csproj" />
   <Project Path="Aero.Events/Aero.Events.csproj" />
   <Project Path="Aero.MartenDB/Aero.MartenDB.csproj" />
@@ -46,8 +46,6 @@
   <Project Path="Aero.Social/Aero.Social.csproj" />
   <Project Path="Aero.Validators/Aero.Validators.csproj" />
   <Project Path="Aero.Web/Aero.Web.csproj" />
-  <Project Path="Aero.Proxy/Aero.Proxy.csproj" />
   <Project Path="Aero.Cloudflare/Aero.Cloudflare.csproj" />
   <Project Path="Aero.Social/Twitter.Client/Aero.Social.Twitter.Client.csproj" />
-  <Project Path="Aero.Identity/Aero.Identity.csproj" />
 </Solution>

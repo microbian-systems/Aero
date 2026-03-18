@@ -1,4 +1,5 @@
 using Shouldly;
+using Aero.DataStructures;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;

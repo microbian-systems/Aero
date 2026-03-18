@@ -1,11 +1,11 @@
 namespace Aero.Identity;
 
 /// <summary>
-/// RavenDB implementation of the Aero.Cms Manager security bridge.
+/// AeroDB implementation of the Aero.Cms Manager security bridge.
 /// </summary>
-//public class RavenIdentitySecurity : ISecurity
+//public class AeroIdentitySecurity : ISecurity
 //{
-//    private readonly SignInManager<RavenUser> _signInManager;
+//    private readonly SignInManager<AeroUser> _signInManager;
 //    private readonly IdentityOptions _options;
 
 //    /// <summary>
@@ -13,7 +13,7 @@ namespace Aero.Identity;
 //    /// </summary>
 //    /// <param name="signInManager">The sign in manager.</param>
 //    /// <param name="identityOptions">The identity options.</param>
-//    public RavenIdentitySecurity(SignInManager<RavenUser> signInManager, IOptions<IdentityOptions> identityOptions)
+//    public AeroIdentitySecurity(SignInManager<AeroUser> signInManager, IOptions<IdentityOptions> identityOptions)
 //    {
 //        _signInManager = signInManager;
 //        _options = identityOptions.Value;

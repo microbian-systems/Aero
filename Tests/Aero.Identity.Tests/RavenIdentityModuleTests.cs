@@ -4,13 +4,13 @@ using Xunit;
 
 namespace Aero.Identity.Tests;
 
-public class RavenIdentityModuleTests
+public class AeroIdentityModuleTests
 {
     [Fact]
     public void Init_RegistersPermissions()
     {
         // Arrange
-        var module = new RavenIdentityModule();
+        var module = new AeroIdentityModule();
 
         // Act
         module.Init();
@@ -24,7 +24,7 @@ public class RavenIdentityModuleTests
     public void Init_AddsMenuItems()
     {
         // Arrange
-        var module = new RavenIdentityModule();
+        var module = new AeroIdentityModule();
 
         // Act
         module.Init();

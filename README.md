@@ -57,7 +57,7 @@ Aero is a production-ready .NET framework designed for building scalable, mainta
 Aero supports multiple databases simultaneously, allowing you to use the best tool for each job:
 
 - **PostgreSQL** (primary) - Entity Framework Core integration
-- **RavenDB** - Document store with event sourcing support
+- **AeroDB** - Document store with event sourcing support
 - **Marten** - PostgreSQL-based document store
 - **Elasticsearch** - Search and analytics
 - **LiteDB** - Embedded database for local scenarios
@@ -124,10 +124,10 @@ Aero/
 │   ├── Aero.Persistence.Core   # Core abstractions
 │   ├── Aero.Persistence        # Base implementations
 │   ├── Aero.EfCore            # Entity Framework (PostgreSQL)
-│   ├── Aero.RavenDB           # RavenDB document store
+│   ├── Aero.AeroDB           # AeroDB document store
 │   ├── Aero.Marten            # Marten PostgreSQL document store
 │   ├── Aero.Elastic           # Elasticsearch integration
-│   └── Aero.RavenDB.ES        # Event sourcing with RavenDB
+│   └── Aero.AeroDB.ES        # Event sourcing with AeroDB
 │
 ├── Web/                          # Web infrastructure
 │   ├── Aero.Web.Core          # Core web abstractions
@@ -175,7 +175,7 @@ builder.Services.AddDefaultApi(builder.Configuration);
 
 // Database-specific
 builder.Services.AddEntityFrameworkStores<AeroDbContext>();
-builder.Services.AddRavenDbStores();
+builder.Services.AddAeroDbStores();
 builder.Services.AddMartenStores();
 ```
 
@@ -262,8 +262,8 @@ public class ProductRepository : GenericEntityFrameworkRepository<Product>
         : base(context, log) { }
 }
 
-// Or using RavenDB
-public class ProductRepository : RavenDbRepositoryBase<Product>
+// Or using AeroDB
+public class ProductRepository : AeroDbRepositoryBase<Product>
 {
     public ProductRepository(IDocumentSession session) 
         : base(session) { }
@@ -311,7 +311,7 @@ Each project contains its own detailed README.md with specific documentation:
 | [Aero.Persistence.Core](./src/Aero.Persistence.Core/README.md) | Core persistence abstractions and interfaces |
 | [Aero.Persistence](./src/Aero.Persistence/README.md) | Base repository implementations |
 | [Aero.EfCore](./src/Aero.EfCore/README.md) | Entity Framework Core integration |
-| [Aero.RavenDB](./src/Aero.RavenDB/README.md) | RavenDB document store integration |
+| [Aero.AeroDB](./src/Aero.AeroDB/README.md) | AeroDB document store integration |
 | [Aero.Marten](./src/Aero.Marten/README.md) | Marten PostgreSQL document store |
 | [Aero.Caching](./src/Aero.Caching/README.md) | FusionCache with Redis backplane |
 | [Aero.Web](./src/Aero.Web/README.md) | Web framework extensions and middleware |

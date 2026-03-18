@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace Aero.MartenDB;
 
 public class AeroUserRepository(IDocumentSession session, ILogger<AeroUserRepository> log)
-    : RavenDbRepositoryBase<AeroUser>(session, log), IAeroUserRepository
+    : AeroDbRepositoryBase<AeroUser>(session, log), IAeroUserRepository
 {
     public override async Task<IEnumerable<AeroUser>> GetByIdsAsync(IEnumerable<string> ids)
     {

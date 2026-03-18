@@ -248,5 +248,5 @@ public static class EventExtensions
 ## Related Packages
 
 - `Aero.Marten` - Event store implementation
-- `Aero.RavenDB.ES` - Alternative event store
+- `Aero.AeroDB.ES` - Alternative event store
 - `Aero.Core` - Entity definitions

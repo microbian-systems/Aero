@@ -1,8 +1,8 @@
-# JWT Signing Key Store - RavenDB Refactoring
+# JWT Signing Key Store - AeroDB Refactoring
 
 ## Overview
 
-The `JwtSigningKeyStore` has been refactored to use an abstracted persistence layer, enabling flexible switching between storage providers (RavenDB, Entity Framework Core, etc.) without modifying core logic.
+The `JwtSigningKeyStore` has been refactored to use an abstracted persistence layer, enabling flexible switching between storage providers (AeroDB, Entity Framework Core, etc.) without modifying core logic.
 
 ---
 
@@ -22,8 +22,8 @@ The `JwtSigningKeyStore` has been refactored to use an abstracted persistence la
 └──────────────┬──────────────────────────┘
                │ implements
 ┌──────────────▼──────────────────────────┐
-│  RavenDbJwtSigningKeyPersistence        │ ← Current Implementation
-│  (RavenDB-specific persistence)         │
+│  AeroDbJwtSigningKeyPersistence        │ ← Current Implementation
+│  (AeroDB-specific persistence)         │
 └─────────────────────────────────────────┘
 ```
 
@@ -33,7 +33,7 @@ The `JwtSigningKeyStore` has been refactored to use an abstracted persistence la
 |-------|-----------------|------|
 | **IJwtSigningKeyStore** | Key rotation, validation, caching | `JwtSigningKeyStore.cs` |
 | **IJwtSigningKeyPersistence** | Database operations abstraction | `IJwtSigningKeyPersistence.cs` |
-| **RavenDbJwtSigningKeyPersistence** | RavenDB-specific implementation | `RavenDbJwtSigningKeyPersistence.cs` |
+| **AeroDbJwtSigningKeyPersistence** | AeroDB-specific implementation | `AeroDbJwtSigningKeyPersistence.cs` |
 
 ---
 
@@ -74,9 +74,9 @@ public interface IJwtSigningKeyPersistence
 
 ## Implementation
 
-### RavenDB Implementation
+### AeroDB Implementation
 
-The `RavenDbJwtSigningKeyPersistence` class implements the abstraction using:
+The `AeroDbJwtSigningKeyPersistence` class implements the abstraction using:
 
 - **Document Queries**: `session.Query<JwtSigningKey>()`
 - **Patch Operations**: For efficient updates
@@ -141,7 +141,7 @@ public class MongoDbJwtSigningKeyPersistence : IJwtSigningKeyPersistence
 ### Registration
 
 ```csharp
-services.AddScoped<IJwtSigningKeyPersistence, RavenDbJwtSigningKeyPersistence>();
+services.AddScoped<IJwtSigningKeyPersistence, AeroDbJwtSigningKeyPersistence>();
 services.AddScoped<IJwtSigningKeyStore, JwtSigningKeyStore>();
 ```
 
@@ -150,8 +150,8 @@ services.AddScoped<IJwtSigningKeyStore, JwtSigningKeyStore>();
 Change only the registration in `ServiceCollectionExtensions.cs`:
 
 ```csharp
-// For RavenDB
-services.AddScoped<IJwtSigningKeyPersistence, RavenDbJwtSigningKeyPersistence>();
+// For AeroDB
+services.AddScoped<IJwtSigningKeyPersistence, AeroDbJwtSigningKeyPersistence>();
 
 // OR for Entity Framework Core (future)
 services.AddScoped<IJwtSigningKeyPersistence, EfCoreJwtSigningKeyPersistence>();
@@ -214,7 +214,7 @@ public class AuthService
 
 ## Known Limitations
 
-### Current RavenDB Implementation
+### Current AeroDB Implementation
 
 The `GetSession()` method currently throws `NotImplementedException`:
 
@@ -222,19 +222,19 @@ The `GetSession()` method currently throws `NotImplementedException`:
 private IDocumentSession GetSession()
 {
     throw new NotImplementedException(
-        "Session access needs to be exposed via IRavenDbUnitOfWork. " +
-        "Add a public IDocumentSession property to IRavenDbUnitOfWork.");
+        "Session access needs to be exposed via IAeroDbUnitOfWork. " +
+        "Add a public IDocumentSession property to IAeroDbUnitOfWork.");
 }
 ```
 
 **To Fix:**
-1. Add `IDocumentSession Session { get; }` property to `IRavenDbUnitOfWork`
-2. Implement the property in `RavenDbUnitOfWork`
+1. Add `IDocumentSession Session { get; }` property to `IAeroDbUnitOfWork`
+2. Implement the property in `AeroDbUnitOfWork`
 3. Update `GetSession()` to return `_uow.Session`
 
 ---
 
-## Migration Path from RavenDB to Entity Framework
+## Migration Path from AeroDB to Entity Framework
 
 If you decide to migrate to Entity Framework Core:
 
@@ -343,9 +343,9 @@ public void JwtSigningKeyStore_ImplementsInterface()
 ### Integration Tests
 ```csharp
 [Test]
-public async Task RotateSigningKey_WithRavenDb_ShouldWork()
+public async Task RotateSigningKey_WithAeroDb_ShouldWork()
 {
-    var persistence = new RavenDbJwtSigningKeyPersistence(uow, logger);
+    var persistence = new AeroDbJwtSigningKeyPersistence(uow, logger);
     var store = new JwtSigningKeyStore(persistence, logger, cache);
     
     var newKeyId = await store.RotateSigningKeyAsync();
@@ -360,7 +360,7 @@ public async Task RotateSigningKey_WithRavenDb_ShouldWork()
 | File | Status | Purpose |
 |------|--------|---------|
 | `IJwtSigningKeyPersistence.cs` | ✨ Created | Abstraction interface |
-| `RavenDbJwtSigningKeyPersistence.cs` | ✨ Created | RavenDB implementation |
+| `AeroDbJwtSigningKeyPersistence.cs` | ✨ Created | AeroDB implementation |
 | `JwtSigningKeyStore.cs` | ♻️ Refactored | Now uses abstraction |
 | `ServiceCollectionExtensions.cs` | ♻️ Updated | Registers persistence |
 
@@ -377,7 +377,7 @@ public async Task RotateSigningKey_WithRavenDb_ShouldWork()
 
 ## Next Steps
 
-1. ✅ Expose `IDocumentSession` in `IRavenDbUnitOfWork`
+1. ✅ Expose `IDocumentSession` in `IAeroDbUnitOfWork`
 2. ⏳ Create Entity Framework Core implementation (when needed)
 3. ⏳ Create unit tests with mock implementations
 4. ⏳ Performance benchmark against other providers
@@ -388,6 +388,6 @@ public async Task RotateSigningKey_WithRavenDb_ShouldWork()
 
 For questions or issues with the persistence abstraction:
 1. Review the interface documentation
-2. Check existing implementation in `RavenDbJwtSigningKeyPersistence`
+2. Check existing implementation in `AeroDbJwtSigningKeyPersistence`
 3. Refer to test examples in test suite
 4. Create new implementation following the same pattern

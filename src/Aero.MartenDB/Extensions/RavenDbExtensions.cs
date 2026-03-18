@@ -3,13 +3,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Aero.MartenDB.Extensions;
 
-public static class RavenDbExtensions
+public static class AeroDbExtensions
 {
-    public static IServiceCollection AddRavenPersistence(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAeroPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        // Load RavenDB settings from configuration
-        var ravenDbSettings = configuration.GetSection(RavenDbSettings.SectionName).Get<RavenDbSettings>() 
-            ?? new RavenDbSettings();
+        // Load AeroDB settings from configuration
+        var AeroDbSettings = configuration.GetSection(AeroDbSettings.SectionName).Get<AeroDbSettings>() 
+            ?? new AeroDbSettings();
 
         // 1. Register the DocumentStore as a SINGLETON
         // It is expensive to create and should exist once for the lifetime of the app.
@@ -17,27 +17,27 @@ public static class RavenDbExtensions
         {
             IDocumentStore store = null;
 
-            if (ravenDbSettings.UseEmbedded)
+            if (AeroDbSettings.UseEmbedded)
             {
-                // For embedded RavenDB, you need to add RavenDB.Embedded NuGet package
+                // For embedded AeroDB, you need to add AeroDB.Embedded NuGet package
                 // and uncomment the code below:
 
                 //var embeddedOptions = new ServerOptions();
 
-                if (!string.IsNullOrWhiteSpace(ravenDbSettings.EmbeddedPath))
+                if (!string.IsNullOrWhiteSpace(AeroDbSettings.EmbeddedPath))
                 {
-                    //embeddedOptions.DataDirectory = ravenDbSettings.EmbeddedPath;
+                    //embeddedOptions.DataDirectory = AeroDbSettings.EmbeddedPath;
                 }
 
                 //EmbeddedServer.Instance.StartServer(embeddedOptions);
 
                 // store = EmbeddedServer.Instance.GetDocumentStore(
-                //     new DatabaseOptions(ravenDbSettings.DatabaseName));
+                //     new DatabaseOptions(AeroDbSettings.DatabaseName));
             }
             else
             {
-                // Use server-based RavenDB
-                var urls = ravenDbSettings.Urls?
+                // Use server-based AeroDB
+                var urls = AeroDbSettings.Urls?
                     .Split(',', System.StringSplitOptions.RemoveEmptyEntries)
                     .Select(u => u.Trim())
                     .ToArray() ?? ["http://localhost:8080"];

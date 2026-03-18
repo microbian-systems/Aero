@@ -6,9 +6,9 @@ using Aero.Cms.Security;
 namespace Aero.Identity;
 
 /// <summary>
-/// The RavenDB identity module for Aero Cms.
+/// The AeroDB identity module for Aero Cms.
 /// </summary>
-public class RavenIdentityModule : IModule
+public class AeroIdentityModule : IModule
 {
     private readonly List<PermissionItem> _permissions = new List<PermissionItem>
     {
@@ -34,7 +34,7 @@ public class RavenIdentityModule : IModule
     public string Version => Aero.Cms.Utils.GetAssemblyVersion(GetType().Assembly);
 
     /// <inheritdoc />
-    public string Description => "Security module for Aero Cms using RavenDB Identity.";
+    public string Description => "Security module for Aero Cms using AeroDB Identity.";
 
     /// <inheritdoc />
     public string PackageUrl => "";
