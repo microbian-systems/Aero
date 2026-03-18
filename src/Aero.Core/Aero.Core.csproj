@@ -4,6 +4,7 @@
     <Description>Core components for the Aero web application platform</Description>
     <IsPackable>false</IsPackable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <!-- The unique ID for your package on NuGet.org -->
