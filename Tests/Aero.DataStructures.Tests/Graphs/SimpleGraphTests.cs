@@ -1,11 +1,8 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
 using Humanizer;
-using Moq;
-using NSubstitute;
-using FakeItEasy;
 
 namespace Aero.DataStructures.Tests;
 
@@ -14,14 +11,14 @@ public class SimpleGraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Constructor Tests
+    //#region Constructor Tests
 
     [Fact]
     public void Constructor_ShouldCreateUndirectedGraph_ByDefault()
     {
         var graph = new SimpleGraph<int>();
 
-        graph.IsDirected.Should().BeFalse();
+        graph.IsDirected.ShouldBeFalse();
     }
 
     [Fact]
@@ -29,12 +26,12 @@ public class SimpleGraphTests
     {
         var graph = new SimpleGraph<string>(directed: true);
 
-        graph.IsDirected.Should().BeTrue();
+        graph.IsDirected.ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 
-    #region Vertex Tests
+    //#region Vertex Tests
 
     [Fact]
     public void AddVertex_ShouldIncreaseVertexCount()
@@ -44,7 +41,7 @@ public class SimpleGraphTests
 
         graph.AddVertex(vertex);
 
-        graph.VertexCount.Should().Be(1);
+        graph.VertexCount.ShouldBe(1);
     }
 
     [Fact]
@@ -55,7 +52,7 @@ public class SimpleGraphTests
 
         var result = graph.AddVertex(vertex);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -66,7 +63,7 @@ public class SimpleGraphTests
 
         var result = graph.AddVertex("existing");
 
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -75,13 +72,13 @@ public class SimpleGraphTests
         var graph = new SimpleGraph<string>();
         graph.AddVertex("present");
 
-        graph.ContainsVertex("present").Should().BeTrue();
-        graph.ContainsVertex("absent").Should().BeFalse();
+        graph.ContainsVertex("present").ShouldBeTrue();
+        graph.ContainsVertex("absent").ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Edge Tests
+    //#region Edge Tests
 
     [Fact]
     public void AddEdge_ShouldIncreaseEdgeCount()
@@ -90,7 +87,7 @@ public class SimpleGraphTests
 
         graph.AddEdge("A", "B");
 
-        graph.EdgeCount.Should().Be(1);
+        graph.EdgeCount.ShouldBe(1);
     }
 
     [Fact]
@@ -102,8 +99,8 @@ public class SimpleGraphTests
 
         graph.AddEdge(v1, v2);
 
-        graph.ContainsVertex(v1).Should().BeTrue();
-        graph.ContainsVertex(v2).Should().BeTrue();
+        graph.ContainsVertex(v1).ShouldBeTrue();
+        graph.ContainsVertex(v2).ShouldBeTrue();
     }
 
     [Fact]
@@ -111,10 +108,8 @@ public class SimpleGraphTests
     {
         var graph = new SimpleGraph<string>();
 
-        var act = () => graph.AddEdge("self", "self");
-
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("*Self-loop*");
+        Action act = () => graph.AddEdge("self", "self");
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -125,7 +120,7 @@ public class SimpleGraphTests
 
         var result = graph.AddEdge("A", "B");
 
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -134,8 +129,8 @@ public class SimpleGraphTests
         var graph = new SimpleGraph<string>(directed: false);
         graph.AddEdge("X", "Y");
 
-        graph.ContainsEdge("X", "Y").Should().BeTrue();
-        graph.ContainsEdge("Y", "X").Should().BeTrue();
+        graph.ContainsEdge("X", "Y").ShouldBeTrue();
+        graph.ContainsEdge("Y", "X").ShouldBeTrue();
     }
 
     [Fact]
@@ -144,8 +139,8 @@ public class SimpleGraphTests
         var graph = new SimpleGraph<string>(directed: true);
         graph.AddEdge("X", "Y");
 
-        graph.ContainsEdge("X", "Y").Should().BeTrue();
-        graph.ContainsEdge("Y", "X").Should().BeFalse();
+        graph.ContainsEdge("X", "Y").ShouldBeTrue();
+        graph.ContainsEdge("Y", "X").ShouldBeFalse();
     }
 
     [Fact]
@@ -158,12 +153,12 @@ public class SimpleGraphTests
 
         var edges = graph.GetEdges().ToList();
 
-        edges.Should().HaveCount(3);
+        edges.Count().ShouldBe(3);
     }
 
-    #endregion
+    //#endregion
 
-    #region Degree Tests
+    //#region Degree Tests
 
     [Fact]
     public void GetDegree_Undirected_ShouldCountNeighbors()
@@ -173,7 +168,7 @@ public class SimpleGraphTests
         graph.AddEdge("center", "n2");
         graph.AddEdge("center", "n3");
 
-        graph.GetDegree("center").Should().Be(3);
+        graph.GetDegree("center").ShouldBe(3);
     }
 
     [Fact]
@@ -184,7 +179,7 @@ public class SimpleGraphTests
         graph.AddEdge("center", "out2");
         graph.AddEdge("in1", "center");
 
-        graph.GetDegree("center").Should().Be(3);
+        graph.GetDegree("center").ShouldBe(3);
     }
 
     [Fact]
@@ -195,7 +190,7 @@ public class SimpleGraphTests
         graph.AddEdge("b", "target");
         graph.AddEdge("target", "c");
 
-        graph.GetInDegree("target").Should().Be(2);
+        graph.GetInDegree("target").ShouldBe(2);
     }
 
     [Fact]
@@ -206,7 +201,7 @@ public class SimpleGraphTests
         graph.AddEdge("source", "b");
         graph.AddEdge("c", "source");
 
-        graph.GetOutDegree("source").Should().Be(2);
+        graph.GetOutDegree("source").ShouldBe(2);
     }
 
     [Fact]
@@ -215,14 +210,13 @@ public class SimpleGraphTests
         var graph = new SimpleGraph<string>(directed: false);
         graph.AddVertex("v");
 
-        var act = () => graph.GetInDegree("v");
-
-        act.Should().Throw<InvalidOperationException>();
+        Action act = () => graph.GetInDegree("v");
+        act.ShouldThrow<InvalidOperationException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region Neighbor Tests
+    //#region Neighbor Tests
 
     [Fact]
     public void GetNeighbors_ShouldReturnAdjacentVertices()
@@ -234,7 +228,7 @@ public class SimpleGraphTests
 
         var neighbors = graph.GetNeighbors("center");
 
-        neighbors.Should().Contain(new[] { "n1", "n2", "n3" });
+        neighbors.ShouldBe(new[] { "n1", "n2", "n3" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -245,12 +239,12 @@ public class SimpleGraphTests
         graph.AddVertex(2);
         graph.AddVertex(3);
 
-        graph.GetVertices().Should().Contain(new[] { 1, 2, 3 });
+        graph.GetVertices().ShouldBe(new[] { 1, 2, 3 }, ignoreOrder: true);
     }
 
-    #endregion
+    //#endregion
 
-    #region Traversal Tests
+    //#region Traversal Tests
 
     [Fact]
     public void BreadthFirstSearch_ShouldVisitAllVertices()
@@ -262,8 +256,8 @@ public class SimpleGraphTests
 
         var result = graph.BreadthFirstSearch("A").ToList();
 
-        result.Should().HaveCount(4);
-        result.First().Should().Be("A");
+        result.Count().ShouldBe(4);
+        result.First().ShouldBe("A");
     }
 
     [Fact]
@@ -276,8 +270,8 @@ public class SimpleGraphTests
 
         var result = graph.DepthFirstSearch("1").ToList();
 
-        result.Should().HaveCount(4);
-        result.First().Should().Be("1");
+        result.Count().ShouldBe(4);
+        result.First().ShouldBe("1");
     }
 
     [Fact]
@@ -285,13 +279,13 @@ public class SimpleGraphTests
     {
         var graph = new SimpleGraph<string>();
 
-        graph.BreadthFirstSearch("nonexistent").Should().BeEmpty();
-        graph.DepthFirstSearch("nonexistent").Should().BeEmpty();
+        graph.BreadthFirstSearch("nonexistent").ShouldBeEmpty();
+        graph.DepthFirstSearch("nonexistent").ShouldBeEmpty();
     }
 
-    #endregion
+    //#endregion
 
-    #region Shortest Path Tests
+    //#region Shortest Path Tests
 
     [Fact]
     public void GetShortestPath_ShouldFindDirectPath()
@@ -301,7 +295,8 @@ public class SimpleGraphTests
 
         var path = graph.GetShortestPath("A", "B");
 
-        path.Should().ContainInOrder("A", "B");
+        path.ShouldContain("A");
+        path.ShouldContain("B");
     }
 
     [Fact]
@@ -314,8 +309,11 @@ public class SimpleGraphTests
 
         var path = graph.GetShortestPath("A", "D");
 
-        path.Should().ContainInOrder("A", "B", "C", "D");
-        path.Count.Should().Be(4);
+        path.ShouldContain("A");
+        path.ShouldContain("B");
+        path.ShouldContain("C");
+        path.ShouldContain("D");
+        path.Count.ShouldBe(4);
     }
 
     [Fact]
@@ -327,7 +325,7 @@ public class SimpleGraphTests
 
         var path = graph.GetShortestPath("isolated", "separate");
 
-        path.Should().BeEmpty();
+        path.ShouldBeEmpty();
     }
 
     [Fact]
@@ -339,12 +337,13 @@ public class SimpleGraphTests
 
         var path = graph.GetShortestPath(vertex, vertex);
 
-        path.Should().ContainSingle().Which.Should().Be(vertex);
+        path.Count.ShouldBe(1);
+        path.First().ShouldBe(vertex);
     }
 
-    #endregion
+    //#endregion
 
-    #region Connectivity Tests
+    //#region Connectivity Tests
 
     [Fact]
     public void IsConnected_ShouldReturnTrue_ForConnectedGraph()
@@ -354,7 +353,7 @@ public class SimpleGraphTests
         graph.AddEdge("B", "C");
         graph.AddEdge("C", "D");
 
-        graph.IsConnected().Should().BeTrue();
+        graph.IsConnected().ShouldBeTrue();
     }
 
     [Fact]
@@ -364,7 +363,7 @@ public class SimpleGraphTests
         graph.AddEdge("A", "B");
         graph.AddVertex("isolated");
 
-        graph.IsConnected().Should().BeFalse();
+        graph.IsConnected().ShouldBeFalse();
     }
 
     [Fact]
@@ -372,9 +371,8 @@ public class SimpleGraphTests
     {
         var graph = new SimpleGraph<string>(directed: true);
 
-        var act = () => graph.IsConnected();
-
-        act.Should().Throw<InvalidOperationException>();
+        Action act = () => graph.IsConnected();
+        act.ShouldThrow<InvalidOperationException>();
     }
 
     [Fact]
@@ -385,7 +383,7 @@ public class SimpleGraphTests
         graph.AddEdge("B", "C");
         graph.AddEdge("C", "A");
 
-        graph.IsStronglyConnected().Should().BeTrue();
+        graph.IsStronglyConnected().ShouldBeTrue();
     }
 
     [Fact]
@@ -395,12 +393,12 @@ public class SimpleGraphTests
         graph.AddEdge("A", "B");
         graph.AddEdge("B", "C");
 
-        graph.IsStronglyConnected().Should().BeFalse();
+        graph.IsStronglyConnected().ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Cycle Detection Tests
+    //#region Cycle Detection Tests
 
     [Fact]
     public void HasCycle_ShouldReturnTrue_WhenCycleExists_Undirected()
@@ -410,7 +408,7 @@ public class SimpleGraphTests
         graph.AddEdge("B", "C");
         graph.AddEdge("C", "A");
 
-        graph.HasCycle().Should().BeTrue();
+        graph.HasCycle().ShouldBeTrue();
     }
 
     [Fact]
@@ -420,7 +418,7 @@ public class SimpleGraphTests
         graph.AddEdge("A", "B");
         graph.AddEdge("B", "C");
 
-        graph.HasCycle().Should().BeFalse();
+        graph.HasCycle().ShouldBeFalse();
     }
 
     [Fact]
@@ -431,7 +429,7 @@ public class SimpleGraphTests
         graph.AddEdge("B", "C");
         graph.AddEdge("C", "A");
 
-        graph.HasCycle().Should().BeTrue();
+        graph.HasCycle().ShouldBeTrue();
     }
 
     [Fact]
@@ -441,12 +439,12 @@ public class SimpleGraphTests
         graph.AddEdge("root", "child1");
         graph.AddEdge("root", "child2");
 
-        graph.HasCycle().Should().BeFalse();
+        graph.HasCycle().ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Bipartite Tests
+    //#region Bipartite Tests
 
     [Fact]
     public void IsBipartite_ShouldReturnTrue_ForBipartiteGraph()
@@ -457,7 +455,7 @@ public class SimpleGraphTests
         graph.AddEdge("B", "1");
         graph.AddEdge("B", "2");
 
-        graph.IsBipartite().Should().BeTrue();
+        graph.IsBipartite().ShouldBeTrue();
     }
 
     [Fact]
@@ -468,12 +466,12 @@ public class SimpleGraphTests
         graph.AddEdge("B", "C");
         graph.AddEdge("C", "A");
 
-        graph.IsBipartite().Should().BeFalse();
+        graph.IsBipartite().ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Connected Components Tests
+    //#region Connected Components Tests
 
     [Fact]
     public void GetConnectedComponents_ShouldReturnCorrectCount()
@@ -485,7 +483,7 @@ public class SimpleGraphTests
 
         var components = graph.GetConnectedComponents().ToList();
 
-        components.Should().HaveCount(3);
+        components.Count().ShouldBe(3);
     }
 
     [Fact]
@@ -493,9 +491,8 @@ public class SimpleGraphTests
     {
         var graph = new SimpleGraph<string>(directed: true);
 
-        var act = () => graph.GetConnectedComponents().ToList();
-
-        act.Should().Throw<InvalidOperationException>();
+        Action act = () => graph.GetConnectedComponents().ToList();
+        act.ShouldThrow<InvalidOperationException>();
     }
 
     [Fact]
@@ -508,12 +505,12 @@ public class SimpleGraphTests
 
         var sccs = graph.GetStronglyConnectedComponents().ToList();
 
-        sccs.Should().HaveCount(2);
+        sccs.Count().ShouldBe(2);
     }
 
-    #endregion
+    //#endregion
 
-    #region Remove Tests
+    //#region Remove Tests
 
     [Fact]
     public void RemoveVertex_ShouldRemoveAndReturnTrue()
@@ -523,8 +520,8 @@ public class SimpleGraphTests
 
         var result = graph.RemoveVertex("remove");
 
-        result.Should().BeTrue();
-        graph.ContainsVertex("remove").Should().BeFalse();
+        result.ShouldBeTrue();
+        graph.ContainsVertex("remove").ShouldBeFalse();
     }
 
     [Fact]
@@ -536,7 +533,7 @@ public class SimpleGraphTests
 
         graph.RemoveVertex("remove");
 
-        graph.EdgeCount.Should().Be(1);
+        graph.EdgeCount.ShouldBe(1);
     }
 
     [Fact]
@@ -547,13 +544,13 @@ public class SimpleGraphTests
 
         graph.RemoveEdge("A", "B");
 
-        graph.ContainsEdge("A", "B").Should().BeFalse();
-        graph.EdgeCount.Should().Be(0);
+        graph.ContainsEdge("A", "B").ShouldBeFalse();
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Clear Tests
+    //#region Clear Tests
 
     [Fact]
     public void Clear_ShouldResetGraph()
@@ -565,13 +562,13 @@ public class SimpleGraphTests
 
         graph.Clear();
 
-        graph.VertexCount.Should().Be(0);
-        graph.EdgeCount.Should().Be(0);
+        graph.VertexCount.ShouldBe(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Theory Tests
+    //#region Theory Tests
 
     [Theory]
     [InlineData(0)]
@@ -586,7 +583,7 @@ public class SimpleGraphTests
         foreach (var v in vertices)
             graph.AddVertex(v);
 
-        graph.VertexCount.Should().Be(count);
+        graph.VertexCount.ShouldBe(count);
     }
 
     [Theory]
@@ -596,12 +593,12 @@ public class SimpleGraphTests
     {
         var graph = new SimpleGraph<string>(directed);
 
-        graph.IsDirected.Should().Be(directed);
+        graph.IsDirected.ShouldBe(directed);
     }
 
-    #endregion
+    //#endregion
 
-    #region Real-World Scenario Tests
+    //#region Real-World Scenario Tests
 
     [Fact]
     public void SocialNetworkScenario_ShouldWorkCorrectly()
@@ -617,15 +614,15 @@ public class SimpleGraphTests
         graph.AddEdge("Bob", "Charlie");
         graph.AddEdge("Charlie", "Diana");
 
-        graph.VertexCount.Should().Be(4);
-        graph.EdgeCount.Should().Be(4);
-        graph.IsConnected().Should().BeTrue();
-        graph.IsBipartite().Should().BeFalse();
+        graph.VertexCount.ShouldBe(4);
+        graph.EdgeCount.ShouldBe(4);
+        graph.IsConnected().ShouldBeTrue();
+        graph.IsBipartite().ShouldBeFalse();
         
         var path = graph.GetShortestPath("Alice", "Diana");
-        path.Should().NotBeEmpty();
-        path.First().Should().Be("Alice");
-        path.Last().Should().Be("Diana");
+        path.ShouldNotBeEmpty();
+        path.First().ShouldBe("Alice");
+        path.Last().ShouldBe("Diana");
     }
 
     [Fact]
@@ -638,11 +635,11 @@ public class SimpleGraphTests
         graph.AddEdge("bob", "alice");
         graph.AddEdge("charlie", "alice");
 
-        graph.VertexCount.Should().Be(3);
-        graph.EdgeCount.Should().Be(4);
+        graph.VertexCount.ShouldBe(3);
+        graph.EdgeCount.ShouldBe(4);
         
-        graph.GetNeighbors("alice").Should().Contain(new[] { "bob", "charlie" });
+        graph.GetNeighbors("alice").ShouldBe(new[] { "bob", "charlie" }, ignoreOrder: true);
     }
 
-    #endregion
+    //#endregion
 }

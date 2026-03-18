@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -24,7 +24,7 @@ public class JwtSigningKeyStoreContractTests
         _mockPersistence = Substitute.For<IJwtSigningKeyPersistence>();
     }
 
-    #region Interface Contract Tests
+    //#region Interface Contract Tests
 
     [Fact]
     public void JwtSigningKeyStore_ImplementsInterface()
@@ -33,8 +33,8 @@ public class JwtSigningKeyStoreContractTests
         IJwtSigningKeyStore store = new JwtSigningKeyStore(_mockPersistence, _mockLogger, _memoryCache);
 
         // Assert
-        store.Should().NotBeNull();
-        store.Should().BeAssignableTo<IJwtSigningKeyStore>();
+        store.ShouldNotBeNull();
+        store.ShouldBeAssignableTo<IJwtSigningKeyStore>();
     }
 
     [Fact]
@@ -47,13 +47,13 @@ public class JwtSigningKeyStoreContractTests
         var methods = interfaceType.GetMethods();
 
         // Assert
-        methods.Should().Contain(m => m.Name == "GetCurrentSigningKeyAsync");
-        methods.Should().Contain(m => m.Name == "GetCurrentKeyIdAsync");
-        methods.Should().Contain(m => m.Name == "GetValidationKeysAsync");
-        methods.Should().Contain(m => m.Name == "GetSigningCredentialsAsync");
-        methods.Should().Contain(m => m.Name == "RotateSigningKeyAsync");
-        methods.Should().Contain(m => m.Name == "RevokeKeyAsync");
-        methods.Should().Contain(m => m.Name == "GetKeyByIdAsync");
+        methods.ShouldContain(m => m.Name == "GetCurrentSigningKeyAsync");
+        methods.ShouldContain(m => m.Name == "GetCurrentKeyIdAsync");
+        methods.ShouldContain(m => m.Name == "GetValidationKeysAsync");
+        methods.ShouldContain(m => m.Name == "GetSigningCredentialsAsync");
+        methods.ShouldContain(m => m.Name == "RotateSigningKeyAsync");
+        methods.ShouldContain(m => m.Name == "RevokeKeyAsync");
+        methods.ShouldContain(m => m.Name == "GetKeyByIdAsync");
     }
 
     [Fact]
@@ -65,12 +65,12 @@ public class JwtSigningKeyStoreContractTests
             .First(m => m.Name == "GetSigningCredentialsAsync");
 
         // Assert
-        methodInfo.ReturnType.Name.Should().Contain("Task");
+        methodInfo.ReturnType.Name.ShouldContain("Task");
     }
 
-    #endregion
+    //#endregion
 
-    #region Cache Behavior Tests
+    //#region Cache Behavior Tests
 
     [Fact]
     public void MemoryCache_CanStoreAndRetrieveValues()
@@ -84,8 +84,8 @@ public class JwtSigningKeyStoreContractTests
         var retrieved = _memoryCache.TryGetValue(cacheKey, out var value);
 
         // Assert
-        retrieved.Should().BeTrue();
-        value.Should().Be(cacheValue);
+        retrieved.ShouldBeTrue();
+        value.ShouldBe(cacheValue);
     }
 
     [Fact]
@@ -100,12 +100,12 @@ public class JwtSigningKeyStoreContractTests
         var retrieved = _memoryCache.TryGetValue(cacheKey, out _);
 
         // Assert
-        retrieved.Should().BeFalse();
+        retrieved.ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Dependency Injection Tests
+    //#region Dependency Injection Tests
 
     [Fact]
     public void Constructor_WithValidDependencies_ShouldNotThrow()
@@ -114,7 +114,7 @@ public class JwtSigningKeyStoreContractTests
         Action act = () => new JwtSigningKeyStore(_mockPersistence, _mockLogger, _memoryCache);
 
         // Assert
-        act.Should().NotThrow();
+        act.ShouldNotThrow();
     }
 
     [Fact]
@@ -124,7 +124,7 @@ public class JwtSigningKeyStoreContractTests
         Action act = () => new JwtSigningKeyStore(null!, _mockLogger, _memoryCache);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>();
+        act.ShouldThrow<ArgumentNullException>();
     }
 
     [Fact]
@@ -134,7 +134,7 @@ public class JwtSigningKeyStoreContractTests
         Action act = () => new JwtSigningKeyStore(_mockPersistence, null!, _memoryCache);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>();
+        act.ShouldThrow<ArgumentNullException>();
     }
 
     [Fact]
@@ -144,12 +144,12 @@ public class JwtSigningKeyStoreContractTests
         Action act = () => new JwtSigningKeyStore(_mockPersistence, _mockLogger, null!);
 
         // Assert
-        act.Should().Throw<ArgumentNullException>();
+        act.ShouldThrow<ArgumentNullException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region Algorithm Tests
+    //#region Algorithm Tests
 
     [Fact]
     public void SigningKey_ShouldUseHmacSha256Algorithm()
@@ -158,8 +158,8 @@ public class JwtSigningKeyStoreContractTests
         var algorithm = SecurityAlgorithms.HmacSha256;
 
         // Assert
-        algorithm.Should().Be("HS256");
+        algorithm.ShouldBe("HS256");
     }
 
-    #endregion
+    //#endregion
 }

@@ -1,9 +1,5 @@
 using Aero.Core.Identity;
-using Aero.RavenDB.Indexes;
-using Raven.Client.Documents;
-using Raven.Client.Documents.Indexes;
-using Raven.Client.Documents.Linq;
-using Raven.Client.Documents.Session;
+using Marten;
 
 namespace Aero.Auth;
 
@@ -18,7 +14,7 @@ public class Seeder
         var userManager = sp.GetRequiredService<UserManager<AeroUser>>();
         var roleManager = sp.GetRequiredService<RoleManager<AeroRole>>();
         var store = sp.GetRequiredService<IDocumentStore>();
-        var db = sp.GetRequiredService<IAsyncDocumentSession>();
+        var db = sp.GetRequiredService<IDocumentSession>();
         
         var existing = await roleManager.Roles.ToListAsync();
         if (!existing.Any())
@@ -36,15 +32,17 @@ public class Seeder
             }
         }
 
-        await IndexCreation.CreateIndexesAsync(typeof(Users_ByRoleName).Assembly, store);
+        // await IndexCreation.CreateIndexesAsync(typeof(Users_ByRoleName).Assembly, store);
+        //
+        // // Seed admin user
+        // var admins = await db
+        //     .Query<Users_ByRoleName.Result, Users_ByRoleName>()
+        //     .Where(x => x.RoleNames.Contains("admin"))
+        //     .OfType<AeroUser>()
+        //     .ToListAsync();
+        //
 
-        // Seed admin user
-        var admins = await db
-            .Query<Users_ByRoleName.Result, Users_ByRoleName>()
-            .Where(x => x.RoleNames.Contains("admin"))
-            .OfType<AeroUser>()
-            .ToListAsync();
-
+        var admins = await userManager.GetUsersInRoleAsync("Admin");
 
         
         if (!admins.Any())

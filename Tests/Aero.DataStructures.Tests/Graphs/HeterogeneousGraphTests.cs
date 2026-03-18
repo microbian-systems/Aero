@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
@@ -11,7 +11,7 @@ public class HeterogeneousGraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Node Tests
+    //#region Node Tests
 
     [Fact]
     public void AddNode_ShouldCreateTypedNode()
@@ -22,9 +22,9 @@ public class HeterogeneousGraphTests
 
         var node = graph.AddNode(nodeId, nodeType);
 
-        node.Should().NotBeNull();
-        node!.Id.Should().Be(nodeId);
-        node.Type.Should().Be(nodeType);
+        node.ShouldNotBeNull();
+        node!.Id.ShouldBe(nodeId);
+        node.Type.ShouldBe(nodeType);
     }
 
     [Fact]
@@ -34,8 +34,8 @@ public class HeterogeneousGraphTests
         
         var node = graph.AddNode("user1", "User", new { name = "Alice", age = 30 });
 
-        node!.GetAttribute<string>("name").Should().Be("Alice");
-        node.GetAttribute<int>("age").Should().Be(30);
+        node!.GetAttribute<string>("name").ShouldBe("Alice");
+        node.GetAttribute<int>("age").ShouldBe(30);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class HeterogeneousGraphTests
 
         var result = graph.AddNode("duplicate", "OtherType");
 
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Fact]
@@ -59,8 +59,8 @@ public class HeterogeneousGraphTests
 
         var users = graph.GetNodes("User").ToList();
 
-        users.Should().HaveCount(2);
-        users.All(n => n.Type == "User").Should().BeTrue();
+        users.Count().ShouldBe(2);
+        users.All(n => n.Type == "User").ShouldBeTrue();
     }
 
     [Fact]
@@ -71,13 +71,13 @@ public class HeterogeneousGraphTests
         graph.AddNode("u2", "User");
         graph.AddNode("p1", "Product");
 
-        graph.NodeTypeCounts["User"].Should().Be(2);
-        graph.NodeTypeCounts["Product"].Should().Be(1);
+        graph.NodeTypeCounts["User"].ShouldBe(2);
+        graph.NodeTypeCounts["Product"].ShouldBe(1);
     }
 
-    #endregion
+    //#endregion
 
-    #region Edge Tests
+    //#region Edge Tests
 
     [Fact]
     public void AddEdge_ShouldCreateTypedEdge()
@@ -88,10 +88,10 @@ public class HeterogeneousGraphTests
 
         var edge = graph.AddEdge("user1", "prod1", "PURCHASED");
 
-        edge.Should().NotBeNull();
-        edge!.Type.Should().Be("PURCHASED");
-        edge.SourceId.Should().Be("user1");
-        edge.TargetId.Should().Be("prod1");
+        edge.ShouldNotBeNull();
+        edge!.Type.ShouldBe("PURCHASED");
+        edge.SourceId.ShouldBe("user1");
+        edge.TargetId.ShouldBe("prod1");
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public class HeterogeneousGraphTests
 
         var edge = graph.AddEdge("a", "b", "LINKS", weight: 0.95);
 
-        edge!.Weight.Should().Be(0.95);
+        edge!.Weight.ShouldBe(0.95);
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class HeterogeneousGraphTests
 
         var edge = graph.AddEdge("nonexistent1", "nonexistent2", "EDGE");
 
-        edge.Should().BeNull();
+        edge.ShouldBeNull();
     }
 
     [Fact]
@@ -129,7 +129,7 @@ public class HeterogeneousGraphTests
 
         var friendEdges = graph.GetEdges("FRIEND").ToList();
 
-        friendEdges.Should().HaveCount(2);
+        friendEdges.Count().ShouldBe(2);
     }
 
     [Fact]
@@ -142,7 +142,7 @@ public class HeterogeneousGraphTests
         graph.AddEdge("a", "b", "KNOWS");
         graph.AddEdge("a", "c", "KNOWS");
 
-        graph.EdgeTypeCounts["KNOWS"].Should().Be(2);
+        graph.EdgeTypeCounts["KNOWS"].ShouldBe(2);
     }
 
     [Fact]
@@ -156,13 +156,13 @@ public class HeterogeneousGraphTests
         var edge1 = graph.AddEdge("a", "b", "LINKS");
         var edge2 = graph.AddEdge("b", "c", "LINKS");
 
-        edge1!.Id.Should().Be(0);
-        edge2!.Id.Should().Be(1);
+        edge1!.Id.ShouldBe(0);
+        edge2!.Id.ShouldBe(1);
     }
 
-    #endregion
+    //#endregion
 
-    #region Neighbor Tests
+    //#region Neighbor Tests
 
     [Fact]
     public void GetNeighbors_ShouldReturnConnectedNodes()
@@ -176,7 +176,7 @@ public class HeterogeneousGraphTests
 
         var neighbors = graph.GetNeighbors("center").ToList();
 
-        neighbors.Select(n => n.Id).Should().Contain(new[] { "n1", "n2" });
+        neighbors.Select(n => n.Id).ShouldBe(new[] { "n1", "n2" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -191,13 +191,13 @@ public class HeterogeneousGraphTests
 
         var friends = graph.GetNeighbors("center", "FRIEND").ToList();
 
-        friends.Should().ContainSingle();
-        friends[0].Id.Should().Be("friend1");
+        friends.ShouldHaveSingleItem();
+        friends[0].Id.ShouldBe("friend1");
     }
 
-    #endregion
+    //#endregion
 
-    #region Meta-Path Tests
+    //#region Meta-Path Tests
 
     [Fact]
     public void FindMetaPaths_ShouldFindMatchingPaths()
@@ -217,8 +217,8 @@ public class HeterogeneousGraphTests
 
         var paths = graph.FindMetaPaths("user1", metaPath).ToList();
 
-        paths.Should().ContainSingle();
-        paths[0].Select(n => n.Id).Should().ContainInOrder("user1", "prod1", "cat1");
+        paths.ShouldHaveSingleItem();
+        paths[0].Select(n => n.Id).ShouldBe(new[] { "user1", "prod1", "cat1" });
     }
 
     [Fact]
@@ -242,12 +242,12 @@ public class HeterogeneousGraphTests
 
         var similarity = graph.ComputePathSimilarity("u1", "u2", metaPath);
 
-        similarity.Should().Be(1.0);
+        similarity.ShouldBe(1.0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Schema Tests
+    //#region Schema Tests
 
     [Fact]
     public void GetSchema_ShouldReturnEdgeTypes()
@@ -259,13 +259,13 @@ public class HeterogeneousGraphTests
 
         var schema = graph.GetSchema();
 
-        schema.Should().ContainKey(("User", "PURCHASED"));
-        schema[("User", "PURCHASED")].Should().Be("Product");
+        schema.ShouldContainKey(("User", "PURCHASED"));
+        schema[("User", "PURCHASED")].ShouldBe("Product");
     }
 
-    #endregion
+    //#endregion
 
-    #region Remove Tests
+    //#region Remove Tests
 
     [Fact]
     public void RemoveNode_ShouldRemoveIncidentEdges()
@@ -277,7 +277,7 @@ public class HeterogeneousGraphTests
 
         graph.RemoveNode("remove");
 
-        graph.EdgeCount.Should().Be(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
     [Fact]
@@ -290,13 +290,13 @@ public class HeterogeneousGraphTests
 
         graph.RemoveEdge(edge!.Id);
 
-        graph.NodeCount.Should().Be(2);
-        graph.EdgeCount.Should().Be(0);
+        graph.NodeCount.ShouldBe(2);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Clear Tests
+    //#region Clear Tests
 
     [Fact]
     public void Clear_ShouldResetGraph()
@@ -308,13 +308,13 @@ public class HeterogeneousGraphTests
 
         graph.Clear();
 
-        graph.NodeCount.Should().Be(0);
-        graph.EdgeCount.Should().Be(0);
+        graph.NodeCount.ShouldBe(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Real-World Scenario Tests
+    //#region Real-World Scenario Tests
 
     [Fact]
     public void ECommerceScenario_ShouldModelCorrectly()
@@ -330,13 +330,13 @@ public class HeterogeneousGraphTests
         graph.AddEdge("laptop", "electronics", "BELONGS_TO");
         graph.AddEdge("laptop", "techco", "MANUFACTURED_BY");
 
-        graph.NodeCount.Should().Be(4);
-        graph.EdgeCount.Should().Be(3);
+        graph.NodeCount.ShouldBe(4);
+        graph.EdgeCount.ShouldBe(3);
         
         var aliceNeighbors = graph.GetNeighbors("alice", "PURCHASED").ToList();
-        aliceNeighbors.Should().ContainSingle();
-        aliceNeighbors[0].Id.Should().Be("laptop");
+        aliceNeighbors.ShouldHaveSingleItem();
+        aliceNeighbors[0].Id.ShouldBe("laptop");
     }
 
-    #endregion
+    //#endregion
 }

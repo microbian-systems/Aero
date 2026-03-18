@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Electra.DataStructures.Trees;
+namespace Aero.DataStructures.Trees;
 
 /// <summary>
 /// Defines a contract for search algorithms on trees.

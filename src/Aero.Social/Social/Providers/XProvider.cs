@@ -421,7 +421,7 @@ public class XProvider : SocialProviderBase
     private string GetApiSecret() => _configuration["X_API_SECRET"] ?? throw new InvalidOperationException("X_API_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class XRequestToken
     {
@@ -477,5 +477,5 @@ public class XProvider : SocialProviderBase
         public string MediaIdString { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

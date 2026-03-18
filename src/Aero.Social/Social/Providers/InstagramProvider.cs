@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Social.Abstractions;
@@ -429,7 +428,7 @@ public class InstagramProvider : SocialProviderBase
     private string GetAppSecret() => _configuration["FACEBOOK_APP_SECRET"] ?? throw new InvalidOperationException("FACEBOOK_APP_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class InstagramMediaResponse
     {
@@ -554,5 +553,5 @@ public class InstagramProvider : SocialProviderBase
         public int? ExpiresIn { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

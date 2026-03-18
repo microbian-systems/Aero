@@ -4,7 +4,7 @@ namespace Aero.Auth.Services;
 
 /// <summary>
 /// Production-grade JWT signing key store with rotation support.
-/// Keys are persisted via abstracted persistence layer for flexibility (RavenDB, EF Core, etc).
+/// Keys are persisted via abstracted persistence layer for flexibility (AeroDB, EF Core, etc).
 /// Can be rotated without downtime, with in-memory caching for performance.
 /// </summary>
 public class JwtSigningKeyStore : IJwtSigningKeyStore

@@ -6,14 +6,14 @@ namespace Aero.Models.Entities;
 /// Represents a refresh token used for session management.
 /// Supports both web (BFF) and app (MAUI) clients.
 /// 
-/// RavenDB Design: This document stores only the UserId reference (not the full user object).
+/// AeroDB Design: This document stores only the UserId reference (not the full user object).
 /// Query by UserId to find all tokens for a user, or by TokenHash for validation.
 /// </summary>
 public class RefreshToken : Entity
 {
     /// <summary>
     /// Reference to the AeroUser ID this token belongs to.
-    /// In RavenDB, store document IDs as strings, not nested objects.
+    /// In AeroDB, store document IDs as strings, not nested objects.
     /// </summary>
     public string UserId { get; set; } = string.Empty;
 

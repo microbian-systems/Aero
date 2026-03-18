@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
@@ -206,7 +204,7 @@ public class InstagramStandaloneProvider : SocialProviderBase
     private string GetAppSecret() => _configuration["INSTAGRAM_APP_SECRET"] ?? throw new InvalidOperationException("INSTAGRAM_APP_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class InstagramShortTokenResponse
     {
@@ -250,5 +248,5 @@ public class InstagramStandaloneProvider : SocialProviderBase
         public string? ProfilePictureUrl { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

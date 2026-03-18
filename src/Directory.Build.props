@@ -3,8 +3,7 @@
 		<TargetFramework>net10.0</TargetFramework>
         <LangVersion>default</LangVersion>
         <Nullable>enable</Nullable>
-        <ImplicitUsings>false</ImplicitUsings>
-        <LangVersion>default</LangVersion>
+        <ImplicitUsings>true</ImplicitUsings>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -15,10 +14,10 @@
     </PropertyGroup>
 
     <PropertyGroup Label="Package information">
-        <Version>1.0.0-alpha</Version>
-        <Authors>Aero, Microbians, bbqchickenrobot</Authors>
+        <Version>0.0.5-alpha</Version>
+        <Authors>Troy Robinson, et al</Authors>
         <Company>Microbians</Company>
-        <Copyright>Copyright (c) 2023 Microbians</Copyright>
+        <Copyright>Copyright (c) 2023-2026 Microbians</Copyright>
         <PackageTags>asp.net efcore Aero</PackageTags>
 <!--        <PackageIcon>../../assets/Aero2.png</PackageIcon>-->
         <PackageProjectUrl>https://github.com/microbian-systems/Aero</PackageProjectUrl>

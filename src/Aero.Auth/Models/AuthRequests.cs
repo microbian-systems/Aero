@@ -7,13 +7,22 @@ namespace Aero.Auth.Models;
 /// </summary>
 public class LoginWebRequest
 {
+    /// <summary>
+    /// Gets or sets the email address.
+    /// </summary>
     [Required]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Gets or sets the password.
+    /// </summary>
     [Required]
     public string Password { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Gets or sets whether to remember the session.
+    /// </summary>
     public bool RememberMe { get; set; } = false;
 }
 
@@ -45,6 +54,9 @@ public class LoginAppRequest
 /// </summary>
 public class RefreshTokenRequest
 {
+    /// <summary>
+    /// Gets or sets the refresh token to use for generating a new access token.
+    /// </summary>
     [Required]
     public string RefreshToken { get; set; } = string.Empty;
 }
@@ -54,6 +66,9 @@ public class RefreshTokenRequest
 /// </summary>
 public class ExternalLoginChallengeRequest
 {
+    /// <summary>
+    /// Gets or sets the external login provider (e.g., Google, GitHub).
+    /// </summary>
     [Required]
     public string Provider { get; set; } = string.Empty;
 

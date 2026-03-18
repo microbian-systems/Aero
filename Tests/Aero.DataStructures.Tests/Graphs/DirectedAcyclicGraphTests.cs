@@ -1,8 +1,8 @@
-using FluentAssertions;
+using Shouldly;
+using Aero.DataStructures;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
-using Humanizer;
 
 namespace Aero.DataStructures.Tests;
 
@@ -11,7 +11,7 @@ public class DirectedAcyclicGraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Vertex Tests
+    //#region Vertex Tests
 
     [Fact]
     public void AddVertex_ShouldIncreaseCount()
@@ -21,7 +21,7 @@ public class DirectedAcyclicGraphTests
 
         dag.AddVertex(vertex);
 
-        dag.VertexCount.Should().Be(1);
+        dag.VertexCount.ShouldBe(1);
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class DirectedAcyclicGraphTests
 
         var result = dag.AddVertex(vertex);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -43,12 +43,12 @@ public class DirectedAcyclicGraphTests
 
         var result = dag.AddVertex("existing");
 
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Edge Tests
+    //#region Edge Tests
 
     [Fact]
     public void AddEdge_ShouldAddSuccessfully_WhenNoCycle()
@@ -59,8 +59,8 @@ public class DirectedAcyclicGraphTests
 
         var act = () => dag.AddEdge("A", "B");
 
-        act.Should().NotThrow();
-        dag.EdgeCount.Should().Be(1);
+        act.ShouldNotThrow();
+        dag.EdgeCount.ShouldBe(1);
     }
 
     [Fact]
@@ -72,8 +72,7 @@ public class DirectedAcyclicGraphTests
 
         var act = () => dag.AddEdge("C", "A");
 
-        act.Should().Throw<InvalidOperationException>()
-            .WithMessage("*cycle*");
+        act.ShouldThrow<InvalidOperationException>("*cycle*");
     }
 
     [Fact]
@@ -85,8 +84,8 @@ public class DirectedAcyclicGraphTests
 
         dag.AddEdge(v1, v2);
 
-        dag.ContainsVertex(v1).Should().BeTrue();
-        dag.ContainsVertex(v2).Should().BeTrue();
+        dag.ContainsVertex(v1).ShouldBeTrue();
+        dag.ContainsVertex(v2).ShouldBeTrue();
     }
 
     [Fact]
@@ -96,7 +95,7 @@ public class DirectedAcyclicGraphTests
         
         var result = dag.TryAddEdge("A", "B");
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -108,12 +107,12 @@ public class DirectedAcyclicGraphTests
 
         var result = dag.TryAddEdge("C", "A");
 
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region WouldCreateCycle Tests
+    //#region WouldCreateCycle Tests
 
     [Fact]
     public void WouldCreateCycle_ShouldReturnTrue_WhenPathExists()
@@ -122,7 +121,7 @@ public class DirectedAcyclicGraphTests
         dag.AddEdge("A", "B");
         dag.AddEdge("B", "C");
 
-        dag.WouldCreateCycle("C", "A").Should().BeTrue();
+        dag.WouldCreateCycle("C", "A").ShouldBeTrue();
     }
 
     [Fact]
@@ -132,12 +131,12 @@ public class DirectedAcyclicGraphTests
         dag.AddVertex("A");
         dag.AddVertex("B");
 
-        dag.WouldCreateCycle("A", "B").Should().BeFalse();
+        dag.WouldCreateCycle("A", "B").ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Reachability Tests
+    //#region Reachability Tests
 
     [Fact]
     public void CanReach_ShouldReturnTrue_WhenPathExists()
@@ -146,7 +145,7 @@ public class DirectedAcyclicGraphTests
         dag.AddEdge("A", "B");
         dag.AddEdge("B", "C");
 
-        dag.CanReach("A", "C").Should().BeTrue();
+        dag.CanReach("A", "C").ShouldBeTrue();
     }
 
     [Fact]
@@ -156,7 +155,7 @@ public class DirectedAcyclicGraphTests
         dag.AddVertex("A");
         dag.AddVertex("B");
 
-        dag.CanReach("A", "B").Should().BeFalse();
+        dag.CanReach("A", "B").ShouldBeFalse();
     }
 
     [Fact]
@@ -165,12 +164,12 @@ public class DirectedAcyclicGraphTests
         var dag = new DirectedAcyclicGraph<string>();
         dag.AddVertex("A");
 
-        dag.CanReach("A", "A").Should().BeTrue();
+        dag.CanReach("A", "A").ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 
-    #region Topological Sort Tests
+    //#region Topological Sort Tests
 
     [Fact]
     public void TopologicalSort_ShouldReturnAllVertices()
@@ -181,8 +180,8 @@ public class DirectedAcyclicGraphTests
 
         var result = dag.TopologicalSort();
 
-        result.Should().HaveCount(3);
-        result.Should().Contain(new[] { "A", "B", "C" });
+        result.Count().ShouldBe(3);
+        result.ShouldBe(new[] { "A", "B", "C" });
     }
 
     [Fact]
@@ -194,8 +193,8 @@ public class DirectedAcyclicGraphTests
 
         var result = dag.TopologicalSort();
 
-        result.IndexOf("compile").Should().BeLessThan(result.IndexOf("test"));
-        result.IndexOf("test").Should().BeLessThan(result.IndexOf("deploy"));
+        result.IndexOf("compile").ShouldBeLessThan(result.IndexOf("test"));
+        result.IndexOf("test").ShouldBeLessThan(result.IndexOf("deploy"));
     }
 
     [Fact]
@@ -207,13 +206,13 @@ public class DirectedAcyclicGraphTests
 
         var result = dag.TopologicalSort();
 
-        result.IndexOf("A").Should().BeLessThan(result.IndexOf("C"));
-        result.IndexOf("B").Should().BeLessThan(result.IndexOf("C"));
+        result.IndexOf("A").ShouldBeLessThan(result.IndexOf("C"));
+        result.IndexOf("B").ShouldBeLessThan(result.IndexOf("C"));
     }
 
-    #endregion
+    //#endregion
 
-    #region All Topological Sorts Tests
+    //#region All Topological Sorts Tests
 
     [Fact]
     public void GetAllTopologicalSorts_ShouldReturnMultipleOrders()
@@ -225,12 +224,12 @@ public class DirectedAcyclicGraphTests
 
         var allSorts = dag.GetAllTopologicalSorts().ToList();
 
-        allSorts.Should().HaveCount(6);
+        allSorts.Count().ShouldBe(6);
     }
 
-    #endregion
+    //#endregion
 
-    #region Sources and Sinks Tests
+    //#region Sources and Sinks Tests
 
     [Fact]
     public void GetSources_ShouldReturnVerticesWithNoIncoming()
@@ -241,7 +240,7 @@ public class DirectedAcyclicGraphTests
 
         var sources = dag.GetSources().ToList();
 
-        sources.Should().ContainSingle("root");
+        sources.ShouldHaveSingleItem().ShouldBe("root");
     }
 
     [Fact]
@@ -253,12 +252,12 @@ public class DirectedAcyclicGraphTests
 
         var sinks = dag.GetSinks().ToList();
 
-        sinks.Should().Contain(new[] { "leaf1", "leaf2" });
+        sinks.ShouldBe(new[] { "leaf1", "leaf2" });
     }
 
-    #endregion
+    //#endregion
 
-    #region Longest Path Tests
+    //#region Longest Path Tests
 
     [Fact]
     public void GetLongestPathLengths_ShouldComputeCorrectly()
@@ -271,10 +270,10 @@ public class DirectedAcyclicGraphTests
 
         var lengths = dag.GetLongestPathLengths();
 
-        lengths["A"].Should().Be(0);
-        lengths["B"].Should().Be(1);
-        lengths["D"].Should().Be(1);
-        lengths["C"].Should().Be(2);
+        lengths["A"].ShouldBe(0);
+        lengths["B"].ShouldBe(1);
+        lengths["D"].ShouldBe(1);
+        lengths["C"].ShouldBe(2);
     }
 
     [Fact]
@@ -287,12 +286,12 @@ public class DirectedAcyclicGraphTests
 
         var path = dag.GetLongestPath();
 
-        path.Should().ContainInOrder("A", "B", "C");
+        path.ShouldBe(new[] { "A", "B", "C" });
     }
 
-    #endregion
+    //#endregion
 
-    #region Ancestor/Descendant Tests
+    //#region Ancestor/Descendant Tests
 
     [Fact]
     public void GetAncestors_ShouldReturnAllPredecessors()
@@ -304,7 +303,7 @@ public class DirectedAcyclicGraphTests
 
         var ancestors = dag.GetAncestors("C");
 
-        ancestors.Should().Contain(new[] { "A", "B", "X" });
+        ancestors.OrderBy(x => x).ShouldBe(new[] { "A", "B", "X" }.OrderBy(x => x));
     }
 
     [Fact]
@@ -317,12 +316,12 @@ public class DirectedAcyclicGraphTests
 
         var descendants = dag.GetDescendants("A");
 
-        descendants.Should().Contain(new[] { "B", "C", "D" });
+        descendants.OrderBy(x => x).ShouldBe(new[] { "B", "C", "D" }.OrderBy(x => x));
     }
 
-    #endregion
+    //#endregion
 
-    #region LCA Tests
+    //#region LCA Tests
 
     [Fact]
     public void GetLowestCommonAncestors_ShouldFindCorrectLca()
@@ -335,12 +334,12 @@ public class DirectedAcyclicGraphTests
 
         var lcas = dag.GetLowestCommonAncestors("left", "right");
 
-        lcas.Should().ContainSingle("root");
+        lcas.ShouldHaveSingleItem().ShouldBe("root");
     }
 
-    #endregion
+    //#endregion
 
-    #region Transitive Closure Tests
+    //#region Transitive Closure Tests
 
     [Fact]
     public void GetTransitiveClosure_ShouldAddIndirectEdges()
@@ -351,12 +350,12 @@ public class DirectedAcyclicGraphTests
 
         var closure = dag.GetTransitiveClosure();
 
-        closure.ContainsEdge("A", "C").Should().BeTrue();
+        closure.ContainsEdge("A", "C").ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 
-    #region Remove Tests
+    //#region Remove Tests
 
     [Fact]
     public void RemoveVertex_ShouldRemoveFromDag()
@@ -367,8 +366,8 @@ public class DirectedAcyclicGraphTests
 
         dag.RemoveVertex("remove");
 
-        dag.ContainsVertex("remove").Should().BeFalse();
-        dag.VertexCount.Should().Be(1);
+        dag.ContainsVertex("remove").ShouldBeFalse();
+        dag.VertexCount.ShouldBe(1);
     }
 
     [Fact]
@@ -381,8 +380,8 @@ public class DirectedAcyclicGraphTests
         dag.RemoveEdge("B", "C");
         
         var act = () => dag.AddEdge("C", "A");
-        act.Should().NotThrow();
+        act.ShouldNotThrow();
     }
 
-    #endregion
+    //#endregion
 }

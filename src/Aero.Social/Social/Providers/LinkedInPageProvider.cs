@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
@@ -591,7 +589,7 @@ public class LinkedInPageProvider : LinkedInProvider
         return imageId;
     }
 
-    #region DTOs
+    //#region DTOs
 
     public class LinkedInCompany
     {
@@ -821,9 +819,9 @@ public class LinkedInPageProvider : LinkedInProvider
         public int TotalFirstLevelComments { get; set; }
     }
 
-    #endregion
+    //#endregion
 
-    #region Plug Examples
+    //#region Plug Examples
 
     /// <summary>
     /// Auto-reposts a post when it reaches a certain number of likes
@@ -960,5 +958,5 @@ public class LinkedInPageProvider : LinkedInProvider
         public object? Content { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

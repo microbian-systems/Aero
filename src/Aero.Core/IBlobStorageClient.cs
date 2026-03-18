@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-
-namespace Aero.Common;
+﻿namespace Aero.Common;
 
 public interface IBlobStorageClient
 {

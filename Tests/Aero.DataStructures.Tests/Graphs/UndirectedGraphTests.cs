@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
@@ -11,7 +11,7 @@ public class UndirectedGraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Vertex Tests
+    //#region Vertex Tests
 
     [Fact]
     public void AddVertex_ShouldIncreaseVertexCount()
@@ -21,7 +21,7 @@ public class UndirectedGraphTests
 
         graph.AddVertex(vertex);
 
-        graph.VertexCount.Should().Be(1);
+        graph.VertexCount.ShouldBe(1);
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class UndirectedGraphTests
 
         var result = graph.AddVertex(vertex);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class UndirectedGraphTests
         graph.AddVertex(vertex);
         var result = graph.AddVertex(vertex);
 
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Theory]
@@ -59,12 +59,12 @@ public class UndirectedGraphTests
         foreach (var v in vertices)
             graph.AddVertex(v);
 
-        graph.VertexCount.Should().Be(count);
+        graph.VertexCount.ShouldBe(count);
     }
 
-    #endregion
+    //#endregion
 
-    #region Edge Tests
+    //#region Edge Tests
 
     [Fact]
     public void AddEdge_ShouldIncreaseEdgeCount()
@@ -75,7 +75,7 @@ public class UndirectedGraphTests
 
         graph.AddEdge(v1, v2);
 
-        graph.EdgeCount.Should().Be(1);
+        graph.EdgeCount.ShouldBe(1);
     }
 
     [Fact]
@@ -87,9 +87,9 @@ public class UndirectedGraphTests
 
         graph.AddEdge(v1, v2);
 
-        graph.VertexCount.Should().Be(2);
-        graph.ContainsVertex(v1).Should().BeTrue();
-        graph.ContainsVertex(v2).Should().BeTrue();
+        graph.VertexCount.ShouldBe(2);
+        graph.ContainsVertex(v1).ShouldBeTrue();
+        graph.ContainsVertex(v2).ShouldBeTrue();
     }
 
     [Fact]
@@ -101,8 +101,8 @@ public class UndirectedGraphTests
 
         graph.AddEdge(v1, v2);
 
-        graph.ContainsEdge(v1, v2).Should().BeTrue();
-        graph.ContainsEdge(v2, v1).Should().BeTrue();
+        graph.ContainsEdge(v1, v2).ShouldBeTrue();
+        graph.ContainsEdge(v2, v1).ShouldBeTrue();
     }
 
     [Fact]
@@ -113,8 +113,7 @@ public class UndirectedGraphTests
 
         var act = () => graph.AddEdge(vertex, vertex);
 
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("*Self-loops*");
+        act.ShouldThrow<ArgumentException>("*Self-loops*");
     }
 
     [Fact]
@@ -127,12 +126,12 @@ public class UndirectedGraphTests
         graph.AddEdge(v1, v2);
         graph.AddEdge(v1, v2);
 
-        graph.EdgeCount.Should().Be(1);
+        graph.EdgeCount.ShouldBe(1);
     }
 
-    #endregion
+    //#endregion
 
-    #region Remove Tests
+    //#region Remove Tests
 
     [Fact]
     public void RemoveVertex_ShouldReturnTrue_WhenVertexExists()
@@ -143,7 +142,7 @@ public class UndirectedGraphTests
 
         var result = graph.RemoveVertex(vertex);
 
-        result.Should().BeTrue();
+        result.ShouldBeTrue();
     }
 
     [Fact]
@@ -153,7 +152,7 @@ public class UndirectedGraphTests
 
         var result = graph.RemoveVertex("nonexistent");
 
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -166,8 +165,8 @@ public class UndirectedGraphTests
 
         graph.RemoveVertex("A");
 
-        graph.EdgeCount.Should().Be(1);
-        graph.ContainsEdge("B", "C").Should().BeTrue();
+        graph.EdgeCount.ShouldBe(1);
+        graph.ContainsEdge("B", "C").ShouldBeTrue();
     }
 
     [Fact]
@@ -180,7 +179,7 @@ public class UndirectedGraphTests
 
         graph.RemoveEdge(v1, v2);
 
-        graph.EdgeCount.Should().Be(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
     [Fact]
@@ -191,13 +190,13 @@ public class UndirectedGraphTests
 
         graph.RemoveEdge("X", "Y");
 
-        graph.ContainsEdge("X", "Y").Should().BeFalse();
-        graph.ContainsEdge("Y", "X").Should().BeFalse();
+        graph.ContainsEdge("X", "Y").ShouldBeFalse();
+        graph.ContainsEdge("Y", "X").ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Degree Tests
+    //#region Degree Tests
 
     [Fact]
     public void GetDegree_ShouldReturnCorrectDegree()
@@ -207,7 +206,7 @@ public class UndirectedGraphTests
         graph.AddEdge("center", "node2");
         graph.AddEdge("center", "node3");
 
-        graph.GetDegree("center").Should().Be(3);
+        graph.GetDegree("center").ShouldBe(3);
     }
 
     [Fact]
@@ -215,12 +214,12 @@ public class UndirectedGraphTests
     {
         var graph = new UndirectedGraph<int>();
 
-        graph.GetDegree(_fixture.Create<int>()).Should().Be(0);
+        graph.GetDegree(_fixture.Create<int>()).ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Traversal Tests
+    //#region Traversal Tests
 
     [Fact]
     public void BreadthFirstSearch_ShouldVisitAllConnectedVertices()
@@ -232,8 +231,8 @@ public class UndirectedGraphTests
 
         var result = graph.BreadthFirstSearch("A").ToList();
 
-        result.Should().HaveCount(4);
-        result.Should().Contain(new[] { "A", "B", "C", "D" });
+        result.Count().ShouldBe(4);
+        result.ShouldBe(new[] { "A", "B", "C", "D" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -245,7 +244,7 @@ public class UndirectedGraphTests
 
         var result = graph.BreadthFirstSearch(start).First();
 
-        result.Should().Be(start);
+        result.ShouldBe(start);
     }
 
     [Fact]
@@ -258,7 +257,7 @@ public class UndirectedGraphTests
 
         var result = graph.DepthFirstSearch("1").ToList();
 
-        result.Should().HaveCount(4);
+        result.Count().ShouldBe(4);
     }
 
     [Fact]
@@ -266,13 +265,13 @@ public class UndirectedGraphTests
     {
         var graph = new UndirectedGraph<string>();
 
-        graph.BreadthFirstSearch("nonexistent").Should().BeEmpty();
-        graph.DepthFirstSearch("nonexistent").Should().BeEmpty();
+        graph.BreadthFirstSearch("nonexistent").ShouldBeEmpty();
+        graph.DepthFirstSearch("nonexistent").ShouldBeEmpty();
     }
 
-    #endregion
+    //#endregion
 
-    #region Shortest Path Tests
+    //#region Shortest Path Tests
 
     [Fact]
     public void GetShortestPath_ShouldFindDirectPath()
@@ -282,7 +281,7 @@ public class UndirectedGraphTests
 
         var path = graph.GetShortestPath("A", "B");
 
-        path.Should().ContainInOrder("A", "B");
+        path.ShouldBe(new[] { "A", "B" });
     }
 
     [Fact]
@@ -295,8 +294,8 @@ public class UndirectedGraphTests
 
         var path = graph.GetShortestPath("A", "D");
 
-        path.Should().ContainInOrder("A", "B", "C", "D");
-        path.Count.Should().Be(4);
+        path.ShouldBe(new[] { "A", "B", "C", "D" });
+        path.Count.ShouldBe(4);
     }
 
     [Fact]
@@ -308,7 +307,7 @@ public class UndirectedGraphTests
 
         var path = graph.GetShortestPath("isolated", "other");
 
-        path.Should().BeEmpty();
+        path.ShouldBeEmpty();
     }
 
     [Fact]
@@ -320,12 +319,12 @@ public class UndirectedGraphTests
 
         var path = graph.GetShortestPath(vertex, vertex);
 
-        path.Should().ContainSingle().Which.Should().Be(vertex);
+        path.ShouldHaveSingleItem().ShouldBe(vertex);
     }
 
-    #endregion
+    //#endregion
 
-    #region Connectivity Tests
+    //#region Connectivity Tests
 
     [Fact]
     public void IsConnected_ShouldReturnTrue_ForConnectedGraph()
@@ -335,7 +334,7 @@ public class UndirectedGraphTests
         graph.AddEdge("B", "C");
         graph.AddEdge("C", "D");
 
-        graph.IsConnected().Should().BeTrue();
+        graph.IsConnected().ShouldBeTrue();
     }
 
     [Fact]
@@ -345,7 +344,7 @@ public class UndirectedGraphTests
         graph.AddEdge("A", "B");
         graph.AddVertex("C");
 
-        graph.IsConnected().Should().BeFalse();
+        graph.IsConnected().ShouldBeFalse();
     }
 
     [Fact]
@@ -353,7 +352,7 @@ public class UndirectedGraphTests
     {
         var graph = new UndirectedGraph<int>();
 
-        graph.IsConnected().Should().BeTrue();
+        graph.IsConnected().ShouldBeTrue();
     }
 
     [Fact]
@@ -362,12 +361,12 @@ public class UndirectedGraphTests
         var graph = new UndirectedGraph<string>();
         graph.AddVertex("alone");
 
-        graph.IsConnected().Should().BeTrue();
+        graph.IsConnected().ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 
-    #region Connected Components Tests
+    //#region Connected Components Tests
 
     [Fact]
     public void GetConnectedComponents_ShouldReturnSingleComponent_ForConnectedGraph()
@@ -378,8 +377,8 @@ public class UndirectedGraphTests
 
         var components = graph.GetConnectedComponents().ToList();
 
-        components.Should().HaveCount(1);
-        components[0].Should().Contain(new[] { "A", "B", "C" });
+        components.Count().ShouldBe(1);
+        components[0].ShouldBe(new[] { "A", "B", "C" }, ignoreOrder: true);
     }
 
     [Fact]
@@ -391,12 +390,12 @@ public class UndirectedGraphTests
 
         var components = graph.GetConnectedComponents().ToList();
 
-        components.Should().HaveCount(2);
+        components.Count().ShouldBe(2);
     }
 
-    #endregion
+    //#endregion
 
-    #region Clear Tests
+    //#region Clear Tests
 
     [Fact]
     public void Clear_ShouldRemoveAllVerticesAndEdges()
@@ -407,9 +406,9 @@ public class UndirectedGraphTests
 
         graph.Clear();
 
-        graph.VertexCount.Should().Be(0);
-        graph.EdgeCount.Should().Be(0);
+        graph.VertexCount.ShouldBe(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 }

@@ -382,5 +382,5 @@ public class AuthController : ControllerBase
 
 - `Aero.Web` - Web framework integration
 - `Aero.Web.Core` - Core web utilities
-- `Aero.RavenDB` - User storage
+- `Aero.AeroDB` - User storage
 - `Aero.Validators` - Input validation

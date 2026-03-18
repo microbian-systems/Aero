@@ -290,7 +290,7 @@ public class WordPressProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    #region DTOs
+    //#region DTOs
 
     private class WordPressAuthBody
     {
@@ -346,5 +346,5 @@ public class WordPressProvider : SocialProviderBase
         public string Name { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

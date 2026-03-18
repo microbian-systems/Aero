@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -17,10 +17,10 @@ public class RedBlackTreeTests
         rbt.Insert(30);
 
         // Assert
-        rbt.Root.Value.Should().Be(20);
-        rbt.Root.Color.Should().Be(NodeColor.Black);
-        ((RedBlackTreeNode<int>)rbt.Root.Left).Color.Should().Be(NodeColor.Black);
-        ((RedBlackTreeNode<int>)rbt.Root.Right).Color.Should().Be(NodeColor.Black);
+        rbt.Root.Value.ShouldBe(20);
+        rbt.Root.Color.ShouldBe(NodeColor.Black);
+        ((RedBlackTreeNode<int>)rbt.Root.Left).Color.ShouldBe(NodeColor.Black);
+        ((RedBlackTreeNode<int>)rbt.Root.Right).Color.ShouldBe(NodeColor.Black);
     }
 
     [Fact]
@@ -43,6 +43,6 @@ public class RedBlackTreeTests
             
         // Assert
         var foundNode = rbt.Find(12);
-        foundNode.Should().BeNull();
+        foundNode.ShouldBeNull();
     }
 }

@@ -239,7 +239,7 @@ public class FarcasterProvider : SocialProviderBase
     private string GetNeynarApiKey() => _configuration["NEYNAR_SECRET_KEY"] ?? "00000000-000-0000-000-000000000000";
     private string GetNeynarClientId() => _configuration["NEYNAR_CLIENT_ID"] ?? "";
 
-    #region DTOs
+    //#region DTOs
 
     private class FarcasterAuthData
     {
@@ -315,5 +315,5 @@ public class FarcasterProvider : SocialProviderBase
         public string Title { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

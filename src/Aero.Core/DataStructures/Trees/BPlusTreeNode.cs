@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Electra.DataStructures.Trees;
+namespace Aero.DataStructures.Trees;
 
 /// <summary>
 /// Represents a node in a B+ Tree.

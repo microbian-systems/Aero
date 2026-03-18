@@ -2,7 +2,7 @@ namespace Aero.Auth.Services;
 
 /// <summary>
 /// Abstraction for JWT signing key persistence.
-/// Allows switching between RavenDB, Entity Framework, or other persistence providers.
+/// Allows switching between AeroDB, Entity Framework, or other persistence providers.
 /// </summary>
 public interface IJwtSigningKeyPersistence
 {

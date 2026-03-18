@@ -1,4 +1,4 @@
-using Aero.Persistence.Entities;
+using Aero.Models.Entities;
 using Aero.Models;
 using Aero.Common.Commands;
 using Aero.Marten;

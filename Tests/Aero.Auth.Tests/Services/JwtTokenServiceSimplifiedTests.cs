@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -23,32 +23,37 @@ public class JwtTokenServiceSimplifiedTests
         _mockConfig = Substitute.For<IConfiguration>();
     }
 
-    #region Configuration Tests
+    //#region Configuration Tests
 
     [Fact]
     public void Constructor_WithValidConfig_ShouldSetAccessTokenLifetime()
     {
         // Arrange
-        _mockConfig["Auth:AccessTokenLifetimeSeconds"].Returns("600");
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "Auth:AccessTokenLifetimeSeconds", "600" }
+            })
+            .Build();
 
         // Act
-        var service = new JwtTokenService(_mockKeyStore, _mockLogger, _mockConfig);
+        var service = new JwtTokenService(_mockKeyStore, _mockLogger, config);
 
         // Assert
-        service.AccessTokenLifetime.Should().Be(600);
+        service.AccessTokenLifetime.ShouldBe(600);
     }
 
     [Fact]
     public void Constructor_WithoutAccessTokenConfig_ShouldUseDefault()
     {
         // Arrange
-        _mockConfig["Auth:AccessTokenLifetimeSeconds"].Returns((string?)null);
+        var config = new ConfigurationBuilder().Build();
 
         // Act
-        var service = new JwtTokenService(_mockKeyStore, _mockLogger, _mockConfig);
+        var service = new JwtTokenService(_mockKeyStore, _mockLogger, config);
 
         // Assert
-        service.AccessTokenLifetime.Should().Be(300);
+        service.AccessTokenLifetime.ShouldBe(300);
     }
 
     [Fact]
@@ -66,13 +71,13 @@ public class JwtTokenServiceSimplifiedTests
         var service2 = new JwtTokenService(_mockKeyStore, _mockLogger, config2);
 
         // Assert
-        service1.AccessTokenLifetime.Should().Be(300);
-        service2.AccessTokenLifetime.Should().Be(600);
+        service1.AccessTokenLifetime.ShouldBe(300);
+        service2.AccessTokenLifetime.ShouldBe(600);
     }
 
-    #endregion
+    //#endregion
 
-    #region Error Handling Tests
+    //#region Error Handling Tests
 
     [Fact]
     public async Task GenerateAccessToken_WithNullKeyStore_ShouldThrowNullReferenceException()
@@ -84,7 +89,7 @@ public class JwtTokenServiceSimplifiedTests
         Func<Task> act = async () => await service.GenerateAccessTokenAsync("user-123", "test@example.com");
 
         // Assert
-        await act.Should().ThrowAsync<NullReferenceException>();
+        act.ShouldThrow<NullReferenceException>();
     }
 
     [Fact]
@@ -100,12 +105,12 @@ public class JwtTokenServiceSimplifiedTests
         Func<Task> act = async () => await service.GenerateAccessTokenAsync("user-123", "test@example.com");
 
         // Assert
-        await act.Should().ThrowAsync<InvalidOperationException>();
+        act.ShouldThrow<InvalidOperationException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region Dependency Injection Tests
+    //#region Dependency Injection Tests
 
     [Fact]
     public void ServiceImplementsInterface_ShouldBeRegistrable()
@@ -114,13 +119,13 @@ public class JwtTokenServiceSimplifiedTests
         IJwtTokenService service = new JwtTokenService(_mockKeyStore, _mockLogger, _mockConfig);
 
         // Assert
-        service.Should().NotBeNull();
-        service.Should().BeAssignableTo<IJwtTokenService>();
+        service.ShouldNotBeNull();
+        service.ShouldBeAssignableTo<IJwtTokenService>();
     }
 
-    #endregion
+    //#endregion
 
-    #region Configuration Value Tests
+    //#region Configuration Value Tests
 
     [Theory]
     [InlineData("100")]
@@ -130,15 +135,20 @@ public class JwtTokenServiceSimplifiedTests
     public void AccessTokenLifetime_WithVariousConfigs_ShouldReturnCorrectValue(string configValue)
     {
         // Arrange
-        _mockConfig["Auth:AccessTokenLifetimeSeconds"].Returns(configValue);
-        var service = new JwtTokenService(_mockKeyStore, _mockLogger, _mockConfig);
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                { "Auth:AccessTokenLifetimeSeconds", configValue }
+            })
+            .Build();
+        var service = new JwtTokenService(_mockKeyStore, _mockLogger, config);
 
         // Act
         var lifetime = service.AccessTokenLifetime;
 
         // Assert
-        lifetime.Should().Be(int.Parse(configValue));
+        lifetime.ShouldBe(int.Parse(configValue));
     }
 
-    #endregion
+    //#endregion
 }

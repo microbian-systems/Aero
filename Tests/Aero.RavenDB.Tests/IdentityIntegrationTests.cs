@@ -1,8 +1,8 @@
 using Aero.Core;
 using Aero.Core.Identity;
 using Aero.Models.Entities;
-using Aero.RavenDB.Extensions;
-using FluentAssertions;
+using Aero.MartenDB.Extensions;
+using Shouldly;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,8 +26,8 @@ public class IdentityIntegrationTests : RavenDbTestBase
         // 3. Add Scoped Session
         services.AddScoped(sp => 
         {
-            var session = DocumentStore.OpenAsyncSession();
-            session.Advanced.WaitForIndexesAfterSaveChanges(TimeSpan.FromSeconds(5));
+            var session = DocumentStore.LightweightSession();
+            //session.Advanced.WaitForIndexesAfterSaveChanges(TimeSpan.FromSeconds(5));
             return session;
         });
 
@@ -43,7 +43,7 @@ public class IdentityIntegrationTests : RavenDbTestBase
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
         })
-        .AddRavenDbIdentityStores<AeroUser, AeroRole>(options =>
+        .AddAerodentityStores<AeroUser, AeroRole>(options =>
         {
             options.AutoSaveChanges = true;
         })
@@ -70,31 +70,31 @@ public class IdentityIntegrationTests : RavenDbTestBase
         };
 
         var createResult = await userManager.CreateAsync(user, "Password123!");
-        createResult.Succeeded.Should().BeTrue();
+        createResult.Succeeded.ShouldBeTrue();
 
         // --- 2. SEARCH ---
         // UserManager.FindByNameAsync might normalize the input name. 
         // Our UserStore normalizes to lowercase in SetNormalizedUserNameAsync.
         var foundUser = await userManager.FindByNameAsync(user.UserName.ToLowerInvariant());
-        foundUser.Should().NotBeNull();
-        foundUser!.Email.Should().Be(user.Email);
+        foundUser.ShouldNotBeNull();
+        foundUser!.Email.ShouldBe(user.Email);
 
         // --- 3. UPDATE ---
         foundUser.FirstName = "Updated";
         var updateResult = await userManager.UpdateAsync(foundUser);
-        updateResult.Succeeded.Should().BeTrue();
+        updateResult.Succeeded.ShouldBeTrue();
 
         // Verify update persisted
         var updatedUser = await userManager.FindByIdAsync(user.Id);
-        updatedUser.Should().NotBeNull();
-        updatedUser!.FirstName.Should().Be("Updated");
+        updatedUser.ShouldNotBeNull();
+        updatedUser!.FirstName.ShouldBe("Updated");
 
         // --- 4. DELETE ---
         var deleteResult = await userManager.DeleteAsync(updatedUser);
-        deleteResult.Succeeded.Should().BeTrue();
+        deleteResult.Succeeded.ShouldBeTrue();
 
         var deletedUser = await userManager.FindByIdAsync(user.Id);
-        deletedUser.Should().BeNull();
+        deletedUser.ShouldBeNull();
     }
 
     [Fact]
@@ -123,12 +123,12 @@ public class IdentityIntegrationTests : RavenDbTestBase
         var addToRoleResult = await userManager.AddToRoleAsync(user, roleName);
 
         // Assert
-        addToRoleResult.Succeeded.Should().BeTrue();
+        addToRoleResult.Succeeded.ShouldBeTrue();
 
         var roles = await userManager.GetRolesAsync(user);
-        roles.Should().Contain(roleName);
+        roles.ShouldContain(roleName);
 
         var isInRole = await userManager.IsInRoleAsync(user, roleName);
-        isInRole.Should().BeTrue();
+        isInRole.ShouldBeTrue();
     }
 }

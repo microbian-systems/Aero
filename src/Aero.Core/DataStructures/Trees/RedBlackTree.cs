@@ -1,6 +1,4 @@
-using System;
-
-namespace Electra.DataStructures.Trees;
+namespace Aero.DataStructures.Trees;
 
 public class RedBlackTree<T> : ITree<T> where T : IComparable<T>
 {

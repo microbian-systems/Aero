@@ -2,7 +2,7 @@
 
 ## Objective Achieved ✅
 
-Successfully refactored `JwtSigningKeyStore` to use RavenDB unit of work while abstracting persistence logic into a service interface for future flexibility to switch to Entity Framework or other providers.
+Successfully refactored `JwtSigningKeyStore` to use AeroDB unit of work while abstracting persistence logic into a service interface for future flexibility to switch to Entity Framework or other providers.
 
 ---
 
@@ -29,11 +29,11 @@ RevokeKeyAsync()                 // Revoke a key
 SaveChangesAsync()               // Persist changes
 ```
 
-### 2. Implemented RavenDB Provider
+### 2. Implemented AeroDB Provider
 
-**File**: `RavenDbJwtSigningKeyPersistence.cs`
+**File**: `AeroDbJwtSigningKeyPersistence.cs`
 
-- Full RavenDB implementation
+- Full AeroDB implementation
 - Uses async document sessions
 - Patch operations for efficient updates
 - Comprehensive error handling
@@ -64,7 +64,7 @@ SaveChangesAsync()               // Persist changes
 ```csharp
 // Before
 public JwtSigningKeyStore(
-    IRavenDbUnitOfWork uow,  // ❌ Direct database reference
+    IAeroDbUnitOfWork uow,  // ❌ Direct database reference
     ILogger<JwtSigningKeyStore> logger,
     IMemoryCache cache)
 
@@ -81,7 +81,7 @@ public JwtSigningKeyStore(
 
 ```csharp
 // Register persistence provider (can swap implementations here)
-services.AddScoped<IJwtSigningKeyPersistence, RavenDbJwtSigningKeyPersistence>();
+services.AddScoped<IJwtSigningKeyPersistence, AeroDbJwtSigningKeyPersistence>();
 
 // Register key store (depends on persistence abstraction)
 services.AddScoped<IJwtSigningKeyStore, JwtSigningKeyStore>();
@@ -123,16 +123,16 @@ Layer 2: Persistence Abstraction
                    │
 Layer 3: Database-Specific Implementation
 ┌─────────────────────────────────────────┐
-│  RavenDbJwtSigningKeyPersistence        │
-│  (RavenDB-specific logic)               │
+│  AeroDbJwtSigningKeyPersistence        │
+│  (AeroDB-specific logic)               │
 └─────────────────────────────────────────┘
                    ▲
                    │ uses
                    │
 Layer 4: Database Client
 ┌─────────────────────────────────────────┐
-│       RavenDB Client Library            │
-│  (IAsyncDocumentSession from UoW)       │
+│       AeroDB Client Library            │
+│  (IDocumentSession from UoW)       │
 └─────────────────────────────────────────┘
 ```
 
@@ -165,7 +165,7 @@ Layer 4: Database Client
 
 ## How to Switch Providers
 
-### Switch from RavenDB to Entity Framework Core
+### Switch from AeroDB to Entity Framework Core
 
 **Step 1**: Create new implementation (future):
 ```csharp
@@ -200,7 +200,7 @@ services.AddScoped<IJwtSigningKeyPersistence, EfCoreJwtSigningKeyPersistence>();
 | File | Status | Lines | Purpose |
 |------|--------|-------|---------|
 | `IJwtSigningKeyPersistence.cs` | ✨ Created | 52 | Persistence abstraction |
-| `RavenDbJwtSigningKeyPersistence.cs` | ✨ Created | 210 | RavenDB implementation |
+| `AeroDbJwtSigningKeyPersistence.cs` | ✨ Created | 210 | AeroDB implementation |
 | `JwtSigningKeyStore.cs` | ♻️ Refactored | 177 | Core logic (cleaned up) |
 | `ServiceCollectionExtensions.cs` | ♻️ Updated | 4 | DI registration |
 | `REFACTORING_DOCUMENTATION.md` | ✨ Created | 450+ | Architecture docs |
@@ -227,19 +227,19 @@ services.AddScoped<IJwtSigningKeyPersistence, EfCoreJwtSigningKeyPersistence>();
 ## Known Limitations & Next Steps
 
 ### Current Limitation
-The RavenDB implementation has a placeholder `GetSession()` method:
+The AeroDB implementation has a placeholder `GetSession()` method:
 
 ```csharp
-private IAsyncDocumentSession GetSession()
+private IDocumentSession GetSession()
 {
     throw new NotImplementedException(
-        "Session access needs to be exposed via IRavenDbUnitOfWork.");
+        "Session access needs to be exposed via IAeroDbUnitOfWork.");
 }
 ```
 
-### To Complete RavenDB Integration
-1. Add `IAsyncDocumentSession Session { get; }` property to `IRavenDbUnitOfWork`
-2. Implement the property in `RavenDbUnitOfWork` class
+### To Complete AeroDB Integration
+1. Add `IDocumentSession Session { get; }` property to `IAeroDbUnitOfWork`
+2. Implement the property in `AeroDbUnitOfWork` class
 3. Update `GetSession()` to return `_uow.Session`
 
 ### Future Enhancements
@@ -346,7 +346,7 @@ All documentation is in the `Aero.Auth` project root:
 For implementation questions or issues:
 
 1. **Interface Design**: See `IJwtSigningKeyPersistence.cs`
-2. **RavenDB Pattern**: See `RavenDbJwtSigningKeyPersistence.cs`
+2. **AeroDB Pattern**: See `AeroDbJwtSigningKeyPersistence.cs`
 3. **Architecture**: See `REFACTORING_DOCUMENTATION.md`
 4. **Future Implementations**: See migration examples in documentation
 

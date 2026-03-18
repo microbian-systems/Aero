@@ -1,8 +1,7 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
-using Humanizer;
 
 namespace Aero.DataStructures.Tests;
 
@@ -11,7 +10,7 @@ public class TemporalGraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Vertex Tests
+    //#region Vertex Tests
 
     [Fact]
     public void AddVertex_ShouldCreateTemporalVertex()
@@ -22,9 +21,9 @@ public class TemporalGraphTests
 
         var vertex = graph.AddVertex("user1", start, end);
 
-        vertex.Id.Should().Be("user1");
-        vertex.Lifetime.Start.Should().Be(start);
-        vertex.Lifetime.End.Should().Be(end);
+        vertex.Id.ShouldBe("user1");
+        vertex.Lifetime.Start.ShouldBe(start);
+        vertex.Lifetime.End.ShouldBe(end);
     }
 
     [Fact]
@@ -36,7 +35,7 @@ public class TemporalGraphTests
 
         var vertex = graph.AddVertex("active", start, farFuture);
 
-        vertex.Lifetime.Contains(DateTime.Now.AddYears(10)).Should().BeTrue();
+        vertex.Lifetime.Contains(DateTime.Now.AddYears(10)).ShouldBeTrue();
     }
 
     [Fact]
@@ -49,13 +48,13 @@ public class TemporalGraphTests
 
         var vertex = graph.GetVertex("temporal");
 
-        vertex!.ExistsAt(new DateTime(2021, 6, 1)).Should().BeTrue();
-        vertex.ExistsAt(new DateTime(2024, 1, 1)).Should().BeFalse();
+        vertex!.ExistsAt(new DateTime(2021, 6, 1)).ShouldBeTrue();
+        vertex.ExistsAt(new DateTime(2024, 1, 1)).ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Edge Tests
+    //#region Edge Tests
 
     [Fact]
     public void AddEdge_ShouldCreateTemporalEdge()
@@ -67,10 +66,10 @@ public class TemporalGraphTests
 
         var edge = graph.AddEdge("a", "b", 1, start, start.AddDays(7));
 
-        edge.Should().NotBeNull();
-        edge!.Source.Should().Be("a");
-        edge.Target.Should().Be("b");
-        edge.Lifetime.Start.Should().Be(start);
+        edge.ShouldNotBeNull();
+        edge!.Source.ShouldBe("a");
+        edge.Target.ShouldBe("b");
+        edge.Lifetime.Start.ShouldBe(start);
     }
 
     [Fact]
@@ -80,7 +79,7 @@ public class TemporalGraphTests
 
         var act = () => graph.AddEdge("nonexistent1", "nonexistent2", 1, DateTime.Now);
 
-        act.Should().Throw<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -95,13 +94,13 @@ public class TemporalGraphTests
 
         var edge = graph.GetEdge(1);
 
-        edge!.ExistsAt(new DateTime(2020, 6, 1)).Should().BeTrue();
-        edge.ExistsAt(new DateTime(2022, 1, 1)).Should().BeFalse();
+        edge!.ExistsAt(new DateTime(2020, 6, 1)).ShouldBeTrue();
+        edge.ExistsAt(new DateTime(2022, 1, 1)).ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region TimeInterval Tests
+    //#region TimeInterval Tests
 
     [Fact]
     public void TimeInterval_Contains_ShouldWorkCorrectly()
@@ -110,9 +109,9 @@ public class TemporalGraphTests
         var end = new DateTime(2021, 1, 1);
         var interval = new TemporalGraph<string, int, DateTime>.TimeInterval(start, end);
 
-        interval.Contains(new DateTime(2020, 6, 1)).Should().BeTrue();
-        interval.Contains(new DateTime(2019, 12, 31)).Should().BeFalse();
-        interval.Contains(new DateTime(2021, 1, 1)).Should().BeFalse();
+        interval.Contains(new DateTime(2020, 6, 1)).ShouldBeTrue();
+        interval.Contains(new DateTime(2019, 12, 31)).ShouldBeFalse();
+        interval.Contains(new DateTime(2021, 1, 1)).ShouldBeFalse();
     }
 
     [Fact]
@@ -123,12 +122,12 @@ public class TemporalGraphTests
         var interval2 = new TemporalGraph<string, int, DateTime>.TimeInterval(
             new DateTime(2020, 3, 1), new DateTime(2020, 9, 1));
 
-        interval1.Overlaps(interval2).Should().BeTrue();
+        interval1.Overlaps(interval2).ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 
-    #region Snapshot Tests
+    //#region Snapshot Tests
 
     [Fact]
     public void GetSnapshot_ShouldReturnGraphAtTime()
@@ -145,9 +144,9 @@ public class TemporalGraphTests
 
         var snapshot = graph.GetSnapshot(new DateTime(2020, 6, 1));
 
-        snapshot.VertexCount.Should().Be(2);
-        snapshot.ContainsVertex("a").Should().BeTrue();
-        snapshot.ContainsVertex("c").Should().BeFalse();
+        snapshot.VertexCount.ShouldBe(2);
+        snapshot.ContainsVertex("a").ShouldBeTrue();
+        snapshot.ContainsVertex("c").ShouldBeFalse();
     }
 
     [Fact]
@@ -165,14 +164,14 @@ public class TemporalGraphTests
 
         var snapshot = graph.GetSnapshot(new DateTime(2020, 3, 1));
 
-        snapshot.EdgeCount.Should().Be(1);
-        snapshot.ContainsEdge("a", "b").Should().BeTrue();
-        snapshot.ContainsEdge("a", "c").Should().BeFalse();
+        snapshot.EdgeCount.ShouldBe(1);
+        snapshot.ContainsEdge("a", "b").ShouldBeTrue();
+        snapshot.ContainsEdge("a", "c").ShouldBeFalse();
     }
 
-    #endregion
+    //#endregion
 
-    #region Temporal Path Tests
+    //#region Temporal Path Tests
 
     [Fact]
     public void GetTemporalPaths_ShouldRespectTimeOrder()
@@ -191,8 +190,8 @@ public class TemporalGraphTests
 
         var paths = graph.GetTemporalPaths("a", "c", t1).ToList();
 
-        paths.Should().NotBeEmpty();
-        paths[0].Last().Vertex.Should().Be("c");
+        paths.ShouldNotBeEmpty();
+        paths[0].Last().Vertex.ShouldBe("c");
     }
 
     [Fact]
@@ -208,7 +207,7 @@ public class TemporalGraphTests
 
         var arrival = graph.GetEarliestArrival("start", "end", t1);
 
-        arrival.Should().Be(t2);
+        arrival.ShouldBe(t2);
     }
 
     [Fact]
@@ -220,12 +219,12 @@ public class TemporalGraphTests
 
         var arrival = graph.GetEarliestArrival("isolated", "target", DateTime.Now);
 
-        arrival.Equals(default(DateTime)).Should().BeTrue();
+        arrival.ShouldBeNull();
     }
 
-    #endregion
+    //#endregion
 
-    #region Edge Queries Tests
+    //#region Edge Queries Tests
 
     [Fact]
     public void GetEdgesInInterval_ShouldFilterCorrectly()
@@ -242,8 +241,8 @@ public class TemporalGraphTests
 
         var edges = graph.GetEdgesInInterval(baseTime, baseTime.AddDays(7)).ToList();
 
-        edges.Select(e => e.Id).Should().Contain(new[] { 1, 2 });
-        edges.Select(e => e.Id).Should().NotContain(3);
+        edges.Select(e => e.Id).ShouldBe(new[] { 1, 2 });
+        edges.Select(e => e.Id).ShouldNotContain(3);
     }
 
     [Fact]
@@ -259,12 +258,12 @@ public class TemporalGraphTests
 
         var changePoints = graph.GetChangePoints();
 
-        changePoints.Should().Contain(new[] { t1, t2, t3 });
+        changePoints.ShouldBe(new[] { t1, t2, t3 });
     }
 
-    #endregion
+    //#endregion
 
-    #region Remove Tests
+    //#region Remove Tests
 
     [Fact]
     public void RemoveVertex_ShouldRemoveIncidentEdges()
@@ -277,7 +276,7 @@ public class TemporalGraphTests
 
         graph.RemoveVertex("remove");
 
-        graph.EdgeCount.Should().Be(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
     [Fact]
@@ -291,13 +290,13 @@ public class TemporalGraphTests
 
         graph.RemoveEdge(1);
 
-        graph.VertexCount.Should().Be(2);
-        graph.EdgeCount.Should().Be(0);
+        graph.VertexCount.ShouldBe(2);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Clear Tests
+    //#region Clear Tests
 
     [Fact]
     public void Clear_ShouldResetGraph()
@@ -309,13 +308,13 @@ public class TemporalGraphTests
 
         graph.Clear();
 
-        graph.VertexCount.Should().Be(0);
-        graph.EdgeCount.Should().Be(0);
+        graph.VertexCount.ShouldBe(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Real-World Scenario Tests
+    //#region Real-World Scenario Tests
 
     [Fact]
     public void SocialNetworkEvolutionScenario_ShouldWorkCorrectly()
@@ -336,10 +335,10 @@ public class TemporalGraphTests
         var snapshot2021 = graph.GetSnapshot(new DateTime(2021, 1, 1));
         var snapshot2023 = graph.GetSnapshot(new DateTime(2023, 1, 1));
 
-        snapshot2021.EdgeCount.Should().Be(2);
-        snapshot2023.EdgeCount.Should().Be(1);
-        snapshot2023.ContainsEdge("bob", "charlie").Should().BeTrue();
+        snapshot2021.EdgeCount.ShouldBe(2);
+        snapshot2023.EdgeCount.ShouldBe(1);
+        snapshot2023.ContainsEdge("bob", "charlie").ShouldBeTrue();
     }
 
-    #endregion
+    //#endregion
 }

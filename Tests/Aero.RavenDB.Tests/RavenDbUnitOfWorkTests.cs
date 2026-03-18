@@ -1,9 +1,8 @@
 using Aero.Core;
 using Aero.Models.Entities;
 using FakeItEasy;
-using FluentAssertions;
+using Marten;
 using Microsoft.Extensions.Logging;
-using Raven.Client.Documents.Session;
 
 namespace Aero.RavenDB.Tests;
 
@@ -23,7 +22,7 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
     public async Task SaveChangesAsync_Should_Return_Change_Count()
     {
         // Arrange
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var uow = new RavenDbUnitOfWork(session, _uowLogger, _loggerFactory);
         
         var user = new AeroUser { Id = "users/uow1", UserName = "u1", Email = "u1@e.com", FirstName = "f", LastName = "l", CreatedBy = "s" };
@@ -33,14 +32,14 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         var count = await uow.SaveChangesAsync();
 
         // Assert
-        count.Should().BeGreaterThan(0);
+        count.ShouldBeGreaterThan(0);
     }
 
     [Fact]
     public void Users_Property_Should_Be_Lazy_Initialized()
     {
         // Arrange
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var uow = new RavenDbUnitOfWork(session, _uowLogger, _loggerFactory);
 
         // Act & Assert
@@ -49,15 +48,15 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         var users1 = uow.Users;
         var users2 = uow.Users;
 
-        users1.Should().NotBeNull();
-        users1.Should().BeSameAs(users2);
+        users1.ShouldNotBeNull();
+        users1.ShouldBeSameAs(users2);
     }
 
     [Fact]
     public async Task SaveChangesAsync_Should_Handle_Exceptions()
     {
         // Arrange
-        var session = A.Fake<IAsyncDocumentSession>();
+        var session = A.Fake<IDocumentSession>();
         A.CallTo(() => session.Advanced.WhatChanged()).Returns(new System.Collections.Generic.Dictionary<string, Raven.Client.Documents.Session.DocumentsChanges[]> { { "key", new Raven.Client.Documents.Session.DocumentsChanges[1] } });
         A.CallTo(() => session.SaveChangesAsync(A<CancellationToken>._)).Throws(new Exception("RavenDB error"));
         
@@ -67,7 +66,7 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         var result = await uow.SaveChangesAsync();
 
         // Assert
-        result.Should().Be(0);
+        result.ShouldBe(0);
         // Verify logging happened
         // Note: Generic loggers are tricky to verify with A.CallTo, but we can verify it didn't crash.
     }
@@ -75,7 +74,7 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
     [Fact]
     public async Task Find_Method_Locates_Users_Should_Success()
     {
-        var session = DocumentStore.OpenAsyncSession();
+        var session = DocumentStore.LightweightSession();
         var uow = new RavenDbUnitOfWork(session, _uowLogger, _loggerFactory);
 
         var user1 = new AeroUser()
@@ -94,32 +93,32 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         await uow.Users.InsertAsync(user2);
 
         var changed =  await uow.SaveChangesAsync();
-        changed.Should().BeGreaterThanOrEqualTo(2);
+        changed.ShouldBeGreaterThanOrEqualTo(2);
         var searchData = await uow.Users
             .FindAsync(x => x.CreatedOn > DateTime.UtcNow.AddDays(-10));
         
-        searchData.Should().NotBeNullOrEmpty();
-        searchData.Count().Should().BeGreaterThanOrEqualTo(2);
+        searchData.ShouldNotBeNullOrEmpty();
+        searchData.Count().ShouldBeGreaterThanOrEqualTo(2);
     }
 
     [Fact]
     public async Task RollbackTransactionAsync_Should_Clear_Session()
     {
         // Arrange
-        using var session = DocumentStore.OpenAsyncSession();
+        using var session = DocumentStore.LightweightSession();
         var uow = new RavenDbUnitOfWork(session, _uowLogger, _loggerFactory);
         
         var user = new AeroUser { Id = "users/rollback", UserName = "rb", Email = "rb@e.com", FirstName = "f", LastName = "l", CreatedBy = "s" };
         await uow.Users.InsertAsync(user);
         
-        session.Advanced.HasChanged(user).Should().BeTrue();
+        session.Advanced.HasChanged(user).ShouldBeTrue();
 
         // Act
         await uow.RollbackTransactionAsync();
 
         // Assert
-        session.Advanced.HasChanged(user).Should().BeFalse();
+        session.Advanced.HasChanged(user).ShouldBeFalse();
         var count = await uow.SaveChangesAsync();
-        count.Should().Be(0);
+        count.ShouldBe(0);
     }
 }

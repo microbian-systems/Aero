@@ -5,7 +5,7 @@ using Aero.Core.Entities;
 using Aero.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Nest;
-using ServiceStack;
+
 
 namespace Aero.Elastic;
 
@@ -191,7 +191,7 @@ public class ElasticsearchRepository<T> : GenericRepository<T, string>, IElastic
         return results;
     }
 
-    #region Unused
+    //#region Unused
 
     /// <summary>
     /// This method is not available for Elasticsearch. Please use the overriden method(s)
@@ -205,5 +205,5 @@ public class ElasticsearchRepository<T> : GenericRepository<T, string>, IElastic
         throw new NotImplementedException();
     }
 
-    #endregion
+    //#endregion
 }

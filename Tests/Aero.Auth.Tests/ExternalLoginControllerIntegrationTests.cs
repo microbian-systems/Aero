@@ -1,5 +1,5 @@
 using System.Net;
-using FluentAssertions;
+using Shouldly;
 
 namespace Aero.Auth.Tests;
 
@@ -21,7 +21,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         var response = await _client.GetAsync("/ExternalLogin");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
     [Theory]
@@ -36,7 +36,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
 
         // Assert
         // External login endpoints typically redirect or return specific auth responses
-        response.StatusCode.Should().BeOneOf(
+        response.StatusCode.ShouldBeOneOf(
             HttpStatusCode.OK, 
             HttpStatusCode.NotFound, 
             HttpStatusCode.Redirect, 
@@ -55,7 +55,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         var response = await _client.PostAsync("/ExternalLogin/callback", content);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(
+        response.StatusCode.ShouldBeOneOf(
             HttpStatusCode.BadRequest, 
             HttpStatusCode.NotFound, 
             HttpStatusCode.Unauthorized,
@@ -76,7 +76,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -89,7 +89,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         var response = await _client.GetAsync(challengeUrl);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(
+        response.StatusCode.ShouldBeOneOf(
             HttpStatusCode.OK, 
             HttpStatusCode.NotFound, 
             HttpStatusCode.Redirect, 
@@ -111,7 +111,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         var response = await _client.GetAsync(challengeUrl);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(
+        response.StatusCode.ShouldBeOneOf(
             HttpStatusCode.BadRequest, 
             HttpStatusCode.NotFound, 
             HttpStatusCode.Unauthorized
@@ -128,7 +128,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         var response = await _client.GetAsync(callbackUrl);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(
+        response.StatusCode.ShouldBeOneOf(
             HttpStatusCode.BadRequest, 
             HttpStatusCode.NotFound, 
             HttpStatusCode.Unauthorized,

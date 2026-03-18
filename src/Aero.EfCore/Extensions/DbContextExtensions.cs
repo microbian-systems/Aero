@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Aero.Core.Data;
 using Aero.Core.Identity;
-using Aero.Persistence;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

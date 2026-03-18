@@ -1,4 +1,5 @@
-using LanguageExt;
+
+using Aero.Core.Railway;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace Aero.Caching;
@@ -40,7 +41,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
     {
         // FusionCache doesn't have atomic increment/decrement, so we simulate it
         // Note: This is not truly atomic - in production you might want Redis for this
-        var current = Get<long?>(key).IfNone(0);
+        var current = Get<long?>(key).GetOrElse(0);
         var newValue = current - value;
         Set(key, newValue);
         return newValue ?? 0;
@@ -58,7 +59,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
     {
         // FusionCache doesn't have atomic increment/decrement, so we simulate it
         // Note: This is not truly atomic - in production you might want Redis for this
-        var current = Get<long?>(key).IfNone(0);
+        var current = Get<long?>(key).GetOrElse(0);
         var newValue = current + value;
         Set(key, newValue);
         return newValue ?? 0;
@@ -67,7 +68,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
     public override async Task<long> IncrementAsync(string key, long value = 1)
     {
         // FusionCache doesn't have atomic increment/decrement, so we simulate it
-        var current = (await GetAsync<long?>(key)).IfNone(0);
+        var current = (await GetAsync<long?>(key)).GetOrElse(0);
         var newValue = current + value;
         await SetAsync(key, newValue);
         return newValue.Value;
@@ -76,7 +77,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
     public override async Task<long> DecrementAsync(string key, long value = 1)
     {
         // FusionCache doesn't have atomic increment/decrement, so we simulate it
-        var current = (await GetAsync<long?>(key)).IfNone(0);
+        var current = (await GetAsync<long?>(key)).GetOrElse(0);
         var newValue = current - value;
         await SetAsync(key, newValue);
         return newValue ?? 0;
@@ -94,7 +95,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         // FusionCache doesn't have native hash support
         // This is a limitation - we can't efficiently get all hash fields without maintaining metadata
         log.LogWarning("HashGetAllAsync is not efficiently supported by FusionCache. Consider using Redis for hash operations.");
-        return Option<Dictionary<string, T>>.None;
+        return Prelude.None;
     }
 
     public override bool HashSet<T>(string key, string field, T value)
@@ -117,7 +118,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         // FusionCache doesn't have native hash support
         // This is a limitation - we can't efficiently get all hash fields without maintaining metadata
         log.LogWarning("HashGetAll is not efficiently supported by FusionCache. Consider using Redis for hash operations.");
-        return Option<Dictionary<string, T>>.None;
+        return Prelude.None;
     }
 
     public override async Task DeleteAsync(string key)
@@ -128,7 +129,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
     public override Option<T> Get<T>(string key)
     {
         var res = cache.TryGet<T>(key);
-        return res.HasValue ? Option<T>.Some(res.Value) : Option<T>.None;
+        return res.HasValue ? Prelude.Some(res.Value) : Prelude.None;
     }
 
     public override async Task<Option<T>> GetOrSetAsync<T>(string key, Func<Task<T>> factory, TimeSpan? absoluteExpiration = null)
@@ -140,7 +141,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
                 opts.Duration = absoluteExpiration ?? TimeSpan.FromMinutes(5);
             });
 
-        return result != null ? Option<T>.Some(result) : Option<T>.None;
+        return result != null ? Prelude.Some(result) : Prelude.None;
     }
 
     public override bool KeyExists(string key)
@@ -152,7 +153,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
     public override async Task<Option<T>> GetAsync<T>(string key)
     {
         var res = await cache.TryGetAsync<T>(key);
-        return res.HasValue ? Option<T>.Some(res.Value) : Option<T>.None;
+        return res.HasValue ? Prelude.Some(res.Value) : Prelude.None;
     }
 
     public override Option<T> GetOrSet<T>(string key, Func<T> factory, TimeSpan? absoluteExpiration = null)
@@ -161,7 +162,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         {
             opts.Duration = absoluteExpiration ?? TimeSpan.FromMinutes(5);
         });
-        
-        return result != null ? Option<T>.Some(result) : Option<T>.None;
+
+        return result != null ? Prelude.Some(result) : Prelude.None;
     }
-}
+    }

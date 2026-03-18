@@ -369,7 +369,7 @@ public class GmbProvider : SocialProviderBase
     private string GetClientSecret() => _configuration["GOOGLE_GMB_CLIENT_SECRET"] ?? _configuration["YOUTUBE_CLIENT_SECRET"] ?? throw new InvalidOperationException("GOOGLE_GMB_CLIENT_SECRET not configured");
     private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
-    #region DTOs
+    //#region DTOs
 
     private class GoogleTokenResponse
     {
@@ -450,5 +450,5 @@ public class GmbProvider : SocialProviderBase
         public string? Picture { get; set; }
     }
 
-    #endregion
+    //#endregion
 }

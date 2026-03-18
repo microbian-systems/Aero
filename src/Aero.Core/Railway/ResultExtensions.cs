@@ -49,7 +49,7 @@ namespace Aero.Core.Railway;
 ///     );
 /// </code>
 /// </example>
-public static class ResultExtensions
+public static partial class ResultExtensions
 {
     /// <summary>
     /// Transforms the success value of a Result using the provided function, preserving any error.

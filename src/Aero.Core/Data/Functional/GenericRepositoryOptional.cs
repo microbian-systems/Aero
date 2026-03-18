@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Aero.Core.Entities;
-using LanguageExt;
+using Aero.Core.Railway;
 
 namespace Aero.Core.Data.Functional;
 

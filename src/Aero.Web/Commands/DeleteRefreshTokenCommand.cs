@@ -1,4 +1,4 @@
-using Aero.Persistence.Entities;
+using Aero.Models.Entities;
 using Aero.Common.Commands;
 using Aero.Marten;
 
@@ -23,7 +23,7 @@ public class DeleteRefreshTokenCommand : IAsyncCommand<DeleteRefreshTokenRequest
 
     public async Task<bool> DeleteRefreshToken(string id, string refreshToken)
     {
-        var record = await db.FindSingle<RefreshTokens>(x => x.UserId == id);
+        var record = await db.FindSingle<RefreshToken>(x => x.UserId == id);
         if (record != null)
             await db.DeleteAsync(record);
         return true;

@@ -246,7 +246,7 @@ public class DevToProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    #region DTOs
+    //#region DTOs
 
     private class DevToAuthBody
     {
@@ -324,5 +324,5 @@ public class DevToProvider : SocialProviderBase
         public string Username { get; set; } = string.Empty;
     }
 
-    #endregion
+    //#endregion
 }

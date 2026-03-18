@@ -1,9 +1,8 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 using AutoFixture;
 using Humanizer;
-using FakeItEasy;
 
 namespace Aero.DataStructures.Tests;
 
@@ -12,7 +11,7 @@ public class BipartiteGraphTests
     private readonly Faker _faker = new();
     private readonly Fixture _fixture = new();
 
-    #region Partition Tests
+    //#region Partition Tests
 
     [Fact]
     public void AddVertexToSetU_ShouldIncreaseSetUCount()
@@ -22,8 +21,8 @@ public class BipartiteGraphTests
 
         graph.AddVertexToSetU(vertex);
 
-        graph.SetUCount.Should().Be(1);
-        graph.SetU.Should().Contain(vertex);
+        graph.SetUCount.ShouldBe(1);
+        graph.SetU.ShouldContain(vertex);
     }
 
     [Fact]
@@ -34,8 +33,8 @@ public class BipartiteGraphTests
 
         graph.AddVertexToSetV(vertex);
 
-        graph.SetVCount.Should().Be(1);
-        graph.SetV.Should().Contain(vertex);
+        graph.SetVCount.ShouldBe(1);
+        graph.SetV.ShouldContain(vertex);
     }
 
     [Fact]
@@ -46,7 +45,7 @@ public class BipartiteGraphTests
 
         var result = graph.AddVertexToSetU("worker");
 
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -57,7 +56,7 @@ public class BipartiteGraphTests
 
         var result = graph.AddVertexToSetV("same");
 
-        result.Should().BeFalse();
+        result.ShouldBeFalse();
     }
 
     [Fact]
@@ -67,14 +66,14 @@ public class BipartiteGraphTests
         graph.AddVertexToSetU("u_vertex");
         graph.AddVertexToSetV("v_vertex");
 
-        graph.GetPartition("u_vertex").Should().Be('U');
-        graph.GetPartition("v_vertex").Should().Be('V');
-        graph.GetPartition("nonexistent").Should().BeNull();
+        graph.GetPartition("u_vertex").ShouldBe('U');
+        graph.GetPartition("v_vertex").ShouldBe('V');
+        graph.GetPartition("nonexistent").ShouldBeNull();
     }
 
-    #endregion
+    //#endregion
 
-    #region Edge Tests
+    //#region Edge Tests
 
     [Fact]
     public void AddEdge_ShouldConnectUToV()
@@ -85,8 +84,8 @@ public class BipartiteGraphTests
 
         graph.AddEdge("worker", "job");
 
-        graph.ContainsEdge("worker", "job").Should().BeTrue();
-        graph.EdgeCount.Should().Be(1);
+        graph.ContainsEdge("worker", "job").ShouldBeTrue();
+        graph.EdgeCount.ShouldBe(1);
     }
 
     [Fact]
@@ -98,7 +97,7 @@ public class BipartiteGraphTests
 
         graph.AddEdge("job", "worker");
 
-        graph.ContainsEdge("job", "worker").Should().BeTrue();
+        graph.ContainsEdge("job", "worker").ShouldBeTrue();
     }
 
     [Fact]
@@ -110,8 +109,7 @@ public class BipartiteGraphTests
 
         var act = () => graph.AddEdge("u1", "u2");
 
-        act.Should().Throw<ArgumentException>()
-            .WithMessage("*same partition*");
+        act.ShouldThrow<ArgumentException>("*same partition*");
     }
 
     [Fact]
@@ -122,12 +120,12 @@ public class BipartiteGraphTests
 
         var act = () => graph.AddEdge("u1", "nonexistent");
 
-        act.Should().Throw<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
-    #endregion
+    //#endregion
 
-    #region Neighbor Tests
+    //#region Neighbor Tests
 
     [Fact]
     public void GetNeighbors_ShouldReturnOppositePartition()
@@ -141,12 +139,12 @@ public class BipartiteGraphTests
 
         var neighbors = graph.GetNeighbors("worker");
 
-        neighbors.Should().Contain(new[] { "job1", "job2" });
+        neighbors.ShouldBe(new[] { "job1", "job2" });
     }
 
-    #endregion
+    //#endregion
 
-    #region Matching Tests
+    //#region Matching Tests
 
     [Fact]
     public void FindMaximumMatching_ShouldFindPerfectMatching_WhenExists()
@@ -163,7 +161,7 @@ public class BipartiteGraphTests
 
         var matching = graph.FindMaximumMatching();
 
-        matching.Count.Should().Be(2);
+        matching.Count.ShouldBe(2);
     }
 
     [Fact]
@@ -178,7 +176,7 @@ public class BipartiteGraphTests
 
         var matching = graph.FindMaximumMatching();
 
-        matching.Count.Should().Be(1);
+        matching.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -190,12 +188,12 @@ public class BipartiteGraphTests
 
         var matching = graph.FindMaximumMatching();
 
-        matching.Should().BeEmpty();
+        matching.ShouldBeEmpty();
     }
 
-    #endregion
+    //#endregion
 
-    #region Perfect Matching Tests
+    //#region Perfect Matching Tests
 
     [Fact]
     public void HasPerfectMatching_ShouldReturnTrue_WhenExists()
@@ -208,7 +206,7 @@ public class BipartiteGraphTests
         graph.AddEdge("a", "1");
         graph.AddEdge("b", "2");
 
-        graph.HasPerfectMatching().Should().BeTrue();
+        graph.HasPerfectMatching().ShouldBeTrue();
     }
 
     [Fact]
@@ -221,7 +219,7 @@ public class BipartiteGraphTests
         graph.AddEdge("a", "1");
         graph.AddEdge("b", "1");
 
-        graph.HasPerfectMatching().Should().BeFalse();
+        graph.HasPerfectMatching().ShouldBeFalse();
     }
 
     [Fact]
@@ -234,12 +232,12 @@ public class BipartiteGraphTests
 
         var perfect = graph.FindPerfectMatching();
 
-        perfect.Should().BeNull();
+        perfect.ShouldBeNull();
     }
 
-    #endregion
+    //#endregion
 
-    #region Vertex Cover Tests
+    //#region Vertex Cover Tests
 
     [Fact]
     public void FindMinimumVertexCover_ShouldReturnCorrectSize()
@@ -255,12 +253,12 @@ public class BipartiteGraphTests
 
         var cover = graph.FindMinimumVertexCover();
 
-        cover.Count.Should().Be(graph.FindMaximumMatching().Count);
+        cover.Count.ShouldBe(graph.FindMaximumMatching().Count);
     }
 
-    #endregion
+    //#endregion
 
-    #region Remove Tests
+    //#region Remove Tests
 
     [Fact]
     public void RemoveVertex_ShouldRemoveFromCorrectSet()
@@ -271,8 +269,8 @@ public class BipartiteGraphTests
 
         graph.RemoveVertex("remove");
 
-        graph.SetUCount.Should().Be(0);
-        graph.SetVCount.Should().Be(1);
+        graph.SetUCount.ShouldBe(0);
+        graph.SetVCount.ShouldBe(1);
     }
 
     [Fact]
@@ -285,12 +283,12 @@ public class BipartiteGraphTests
 
         graph.RemoveEdge("u", "v");
 
-        graph.EdgeCount.Should().Be(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Clear Tests
+    //#region Clear Tests
 
     [Fact]
     public void Clear_ShouldRemoveAllVerticesAndEdges()
@@ -304,13 +302,13 @@ public class BipartiteGraphTests
 
         graph.Clear();
 
-        graph.VertexCount.Should().Be(0);
-        graph.EdgeCount.Should().Be(0);
+        graph.VertexCount.ShouldBe(0);
+        graph.EdgeCount.ShouldBe(0);
     }
 
-    #endregion
+    //#endregion
 
-    #region Real-World Scenario Tests
+    //#region Real-World Scenario Tests
 
     [Fact]
     public void JobAssignmentScenario_ShouldWorkCorrectly()
@@ -332,8 +330,8 @@ public class BipartiteGraphTests
 
         var matching = graph.FindMaximumMatching();
 
-        matching.Count.Should().BeGreaterThanOrEqualTo(2);
+        matching.Count.ShouldBeGreaterThanOrEqualTo(2);
     }
 
-    #endregion
+    //#endregion
 }

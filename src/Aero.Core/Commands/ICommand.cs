@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Aero.Common.Commands;
+﻿namespace Aero.Common.Commands;
 // todo - replace these commands with MediatR
 // public interface ICommand
 // {

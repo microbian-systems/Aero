@@ -1,72 +1,25 @@
-# Aero - The .NET Application Accelerator
+# Initial Concept
+Aero is an open-source library collection designed to accelerate the development of ASP.NET web, desktop, and mobile applications. It functions as a lightweight, modular toolkit rather than a restrictive full-blown framework, providing the essential foundation so developers can focus purely on application-specific logic.
 
-## Vision
+# Product Guide: Aero
 
-Aero is your launchpad for production-ready .NET applications. Whether you're building web, mobile, or desktop experiences, Aero eliminates the boilerplate grind so you can focus on what matters—shipping features.
+## Target Audience
+- **.NET Developers:** Specifically those looking to bootstrap projects quickly without reinventing the wheel.
+- **Cross-Platform Builders:** Developers working across Web, Desktop, and Mobile environments using the .NET ecosystem.
+- **Open Source Community:** Contributors and users seeking a flexible, "pick-and-choose" library approach.
 
-**Stop reinventing the wheel.** Aero delivers battle-tested implementations for all the essentials: authentication, authorization, identity management, JWT tokens, and database setup right out of the box. No more wrestling with configuration files or piecing together fragmented libraries.
+## Core Value Propositions
+1.  **Rapid Scaffolding:** Drastically reduces the "time-to-hello-world" by providing pre-built, production-ready components.
+2.  **Modular Flexibility:** Adopts a "library-first" philosophy, allowing developers to consume only the specific components they need (e.g., just `Aero.Common` or `Aero.Auth`) without inheriting a monolithic architecture.
+3.  **Security by Default:** Integrates best-practice security patterns from the ground up, ensuring a secure foundation without complex configuration.
 
-**From zero to production in record time.** What typically takes weeks of plumbing work becomes minutes with Aero. Our modular, Clean Architecture approach means you only pull in what you need—but everything you need just works.
+## Key Features & Components
+-   **High-Utility Extensions:** A robust set of helper methods and utilities designed to reduce boilerplate and make common tasks trivial.
+-   **Logic & Pattern Implementations:** Reliable implementations of complex patterns, such as Snowflake ID generation, Secret Sharing schemes, and Actor model support, ready to drop into any project.
+-   **Aero.MerakiUI:** A complete collection of pre-built, accessible Blazor components (Cards, Modals, Dropdowns, etc.) styled with Tailwind CSS and powered by Alpine.js, enabling rapid UI development with a strict 4-file scoped asset pattern. Includes a living documentation showcase for interactive exploration.
+-   **Aero.Cms:** A hybrid CMS suite combining editor flexibility with developer control. Supports multi-site hosting, block-based page composition, and RavenDB/Marten persistence. Includes a dedicated management UI, Web API, and various hosting models (ASP.NET Core, Blazor).
+-   **Cross-Platform Foundation:** Provides the standardized infrastructure needed to get not just web, but also desktop and mobile .NET projects running immediately.
 
-Build confidently. Scale fearlessly. Ship faster.
-
----
-
-## Target Users
-
-### Solo Developers & Startups
-Building MVPs quickly without sacrificing quality. Get from idea to deployed application in days, not weeks. Focus on your unique value proposition while Aero handles the infrastructure.
-
-### Enterprise Teams
-Needing consistent architecture across projects. Eliminate architectural drift between teams. Provide a standardized foundation that scales from internal tools to customer-facing applications.
-
----
-
-## Core Features
-
-### Authentication & Identity Management
-- JWT token generation and validation
-- OAuth integration with major providers
-- Passkey/WebAuthn support for passwordless authentication
-- Complete identity management out of the box
-
-### Rapid Development with RavenDB
-- Zero-configuration database setup
-- Document-based flexibility for evolving schemas
-- Perfect for prototyping and production alike
-
-### Ready-Made Authorization
-- Role-based access control
-- Permission management
-- Policy-based authorization
-
-### Content Management System (CMS)
-- Built-in content management
-- Extensible and customizable
-- Integrated with the authentication system
-
-### Admin Backend
-- Pre-built admin dashboard
-- User and content management interfaces
-- Extensible architecture for custom admin features
-
----
-
-## Success Criteria
-
-- **Speed:** Reduce new project setup time from weeks to hours
-- **Scalability:** Provide a consistent, maintainable architecture that grows with your application
-- **Productivity:** Enable developers to ship production-ready apps with minimal effort
-
----
-
-## Problems Solved
-
-### Boilerplate Code Fatigue
-Stop repeating the same setup across every project. Aero provides the foundational code you write (and rewrite) on every new application.
-
-### Configuration Complexity
-Authentication, databases, caching—all wired together and ready to go. No more debugging connection strings or tracing auth pipeline issues.
-
-### Inconsistent Architecture
-Aero enforces Clean Architecture principles out of the box. Every project starts with a maintainable, scalable foundation that teams can build on confidently.
+## Design Philosophy
+-   **Developer Experience (DX) First:** The API design prioritizes intuitiveness and expressiveness, making C# code cleaner and easier to write.
+-   **Foundation-Focused:** Aero handles the plumbing and infrastructure—the "boring" but critical parts—empowering developers to spend their time on the unique business logic that matters.

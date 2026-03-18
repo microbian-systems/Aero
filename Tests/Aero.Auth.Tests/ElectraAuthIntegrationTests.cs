@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using FluentAssertions;
+using Shouldly;
 
 namespace Aero.Auth.Tests;
 
@@ -13,7 +13,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
     private readonly HttpClient _client = factory.CreateClient();
     private readonly TestWebAppFactory _factory = factory;
 
-    #region Registration Tests
+    //#region Registration Tests
 
     [Fact]
     public async Task PostRegister_ShouldReturnBadRequest_WhenInvalidEmail()
@@ -31,7 +31,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -69,12 +69,12 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    #endregion
+    //#endregion
 
-    #region Traditional Login Tests
+    //#region Traditional Login Tests
 
     [Fact]
     public async Task PostLogin_ShouldReturnUnauthorized_WhenInvalidCredentials()
@@ -92,7 +92,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/api/Auth/login", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -111,12 +111,12 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/api/Auth/login", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    #endregion
+    //#endregion
 
-    #region OpenIddict Token Flow Tests
+    //#region OpenIddict Token Flow Tests
 
     [Fact]
     public async Task PostTokenExchange_ShouldReturnBadRequest_WhenUnsupportedGrantType()
@@ -133,7 +133,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/connect/token", formData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -151,12 +151,12 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/connect/token", formData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }
 
-    #endregion
+    //#endregion
 
-    #region Userinfo Endpoint Tests
+    //#region Userinfo Endpoint Tests
 
     [Fact]
     public async Task GetUserinfo_ShouldReturnUnauthorized_WhenNotAuthenticated()
@@ -165,7 +165,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.GetAsync("/connect/userinfo");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -178,12 +178,12 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/connect/userinfo", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    #endregion
+    //#endregion
 
-    #region Token Revocation Tests
+    //#region Token Revocation Tests
 
     [Fact]
     public async Task PostRevoke_ShouldReturnBadRequest_WhenNoTokenProvided()
@@ -198,7 +198,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/connect/revoke", formData);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -215,12 +215,12 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
 
         // Assert
         // Per OAuth 2.0 spec, should return success even if token doesn't exist
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
 
-    #endregion
+    //#endregion
 
-    #region Account Management Tests
+    //#region Account Management Tests
 
     [Fact]
     public async Task GetAccountListPasskeys_ShouldReturnUnauthorized_WhenNotAuthenticated()
@@ -229,7 +229,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.GetAsync("/Account/list");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -242,7 +242,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.DeleteAsync($"/Account/{credentialId}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -255,12 +255,12 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/Account/Logout", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    #endregion
+    //#endregion
 
-    #region Passwordless/WebAuthn Tests
+    //#region Passwordless/WebAuthn Tests
 
     [Fact]
     public async Task GetPasswordless_ShouldReturnValidResponse()
@@ -269,7 +269,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.GetAsync("/Passwordless");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -279,7 +279,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.GetAsync("/Usernameless");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
     [Fact]
@@ -292,7 +292,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/Passwordless/authenticate", content);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -306,12 +306,12 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
 
         // Assert
         // Should handle WebAuthn-specific requests appropriately
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
-    #endregion
+    //#endregion
 
-    #region External Login Tests
+    //#region External Login Tests
 
     [Fact]
     public async Task GetExternalLogin_ShouldReturnValidResponse()
@@ -320,7 +320,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.GetAsync("/ExternalLogin");
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
     [Theory]
@@ -333,7 +333,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.GetAsync(endpoint);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(
+        response.StatusCode.ShouldBeOneOf(
             HttpStatusCode.OK, 
             HttpStatusCode.NotFound, 
             HttpStatusCode.Redirect, 
@@ -342,9 +342,9 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         );
     }
 
-    #endregion
+    //#endregion
 
-    #region HTTP Method Validation Tests
+    //#region HTTP Method Validation Tests
 
     [Theory]
     [InlineData("GET")]
@@ -360,7 +360,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+        response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
     [Theory]
@@ -377,7 +377,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+        response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
     [Theory]
@@ -394,12 +394,12 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.SendAsync(request);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+        response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    #endregion
+    //#endregion
 
-    #region Security Tests
+    //#region Security Tests
 
     [Fact]
     public async Task PostLogin_ShouldRejectMaliciousInput()
@@ -417,7 +417,7 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/api/Auth/login", content);
 
         // Assert
-        response.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized);
+        response.StatusCode.ShouldBeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized);
     }
 
     [Fact]
@@ -436,8 +436,8 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory) : IClassFixt
         var response = await _client.PostAsync("/api/Auth/register", content);
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    #endregion
+    //#endregion
 }

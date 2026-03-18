@@ -1,6 +1,7 @@
 using System.IO;
 using Aero.Core.Identity;
-using Aero.RavenDB.Extensions;
+using Aero.MartenDB.Extensions;
+using Aero.Auth.Services;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.DataProtection;
 
@@ -18,7 +19,7 @@ public static class SocialLoginExtensions
     public static AuthenticationBuilder AddAeroAuthentication(this IServiceCollection services, IHostEnvironment env,
         IConfiguration config)
     {
-        var useRavenDb = config.GetValue<bool>("Identity:UseRavenDB");
+        var useAeroDb = config.GetValue<bool>("Identity:UseAeroDB");
 
 
         // Configure ASP.NET Core Identity
@@ -34,8 +35,8 @@ public static class SocialLoginExtensions
             opts.SignIn.RequireConfirmedEmail = false; // Set to true if email confirmation is implemented
         });
 
-        services.AddRavenPersistence(config);
-        identityBuilder.AddRavenDbIdentityStores<AeroUser, AeroRole>(options =>
+        services.AddAeroPersistence(config);
+        identityBuilder.AddAerodentityStores<AeroUser, AeroRole>(options =>
         {
             options.AutoSaveChanges = true;
         });
@@ -151,9 +152,9 @@ public static class SocialLoginExtensions
 
         // Add production-grade token services
         // Register persistence based on configuration
-        if (useRavenDb)
+        if (useAeroDb)
         {
-            services.AddScoped<IJwtSigningKeyPersistence, RavenDbJwtSigningKeyPersistence>();
+            services.AddScoped<IJwtSigningKeyPersistence, MartenJwtSigningKeyPersistence>();
         }
         else
         {
@@ -172,7 +173,7 @@ public static class SocialLoginExtensions
         services.AddScoped<IJwtSigningKeyStore, JwtSigningKeyStore>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
 
-        if (useRavenDb)
+        if (useAeroDb)
         {
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         }

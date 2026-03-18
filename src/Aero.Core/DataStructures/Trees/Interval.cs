@@ -1,6 +1,4 @@
-using System;
-
-namespace Electra.DataStructures.Trees;
+namespace Aero.DataStructures.Trees;
 
 /// <summary>
 /// Represents an interval with a start and an end.

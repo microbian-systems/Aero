@@ -1,13 +1,28 @@
-﻿
-
-using LanguageExt;
+using Aero.Core.Railway;
 
 namespace Aero.Auth.Extensions;
 
+/// <summary>
+/// Extension methods for handling JWT tokens.
+/// </summary>
 public static class JwtExtensions
 {
+    /// <summary>
+    /// The Unix Epoch (January 1, 1970).
+    /// </summary>
     public static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
+    /// <summary>
+    /// Generates a JWT token for the specified user.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the user key.</typeparam>
+    /// <param name="user">The user to generate the token for.</param>
+    /// <param name="secret">The secret key used to sign the token.</param>
+    /// <param name="issuer">The token issuer.</param>
+    /// <param name="audience">The token audience.</param>
+    /// <param name="expires">The token expiration time. Defaults to 15 minutes if null.</param>
+    /// <param name="claims">Optional additional claims.</param>
+    /// <returns>A signed JWT token string.</returns>
     public static string ToJwtToken<TKey>(this IdentityUser<TKey> user, string secret, string issuer, string audience,
         TimeSpan? expires = null, List<Claim>? claims = null) where TKey : IEquatable<TKey>
     {
@@ -23,7 +38,15 @@ public static class JwtExtensions
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public static ClaimsPrincipal GetPrincipleFromExpiredToken(this string expiredToken, string secret,
+    /// <summary>
+    /// Extracts the <see cref="ClaimsPrincipal"/> from an expired JWT token.
+    /// </summary>
+    /// <param name="expiredToken">The expired JWT token string.</param>
+    /// <param name="secret">The secret key used to validate the token signature.</param>
+    /// <param name="validateAudience">Whether to validate the audience.</param>
+    /// <param name="validateIssuer">Whether to validate the issuer.</param>
+    /// <returns>A <see cref="ClaimsPrincipal"/> if the token is valid (excluding expiration), otherwise null.</returns>
+    public static ClaimsPrincipal? GetPrincipleFromExpiredToken(this string expiredToken, string secret,
         bool validateAudience = false, bool validateIssuer = false)
     {
         var tokenValidationParameters = new TokenValidationParameters
@@ -45,13 +68,23 @@ public static class JwtExtensions
         return principal;
     }
 
+    /// <summary>
+    /// Converts a <see cref="DateTime"/> to Unix epoch seconds.
+    /// </summary>
+    /// <param name="src">The source date time.</param>
+    /// <returns>The number of seconds since the Unix epoch.</returns>
     public static double ToUnixEpochExpiration(this DateTime src)
     {
         var unixEpoch = UnixEpoch;
         return Math.Round((src - unixEpoch).TotalSeconds);
     }
 
-    // Method to decode JWT payload from HttpRequest
+    /// <summary>
+    /// Decodes the JWT payload from an HTTP request's Authorization header.
+    /// </summary>
+    /// <param name="request">The current HTTP request.</param>
+    /// <param name="secret">The secret key used to validate the token.</param>
+    /// <returns>An <see cref="Option{JwtPayload}"/> containing the payload if decoding was successful.</returns>
     public static Option<JwtPayload> DecodeJwtPayload(this HttpRequest request, string secret)
     {
         var token = request.Headers["Authorization"]
@@ -60,7 +93,12 @@ public static class JwtExtensions
         return DecodeJwtPayload(token, secret);
     }
 
-    // Method to decode JWT payload from a token string
+    /// <summary>
+    /// Decodes the JWT payload from a token string.
+    /// </summary>
+    /// <param name="token">The JWT token string.</param>
+    /// <param name="secret">The secret key used to validate the token.</param>
+    /// <returns>An <see cref="Option{JwtPayload}"/> containing the payload if decoding was successful.</returns>
     public static Option<JwtPayload> DecodeJwtPayload(this string token, string secret)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -72,21 +110,18 @@ public static class JwtExtensions
             IssuerSigningKey = key,
             ValidateIssuer = false,
             ValidateAudience = false,
-            ValidateLifetime = false // Since we are only decoding, not validating
+            ValidateLifetime = false
         };
 
         try
         {
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out var securityToken);
+            tokenHandler.ValidateToken(token, validationParameters, out var securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
-
-            return jwtSecurityToken?.Payload!;
+            return jwtSecurityToken != null ? Prelude.Some(jwtSecurityToken.Payload) : Prelude.None;
         }
-        catch (SecurityTokenMalformedException ex)
+        catch (Exception)
         {
-            // todo - log the exception here if obtain jwt throws exception or use ThrowGuard
-            var result = Option<JwtPayload>.None;
-            return result;
+            return Prelude.None;
         }
     }
 }

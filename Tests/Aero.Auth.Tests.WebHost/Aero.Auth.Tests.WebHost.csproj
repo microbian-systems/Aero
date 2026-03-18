@@ -14,7 +14,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\Aero.Auth\Aero.Auth.csproj" />
       <ProjectReference Include="..\..\src\Aero.Models\Aero.Models.csproj" />
-      <ProjectReference Include="..\..\src\Aero.Persistence\Aero.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

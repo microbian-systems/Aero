@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
@@ -20,8 +20,8 @@ public class RTreeTests
         var found = rtree.Search(searchArea).ToList();
 
         // Assert
-        found.Should().HaveCount(2);
-        found.Should().Contain(p => p.X == 1 && p.Y == 1);
-        found.Should().Contain(p => p.X == 5 && p.Y == 5);
+        found.Count().ShouldBe(2);
+        found.ShouldContain(p => p.X == 1 && p.Y == 1);
+        found.ShouldContain(p => p.X == 5 && p.Y == 5);
     }
 }

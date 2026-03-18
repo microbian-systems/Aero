@@ -1,11 +1,32 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+    <PropertyGroup>
+        <!-- The unique ID for your package on NuGet.org -->
+        <PackageId>Aero.EfCore</PackageId>
 
+        <!-- Increment this version every time you push a new update -->
+        <Version>0.0.5-alpha</Version>
+
+        <!-- Your name or organization -->
+        <Authors>Microbians</Authors>
+
+        <!-- A brief description shown in the NuGet gallery -->
+        <Description>Aero core library with useful utility tools for any project</Description>
+
+        <!-- Optional: High-quality metadata for better discoverability -->
+        <PackageTags>aero;utils;netcore</PackageTags>
+        <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+
+        <!-- Optional: Automatically creates a package on every build -->
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
@@ -15,17 +36,11 @@
     
     <ItemGroup>
       <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
-      <ProjectReference Include="..\Aero.Persistence.Core\Aero.Persistence.Core.csproj" />
-      <ProjectReference Include="..\Aero.Persistence\Aero.Persistence.csproj" />
+      <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
     </ItemGroup>
-    
+
     <ItemGroup>
-      <Compile Remove="MultipleResultSetWrapper.cs" />
-      <None Include="MultipleResultSetWrapper.cs" />
-      <Compile Remove="MultipleResultSetHelper.cs" />
-      <None Include="MultipleResultSetHelper.cs" />
-      <Compile Remove="BlogDbContext.cs" />
-      <None Include="BlogDbContext.cs" />
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
 </Project>

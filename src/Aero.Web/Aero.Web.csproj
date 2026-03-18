@@ -8,11 +8,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Extensions\IdentityServerExtensions.cs" />
-    <Compile Remove="Identity\IdentityServerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Extensions\IdentityServerExtensions.cs" />
-    <None Include="Identity\IdentityServerSettings.cs" />
     <Compile Remove="Services\ApiKeyService.cs" />
     <None Include="Services\ApiKeyService.cs" />
     <Compile Remove="Extensions\ApiKeyExtensions.cs" />
@@ -77,11 +75,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Aero.Caching\Aero.Caching.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
-    <ProjectReference Include="..\Aero.Persistence\Aero.Persistence.csproj" />
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
     <ProjectReference Include="..\Aero.Services\Aero.Services.csproj" />
     <ProjectReference Include="..\Aero.SignalR\Aero.SignalR.csproj" />
     <ProjectReference Include="..\Aero.Validators\Aero.Validators.csproj" />
-    <ProjectReference Include="..\Aero.Web.Core\Aero.Web.Core.csproj" />
-  </ItemGroup>
-</Project>
+    </ItemGroup>
+    </Project>
