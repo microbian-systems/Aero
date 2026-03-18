@@ -8,7 +8,7 @@ public static class AeroDbExtensions
     public static IServiceCollection AddAeroPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         // Load AeroDB settings from configuration
-        var AeroDbSettings = configuration.GetSection(AeroDbSettings.SectionName).Get<AeroDbSettings>() 
+        var aeroDbSettings = configuration.GetSection(AeroDbSettings.SectionName).Get<AeroDbSettings>() 
             ?? new AeroDbSettings();
 
         // 1. Register the DocumentStore as a SINGLETON
@@ -17,16 +17,16 @@ public static class AeroDbExtensions
         {
             IDocumentStore store = null;
 
-            if (AeroDbSettings.UseEmbedded)
+            if (aeroDbSettings.UseEmbedded)
             {
                 // For embedded AeroDB, you need to add AeroDB.Embedded NuGet package
                 // and uncomment the code below:
 
                 //var embeddedOptions = new ServerOptions();
 
-                if (!string.IsNullOrWhiteSpace(AeroDbSettings.EmbeddedPath))
+                if (!string.IsNullOrWhiteSpace(aeroDbSettings.EmbeddedPath))
                 {
-                    //embeddedOptions.DataDirectory = AeroDbSettings.EmbeddedPath;
+                    //embeddedOptions.DataDirectory = aeroDbSettings.EmbeddedPath;
                 }
 
                 //EmbeddedServer.Instance.StartServer(embeddedOptions);
@@ -37,7 +37,7 @@ public static class AeroDbExtensions
             else
             {
                 // Use server-based AeroDB
-                var urls = AeroDbSettings.Urls?
+                var urls = aeroDbSettings.Urls?
                     .Split(',', System.StringSplitOptions.RemoveEmptyEntries)
                     .Select(u => u.Trim())
                     .ToArray() ?? ["http://localhost:8080"];
