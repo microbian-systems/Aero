@@ -20,6 +20,14 @@ public partial class AuthController(
     ILogger<AuthController> logger)
     : AeroWebBaseController(logger)
 {
+    /// <summary>
+    /// Responds based on the request content type, choosing between JSON or a View.
+    /// </summary>
+    /// <param name="success">Whether the operation was successful.</param>
+    /// <param name="data">The JSON data to return on success.</param>
+    /// <param name="viewName">The name of the view to return for non-JSON requests.</param>
+    /// <param name="model">The model for the view.</param>
+    /// <returns>An <see cref="IActionResult"/>.</returns>
     private IActionResult RespondBasedOnContentType(
         bool success,
         object data,
@@ -54,9 +62,11 @@ public partial class AuthController(
     }
 
     /// <summary>
-    /// Web login endpoint (API - JSON)
-    /// POST /login
+    /// Web login endpoint (API - JSON).
     /// </summary>
+    /// <param name="request">The login request model containing credentials.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A result containing user information or an error message.</returns>
     [HttpPost("/login")]
     [AllowAnonymous]
     [Consumes("application/json")]

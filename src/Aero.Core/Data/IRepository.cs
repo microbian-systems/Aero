@@ -1,9 +1,14 @@
-﻿using Aero.Core.Entities;
+using Aero.Core.Entities;
 
 namespace Aero.Core.Data;
 
 
 
+/// <summary>
+/// Defines a write-only repository for a given entity type.
+/// </summary>
+/// <typeparam name="T">The entity type.</typeparam>
+/// <typeparam name="TKey">The type of the primary key.</typeparam>
 public interface IWriteRepository<T, TKey>
     where T : IEntity<TKey> 
     where TKey : IEquatable<TKey>

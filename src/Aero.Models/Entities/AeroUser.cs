@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Identity;
 namespace Aero.Models.Entities;
 
 
+/// <summary>
+/// Defines the core properties for an Aero user entity.
+/// </summary>
 public interface IAeroUser : IEntity
 {
     string? UserName { get; set; }
@@ -43,10 +46,17 @@ public interface IAeroUser : IEntity
     List<IdentityUserToken<string>> Tokens { get; set; }
 }
 
+/// <summary>
+/// Represents a concrete Aero user with a string-based primary key.
+/// </summary>
 public class AeroUser : AeroUser<string>, IAeroUser
 {
 }
 
+/// <summary>
+/// Generic interface for an Aero user entity with a custom primary key type.
+/// </summary>
+/// <typeparam name="TKey">The type of the primary key.</typeparam>
 public interface IAeroUser<TKey>  where TKey : IEquatable<TKey> 
 {
     public DateTime? Birthday { get; set; }
@@ -89,6 +99,10 @@ public interface IAeroUser<TKey>  where TKey : IEquatable<TKey>
     string ToString();
 }
 
+/// <summary>
+/// Base class for an Aero user entity, extending ASP.NET Core Identity.
+/// </summary>
+/// <typeparam name="TKey">The type of the primary key.</typeparam>
 public class AeroUser<TKey> 
     : IdentityUser<TKey>, IEntity<TKey>, IAeroUser<TKey> 
     where TKey : IEquatable<TKey>

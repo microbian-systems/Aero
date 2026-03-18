@@ -10,8 +10,17 @@ public class JwtTokenService : IJwtTokenService
     private readonly ILogger<JwtTokenService> _logger;
     private readonly IConfiguration _config;
 
+    /// <summary>
+    /// Gets the lifetime of the access token in seconds.
+    /// </summary>
     public int AccessTokenLifetime { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JwtTokenService"/> class.
+    /// </summary>
+    /// <param name="signingKeyStore">The signing key store.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="config">The configuration instance.</param>
     public JwtTokenService(
         IJwtSigningKeyStore signingKeyStore,
         ILogger<JwtTokenService> logger,
@@ -23,6 +32,13 @@ public class JwtTokenService : IJwtTokenService
         AccessTokenLifetime = _config.GetValue("Auth:AccessTokenLifetimeSeconds", 300); // 5 minutes
     }
 
+    /// <summary>
+    /// Generates a short-lived access token for a user.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="email">The email address of the user.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A signed JWT access token.</returns>
     public async Task<string> GenerateAccessTokenAsync(
         string userId,
         string email,
@@ -56,6 +72,12 @@ public class JwtTokenService : IJwtTokenService
         return jwt;
     }
 
+    /// <summary>
+    /// Validates an access token and returns the principal if valid.
+    /// </summary>
+    /// <param name="token">The JWT access token to validate.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A tuple indicating success and the resulting principal.</returns>
     public async Task<(bool IsValid, ClaimsPrincipal? Principal)> ValidateAccessTokenAsync(
         string token,
         CancellationToken cancellationToken = default)
