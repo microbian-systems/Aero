@@ -73,6 +73,7 @@
     <PackageReference Include="Serilog.Sinks.Trace" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MimeKit" Version="4.15.1" />
     <ProjectReference Include="..\Aero.Caching\Aero.Caching.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
