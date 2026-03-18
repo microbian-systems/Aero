@@ -13,3 +13,6 @@
 [submodule "MerakiUI"]
 	path = MerakiUI
 	url = git@github.com:merakiuilabs/merakiui.git
+[submodule "Aero"]
+	path = Aero
+	url = git@github.com:microbian-systems/Aero.git
