@@ -6,81 +6,36 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Aero.Models.Entities;
 
+/// <summary>
+/// Represents a concrete Aero user with a snowflake primary key.
+/// </summary>
+public class AeroUser : AeroUser<ulong>, IAeroUser;
+
 
 /// <summary>
 /// Defines the core properties for an Aero user entity.
 /// </summary>
-public interface IAeroUser : IEntity
-{
-    string? UserName { get; set; }
-    string? NormalizedUserName { get; set; }
-    string? Email { get; set; }
-    string? NormalizedEmail { get; set; }
-    bool EmailConfirmed { get; set; }
-    string? PasswordHash { get; set; }
-    string? SecurityStamp { get; set; }
-    string? ConcurrencyStamp { get; set; }
-    string? PhoneNumber { get; set; }
-    bool PhoneNumberConfirmed { get; set; }
-    bool TwoFactorEnabled { get; set; }
-    DateTimeOffset? LockoutEnd { get; set; }
-    bool LockoutEnabled { get; set; }
-    int AccessFailedCount { get; set; }
-    DateTime? Birthday { get; set; }
-    string FirstName { get; set; }
-    string MiddleName { get; set; }
-    string LastName { get; set; }
-    string CreatedBy { get; set; }
-    // todo - remove data attribute -> ModelBuilding (EF)
-    string ProfilePictureDataUrl { get; set; }
-    bool IsDeleted { get; set; }
-    DateTimeOffset? DeletedOn { get; set; }
-    bool IsActive { get; set; }
-    string RefreshToken { get; set; }
-    DateTimeOffset? RefreshTokenExpiryTime { get; set; }
-    DateTimeOffset? LastLoginAt { get; set; }
-    AeroUserProfile Profile { get; set; }
-    UserSettingsModel UserSettings { get; set; }
-    List<IdentityUserClaim<string>> Claims { get; set; }
-    List<IdentityUserLogin<string>> Logins { get; set; }
-    List<IdentityUserToken<string>> Tokens { get; set; }
-}
+public interface IAeroUser : IAeroUser<ulong>, ISnowflakeEntity;
 
-/// <summary>
-/// Represents a concrete Aero user with a string-based primary key.
-/// </summary>
-public class AeroUser : AeroUser<string>, IAeroUser
-{
-}
 
 /// <summary>
 /// Generic interface for an Aero user entity with a custom primary key type.
 /// </summary>
 /// <typeparam name="TKey">The type of the primary key.</typeparam>
-public interface IAeroUser<TKey>  where TKey : IEquatable<TKey> 
+public interface IAeroUser<TKey> : IEntity<TKey> where TKey : IEquatable<TKey> 
 {
-    public DateTime? Birthday { get; set; }
+    public DateTimeOffset? Birthday { get; set; }
     public string FirstName { get; set; }
     public string MiddleName { get; set; }
     public string LastName { get; set; }
     public string CreatedBy { get; set; }
     // todo - remove data attribute -> ModelBuilding (EF)
     public string ProfilePictureDataUrl { get; set; }
-    public DateTimeOffset CreatedOn { get; set; }
-    public string ModifiedBy { get; set; }
-    public DateTimeOffset? ModifiedOn { get; set; }
     public bool IsDeleted { get; set; } // todo - make IsDeleted a computed column from DeletedOn == null
     public DateTimeOffset? DeletedOn { get; set; }
     public bool IsActive { get; set; }
     public string RefreshToken { get; set; }
     public DateTimeOffset? RefreshTokenExpiryTime { get; set; }
-    public AeroUserProfile Profile { get; set;  }
-    public UserSettingsModel UserSettings { get; set; }
-    public List<IdentityUserClaim<string>> Claims { get; set; }
-    public List<IdentityUserLogin<string>> Logins { get; set; }
-    public List<IdentityUserToken<string>> Tokens { get; set; }
-    public List<AeroRole> Roles { get; set; }
-    TKey Id { get; set; }
     string? UserName { get; set; }
     string? NormalizedUserName { get; set; }
     string? Email { get; set; }
@@ -96,18 +51,26 @@ public interface IAeroUser<TKey>  where TKey : IEquatable<TKey>
     public DateTimeOffset? LastLoginAt { get; set; }
     bool LockoutEnabled { get; set; }
     int AccessFailedCount { get; set; }
-    string ToString();
+    public IList<IdentityRoleClaim<ulong>> Claims { get; set; }
+    public IList<IdentityLogin> Logins { get; set; }
+    public IList<IdentityToken> Tokens { get; set; }
+    public ISet<AeroRole> Roles { get; set; }
 }
 
 /// <summary>
 /// Base class for an Aero user entity, extending ASP.NET Core Identity.
 /// </summary>
 /// <typeparam name="TKey">The type of the primary key.</typeparam>
-public class AeroUser<TKey> 
+public abstract class AeroUser<TKey> 
     : IdentityUser<TKey>, IEntity<TKey>, IAeroUser<TKey> 
     where TKey : IEquatable<TKey>
 {
-    [PersonalData] public DateTime? Birthday { get; set; }
+    protected AeroUser()
+    {
+        SecurityStamp = Guid.NewGuid().ToString("N");
+    }
+
+    [PersonalData] public DateTimeOffset? Birthday { get; set; }
     public string FirstName { get; set; }
     public string MiddleName { get; set; }
     public string LastName { get; set; }
@@ -126,23 +89,12 @@ public class AeroUser<TKey>
     public byte[] UserHandle { get; set; } 
     public TKey UserProfileId { get; set; }
     public bool AgreedToTos { get; set; } 
-    //[Column(TypeName = "jsonb")]
-    [JsonPropertyName("profile")] 
-    public virtual AeroUserProfile Profile { get; set; } = new();
-    public virtual UserSettingsModel UserSettings { get; set; } = new();
-    public virtual List<IdentityUserClaim<string>> Claims { get; set; } = [];
-    public virtual List<IdentityUserLogin<string>> Logins { get; set; } = [];
-    public virtual List<IdentityUserToken<string>> Tokens { get; set; } = [];
-    public virtual List<AeroRole> Roles { get; set; } = [];
-    [NotMapped]
-    [JsonIgnore]
-    public virtual List<string> RoleNames
-    {
-        get { return Roles.Select(x => x.Name).ToList(); }
-    }
-    public virtual List<string> TwoFactorRecoveryCodes { get; set; } = [];
+    public virtual IList<IdentityRoleClaim<ulong>> Claims { get; set; } = [];
+    public virtual IList<IdentityLogin> Logins { get; set; } = [];
+    public virtual IList<IdentityToken> Tokens { get; set; } = [];
+    public virtual ISet<AeroRole> Roles { get; set; } = new HashSet<AeroRole>();
+    public virtual IList<string> TwoFactorRecoveryCodes { get; set; } = [];
     public virtual string? TwoFactorAuthenticatorKey { get; set; }
-    public virtual List<string> GetRolesList() => RoleNames;
 }
 
 

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Aero.Core.Entities;
 
-public interface IEntity : IEntity<string>;
+public interface IEntity : ISnowflakeEntity;
 public interface IEntity<TKey> where TKey : IEquatable<TKey>
 {
     [Key] [JsonPropertyName("id")]
@@ -24,7 +24,7 @@ public interface IEntity<TKey> where TKey : IEquatable<TKey>
 /// <summary>
 /// Represents a persisted entity for Aero
 /// </summary>
-public abstract class Entity : Entity<string>, IEntity {}
+public abstract class Entity : Entity<ulong>, IEntity {}
 
 /// <summary>
 /// Represents a persisted entity for Aero
@@ -43,7 +43,7 @@ public abstract class EntityBase<TKey> : IEntity<TKey>
 {
     [Key]
     [JsonPropertyName("id")]
-    public TKey Id { get; set; }
+    public required TKey Id { get; set; }
 
     [JsonPropertyName("created_on")]
     public DateTimeOffset CreatedOn { get; set; } = DateTimeOffset.UtcNow;

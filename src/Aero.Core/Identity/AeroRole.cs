@@ -29,9 +29,9 @@ namespace Aero.Core.Identity;
 // }
 
 [Table("Roles")]
-public class AeroRole : AeroRole<string>
+public class AeroRole : AeroRole<ulong>
 {
-    public AeroRole() => Id = Snowflake.NewId().ToString();
+    public AeroRole() => Id = Snowflake.NewId();
     public AeroRole(string roleName)
         : this()
     {
@@ -45,11 +45,10 @@ public class AeroRole<Tkey> : IdentityRole<Tkey>
     where Tkey : IEquatable<Tkey>, IComparable<Tkey>
 {
     public AeroRole() { }
-
     public AeroRole(string roleName) : base(roleName) { }
 
-    public List<IdentityRoleClaim<string>> Claims { get; set; } = [];
-    public List<string> Users { get; set; } = [];
+    public List<IdentityRoleClaim<Tkey>> Claims { get; set; } = [];
+    public List<Tkey> Users { get; set; } = [];
     public DateTimeOffset CreatedOn { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? ModifiedOn { get; set; } = DateTimeOffset.UtcNow;
     public string? CreatedBy { get; set; }
