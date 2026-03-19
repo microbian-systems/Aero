@@ -51,7 +51,7 @@ public interface IAeroUser<TKey> : IEntity<TKey> where TKey : IEquatable<TKey>
     public DateTimeOffset? LastLoginAt { get; set; }
     bool LockoutEnabled { get; set; }
     int AccessFailedCount { get; set; }
-    public IList<IdentityRoleClaim<ulong>> Claims { get; set; }
+    public IList<IdentityUserClaim<ulong>> Claims { get; set; }
     public IList<IdentityLogin> Logins { get; set; }
     public IList<IdentityToken> Tokens { get; set; }
     public ISet<AeroRole> Roles { get; set; }
@@ -89,7 +89,7 @@ public abstract class AeroUser<TKey>
     public byte[] UserHandle { get; set; } 
     public TKey UserProfileId { get; set; }
     public bool AgreedToTos { get; set; } 
-    public virtual IList<IdentityRoleClaim<ulong>> Claims { get; set; } = [];
+    public virtual IList<IdentityUserClaim<ulong>> Claims { get; set; } = [];
     public virtual IList<IdentityLogin> Logins { get; set; } = [];
     public virtual IList<IdentityToken> Tokens { get; set; } = [];
     public virtual ISet<AeroRole> Roles { get; set; } = new HashSet<AeroRole>();
