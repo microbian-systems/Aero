@@ -1,5 +1,6 @@
 using Marten;
 using System.Security.Cryptography;
+using Aero.Core;
 
 namespace Aero.Auth.Services;
 
@@ -27,7 +28,7 @@ public class RefreshTokenService : IRefreshTokenService
     }
 
     public async Task<string> GenerateRefreshTokenAsync(
-        string userId,
+        ulong userId,
         string clientType,
         string? ipAddress = null,
         string? userAgent = null,
@@ -38,7 +39,7 @@ public class RefreshTokenService : IRefreshTokenService
 
         var refreshToken = new RefreshToken
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Snowflake.NewId(),
             UserId = userId,
             TokenHash = tokenHash,
             CreatedOn = DateTimeOffset.UtcNow,
@@ -59,7 +60,7 @@ public class RefreshTokenService : IRefreshTokenService
         return token;
     }
 
-    public async Task<string?> ValidateRefreshTokenAsync(
+    public async Task<ulong?> ValidateRefreshTokenAsync(
         string token,
         CancellationToken cancellationToken = default)
     {
@@ -98,10 +99,10 @@ public class RefreshTokenService : IRefreshTokenService
     {
         // Validate and get user ID from old token
         var userId = await ValidateRefreshTokenAsync(oldToken, cancellationToken);
-        if (string.IsNullOrEmpty(userId))
-        {
-            throw new InvalidOperationException("Invalid refresh token");
-        }
+        // if (string.IsNullOrEmpty(userId))
+        // {
+        //     throw new InvalidOperationException("Invalid refresh token");
+        // }
 
         // Mark old token as rotated
         var oldTokenHash = HashToken(oldToken);
@@ -115,8 +116,8 @@ public class RefreshTokenService : IRefreshTokenService
             var newToken = GenerateRandomToken(64);
             var newRefreshToken = new RefreshToken
             {
-                Id = Guid.NewGuid().ToString(),
-                UserId = userId,
+                Id = Snowflake.NewId(),
+                UserId = userId.Value,
                 TokenHash = HashToken(newToken),
                 CreatedOn = DateTimeOffset.UtcNow,
                 ExpiresAt = DateTimeOffset.UtcNow.AddDays(refreshTokenLifetimeDays),
@@ -160,7 +161,7 @@ public class RefreshTokenService : IRefreshTokenService
     }
 
     public async Task RevokeAllUserTokensAsync(
-        string userId,
+        ulong userId,
         CancellationToken cancellationToken = default)
     {
         
@@ -181,8 +182,8 @@ public class RefreshTokenService : IRefreshTokenService
         }
     }
 
-    public async Task<IEnumerable<(string Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
-        string userId,
+    public async Task<IEnumerable<(ulong Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
+        ulong userId,
         CancellationToken cancellationToken = default)
     {
 

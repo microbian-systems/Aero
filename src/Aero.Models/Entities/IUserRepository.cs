@@ -14,10 +14,6 @@ public interface IUserRepository : IGenericRepository<AeroUser, ulong>
     /// </summary>
     Task<Option<AeroUser>> GetFullUserById(ulong userId);
 
-    /// <summary>
-    /// Gets only the user's profile.
-    /// </summary>
-    Task<Option<AeroUserProfile>> GetUserProfileAsync(ulong userId);
 
     /// <summary>
     /// Gets only the user's settings.

@@ -622,7 +622,7 @@ public partial class AuthController(
 
         // Validate and get user ID from refresh token
         var userId = await refreshTokenService.ValidateRefreshTokenAsync(request.RefreshToken, cancellationToken);
-        if (string.IsNullOrEmpty(userId))
+        //if (string.IsNullOrEmpty(userId))
         {
             logger.LogWarning("Invalid refresh token attempt");
             return Unauthorized(new RefreshTokenResponse
@@ -681,7 +681,7 @@ public partial class AuthController(
         if (!string.IsNullOrEmpty(userId))
         {
             // Revoke all refresh tokens for this user (logout everywhere)
-            await refreshTokenService.RevokeAllUserTokensAsync(userId, cancellationToken);
+            await refreshTokenService.RevokeAllUserTokensAsync(ulong.Parse(userId), cancellationToken);
             logger.LogInformation("User {UserId} logged out (revoked all tokens)", userId);
         }
 
@@ -724,8 +724,9 @@ public partial class AuthController(
 
         if (!string.IsNullOrEmpty(userId))
         {
+            var id = ulong.Parse(userId);
             // Revoke all refresh tokens
-            await refreshTokenService.RevokeAllUserTokensAsync(userId, cancellationToken);
+            await refreshTokenService.RevokeAllUserTokensAsync(id, cancellationToken);
             logger.LogInformation("User {UserId} logged out from app (revoked all tokens)", userId);
         }
 
@@ -750,7 +751,8 @@ public partial class AuthController(
             return Unauthorized();
         }
 
-        var sessions = await refreshTokenService.GetActiveTokensAsync(userId, cancellationToken);
+        var id = ulong.Parse(userId);
+        var sessions = await refreshTokenService.GetActiveTokensAsync(id, cancellationToken);
 
         return Ok(new
         {
@@ -782,8 +784,9 @@ public partial class AuthController(
         }
 
         // Get the session to verify it belongs to this user
-        var sessions = await refreshTokenService.GetActiveTokensAsync(userId, cancellationToken);
-        if (!sessions.Any(s => s.Id == sessionId))
+        var id = ulong.Parse(sessionId);
+        var sessions = await refreshTokenService.GetActiveTokensAsync(id, cancellationToken);
+        if (!sessions.Any(s => s.Id == id))
         {
             return NotFound();
         }

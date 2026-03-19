@@ -1,4 +1,4 @@
-# Aero.AeroDB
+﻿# Aero.AeroDB
 
 AeroDB document store integration for the Aero framework with event sourcing support.
 

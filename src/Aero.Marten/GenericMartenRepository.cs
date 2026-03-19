@@ -7,34 +7,26 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Marten;
 
-public interface IGenericMartenRepository<T, TKey> : IGenericRepository<T, TKey>
-    where T : IEntity<TKey>, new() where TKey : IEquatable<TKey>
+public interface IGenericMartenRepository<T, TKey> 
+    : IGenericRepository<T, TKey>
+    where T : IEntity<TKey>, new() 
+    where TKey : IEquatable<TKey>
 {
+    IDocumentSession session { get; }
     Task SaveChangesAsync();
 }
 
-public interface IGenericMartenRepository<T> : IGenericRepository<T, Guid> where T : IEntity<Guid>, new()
-{
-}
+public interface IGenericMartenRepository<T> : IGenericRepository<T, ulong> where T : IEntity<ulong>, new();
 
-public class GenericMartenRepository<T> : GenericMartenRepository<T, Guid> where T : IEntity<Guid>, new()
-{
-    public GenericMartenRepository(IDocumentStore store, ILogger<GenericMartenRepository<T>> log) : base(store, log)
-    {
-    }
-}
+public abstract class GenericMartenRepository<T>(IDocumentSession session, ILogger<GenericMartenRepository<T>> log)
+    : GenericMartenRepository<T, ulong>(session, log), IGenericMartenRepository<T>
+    where T : ISnowflakeEntity, new();
 
-public class GenericMartenRepository<T, TKey> : GenericRepository<T, TKey>, IGenericMartenRepository<T, TKey>
+public class GenericMartenRepository<T, TKey>(IDocumentSession session, ILogger<GenericMartenRepository<T, TKey>> log) 
+    : GenericRepository<T, TKey>(log), IGenericMartenRepository<T, TKey>
     where T : IEntity<TKey>, new() where TKey : IEquatable<TKey>
 {
-    protected readonly IDocumentStore store;
-    protected readonly IDocumentSession session;
-
-    public GenericMartenRepository(IDocumentStore store, ILogger<GenericMartenRepository<T, TKey>> log) : base(log)
-    {
-        this.store = store;
-        session = store.LightweightSession();
-    }
+    public IDocumentSession session { get; } = session;
 
     public override async Task<long> CountAsync()
     {

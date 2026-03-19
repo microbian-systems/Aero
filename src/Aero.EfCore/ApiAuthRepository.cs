@@ -22,7 +22,7 @@ public sealed class ApiAuthRepository(AeroDbContext context, ILogger<ApiAuthRepo
         return Task.FromResult(accounts);
     }
 
-    public async Task<ApiAccountModel?> GetByKeyAsync(string key)
+    public async Task<ApiAccountModel?> GetByKeyAsync(ulong key)
     {
         var account = await apiAccountsDb
             .Include(x => x.Claims)

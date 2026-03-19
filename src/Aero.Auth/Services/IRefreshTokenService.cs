@@ -10,7 +10,7 @@ public interface IRefreshTokenService
     /// Generates a new refresh token for a user
     /// </summary>
     Task<string> GenerateRefreshTokenAsync(
-        string userId,
+        ulong userId,
         string clientType,
         string? ipAddress = null,
         string? userAgent = null,
@@ -19,9 +19,8 @@ public interface IRefreshTokenService
     /// <summary>
     /// Validates a refresh token and returns the user ID if valid
     /// </summary>
-    Task<string?> ValidateRefreshTokenAsync(
-        string token,
-        CancellationToken cancellationToken = default);
+    Task<ulong?> ValidateRefreshTokenAsync(string token,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Rotates a refresh token (invalidates old, returns new)
@@ -44,13 +43,13 @@ public interface IRefreshTokenService
     /// Revokes all refresh tokens for a user (logout everywhere)
     /// </summary>
     Task RevokeAllUserTokensAsync(
-        string userId,
+        ulong userId,
         CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Gets all active refresh tokens for a user
     /// </summary>
-    Task<IEnumerable<(string Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
-        string userId,
-        CancellationToken cancellationToken = default);
+    Task<IEnumerable<(ulong Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
+        ulong userId,
+        CancellationToken cancellationToken);
 }

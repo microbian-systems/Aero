@@ -43,7 +43,7 @@ public abstract class EntityBase<TKey> : IEntity<TKey>
 {
     [Key]
     [JsonPropertyName("id")]
-    public required TKey Id { get; set; }
+    public TKey Id { get; set; }
 
     [JsonPropertyName("created_on")]
     public DateTimeOffset CreatedOn { get; set; } = DateTimeOffset.UtcNow;

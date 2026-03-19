@@ -1,6 +1,5 @@
 using Aero.Models.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace Aero.MartenDB;
 

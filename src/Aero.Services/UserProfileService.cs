@@ -1,46 +1,43 @@
 using System.Linq.Expressions;
 using Aero.Core.Data;
 using Aero.Core.Entities;
+using Marten;
 
 namespace Aero.Services;
 
 public interface IAeroUserProfileService : IUserProfileService<AeroUserProfile>{}
 
-public class AeroUserProfileService(IUserRepository userRepo, IGenericRepository<AeroUserProfile> db, ILogger<AeroUserProfileService> log)
-    : UserProfileService<AeroUserProfile>(userRepo, db, log), IAeroUserProfileService;
-
-public interface IAeroUserProfileRepository
-{
-}
+public class AeroUserProfileService(IUserProfileRepository userRepo, ILogger<AeroUserProfileService> log)
+    : AeroUserProfileService<AeroUserProfile>(userRepo, log), IAeroUserProfileService;
 
 public interface IUserProfileService<T> where T : AeroUserProfile, IEntity
 {
-    Task<T> GetById(string id);
+    Task<T> GetById(ulong id);
     Task<T> GetByEmail(string email);
     Task InsertAsync(T model);
     Task UpdateAsync(T model);
     Task UpsertAsync(T model);
     Task DeleteAsync(T model);
-    Task DeleteAsync(string id);
+    Task DeleteAsync(ulong id);
     Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
 }
     
-public class UserProfileService<T>(IUserRepository userRepo, IGenericRepository<T> db, ILogger<UserProfileService<T>> log)
+public class AeroUserProfileService<T>(IUserProfileRepository db, ILogger<AeroUserProfileService<T>> log)
     : IUserProfileService<T>
     where T : AeroUserProfile, new()
 {
-    private readonly ILogger<UserProfileService<T>> log = log;
 
-    public async Task<T> GetById(string id)
+    public async Task<T> GetById(ulong id)
     {
-        var results = await db.FindByIdAsync(id);
+        var results = await db.session.Query<AeroUser>()
+            .FirstOrDefaultAsync(x => x.Id == id);
         return results;
     }
 
     public async Task<T> GetByEmail(string email)
     {
         //var results = await db.FindAsync(x => x.Email.ToUpper() == email);
-        var user = await userRepo.FindAsync(x => x.Email.ToUpper() == email.ToUpper());
+        var user = await db.FindAsync(x => x.Email.ToUpper() == email.ToUpper());
         if (user == null || !user.Any())
         {
             log.LogWarning("No user found with email {Email}", email);
@@ -70,7 +67,7 @@ public class UserProfileService<T>(IUserRepository userRepo, IGenericRepository<
         await DeleteAsync(model.Id);
     }
 
-    public async Task DeleteAsync(string id)
+    public async Task DeleteAsync(ulong id)
     {
         await db.DeleteAsync(id);
     }

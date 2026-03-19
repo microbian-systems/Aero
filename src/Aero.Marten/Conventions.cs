@@ -60,6 +60,7 @@ public static class Conventions
     /// <param name="idType">The type of the ID to create.</param>
     /// <param name="db">The Aero document store.</param>
     /// <returns>An initial string ID. Depending on the <paramref name="idType"/>, this may be null or a partial ID that gets assigned by the database upon storing the user.</returns>
+    [Obsolete("old raven stuff left over from migration", true)]
     public static string? UserIdFor<TUser>(TUser user, UserIdType idType, IDocumentStore db)
         where TUser : AeroUser
     {

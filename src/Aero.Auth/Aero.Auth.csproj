@@ -44,7 +44,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
-    <ProjectReference Include="..\Aero.MartenDB\Aero.MartenDB.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
     <ProjectReference Include="..\Aero.Web\Aero.Web.csproj" />
   </ItemGroup>

@@ -1,42 +1,36 @@
-using Microsoft.Extensions.Logging;
+using Aero.Core.Data;
+using Aero.MartenDB.Extensions;
 
 namespace Aero.MartenDB;
 
-public class AeroUnitOfWork : IAeroDbUnitOfWork
+/// <summary>
+/// Database facade containing all domains for Aero CMS (unified db api)
+/// </summary>
+public interface IAeroDb : IAsyncUnitOfWork
 {
-    private readonly IDocumentSession _session;
-    private readonly ILogger<AeroUnitOfWork> _log;
-    private readonly ILoggerFactory _loggerFactory;
+    IDocumentSession Session { get; }
 
-    // Backing field for the repository
-    private IAeroUserRepository? _users;
+    IAeroUserRepository Users { get; }
 
-    public AeroUnitOfWork(
-        IDocumentSession session, 
-        ILogger<AeroUnitOfWork> log,
-        ILoggerFactory loggerFactory) 
-    {
-        _session = session;
-        _log = log;
-        _loggerFactory = loggerFactory;
-    }
+    // todo - add all AeroCMS repositories as properties on AeroDb class + IAeroDB interface
+    // todo - add Posts data access
+    // todo - add Pages data access
+    // todo - add Modules data access
+}
 
-    public IDocumentSession Session => _session;
+
+public class AeroDb(
+    IDocumentSession session,
+    IAeroUserRepository users,
+    ILogger<AeroDb> log,
+    ILoggerFactory loggerFactory)
+    : IAeroDb
+{
+    public IDocumentSession Session => session;
 
     // Lazy initialization ensures the repo is only created when accessed
     // and guarantees it uses the UoW's specific session.
-    public IAeroUserRepository Users
-    {
-        get
-        {
-            if (_users == null)
-            {
-                var repoLogger = _loggerFactory.CreateLogger<AeroUserRepository>();
-                _users = new AeroUserRepository(_session, repoLogger);
-            }
-            return _users;
-        }
-    }
+    public IAeroUserRepository Users => users;
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -45,15 +39,13 @@ public class AeroUnitOfWork : IAeroDbUnitOfWork
         // var count = changes.Count;
         try
         {
-            var count = _session.PendingChanges.Deletions().Count()
-                + _session.PendingChanges.Inserts().Count()
-                + _session.PendingChanges.Updates().Count();
-            await _session.SaveChangesAsync(cancellationToken);
+            var count = session.CountPendingChanges();
+            await session.SaveChangesAsync(cancellationToken);
             return count;
         }
         catch (Exception ex)
         {
-            _log.LogError(ex, "Failed to save changes to AeroDB");
+            log.LogError(ex, "Failed to save changes to AeroDB");
             return 0; // Or re-throw, depending on your error handling strategy
         }
     }
@@ -81,7 +73,7 @@ public class AeroUnitOfWork : IAeroDbUnitOfWork
 
     public void Dispose()
     {
-        _session.Dispose();
+        session.Dispose();
         GC.SuppressFinalize(this);
     }
 }

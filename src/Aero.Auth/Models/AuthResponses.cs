@@ -18,7 +18,7 @@ public class LoginWebResponse
     /// <summary>
     /// Gets or sets the user ID if successful.
     /// </summary>
-    public string? UserId { get; set; }
+    public ulong? UserId { get; set; }
 
     /// <summary>
     /// Gets or sets the user's email if successful.
@@ -64,7 +64,7 @@ public class LoginAppResponse
     /// <summary>
     /// Gets or sets the user ID if successful.
     /// </summary>
-    public string? UserId { get; set; }
+    public ulong? UserId { get; set; }
 
     /// <summary>
     /// Gets or sets the user's email if successful.

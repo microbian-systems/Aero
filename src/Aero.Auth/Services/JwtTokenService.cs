@@ -40,7 +40,7 @@ public class JwtTokenService : IJwtTokenService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A signed JWT access token.</returns>
     public async Task<string> GenerateAccessTokenAsync(
-        string userId,
+        ulong userId,
         string email,
         CancellationToken cancellationToken = default)
     {
@@ -49,7 +49,7 @@ public class JwtTokenService : IJwtTokenService
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, userId),
+            new(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new(JwtRegisteredClaimNames.Email, email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };

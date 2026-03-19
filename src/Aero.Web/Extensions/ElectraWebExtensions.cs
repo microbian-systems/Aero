@@ -97,7 +97,7 @@ public static class AeroWebExtensions
         services.AddScoped<IZipApiService, ZipApiService>();
         services.AddScoped(typeof(IAeroUserService<>), typeof(AeroUserServiceBase<>));
         services.AddScoped<IAeroUserProfileService, AeroUserProfileService>();
-        services.AddScoped(typeof(IUserProfileService<>), typeof(UserProfileService<>));
+        services.AddScoped(typeof(IUserProfileService<>), typeof(AeroUserProfileService<>));
 
         return services;
     }

@@ -13,7 +13,7 @@ public interface IJwtTokenService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the JWT access token string.</returns>
     Task<string> GenerateAccessTokenAsync(
-        string userId,
+        ulong userId,
         string email,
         CancellationToken cancellationToken = default);
 

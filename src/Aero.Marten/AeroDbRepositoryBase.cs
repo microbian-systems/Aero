@@ -1,30 +1,24 @@
-﻿using System.Linq.Expressions;
-using Aero.Core.Data.Functional;
-using Aero.Core.Entities;
-using Microsoft.Extensions.Logging;
-using static System.GC;
-using Aero.Core.Railway;
-using static Aero.Core.Railway.Prelude;
+﻿using static System.GC;
+
 
 namespace Aero.MartenDB;
 
-public abstract class AeroDbRepositoryBase<TEntity> 
-    : GenericRepositoryOption<TEntity>
-    where TEntity : IEntity, new()
-{
-    protected readonly IDocumentSession session;
+// todo - perform retry on martendb exeption connection type or similar 
 
-    public AeroDbRepositoryBase(IDocumentSession session, ILogger<GenericRepositoryOption<TEntity>> log) : base(log)
-    {
-        this.session = session;
-    }
-    
+public abstract class AeroDbRepositoryBase<TEntity>(
+    IDocumentSession session,
+    ILogger<AeroDbRepositoryBase<TEntity>> log)
+    : MartenGenericRepositoryOption<TEntity>(log)
+    where TEntity : ISnowflakeEntity, new()
+{
+    protected readonly IDocumentSession session = session;
+
     public override async Task<long> CountAsync()
     {
         return await session.Query<TEntity>().LongCountAsync();
     }
 
-    public override async Task<bool> ExistsAsync(string id)
+    public override async Task<bool> ExistsAsync(ulong id)
     {
         return await session.Query<TEntity>().AnyAsync(x => x.Id == id);
     }
@@ -36,62 +30,63 @@ public abstract class AeroDbRepositoryBase<TEntity>
         return res;
     }
 
-    public override async Task<Option<TEntity>> FindByIdAsync(string id)
+    public override async Task<Option<TEntity>> FindByIdAsync(ulong id)
     {
         var entity = await session.Query<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
         var res = entity is not null ? Some(entity) : Prelude.None;
         return res;
     }
 
-    public override async Task<Core.Railway.Option<TEntity>> InsertAsync(TEntity entity)
+    public override async Task<TEntity> InsertAsync(TEntity entity)
     {
         try
         {
             var existing = await FindByIdAsync(entity.Id);
             if (existing.IsSome) throw new Exception($"Entity with id: {entity.Id} already exists");
             session.Store(entity);
-            return Some(entity);
+            return entity;
         }
         catch (Exception ex)
         {
             log.LogError(ex, "Failed to upsert entity with id: {id}", entity.Id);
-            return Prelude.None;
+           throw;
         }
     }
 
-    public override async Task<Option<TEntity>> UpdateAsync(TEntity entity)
+    public override async Task<TEntity> UpdateAsync(TEntity entity)
     {
         try
         {
             var existing = await FindByIdAsync(entity.Id);
             if (existing.IsNone) throw new Exception($"Update failed - Entity with id: {entity.Id} does not exist");
             session.Store(entity);
-            return Some(entity);
+            return entity;
         }
         catch (Exception ex)
         {
             log.LogError(ex, "Failed to upsert entity with id: {id}", entity.Id);
-            return Prelude.None;
+           throw;
         }
     }        
     
 
-    public override async Task<Option<TEntity>> UpsertAsync(TEntity entity)
+    public async override Task<TEntity> UpsertAsync(TEntity entity)
     {
         try
         {
             session.Store(entity);
-            return Some(entity);
+            // todo - return a value task (requires changin signature of marten repository base classes)
+            // return new ValueTask<TEntity>(entity);
+            return entity;
         }
         catch (Exception ex)
         {
             log.LogError(ex, "Failed to upsert entity with id: {id}", entity.Id);
-            return Prelude.None;
+           throw;
         }
-        }
+    }
 
-        public override async Task<bool> DeleteAsync(string id)
-
+    public override async Task<bool> DeleteAsync(ulong id)
     {
         try
         {
@@ -108,7 +103,7 @@ public abstract class AeroDbRepositoryBase<TEntity>
         catch (Exception ex)
         {
             log.LogError(ex, "Failed to delete entity with id: {id}", id);
-            return false;
+            throw;
         }
     }
 
@@ -122,7 +117,7 @@ public abstract class AeroDbRepositoryBase<TEntity>
         catch (Exception ex)
         {
             log.LogError(ex, "Failed to delete entity with id: {id}", entity.Id);
-            return Task.FromResult(false);
+            throw;
         }
         
     }
@@ -133,17 +128,19 @@ public abstract class AeroDbRepositoryBase<TEntity>
         return results ?? [];
     }
 
-    public override async Task<Option<TEntity>> GetByIdAsync(string id)
+    public override async Task<Option<TEntity>> GetByIdAsync(ulong id)
     {
         var res = await FindByIdAsync(id);
         return res;
     }
 
-    public override async Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<string> ids)
+    public override async Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<ulong> ids)
     {
         return await FindAsync(x => ids.Contains(x.Id));
     }
 
+
+    // todo - implement IAsyncDisposable and its pattern for AeroDbRepository
     public void Dispose()
     {
         session.Dispose();

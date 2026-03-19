@@ -2,7 +2,7 @@ using Aero.Core.Entities;
 
 namespace Aero.Services.Models;
 
-public record UserViewModel : UserViewModel<string>;
+public record UserViewModel : UserViewModel<ulong>;
 
 public record UserViewModel<TKey> : IEntity<TKey>
     where TKey : IEquatable<TKey> , IComparable<TKey>
