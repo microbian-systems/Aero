@@ -51,7 +51,8 @@ public class UserStore<TUser, TRole> :
 
     public async Task<TUser?> FindByIdAsync(string userId, CancellationToken cancellationToken) => await _session.LoadAsync<TUser>(userId, cancellationToken);
     public async Task<TUser?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken) => await _session.Query<TUser>().FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
-    public Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken) => Task.FromResult(user.Id);
+    // todo - default ms identity loves to use string - implement the full IUserStore to get around this temporary fix
+    public Task<string> GetUserIdAsync(TUser user, CancellationToken cancellationToken) => Task.FromResult(user.Id.ToString());
     public Task<string?> GetUserNameAsync(TUser user, CancellationToken cancellationToken) => Task.FromResult(user.UserName);
     public Task SetNormalizedUserNameAsync(TUser user, string? normalizedName, CancellationToken cancellationToken) { user.NormalizedUserName = normalizedName; return Task.CompletedTask; }
     public Task SetUserNameAsync(TUser user, string? userName, CancellationToken cancellationToken) { user.UserName = userName; return Task.CompletedTask; }
@@ -73,14 +74,14 @@ public class UserStore<TUser, TRole> :
     public Task SetNormalizedEmailAsync(TUser user, string? normalizedEmail, CancellationToken cancellationToken) { user.NormalizedEmail = normalizedEmail; return Task.CompletedTask; }
 
     // IUserLoginStore
-    public Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken) { user.Logins.Add(new IdentityUserLogin<string> { LoginProvider = login.LoginProvider, ProviderKey = login.ProviderKey, ProviderDisplayName = login.ProviderDisplayName }); return Task.CompletedTask; }
+    public Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken) { user.Logins.Add(new IdentityUserLogin<ulong> { LoginProvider = login.LoginProvider, ProviderKey = login.ProviderKey, ProviderDisplayName = login.ProviderDisplayName }); return Task.CompletedTask; }
     public Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken) { var login = user.Logins.FirstOrDefault(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey); if (login != null) user.Logins.Remove(login); return Task.CompletedTask; }
     public Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken) => Task.FromResult<IList<UserLoginInfo>>(user.Logins.Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.ProviderDisplayName)).ToList());
     public async Task<TUser?> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken) => await _session.Query<TUser>().FirstOrDefaultAsync(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey), cancellationToken);
 
     // IUserClaimStore
     public Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken) => Task.FromResult<IList<Claim>>(user.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList());
-    public Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) { foreach (var claim in claims) user.Claims.Add(new IdentityUserClaim<string> { ClaimType = claim.Type, ClaimValue = claim.Value }); return Task.CompletedTask; }
+    public Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) { foreach (var claim in claims) user.Claims.Add(new IdentityUserClaim<ulong> { ClaimType = claim.Type, ClaimValue = claim.Value }); return Task.CompletedTask; }
     public Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken) { var existing = user.Claims.FirstOrDefault(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value); if (existing != null) { existing.ClaimType = newClaim.Type; existing.ClaimValue = newClaim.Value; } return Task.CompletedTask; }
     public Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) { foreach (var claim in claims) { var existing = user.Claims.FirstOrDefault(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value); if (existing != null) user.Claims.Remove(existing); } return Task.CompletedTask; }
     public async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken) => (await _session.Query<TUser>().Where(u => u.Claims.Any(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value)).ToListAsync(cancellationToken)).ToList();

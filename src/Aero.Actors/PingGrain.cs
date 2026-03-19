@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿
+using Aero.Core;
 
 namespace Aero.Actors;
 
@@ -24,9 +25,9 @@ public class PingGrain(ILogger<PingGrain> log, IGrainFactory grainFactory) : Aer
     public async Task Ping()
     {
         log.LogInformation("Ping received.");
-        var id = NewId.NextSequentialGuid();
+        var id = Snowflake.NewId();
         // Create a message to send
-        var message = new Message(id, "ping!" );
+        var message = new Message(id, "ping!");
 
         // Get a reference to the PongGrain using GrainFactory
         var pongGrain = grainFactory.GetGrain<IPongGrain>(Guid.NewGuid());

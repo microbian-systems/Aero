@@ -1,14 +1,13 @@
-using Aero.Models.Entities;
 using Aero.Common.Commands;
 using Aero.Core.Data;
 using Aero.Core.Extensions;
-using Microsoft.Extensions.Logging;
+using Aero.Models.Entities;
 
 
 namespace Aero.Marten;
 
 public class UpdateUserProfileCommand(
-    IGenericRepository<AeroUserProfile, string> db,
+    IGenericRepository<AeroUserProfile, ulong> db,
     ILogger<UpdateUserProfileCommand> log)
     : IAsyncCommand<AeroUserProfile, AeroUserProfile>
 {

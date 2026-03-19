@@ -38,7 +38,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Aero.Auth.Tests.WebHost\Aero.Auth.Tests.WebHost.csproj" />
       <ProjectReference Include="..\..\src\Aero.Auth\Aero.Auth.csproj" />
       <ProjectReference Include="..\..\src\Aero.Core\Aero.Core.csproj" />
       <ProjectReference Include="..\..\src\Aero.Models\Aero.Models.csproj" />

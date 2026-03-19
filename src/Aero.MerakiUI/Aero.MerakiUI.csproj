@@ -1,18 +1,46 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <Title>Meraki UI html blocks for the Aero Web Platform</Title>
+    <Description>Core components for the Aero application platform</Description>
+    <IsPackable>false</IsPackable>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- The unique ID for your package on NuGet.org -->
+    <PackageId>Aero.Events</PackageId>
+
+    <!-- Increment this version every time you push a new update -->
+    <Version>0.0.5-alpha</Version>
+
+    <!-- Your name or organization -->
+    <Authors>Microbians</Authors>
+
+    <!-- A brief description shown in the NuGet gallery -->
+    <Description>A lightweight library for making it easier to build .net applications</Description>
+
+    <!-- Optional: High-quality metadata for better discoverability -->
+    <PackageTags>aero;utils;netcore</PackageTags>
+    <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Optional: Automatically creates a package on every build -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
+
+</Project>
+
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.9.3">
+    <PackageReference Include="Microsoft.TypeScript.MSBuild">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

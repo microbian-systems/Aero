@@ -3,9 +3,9 @@ using Aero.Core.Extensions;
 
 namespace Aero.Services;
 
-public interface IAeroIdentityService : IAeroIdentityService<AeroUser>{}
+public interface IAeroIdentityService : IAeroIdentityService<AeroUser> { }
 
-public interface IAeroIdentityService<T> : IAeroIdentityService<T, string>
+public interface IAeroIdentityService<T> : IAeroIdentityService<T, ulong>
     where T : AeroUser, new()
 { }
 
@@ -18,26 +18,26 @@ public interface IAeroIdentityService<T, TKey>
     Task LogoutAsync(UserViewModel model);
     Task LogoutAsync(string username);
     Task<(T user, IdentityResult identityReuslt)> AddUserAsync(T model, string password = "");
-    Task<(T user,  IdentityResult identityReuslt)> UpdateUserAsync(T model);
-    Task<(T user,  IdentityResult identityReuslt)> DeleteUserAsync(T model);
-    Task<(T user,  IdentityResult identityReuslt)> DeleteUserAsync(string id);
+    Task<(T user, IdentityResult identityReuslt)> UpdateUserAsync(T model);
+    Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(T model);
+    Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(ulong id);
     Task<bool> ChangePassword(T user, string current, string updated);
     Task<(bool success, string token, string errorMessage)> GenerateResetPasswordToken(string email);
     Task<(bool success, string token, string[] errors)> ResetPassword(string email, string fromEmail, string url, string subject, string scheme = "https");
     Task<(bool success, string[] errors)> ResetPasswordConfirmation(string email, string token, string password);
-    Task<T> GetByIdAsync(string id);
+    Task<T> GetByIdAsync(ulong id);
     Task<T> GetByUsernameAsync(string username);
     Task<T> GetByEmailAsync(string email);
     Task<IEnumerable<string>> GetRoles(string userId);
     Task<IdentityResult> AddToRole(T user, string role);
-    Task<IdentityResult> AddToRole(string userId, string role);
+    Task<IdentityResult> AddToRole(ulong userId, string role);
     Task<IdentityResult> AddToRoles(T user, IEnumerable<string> roles);
     Task<IdentityResult> AddToRoles(string userId, IEnumerable<string> roles);
     Task<IdentityResult> AddClaim(T user, Claim claim);
-    Task<IdentityResult> AddClaim(string userId, Claim claim);
+    Task<IdentityResult> AddClaim(ulong userId, Claim claim);
     Task<IdentityResult> AddClaimsAsync(T user, IEnumerable<Claim> claims);
-    Task<IdentityResult> AddClaimsAsync(string userId, IEnumerable<Claim> claims);
-    Task<IDictionary<string,string>> GetClaims(string userId);
+    Task<IdentityResult> AddClaimsAsync(ulong userId, IEnumerable<Claim> claims);
+    Task<IDictionary<string, string>> GetClaims(ulong userId);
     Task<(T model, IdentityResult identityResult)> Register(RegistrationRequestModel model, string createdBy = "User");
     Task<(T model, IdentityResult identityResult)> Register(T user, string password, string createdBy = "User");
     Task<bool> SaveRefreshTokenAsync(string username, string token);
@@ -45,8 +45,9 @@ public interface IAeroIdentityService<T, TKey>
     Task<bool> VerifyPassword(string username, string password);
 }
 
-public class AeroIdentityService : AeroIdentityService<AeroUser, long>, IAeroIdentityService
+public class AeroIdentityService : AeroIdentityService<AeroUser, ulong>, IAeroIdentityService
 {
+    // todo - fix Aero.Services.IdentityService.cs (do we still even need?) 
     public AeroIdentityService(
         // SignInManager<AeroUser> signinManager,
         // UserManager<AeroUser> userManager,
@@ -125,7 +126,7 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
     protected readonly IZipApiService zipService;
 
     protected AeroIdentityService(
-        SignInManager<T> signinManager, 
+        SignInManager<T> signinManager,
         UserManager<T> userManager,
         RoleManager<AeroRole> roleManager,
         IPasswordService passwordService,
@@ -142,7 +143,7 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
         this.zipService = zipService;
         this.fluentEmail = fluentEmail;
     }
-    
+
     public async Task<UserViewModel> LoginAsync(UserLoginRequest model)
         => await LoginAsync(model.Username, model.Password);
 
@@ -154,10 +155,10 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
 
     public async Task<UserViewModel> LoginAsync(UserLoginRequest model, string password) =>
         await LoginAsync(model.Username, password);
-    
+
     public async Task LogoutAsync(UserViewModel model)
         => await LogoutAsync(model.Username);
-    
+
     public async Task LogoutAsync(string username)
     {
         // todo - verify this logout code actually works...
@@ -173,79 +174,79 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
 
         if (string.IsNullOrEmpty(password))
             password = passwordService.GeneratePassword();
-        
+
         var res = await userManager.CreateAsync(model, password);
-        
+
         if (!res.Succeeded)
-        { 
+        {
             log.LogError($"unable to create user {model.ToJson()}");
             log.LogError($"information: {res.Errors.ToJson()}");
             return (null, res);
         }
-    
+
         log.LogInformation($"successfully created user");
-            
+
         return (model, res);
     }
 
     public async Task<(T user, IdentityResult identityReuslt)> UpdateUserAsync(T model)
     {
         var res = await userManager.UpdateAsync(model);
-        
+
         return (model, res);
     }
 
     public async Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(T model)
     {
         var res = await userManager.DeleteAsync(model);
-        
+
         return (model, res);
     }
-    
 
-    public async Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(string id)
+
+    public async Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(ulong id)
     {
         var user = await userManager.FindByIdAsync(id.ToString());
         var res = await userManager.DeleteAsync(user);
-        
+
         return (user, res);
     }
     public async Task<bool> ChangePassword(T user, string current, string updated)
     {
         log.LogInformation($"changing password for user: {user.ToJson()}");
         var res = await userManager.ChangePasswordAsync(user, current, updated);
-    
+
         return res.Succeeded;
     }
     public async Task<(bool success, string token, string errorMessage)> GenerateResetPasswordToken(string email)
     {
-        var user =  await userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email);
         if (user == null)
             return (false, "", "user not found");
-        
+
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
 
         return (!string.IsNullOrEmpty(token), token, string.Empty);
     }
-    
+
     public async Task<(bool success, string token, string[] errors)> ResetPassword(string email, string fromEmail, string url, string subject, string scheme = "https")
     {
         log.LogInformation($"generating password reset link for {email}");
 
         if (string.IsNullOrEmpty(email) || !email.IsValidEmail())
-                return (false, string.Empty, new[] {$"email must be in a valid format {email}"});
-        
+            return (false, string.Empty, new[] { $"email must be in a valid format {email}" });
+
         var passGenRes = await GenerateResetPasswordToken(email);
         if (!passGenRes.success)
-            return (false, string.Empty, new []{"email address not found"});
+            return (false, string.Empty, new[] { "email address not found" });
 
         var token = passGenRes.token;
 
         var rawUrl = url.Split("?").First();
         url = string.Join(rawUrl, $"?token={token}&email={email}");
-        
+
         log.LogInformation($"generated reset link: {url}");
-        
+
         var template = $@"
                     Click here to reset your email: <a href=""@Model.Url"">Reset your password</a>
                     <br/><br/>
@@ -257,15 +258,15 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
         var res = await fluentEmail
                 .To(email)
                 .Subject(subject)
-                .UsingTemplate(template, new {Url = url})
+                .UsingTemplate(template, new { Url = url })
                 .SendAsync();
-        
+
         if (!res.Successful)
         {
             log.LogError($"sending email failed with error(s): {res.ErrorMessages.ToJson()}");
             return (false, token, res.ErrorMessages.ToArray());
         }
-        
+
         log.LogInformation($"successfully sent password reset email to {email}");
 
 
@@ -275,31 +276,31 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
     public async Task<(bool success, string[] errors)> ResetPasswordConfirmation(string email, string token, string password)
     {
         if (!email.IsValidEmail() || string.IsNullOrEmpty(token))
-            return (false, new[] {$"must have a valid email address and token"});
+            return (false, new[] { $"must have a valid email address and token" });
 
         var user = await userManager.FindByEmailAsync(email);
-        
-        if(user == null)
-            return (false, new []{$"unable to find user with email {email}"});
+
+        if (user == null)
+            return (false, new[] { $"unable to find user with email {email}" });
 
         var res = await userManager.ResetPasswordAsync(user, token, password);
 
         if (!res.Succeeded)
             return (false, res.Errors.Select(x => x.Description).ToArray());
-        
+
         log.LogInformation($"successfully reset password for {email}");
 
         return (true, []);
     }
-    
-    public async Task<T> GetByIdAsync(string id) => await userManager.FindByIdAsync(id);
+
+    public async Task<T> GetByIdAsync(ulong id) => await userManager.FindByIdAsync(id);
 
 
     public async Task<T> GetByUsernameAsync(string username) => await userManager.FindByNameAsync(username);
-    
+
     public async Task<T> GetByEmailAsync(string email) => await userManager.FindByEmailAsync((email));
 
-    public async Task<IEnumerable<string>> GetRoles(string userId)
+    public async Task<IEnumerable<string>> GetRoles(ulong userId)
     {
         var user = await userManager.FindByIdAsync(userId);
 
@@ -360,7 +361,7 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
         return await AddClaimsAsync(user, claims);
     }
 
-    public async Task<IDictionary<string,string>> GetClaims(string userId)
+    public async Task<IDictionary<string, string>> GetClaims(string userId)
     {
         var user = await userManager.FindByIdAsync(userId);
 
@@ -370,46 +371,46 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
         var roles = await userManager.GetClaimsAsync(user);
 
         var kvps = roles.Any()
-            ? roles.Select(x => new KeyValuePair<string,string>(x.Type, x.Value))
-            : Array.Empty<KeyValuePair<string,string>>();
+            ? roles.Select(x => new KeyValuePair<string, string>(x.Type, x.Value))
+            : Array.Empty<KeyValuePair<string, string>>();
 
         return new Dictionary<string, string>(kvps);
     }
-    
+
     public virtual async Task<(T model, IdentityResult identityResult)> Register(RegistrationRequestModel model, string createdBy = "User")
     {
         var user = RegistrationModelToUser(model, createdBy);
 
         return await Register(user, model.Password, createdBy);
     }
-    
+
     public virtual async Task<(T model, IdentityResult identityResult)> Register(T user, string password, string createdBy = "User")
     {
         var res = await AddUserAsync(user, password);
 
         return res;
     }
-    
+
 
     protected virtual T RegistrationModelToUser(RegistrationRequestModel model, string createdBy = "User") => new()
     {
-            Id = Snowflake.NewId().ToString(),
-            Email = model.Email,
-            FirstName = model.Firstname,
-            LastName = model.Lastname,
-            UserName = model.Username,
-            PhoneNumber = model.MobileNumber,
-            CreatedBy = createdBy,
-        };
+        Id = Snowflake.NewId(),
+        Email = model.Email,
+        FirstName = model.Firstname,
+        LastName = model.Lastname,
+        UserName = model.Username,
+        PhoneNumber = model.MobileNumber,
+        CreatedBy = createdBy,
+    };
 
-    public async Task<bool> SaveRefreshTokenAsync(string id, string token)
+    public async Task<bool> SaveRefreshTokenAsync(ulong id, string token)
     {
         //throw new NotImplementedException();
         var request = new SaveRefreshTokenRequest(id, token);
         //var success = await saveHandler.ExecuteAsync(request);
         var entity = new RefreshToken
         {
-            TokenHash = token, 
+            TokenHash = token,
             UserId = id,
             //DateCreated = DateTime.UtcNow,
             //DateModified =  DateTime.UtcNow
@@ -418,7 +419,7 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
         var success = true;
         return await Task.FromResult(success);
     }
-    
+
     public async Task<bool> DeleteRefreshTokenAsync(string username, string refreshToken)
     {
         await Task.CompletedTask;
@@ -437,7 +438,7 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
         var res = await userManager.CheckPasswordAsync(user, password);
         return res;
     }
-    
+
     public virtual async Task<bool> VerifyPassword(string username, string password)
     {
         var user = await userManager.FindByNameAsync(username);
@@ -447,4 +448,4 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
     }
 }
 
-public record SaveRefreshTokenRequest(string userId, string token);
+public record SaveRefreshTokenRequest(ulong userId, string token);

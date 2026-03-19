@@ -1,46 +1,29 @@
 using Aero.Core;
 using Aero.Core.Data;
 using Aero.Core.Entities;
-using Aero.Core.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Aero.EfCore;
 
 
-public class AeroDbContext : DbContext
-    // IdentityDbContext<AeroUser, AeroRole, string,
-    // IdentityUserClaim<string>,
-    // IdentityUserRole<string>,
-    // IdentityUserLogin<string>,
-    // IdentityRoleClaim<string>,
-    // IdentityUserToken<string>>
+public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(options)
 {
-    public AeroDbContext(DbContextOptions<AeroDbContext> options) : base(options)
-    {
-    }
-
-    protected AeroDbContext(DbContextOptions options) : base(options)
-    {
-    }
-
     public DbSet<AiUsageLog> AiUsageLogs { get; set; }
     public DbSet<AddressModel> Addresses { get; set; }
     public DbSet<ApiAccountModel> ApiAccounts { get; set; }
     public DbSet<ApiClaimsModel> ApiClaims { get; set; }
     public DbSet<CityModel> Cities { get; set; }
     public DbSet<CountryModel> Countries { get; set; }
-    public DbSet<AeroUserProfile> UserProfiles { get; set; }   
+    public DbSet<AeroUserProfile> UserProfiles { get; set; }
     //public DbSet<UserPasskeys> UserPasskeys { get; set; }
-    
+
     // Authentication token management
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<JwtSigningKey> JwtSigningKeys { get; set; }
-    
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         //ConfigureIdentityTables(builder);
         ConfigureDecimalPrecision(builder);
         ModelApiAuth(builder);
@@ -50,37 +33,37 @@ public class AeroDbContext : DbContext
 
     //private void ConfigureIdentityTables(ModelBuilder builder)
     //{
-        // builder.Entity<AeroUser>(entity =>
-        // {
-        //     entity.ToTable("Users", schema: Schemas.Auth);
-        //     
-        //     // Auditing - use ValueGeneratedOnAdd for server-side defaults
-        //     entity.Property(x => x.CreatedOn).ValueGeneratedOnAdd();
-        //     entity.Property(x => x.ModifiedOn).ValueGeneratedOnAdd();
-        //     entity.HasIndex(x => x.CreatedOn);
-        //     entity.HasIndex(x => x.ModifiedOn);
-        //     entity.HasIndex(x => x.CreatedBy);
-        //     entity.HasIndex(x => x.ModifiedBy);
-        //     
-        //     // Profile relationship - ONLY CONFIGURE ONCE
-        //     // entity.HasOne(x => x.Profile)
-        //     //     .WithOne()
-        //     //     .HasForeignKey<AeroUserProfile>(x => x.Userid)
-        //     //     .OnDelete(DeleteBehavior.Cascade);
-        //     
-        //     entity.HasIndex(i => i.UserProfileId).IsUnique();
-        // });
-        //
-        // builder.Entity<AeroRole>(entity =>
-        // {
-        //     entity.ToTable("Roles", schema: Schemas.Auth);
-        // });
-        //
-        // builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles", schema: Schemas.Auth);
-        // builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", schema: Schemas.Auth);
-        // builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", schema: Schemas.Auth);
-        // builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", schema: Schemas.Auth);
-        // builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", schema: Schemas.Auth);
+    // builder.Entity<AeroUser>(entity =>
+    // {
+    //     entity.ToTable("Users", schema: Schemas.Auth);
+    //     
+    //     // Auditing - use ValueGeneratedOnAdd for server-side defaults
+    //     entity.Property(x => x.CreatedOn).ValueGeneratedOnAdd();
+    //     entity.Property(x => x.ModifiedOn).ValueGeneratedOnAdd();
+    //     entity.HasIndex(x => x.CreatedOn);
+    //     entity.HasIndex(x => x.ModifiedOn);
+    //     entity.HasIndex(x => x.CreatedBy);
+    //     entity.HasIndex(x => x.ModifiedBy);
+    //     
+    //     // Profile relationship - ONLY CONFIGURE ONCE
+    //     // entity.HasOne(x => x.Profile)
+    //     //     .WithOne()
+    //     //     .HasForeignKey<AeroUserProfile>(x => x.Userid)
+    //     //     .OnDelete(DeleteBehavior.Cascade);
+    //     
+    //     entity.HasIndex(i => i.UserProfileId).IsUnique();
+    // });
+    //
+    // builder.Entity<AeroRole>(entity =>
+    // {
+    //     entity.ToTable("Roles", schema: Schemas.Auth);
+    // });
+    //
+    // builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles", schema: Schemas.Auth);
+    // builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", schema: Schemas.Auth);
+    // builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", schema: Schemas.Auth);
+    // builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", schema: Schemas.Auth);
+    // builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", schema: Schemas.Auth);
     //}
 
     private void ConfigureDecimalPrecision(ModelBuilder builder)
@@ -146,7 +129,7 @@ public class AeroDbContext : DbContext
             entity.HasOne<ApiAccountModel>()
                 .WithMany(m => m.Claims)
                 .HasForeignKey(m => m.AccountId);
-            
+
         });
     }
 
@@ -192,7 +175,7 @@ public class AeroDbContext : DbContext
     {
         foreach (var entry in ChangeTracker.Entries())
         {
-            if (entry is { State: EntityState.Added, Entity: IEntity{ Id: 0 } entity })
+            if (entry is { State: EntityState.Added, Entity: IEntity { Id: 0 } entity })
             {
                 entity.Id = Snowflake.NewId();
             }

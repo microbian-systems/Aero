@@ -6,6 +6,7 @@
   </Configurations>
   <Folder Name="/.global/">
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
   </Folder>
   <Folder Name="/.misc/">
     <File Path="../CLAUDE.md" />
@@ -34,9 +35,7 @@
   <Project Path="Aero.Caching/Aero.Caching.csproj" />
   <Project Path="Aero.Core.Ai/Aero.Core.Ai.csproj" />
   <Project Path="Aero.Core/Aero.Core.csproj" />
-  <Project Path="Aero.Elastic/Aero.Elastic.csproj" />
   <Project Path="Aero.Events/Aero.Events.csproj" />
-  <Project Path="Aero.MartenDB/Aero.MartenDB.csproj" />
   <Project Path="Aero.MerakiUI/Aero.MerakiUI.csproj" />
   <Project Path="Aero.Models/Aero.Models.csproj" />
   <Project Path="Aero.EfCore/Aero.EfCore.csproj" />

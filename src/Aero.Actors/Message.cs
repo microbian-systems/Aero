@@ -2,8 +2,8 @@
 
 [Serializable]
 [GenerateSerializer]
-public record Message(Guid? Id, string content);
+public record Message(ulong Id, string content);
 
 [Serializable]
 [GenerateSerializer]
-public record Message<T>(string? Id, string content, T payload);
+public record Message<T>(ulong Id, string content, T payload);

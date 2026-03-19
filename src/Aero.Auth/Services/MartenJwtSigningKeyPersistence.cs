@@ -10,12 +10,12 @@ namespace Aero.Auth.Services;
 /// </summary>
 public class MartenJwtSigningKeyPersistence : IJwtSigningKeyPersistence
 {
-    private readonly IAeroDbUnitOfWork _uow;
+    private readonly IAeroDb _uow;
     private readonly ILogger<MartenJwtSigningKeyPersistence> _logger;
     private const string KeyCollectionName = "JwtSigningKeys";
 
     public MartenJwtSigningKeyPersistence(
-        IAeroDbUnitOfWork uow,
+        IAeroDb uow,
         ILogger<MartenJwtSigningKeyPersistence> logger)
     {
         _uow = uow ?? throw new ArgumentNullException(nameof(uow));

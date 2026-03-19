@@ -50,7 +50,8 @@ public class RoleStore<TRole> :
     }
 
     public Task<string?> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken) => Task.FromResult(role.NormalizedName);
-    public Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken) => Task.FromResult(role.Id);
+    // todo - The default ms identity loves to return strings - instead of casting between the two string/ulong - implement the IRoleStore<T, TKey> completely
+    public Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken) => Task.FromResult(role.Id.ToString());
     public Task<string?> GetRoleNameAsync(TRole role, CancellationToken cancellationToken) => Task.FromResult(role.Name);
 
     public Task SetNormalizedRoleNameAsync(TRole role, string? normalizedName, CancellationToken cancellationToken)
@@ -82,7 +83,7 @@ public class RoleStore<TRole> :
 
     public Task AddClaimAsync(TRole role, System.Security.Claims.Claim claim, CancellationToken cancellationToken = default)
     {
-        role.Claims.Add(new IdentityRoleClaim<string> { ClaimType = claim.Type, ClaimValue = claim.Value });
+        role.Claims.Add(new IdentityRoleClaim<ulong> { ClaimType = claim.Type, ClaimValue = claim.Value });
         return Task.CompletedTask;
     }
 

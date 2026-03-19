@@ -5,12 +5,12 @@ namespace Aero.MartenDB;
 public class AeroUserRepository(IDocumentSession session, ILogger<AeroUserRepository> log)
     : AeroDbRepositoryBase<AeroUser>(session, log), IAeroUserRepository
 {
-    public override async Task<IEnumerable<AeroUser>> GetByIdsAsync(IEnumerable<string> ids)
+    public override async Task<IEnumerable<AeroUser>> GetByIdsAsync(IEnumerable<ulong> ids)
     {
         throw new NotImplementedException();
     }
 
-    public Option<AeroUser> FindById(string id)
+    public override Option<AeroUser> FindById(ulong id)
     {
         throw new NotImplementedException();
     }
@@ -20,17 +20,32 @@ public class AeroUserRepository(IDocumentSession session, ILogger<AeroUserReposi
         throw new NotImplementedException();
     }
 
-    public Option<AeroUser> Insert(AeroUser entity)
+    public override AeroUser Insert(AeroUser entity)
     {
         throw new NotImplementedException();
     }
 
-    public Option<AeroUser> Update(AeroUser entity)
+    public override AeroUser Update(AeroUser entity)
     {
         throw new NotImplementedException();
     }
 
-    public Option<AeroUser> Upsert(AeroUser entity)
+    public override AeroUser Upsert(AeroUser entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Task<AeroUser> InsertAsync(AeroUser entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Task<AeroUser> UpdateAsync(AeroUser entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Task<AeroUser> UpsertAsync(AeroUser entity)
     {
         throw new NotImplementedException();
     }

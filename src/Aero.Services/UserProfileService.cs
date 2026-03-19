@@ -29,22 +29,23 @@ public class AeroUserProfileService<T>(IUserProfileRepository db, ILogger<AeroUs
 
     public async Task<T> GetById(ulong id)
     {
-        var results = await db.session.Query<AeroUser>()
+        var results = await db.session.Query<T>()
             .FirstOrDefaultAsync(x => x.Id == id);
         return results;
     }
 
     public async Task<T> GetByEmail(string email)
     {
+        ThrowGuard.Throw.NotImplemented("have to figure out how to get the user profile with marten");
         //var results = await db.FindAsync(x => x.Email.ToUpper() == email);
-        var user = await db.FindAsync(x => x.Email.ToUpper() == email.ToUpper());
-        if (user == null || !user.Any())
-        {
-            log.LogWarning("No user found with email {Email}", email);
-            return null;
-        }
-        var profile = user.First().Profile;
-        return (T)profile;
+        // var user = await db.FindAsync(x => x.Email.ToUpper() == email.ToUpper());
+        // if (user == null || !user.Any())
+        // {
+        //     log.LogWarning("No user found with email {Email}", email);
+        //     return null;
+        // }
+        // var profile = user.First().Profile;
+        // return (T)profile;
     }
 
     public async Task InsertAsync(T model)

@@ -33,7 +33,7 @@ public static class Conventions
     /// <returns>Something like "AppUsers"</returns>
     public static string CollectionNameFor<TUser>(IDocumentStore db)
     {
-        Throw.NotImplemented();
+        ThrowGuard.Throw.NotImplemented();
         // var entityName = db.Conventions.GetCollectionName(typeof(TUser));
         // return db.Conventions.TransformTypeCollectionNameToDocumentIdPrefix(entityName);
         return null;
@@ -47,7 +47,7 @@ public static class Conventions
     /// <returns>Something like "AppUsers/"</returns>
     public static string CollectionNameWithSeparator<TUser>(IDocumentStore db)
     {
-        Throw.NotImplemented();
+        ThrowGuard.Throw.NotImplemented();
         // return CollectionNameFor<TUser>(db) + db.Conventions.IdentityPartsSeparator;
         return null;
     }

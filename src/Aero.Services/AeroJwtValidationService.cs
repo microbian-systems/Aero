@@ -1,5 +1,6 @@
 namespace Aero.Services;
 
+
 public class AeroJwtValidationService(
     IOptions<AppSettings> settings,
     ILogger<AeroJwtValidationService> log)
@@ -53,7 +54,7 @@ public class AeroJwtValidationService(
     {
         var message = "token is valid";
 
-        var result = new WebResponse<bool>()
+        var result = new Aero.Models.WebResponse<bool>()
         {
             Message = message
         };

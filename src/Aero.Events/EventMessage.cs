@@ -1,24 +1,23 @@
-using SnowflakeGenerator;
+using Aero.Core;
 using Wolverine;
 
 namespace Aero.Events;
 
 public interface IEvent
 {
-    
+
 }
 
 public interface IEventMessage : IEvent, IMessage
 {
-    long Id { get; init; } 
-    public DateTimeOffset CreatedAt { get; init; } 
+    ulong Id { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
 }
 
 public abstract record EventMessageBase : IEventMessage
 {
     // var (timeStamp, machineId, sequence) = sonyflake.DecodeID(uniqueId);
-    private static readonly Snowflake snowflake = new();
-    public long Id { get; init; } = snowflake.NextID();
+    public ulong Id { get; init; } = Snowflake.NewId();
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
 }
 
