@@ -58,7 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+
     <PackageReference Include="SnowflakeGuid" />
     <PackageReference Include="System.Configuration.ConfigurationManager" />
     <PackageReference Include="WindowsAzure.Storage" />

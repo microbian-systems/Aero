@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
-<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <Title>Meraki UI html blocks for the Aero Web Platform</Title>
     <Description>Core components for the Aero application platform</Description>
@@ -10,7 +8,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- The unique ID for your package on NuGet.org -->
-    <PackageId>Aero.Events</PackageId>
+    <PackageId>Aero.MerakiUI</PackageId>
 
     <!-- Increment this version every time you push a new update -->
     <Version>0.0.5-alpha</Version>
@@ -31,21 +29,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
-
-</Project>
-
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.TypeScript.MSBuild">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-
-
 
 </Project>

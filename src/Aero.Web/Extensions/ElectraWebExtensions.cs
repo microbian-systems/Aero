@@ -1,7 +1,6 @@
 using Aero.Common.Web.Exceptions;
 using Aero.Common.Web.Middleware;
 using Aero.Services;
-using Aero.Common.Web.Services;
 using Aero.Services.Geo;
 using Aero.Services.Mail;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,10 +19,9 @@ public static class AeroWebExtensions
 
     public static IServiceCollection AddAeroDefaultServices(this IServiceCollection services, IConfiguration config, IWebHostEnvironment host, string connString = "")
     {
-        if(string.IsNullOrEmpty(connString))
+        if (string.IsNullOrEmpty(connString))
             connString = config.GetConnectionString("DefaultConnection")
                          ?? throw new ArgumentNullException(nameof(connString), "Connection string is required for Aero services");
-        services.AddAspNetIdentityEx(config, host);
         //services.AddAeroIdentity<AeroUser, AeroRole>();
         services.AddAeroCoreServices(config, host);
         //services.AddDataLayerPersistence(config, host);
@@ -31,11 +29,11 @@ public static class AeroWebExtensions
 
         return services;
     }
-    
+
     public static IServiceCollection AddAeroCoreServices(
-        this IServiceCollection services, 
-        IConfiguration config, 
-        IWebHostEnvironment host, 
+        this IServiceCollection services,
+        IConfiguration config,
+        IWebHostEnvironment host,
         bool enableAntiForgeryProtection = false)
     {
         services.AddEncryptionServices();
@@ -43,8 +41,8 @@ public static class AeroWebExtensions
         // if (enableAntiForgeryProtection)
         //     services.ConfigureAntiForgeryOptions();
         //services.AddRequestResponseLogging();
-        if(!host.IsProduction())
-            services.AddMiniProfilerEx();
+        // if (!host.IsProduction())
+        //     services.AddMiniProfilerEx();
 
         // https://learn.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/7.0/default-authentication-scheme
         // https://learn.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-8.0
@@ -72,6 +70,7 @@ public static class AeroWebExtensions
             }
         });
 
+        // todo - should authorization be initialized here - may be better in cms
         services.AddAuthorization(o =>
         {
             string[] schemes = [
@@ -84,18 +83,18 @@ public static class AeroWebExtensions
                 .RequireAuthenticatedUser()
                 .Build();
         });
+        // todo - analyzle if we still need any of the middleware here in this library - may move to cms project
+
         //services.AddAntiforgery();
         services.AddHttpContextAccessor();
         services.AddScoped<ITokenValidationService, AeroJwtValidationService>();
         services.AddEmailServies(config, host);
         services.ConfigureAppSettings(config, host);
         services.AddAeroCaching(config);
-        services.AddScoped<IAeroUserService, AeroUserService>();
         services.AddScoped<ISmsService, TwilioSmsService>();
         services.AddTransient<IEmailSender, SendGridMailer>();
         services.AddTransient<IPasswordService, PasswordService>();
         services.AddScoped<IZipApiService, ZipApiService>();
-        services.AddScoped(typeof(IAeroUserService<>), typeof(AeroUserServiceBase<>));
         services.AddScoped<IAeroUserProfileService, AeroUserProfileService>();
         services.AddScoped(typeof(IUserProfileService<>), typeof(AeroUserProfileService<>));
 
@@ -107,16 +106,16 @@ public static class AeroWebExtensions
         app.UseAeroMiddleware();
         return app;
     }
-    
+
     public static IApplicationBuilder UseAeroMiddleware(this IApplicationBuilder app)
     {
+        // todo - analyzle if we still need any of the middleware here in this library - may move to cms project
         app.ConfigureExceptionMiddleware();
-        app.UseDefaultLogging();
+        //app.UseDefaultLogging();
         app.UseRequestCultureMiddleware();
         //app.UsePerfLogging();
         // app.UseSerilogRequestLogging();
         // app.UseRequestResponseLogging();
-        app.UseMiniProfiler();
         // app.UseCustom404Handler();
         // app.UseCustom401Handler();
         // app.UseCustom400Handler();
@@ -125,8 +124,8 @@ public static class AeroWebExtensions
         //app.UseXssMiddleware();
         // https://github.com/GaProgMan/OwaspHeaders.Core
         // app.UseSecureHeadersMiddleware();
-        
-        
+
+
         return app;
     }
 }

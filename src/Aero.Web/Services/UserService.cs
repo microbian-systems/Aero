@@ -1,28 +1,27 @@
-using FluentEmail.Core;
 using Aero.Common.Web.Extensions;
 using Aero.Core.Identity;
 using Aero.Models.Entities;
 using Aero.Services;
 using Aero.Services.Geo;
 using Aero.Services.Models;
+using FluentEmail.Core;
 using Microsoft.AspNetCore.Identity;
-using ThrowGuard;
 
 namespace Aero.Common.Web.Services;
 
-public interface IAeroUserService : IAeroUserService<AeroUser>{}
+public interface IAeroUserService : IAeroUserService<AeroUser> { }
 
 public class AeroUserService : AeroUserServiceBase<AeroUser>, IAeroUserService
 {
     public AeroUserService(
-        SignInManager<AeroUser> signinManager, 
-        UserManager<AeroUser> userManager, 
-        RoleManager<AeroRole> roleManager, 
-        IPasswordService passwordService, 
-        IHttpContextAccessor contextAccessor, 
-        IFluentEmail fluentEmail, 
-        IZipApiService zipService, 
-        ILogger<AeroUserService> log) 
+        SignInManager<AeroUser> signinManager,
+        UserManager<AeroUser> userManager,
+        RoleManager<AeroRole> roleManager,
+        IPasswordService passwordService,
+        IHttpContextAccessor contextAccessor,
+        IFluentEmail fluentEmail,
+        IZipApiService zipService,
+        ILogger<AeroUserService> log)
         : base(signinManager, userManager, roleManager, passwordService, contextAccessor, fluentEmail, zipService, log)
     {
     }
@@ -49,28 +48,28 @@ public class AeroUserServiceBase<T> : AeroIdentityService<T>
 
     protected AeroUserServiceBase(
         SignInManager<T> signinManager,
-        UserManager<T> userManager, 
-        RoleManager<AeroRole> roleManager, 
-        IPasswordService passwordService, 
-        IHttpContextAccessor contextAccessor, 
-        IFluentEmail fluentEmail, 
-        IZipApiService zipService, 
-        ILogger<AeroUserServiceBase<T>> log) 
+        UserManager<T> userManager,
+        RoleManager<AeroRole> roleManager,
+        IPasswordService passwordService,
+        IHttpContextAccessor contextAccessor,
+        IFluentEmail fluentEmail,
+        IZipApiService zipService,
+        ILogger<AeroUserServiceBase<T>> log)
         : base(signinManager, userManager, roleManager, passwordService, contextAccessor, fluentEmail, zipService, log)
     {
-        Throw.IfNull(contextAccessor?.HttpContext, nameof(contextAccessor));
+        ThrowGuard.Throw.IfNull(contextAccessor?.HttpContext, nameof(contextAccessor));
         context = contextAccessor?.HttpContext!;
     }
-    
+
     public string GetCurrentUserId() => context.User.GetUserId();
 
     public string GetCurrentUserEmail() => context.User.GetUserEmail();
-    
+
     public async Task<T> GetCurrentUser()
     {
         var id = context.User.GetUserId();
         var user = await userManager.FindByIdAsync(id);
-        
+
         return user;
     }
 
@@ -78,7 +77,7 @@ public class AeroUserServiceBase<T> : AeroIdentityService<T>
     {
         user ??= await GetCurrentUser();
         var res = await base.ChangePassword(user, current, updated);
-        
+
         return res;
     }
 

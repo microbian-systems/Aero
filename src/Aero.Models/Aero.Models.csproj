@@ -8,7 +8,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- The unique ID for your package on NuGet.org -->
-    <PackageId>Aero.Events</PackageId>
+    <PackageId>Aero.Models</PackageId>
 
     <!-- Increment this version every time you push a new update -->
     <Version>0.0.5-alpha</Version>

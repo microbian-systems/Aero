@@ -37,15 +37,7 @@ public class AeroUserProfileService<T>(IUserProfileRepository db, ILogger<AeroUs
     public async Task<T> GetByEmail(string email)
     {
         ThrowGuard.Throw.NotImplemented("have to figure out how to get the user profile with marten");
-        //var results = await db.FindAsync(x => x.Email.ToUpper() == email);
-        // var user = await db.FindAsync(x => x.Email.ToUpper() == email.ToUpper());
-        // if (user == null || !user.Any())
-        // {
-        //     log.LogWarning("No user found with email {Email}", email);
-        //     return null;
-        // }
-        // var profile = user.First().Profile;
-        // return (T)profile;
+        return await Task.FromResult<T>(default!);
     }
 
     public async Task InsertAsync(T model)
@@ -75,7 +67,7 @@ public class AeroUserProfileService<T>(IUserProfileRepository db, ILogger<AeroUs
 
     public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
     {
-        var results = await db.FindAsync(predicate);
-        return results;
+        var results = await db.FindAsync((Expression<Func<AeroUserProfile, bool>>)(object)predicate);
+        return results.Cast<T>();
     }
 }

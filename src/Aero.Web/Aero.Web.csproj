@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Extensions\IdentityServerExtensions.cs" />
+    <Compile Remove="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Extensions\IdentityServerExtensions.cs" />
@@ -39,10 +40,28 @@
     <None Include="Extensions\ApiKeyExtensions.cs" />
     <Compile Remove="Controllers\JwtAuthController.cs" />
     <None Include="Controllers\JwtAuthController.cs" />
+    <None Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" />
+    <PackageReference Include="Scalar.AspNetCore" />
+    <PackageReference Include="Boxed.AspNetCore" />
+    <PackageReference Include="Mapster" />
+    <PackageReference Include="Mapster.DependencyInjection" />
+    <PackageReference Include="Foundatio" />
+    <PackageReference Include="Serilog.Exceptions" />
+    <PackageReference Include="Serilog.Enrichers.Environment" />
+    <PackageReference Include="Serilog.Enrichers.Span" />
+    <PackageReference Include="Serilog.Sinks.OpenTelemetry" />
+    <PackageReference Include="IPAddressRange" />
+    <PackageReference Include="Honeycomb.OpenTelemetry" />
+    <PackageReference Include="Honeycomb.Serilog.Sink" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
   </ItemGroup>
 
   <ItemGroup>

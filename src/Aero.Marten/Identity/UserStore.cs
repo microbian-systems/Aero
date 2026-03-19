@@ -74,14 +74,14 @@ public class UserStore<TUser, TRole> :
     public Task SetNormalizedEmailAsync(TUser user, string? normalizedEmail, CancellationToken cancellationToken) { user.NormalizedEmail = normalizedEmail; return Task.CompletedTask; }
 
     // IUserLoginStore
-    public Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken) { user.Logins.Add(new IdentityUserLogin<ulong> { LoginProvider = login.LoginProvider, ProviderKey = login.ProviderKey, ProviderDisplayName = login.ProviderDisplayName }); return Task.CompletedTask; }
+    public Task AddLoginAsync(TUser user, UserLoginInfo login, CancellationToken cancellationToken) { user.Logins.Add(new IdentityLogin { LoginProvider = login.LoginProvider, ProviderKey = login.ProviderKey, ProviderDisplayName = login.ProviderDisplayName }); return Task.CompletedTask; }
     public Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken) { var login = user.Logins.FirstOrDefault(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey); if (login != null) user.Logins.Remove(login); return Task.CompletedTask; }
     public Task<IList<UserLoginInfo>> GetLoginsAsync(TUser user, CancellationToken cancellationToken) => Task.FromResult<IList<UserLoginInfo>>(user.Logins.Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey, l.ProviderDisplayName)).ToList());
     public async Task<TUser?> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken) => await _session.Query<TUser>().FirstOrDefaultAsync(u => u.Logins.Any(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey), cancellationToken);
 
     // IUserClaimStore
     public Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken) => Task.FromResult<IList<Claim>>(user.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList());
-    public Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) { foreach (var claim in claims) user.Claims.Add(new IdentityUserClaim<ulong> { ClaimType = claim.Type, ClaimValue = claim.Value }); return Task.CompletedTask; }
+    public Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) { foreach (var claim in claims) user.Claims.Add(new IdentityRoleClaim<ulong> { ClaimType = claim.Type, ClaimValue = claim.Value }); return Task.CompletedTask; }
     public Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken) { var existing = user.Claims.FirstOrDefault(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value); if (existing != null) { existing.ClaimType = newClaim.Type; existing.ClaimValue = newClaim.Value; } return Task.CompletedTask; }
     public Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) { foreach (var claim in claims) { var existing = user.Claims.FirstOrDefault(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value); if (existing != null) user.Claims.Remove(existing); } return Task.CompletedTask; }
     public async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken) => (await _session.Query<TUser>().Where(u => u.Claims.Any(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value)).ToListAsync(cancellationToken)).ToList();
@@ -121,7 +121,7 @@ public class UserStore<TUser, TRole> :
     public Task<string?> GetAuthenticatorKeyAsync(TUser user, CancellationToken cancellationToken) => Task.FromResult(user.TwoFactorAuthenticatorKey);
 
     // IUserAuthenticationTokenStore
-    public Task SetTokenAsync(TUser user, string loginProvider, string name, string? value, CancellationToken cancellationToken) { var token = user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name); if (token != null) token.Value = value; else user.Tokens.Add(new IdentityUserToken<string> { LoginProvider = loginProvider, Name = name, Value = value }); return Task.CompletedTask; }
+    public Task SetTokenAsync(TUser user, string loginProvider, string name, string? value, CancellationToken cancellationToken) { var token = user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name); if (token != null) token.Value = value; else user.Tokens.Add(new IdentityToken { LoginProvider = loginProvider, Name = name, Value = value }); return Task.CompletedTask; }
     public Task RemoveTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken) { var token = user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name); if (token != null) user.Tokens.Remove(token); return Task.CompletedTask; }
     public Task<string?> GetTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken) => Task.FromResult(user.Tokens.FirstOrDefault(t => t.LoginProvider == loginProvider && t.Name == name)?.Value);
 
