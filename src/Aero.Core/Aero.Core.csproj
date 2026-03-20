@@ -63,4 +63,8 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" />
     <PackageReference Include="WindowsAzure.Storage" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Logging\" />
+  </ItemGroup>
 </Project>
