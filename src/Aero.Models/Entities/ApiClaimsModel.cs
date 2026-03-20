@@ -6,9 +6,9 @@ namespace Aero.Models.Entities;
 public class ApiClaimsModel : Entity
 {
     [MaxLength(128)]
-    public string ClaimKey { get; set; }
+    public required string ClaimKey { get; set; }
     [MaxLength(1024)]
-    public string ClaimValue { get; set; }
+    public required string ClaimValue { get; set; }
     
-    public string AccountId { get; set; }
+    public ulong AccountId { get; set; }
 }

@@ -43,6 +43,7 @@
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" />
     <PackageReference Include="PasswordGenerator" />
+    <PackageReference Include="starkbank-ecdsa" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     <PackageReference Include="Twilio.AspNet.Common" />
     <PackageReference Include="Twilio.AspNet.Core" />

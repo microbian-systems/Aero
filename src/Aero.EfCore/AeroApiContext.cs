@@ -1,15 +1,13 @@
-﻿namespace Aero.EfCore;
+﻿using Aero.Core.Data;
 
-public class ApiAuthContext : DbContext
+namespace Aero.EfCore;
+
+public class AeroApiContext(DbContextOptions<AeroApiContext> options) : DbContext(options)
 {
     public DbSet<ApiAccountModel> ApiAccounts { get; set; }
     public DbSet<ApiClaimsModel> Claims { get; set; }
-    private const string schemaName = "apiauth";
-    
-    public ApiAuthContext(DbContextOptions<ApiAuthContext> options) : base(options)
-    {
-    }
-    
+    private const string schemaName = Schemas.Api;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

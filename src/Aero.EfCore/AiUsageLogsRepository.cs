@@ -4,5 +4,5 @@ namespace Aero.EfCore;
 
 public interface IAiUsageLogRepository : IGenericRepository<AiUsageLog>;
 
-public sealed class AiUsageLogsRepository(DbContext session, ILogger<AiUsageLogsRepository> log)
-    : GenericEntityFrameworkRepository<AiUsageLog>(session, log), IAiUsageLogRepository;
+public sealed class AiUsageLogsRepository(AeroDbContext context, ILogger<AiUsageLogsRepository> log)
+    : GenericEntityFrameworkRepository<AiUsageLog>(context, log), IAiUsageLogRepository;
