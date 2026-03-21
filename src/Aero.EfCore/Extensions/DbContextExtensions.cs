@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Aero.MartenDB;
 using Marten;
 
 namespace Aero.EfCore.Extensions;
@@ -53,6 +54,11 @@ public static class DbContextExtensions
             // Optional: enable automatic schema creation for development
             //opts.AutoCreateSchemaObjects = SchemaMode.Development;
         });
+
+        // todo - rename this project from EfCore to Data and move Marten stuff in same project 
+        services.AddScoped<IAeroDb, AeroDb>();
+        services.AddScoped<IAeroUserRepository>(ctx =>
+            ctx.GetRequiredService<IAeroDb>().Users);
 
         return services;
     }

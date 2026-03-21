@@ -5,6 +5,7 @@ namespace Aero.MartenDB.Extensions;
 
 public static class AeroDbExtensions
 {
+    [Obsolete("moved to DbExtensions", true)]
     public static IServiceCollection AddAeroPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         // Load AeroDB settings from configuration

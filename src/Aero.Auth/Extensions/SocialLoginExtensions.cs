@@ -35,7 +35,7 @@ public static class SocialLoginExtensions
             opts.SignIn.RequireConfirmedEmail = false; // Set to true if email confirmation is implemented
         });
 
-        services.AddAeroPersistence(config);
+        //services.AddAeroPersistence(config);
         identityBuilder.AddAerodentityStores<AeroUser, AeroRole>(options =>
         {
             options.AutoSaveChanges = true;

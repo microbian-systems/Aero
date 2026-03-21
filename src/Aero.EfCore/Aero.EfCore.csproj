@@ -25,6 +25,7 @@
     </PropertyGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\Aero.Marten\Aero.Marten.csproj" />
       <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
       <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
     </ItemGroup>
