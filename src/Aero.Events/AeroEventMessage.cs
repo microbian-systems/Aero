@@ -3,27 +3,24 @@ using Wolverine;
 
 namespace Aero.Events;
 
-public interface IEvent
-{
+public interface IAeroEvent;
 
-}
-
-public interface IEventMessage : IEvent, IMessage
+public interface IAeroEventMessage : IAeroEvent, IMessage
 {
     ulong Id { get; init; }
     public DateTimeOffset CreatedAt { get; init; }
 }
 
-public abstract record EventMessageBase : IEventMessage
+public abstract record AeroEventMessageBase : IAeroEventMessage
 {
     // var (timeStamp, machineId, sequence) = sonyflake.DecodeID(uniqueId);
     public ulong Id { get; init; } = Snowflake.NewId();
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
 }
 
-public abstract record EventMessage : EventMessageBase { }
+public abstract record AeroEventMessage : AeroEventMessageBase { }
 
-public abstract record EventMessage<T> : EventMessageBase
+public abstract record AeroEventMessage<T> : AeroEventMessageBase
 {
     public required T Payload;
 }

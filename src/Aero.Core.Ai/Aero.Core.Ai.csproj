@@ -12,4 +12,16 @@
       <None Include="SmartKernelFactory.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="LlmTornado" />
+      <PackageReference Include="LlmTornado.Agents" />
+      <PackageReference Include="LlmTornado.Contrib" />
+      <PackageReference Include="LlmTornado.Mcp" />
+      <PackageReference Include="LlmTornado.Microsoft.Extensions.AI" />
+      <PackageReference Include="LlmTornado.Toolkit" />
+      <PackageReference Include="LlmTornado.VectorDatabases" />
+      <PackageReference Include="LlmTornado.VectorDatabases.PgVector" />
+      <PackageReference Include="Microsoft.Agents.AI" />
+    </ItemGroup>
+
 </Project>

@@ -2,14 +2,12 @@
 
 namespace Aero.Events;
 
-public interface IEventHandlerBase { }
+public interface IAeroEventHandlerBase { }
 
-public abstract class EventHandlerBase(ILogger<EventHandlerBase> log) : IEventHandlerBase
+public abstract class AeroEventHandlerBase(ILogger<AeroEventHandlerBase> log) : IAeroEventHandlerBase
 {
-    private readonly ILogger<EventHandlerBase> log = log;
-
     /// <summary>
-    /// Cancelation token support for event handlers
+    /// Cancellation token support for event handlers
     /// </summary>
     /// <param name="timeout">the timeout in minutes</param>
     /// <returns><see cref="CancellationToken"/></returns>

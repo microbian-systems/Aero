@@ -4,6 +4,7 @@ public record AppSettings
 {
     public string AppName { get; init; } = string.Empty;
     public string AppVersion { get; init; } = string.Empty;
+    public bool SetupComplete { get; init; }
     public string[] ClientUrls { get; init; } = [];
     public string DomainName { get; init; } = string.Empty;
     public string OrganizationName { get; init; } = string.Empty;
