@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Aero.Core;
 using Aero.Core.Entities;
 using Aero.Core.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +10,9 @@ namespace Aero.Models.Entities;
 /// <summary>
 /// Represents a concrete Aero user with a snowflake primary key.
 /// </summary>
-public class AeroUser : AeroUser<long>, IAeroUser;
+public class AeroUser : AeroUser<long>, IAeroUser
+{
+}
 
 
 /// <summary>

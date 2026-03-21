@@ -10,11 +10,15 @@ namespace Aero.Models.Entities;
 // https://www.npgsql.org/efcore/mapping/json.html?tabs=data-annotations%2Cpoco
 public class AeroUserProfile : Entity
 {
+    public AeroUserProfile()
+    {
+        
+    }
     /// <summary>
     /// Foreign key to the Aero Identity table
     /// </summary>
     [JsonPropertyName("user_id")]
-    public string Userid { get; set; } // todo - make this generic so the type can vary for pkey
+    public long Userid { get; set; } // todo - make this generic so the type can vary for pkey
 
     [MinLength(4)] // todo - remove data annotations and use FluentValidation
     [MaxLength(256)]

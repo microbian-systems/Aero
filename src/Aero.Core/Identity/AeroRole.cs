@@ -1,7 +1,8 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using Aero.Core.Data;
 using Aero.Core.Entities;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Aero.Core.Identity;
 
@@ -33,7 +34,9 @@ namespace Aero.Core.Identity;
 [Table("Roles", Schema = Schemas.Aero)]
 public class AeroRole : AeroRole<long>
 {
-    public AeroRole() => Id = Snowflake.NewId();
+    public new long Id { get; set; } = Snowflake.NewId();
+
+    public AeroRole() => Snowflake.NewId();
 
     public AeroRole(string roleName)
         : this()
@@ -50,7 +53,6 @@ public abstract class AeroRole<TKey> : IdentityRole<TKey>, IEntity<TKey>
 {
     protected AeroRole() { }
     protected AeroRole(string roleName) : base(roleName) { }
-
     public List<IdentityRoleClaim<TKey>> Claims { get; set; } = [];
     public List<TKey> Users { get; set; } = [];
     public DateTimeOffset CreatedOn { get; set; } = DateTimeOffset.UtcNow;

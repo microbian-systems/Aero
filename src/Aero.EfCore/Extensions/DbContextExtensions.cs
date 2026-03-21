@@ -1,4 +1,6 @@
-﻿using Aero.Core.Data;
+using Aero.Core.Data;
+using Aero.Core.Identity;
+using Aero.Models.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +53,8 @@ public static class DbContextExtensions
         services.AddMarten(opts =>
         {
             opts.Connection(connString!);
+            opts.Schema.For<AeroRole>().Identity(x => x.Id);
+            opts.Schema.For<AeroUser>().Identity(x => x.Id);
             // Optional: enable automatic schema creation for development
             //opts.AutoCreateSchemaObjects = SchemaMode.Development;
         });
