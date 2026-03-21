@@ -5,12 +5,12 @@ namespace Aero.MartenDB;
 public class AeroUserRepository(IDocumentSession session, ILogger<AeroUserRepository> log)
     : AeroDbRepositoryBase<AeroUser>(session, log), IAeroUserRepository
 {
-    public override async Task<IEnumerable<AeroUser>> GetByIdsAsync(IEnumerable<ulong> ids)
+    public override async Task<IEnumerable<AeroUser>> GetByIdsAsync(IEnumerable<long> ids)
     {
         throw new NotImplementedException();
     }
 
-    public override Option<AeroUser> FindById(ulong id)
+    public override Option<AeroUser> FindById(long id)
     {
         throw new NotImplementedException();
     }

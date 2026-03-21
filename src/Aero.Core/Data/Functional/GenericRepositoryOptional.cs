@@ -61,12 +61,12 @@ public interface IGenericRepositoryOption<T, TKey>
 /// DI registration for the specific interface & concrete implementation.
 /// </summary>
 /// <typeparam name="T">The type of data model to be operated upon <see cref="IEntity{TKey}"/></typeparam>
-/// <remarks>ulong is the default type for the primary key due to the Aero use of the snowflake algorithm</remarks>
-public interface IGenericRepositoryOption<T> : IGenericRepositoryOption<T, ulong> where T : IEntity<ulong>, new();
+/// <remarks>long is the default type for the primary key due to the Aero use of the snowflake algorithm</remarks>
+public interface IGenericRepositoryOption<T> : IGenericRepositoryOption<T, long> where T : IEntity<long>, new();
 
 public abstract class GenericRepositoryOption<T>(ILogger<GenericRepositoryOption<T>> log)
-    : GenericRepositoryOption<T, ulong>(log), IGenericRepositoryOption<T>
-    where T : IEntity<ulong>, new();
+    : GenericRepositoryOption<T, long>(log), IGenericRepositoryOption<T>
+    where T : IEntity<long>, new();
 
 public abstract class GenericRepositoryOption<T, TKey>(ILogger log) 
     : IGenericRepositoryOption<T, TKey>

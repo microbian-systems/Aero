@@ -5,14 +5,14 @@ using Marten;
 
 namespace Aero.Models.Entities;
 
-public interface IUserProfileRepository : IGenericRepository<AeroUserProfile, ulong>
+public interface IUserProfileRepository : IGenericRepository<AeroUserProfile, long>
 {
     IDocumentSession session { get; }
     /// <summary>
     /// Gets only the user's profile.
     /// </summary>
-    Task<Option<AeroUserProfile>> GetUserProfileAsync(ulong userId);
+    Task<Option<AeroUserProfile>> GetUserProfileAsync(long userId);
     Task SaveUserProfileAsync(AeroUserProfile user);
-    Task DeleteUserProfileAsync(ulong userId);
+    Task DeleteUserProfileAsync(long userId);
 }
 

@@ -10,5 +10,5 @@ public class ApiClaimsModel : Entity
     [MaxLength(1024)]
     public required string ClaimValue { get; set; }
     
-    public ulong AccountId { get; set; }
+    public long AccountId { get; set; }
 }

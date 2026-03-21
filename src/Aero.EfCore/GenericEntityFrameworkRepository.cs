@@ -12,12 +12,12 @@ public interface IGenericEntityFrameworkRepository<T, TKey> : IGenericRepository
     Task<List<T>> GetPaged(int page = 1, int rows = 10);
 }
 
-public interface IGenericEntityFrameworkRepository<T> : IGenericEntityFrameworkRepository<T, ulong>, IGenericRepository<T>
+public interface IGenericEntityFrameworkRepository<T> : IGenericEntityFrameworkRepository<T, long>, IGenericRepository<T>
     where T : class, ISnowflakeEntity, new()
 { }
 
 public class GenericEntityFrameworkRepository<T>(DbContext context, ILogger<GenericEntityFrameworkRepository<T>> log)
-    : GenericEntityFrameworkRepository<T, ulong>(context, log), IGenericRepository<T>
+    : GenericEntityFrameworkRepository<T, long>(context, log), IGenericRepository<T>
     where T : class, ISnowflakeEntity, new();
 
 public class GenericEntityFrameworkRepository<T, TKey> : GenericRepository<T, TKey>, IGenericEntityFrameworkRepository<T, TKey> where T : class, IEntity<TKey>, new() where TKey : IEquatable<TKey>

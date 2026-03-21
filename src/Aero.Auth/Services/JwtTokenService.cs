@@ -40,7 +40,7 @@ public class JwtTokenService : IJwtTokenService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A signed JWT access token.</returns>
     public async Task<string> GenerateAccessTokenAsync(
-        ulong userId,
+        long userId,
         string email,
         CancellationToken cancellationToken = default)
     {

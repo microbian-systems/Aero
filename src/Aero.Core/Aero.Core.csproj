@@ -29,6 +29,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="FlakeId" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
@@ -58,8 +59,6 @@
   </ItemGroup>
 
   <ItemGroup>
-
-    <PackageReference Include="SnowflakeGuid" />
     <PackageReference Include="System.Configuration.ConfigurationManager" />
     <PackageReference Include="WindowsAzure.Storage" />
   </ItemGroup>

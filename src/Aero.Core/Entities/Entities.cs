@@ -6,6 +6,6 @@ public interface IEntityString : IEntity<string>;
 
 public interface IEntityGuid : IEntity<Guid>;
 
-public interface IEntityLong : IEntity<ulong>;
+public interface IEntityLong : IEntity<long>;
 
 public interface ISnowflakeEntity : IEntityLong;

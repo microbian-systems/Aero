@@ -15,7 +15,7 @@ public class RefreshToken : Entity
     /// Reference to the AeroUser ID this token belongs to.
     /// In AeroDB, store document IDs as strings, not nested objects.
     /// </summary>
-    public ulong UserId { get; set; } 
+    public long UserId { get; set; } 
 
     /// <summary>
     /// SHA-256 hash of the actual token (never store plaintext)
@@ -35,7 +35,7 @@ public class RefreshToken : Entity
     /// <summary>
     /// Optional: the ID of the token that replaced this one (for rotation tracking)
     /// </summary>
-    public ulong? ReplacedByTokenId { get; set; }
+    public long? ReplacedByTokenId { get; set; }
 
     /// <summary>
     /// Client identifier (web, mobile, desktop)

@@ -46,12 +46,12 @@ public interface IMartenGenericRepositoryOption<T, TKey>
 /// DI registration for the specific interface & concrete implementation.
 /// </summary>
 /// <typeparam name="T">The type of data model to be operated upon <see cref="IEntity{TKey}"/></typeparam>
-/// <remarks>ulong is the default type for the primary key due to the Aero use of the snowflake algorithm</remarks>
-public interface IMartenGenericRepositoryOption<T> : IMartenGenericRepositoryOption<T, ulong> where T : IEntity<ulong>, new();
+/// <remarks>long is the default type for the primary key due to the Aero use of the snowflake algorithm</remarks>
+public interface IMartenGenericRepositoryOption<T> : IMartenGenericRepositoryOption<T, long> where T : IEntity<long>, new();
 
 public abstract class MartenGenericRepositoryOption<T>(ILogger<MartenGenericRepositoryOption<T>> log)
-    : MartenGenericRepositoryOption<T, ulong>(log), IMartenGenericRepositoryOption<T>
-    where T : IEntity<ulong>, new();
+    : MartenGenericRepositoryOption<T, long>(log), IMartenGenericRepositoryOption<T>
+    where T : IEntity<long>, new();
 
 public abstract class MartenGenericRepositoryOption<T, TKey>(ILogger<MartenGenericRepositoryOption<T, TKey>> log)
     : GenericRepositoryOption<T, TKey>(log), IMartenGenericRepositoryOption<T, TKey>

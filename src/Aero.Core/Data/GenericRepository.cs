@@ -181,7 +181,7 @@ public interface IGenericRepository<T, TKey> : IReadOnlyRepository<T, TKey>, IWr
 /// </summary>
 /// <typeparam name="T">The type of data model to be operated upon <see cref="IEntity{TKey}"/></typeparam>
 /// <remarks>Guid is the default type for the primary key due to the Aero nature of using document stores</remarks>
-public interface IGenericRepository<T> : IGenericRepository<T, ulong> where T : ISnowflakeEntity, new()
+public interface IGenericRepository<T> : IGenericRepository<T, long> where T : ISnowflakeEntity, new()
 {
 }
 
@@ -190,7 +190,7 @@ public interface IGenericRepository<T> : IGenericRepository<T, ulong> where T : 
 /// </summary>
 /// <typeparam name="T">The entity type.</typeparam>
 public abstract class GenericRepository<T>(ILogger<GenericRepository<T>> log)
-    : GenericRepository<T, ulong>(log), IGenericRepository<T>
+    : GenericRepository<T, long>(log), IGenericRepository<T>
     where T : ISnowflakeEntity, new();
 
 /// <summary>

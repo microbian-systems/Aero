@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Aero.Core.Data;
+using Aero.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Aero.Core.Identity;
@@ -28,10 +30,11 @@ namespace Aero.Core.Identity;
 //     public AeroUser? User { get; set; }
 // }
 
-[Table("Roles")]
-public class AeroRole : AeroRole<ulong>
+[Table("Roles", Schema = Schemas.Aero)]
+public class AeroRole : AeroRole<long>
 {
     public AeroRole() => Id = Snowflake.NewId();
+
     public AeroRole(string roleName)
         : this()
     {
@@ -40,15 +43,16 @@ public class AeroRole : AeroRole<ulong>
 }
 
 
-[Table("Roles")]
-public class AeroRole<Tkey> : IdentityRole<Tkey>
-    where Tkey : IEquatable<Tkey>, IComparable<Tkey>
-{
-    public AeroRole() { }
-    public AeroRole(string roleName) : base(roleName) { }
+[Table("Roles", Schema = Schemas.Aero)]
+public abstract class AeroRole<TKey> : IdentityRole<TKey>, IEntity<TKey>
 
-    public List<IdentityRoleClaim<Tkey>> Claims { get; set; } = [];
-    public List<Tkey> Users { get; set; } = [];
+    where TKey : IEquatable<TKey>, IComparable<TKey> 
+{
+    protected AeroRole() { }
+    protected AeroRole(string roleName) : base(roleName) { }
+
+    public List<IdentityRoleClaim<TKey>> Claims { get; set; } = [];
+    public List<TKey> Users { get; set; } = [];
     public DateTimeOffset CreatedOn { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? ModifiedOn { get; set; } = DateTimeOffset.UtcNow;
     public string? CreatedBy { get; set; }

@@ -12,13 +12,13 @@ public class AeroUserProfileService(IUserProfileRepository userRepo, ILogger<Aer
 
 public interface IUserProfileService<T> where T : AeroUserProfile, IEntity
 {
-    Task<T> GetById(ulong id);
+    Task<T> GetById(long id);
     Task<T> GetByEmail(string email);
     Task InsertAsync(T model);
     Task UpdateAsync(T model);
     Task UpsertAsync(T model);
     Task DeleteAsync(T model);
-    Task DeleteAsync(ulong id);
+    Task DeleteAsync(long id);
     Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
 }
     
@@ -27,7 +27,7 @@ public class AeroUserProfileService<T>(IUserProfileRepository db, ILogger<AeroUs
     where T : AeroUserProfile, new()
 {
 
-    public async Task<T> GetById(ulong id)
+    public async Task<T> GetById(long id)
     {
         var results = await db.session.Query<T>()
             .FirstOrDefaultAsync(x => x.Id == id);
@@ -60,7 +60,7 @@ public class AeroUserProfileService<T>(IUserProfileRepository db, ILogger<AeroUs
         await DeleteAsync(model.Id);
     }
 
-    public async Task DeleteAsync(ulong id)
+    public async Task DeleteAsync(long id)
     {
         await db.DeleteAsync(id);
     }

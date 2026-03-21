@@ -7,16 +7,16 @@ namespace Aero.Models.Entities;
 /// <summary>
 /// Defines the repository interface for User-related operations.
 /// </summary>
-public interface IUserRepository : IGenericRepository<AeroUser, ulong>
+public interface IUserRepository : IGenericRepository<AeroUser, long>
 {
     /// <summary>
     /// Gets a user with all related data (Profile, Settings).
     /// </summary>
-    Task<Option<AeroUser>> GetFullUserById(ulong userId);
+    Task<Option<AeroUser>> GetFullUserById(long userId);
 
 
     /// <summary>
     /// Gets only the user's settings.
     /// </summary>
-    Task<Option<AeroUserSettings>> GetUserSettingsAsync(ulong userId);
+    Task<Option<AeroUserSettings>> GetUserSettingsAsync(long userId);
 }

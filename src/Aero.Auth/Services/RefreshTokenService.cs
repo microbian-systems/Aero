@@ -28,7 +28,7 @@ public class RefreshTokenService : IRefreshTokenService
     }
 
     public async Task<string> GenerateRefreshTokenAsync(
-        ulong userId,
+        long userId,
         string clientType,
         string? ipAddress = null,
         string? userAgent = null,
@@ -60,7 +60,7 @@ public class RefreshTokenService : IRefreshTokenService
         return token;
     }
 
-    public async Task<ulong?> ValidateRefreshTokenAsync(
+    public async Task<long?> ValidateRefreshTokenAsync(
         string token,
         CancellationToken cancellationToken = default)
     {
@@ -161,7 +161,7 @@ public class RefreshTokenService : IRefreshTokenService
     }
 
     public async Task RevokeAllUserTokensAsync(
-        ulong userId,
+        long userId,
         CancellationToken cancellationToken = default)
     {
         
@@ -182,8 +182,8 @@ public class RefreshTokenService : IRefreshTokenService
         }
     }
 
-    public async Task<IEnumerable<(ulong Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
-        ulong userId,
+    public async Task<IEnumerable<(long Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
+        long userId,
         CancellationToken cancellationToken = default)
     {
 

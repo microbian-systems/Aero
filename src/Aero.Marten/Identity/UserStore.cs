@@ -81,7 +81,7 @@ public class UserStore<TUser, TRole> :
 
     // IUserClaimStore
     public Task<IList<Claim>> GetClaimsAsync(TUser user, CancellationToken cancellationToken) => Task.FromResult<IList<Claim>>(user.Claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList());
-    public Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) { foreach (var claim in claims) user.Claims.Add(new IdentityUserClaim<ulong> { ClaimType = claim.Type, ClaimValue = claim.Value }); return Task.CompletedTask; }
+    public Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) { foreach (var claim in claims) user.Claims.Add(new IdentityUserClaim<long> { ClaimType = claim.Type, ClaimValue = claim.Value }); return Task.CompletedTask; }
     public Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken) { var existing = user.Claims.FirstOrDefault(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value); if (existing != null) { existing.ClaimType = newClaim.Type; existing.ClaimValue = newClaim.Value; } return Task.CompletedTask; }
     public Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) { foreach (var claim in claims) { var existing = user.Claims.FirstOrDefault(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value); if (existing != null) user.Claims.Remove(existing); } return Task.CompletedTask; }
     public async Task<IList<TUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken) => (await _session.Query<TUser>().Where(u => u.Claims.Any(c => c.ClaimType == claim.Type && c.ClaimValue == claim.Value)).ToListAsync(cancellationToken)).ToList();

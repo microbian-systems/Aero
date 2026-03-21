@@ -5,7 +5,7 @@ namespace Aero.Services;
 
 public interface IAeroIdentityService : IAeroIdentityService<AeroUser> { }
 
-public interface IAeroIdentityService<T> : IAeroIdentityService<T, ulong>
+public interface IAeroIdentityService<T> : IAeroIdentityService<T, long>
     where T : AeroUser, new()
 { }
 
@@ -20,24 +20,24 @@ public interface IAeroIdentityService<T, TKey>
     Task<(T user, IdentityResult identityReuslt)> AddUserAsync(T model, string password = "");
     Task<(T user, IdentityResult identityReuslt)> UpdateUserAsync(T model);
     Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(T model);
-    Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(ulong id);
+    Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(long id);
     Task<bool> ChangePassword(T user, string current, string updated);
     Task<(bool success, string token, string errorMessage)> GenerateResetPasswordToken(string email);
     Task<(bool success, string token, string[] errors)> ResetPassword(string email, string fromEmail, string url, string subject, string scheme = "https");
     Task<(bool success, string[] errors)> ResetPasswordConfirmation(string email, string token, string password);
-    Task<T> GetByIdAsync(ulong id);
+    Task<T> GetByIdAsync(long id);
     Task<T> GetByUsernameAsync(string username);
     Task<T> GetByEmailAsync(string email);
     Task<IEnumerable<string>> GetRoles(string userId);
     Task<IdentityResult> AddToRole(T user, string role);
-    Task<IdentityResult> AddToRole(ulong userId, string role);
+    Task<IdentityResult> AddToRole(long userId, string role);
     Task<IdentityResult> AddToRoles(T user, IEnumerable<string> roles);
     Task<IdentityResult> AddToRoles(string userId, IEnumerable<string> roles);
     Task<IdentityResult> AddClaim(T user, Claim claim);
-    Task<IdentityResult> AddClaim(ulong userId, Claim claim);
+    Task<IdentityResult> AddClaim(long userId, Claim claim);
     Task<IdentityResult> AddClaimsAsync(T user, IEnumerable<Claim> claims);
-    Task<IdentityResult> AddClaimsAsync(ulong userId, IEnumerable<Claim> claims);
-    Task<IDictionary<string, string>> GetClaims(ulong userId);
+    Task<IdentityResult> AddClaimsAsync(long userId, IEnumerable<Claim> claims);
+    Task<IDictionary<string, string>> GetClaims(long userId);
     Task<(T model, IdentityResult identityResult)> Register(RegistrationRequestModel model, string createdBy = "User");
     Task<(T model, IdentityResult identityResult)> Register(T user, string password, string createdBy = "User");
     Task<bool> SaveRefreshTokenAsync(string username, string token);
@@ -45,7 +45,7 @@ public interface IAeroIdentityService<T, TKey>
     Task<bool> VerifyPassword(string username, string password);
 }
 
-public class AeroIdentityService : AeroIdentityService<AeroUser, ulong>, IAeroIdentityService
+public class AeroIdentityService : AeroIdentityService<AeroUser, long>, IAeroIdentityService
 {
     // todo - fix Aero.Services.IdentityService.cs (do we still even need?) 
     public AeroIdentityService(
@@ -204,7 +204,7 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
     }
 
 
-    public async Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(ulong id)
+    public async Task<(T user, IdentityResult identityReuslt)> DeleteUserAsync(long id)
     {
         var user = await userManager.FindByIdAsync(id.ToString());
         var res = await userManager.DeleteAsync(user);
@@ -293,14 +293,14 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
         return (true, []);
     }
 
-    public async Task<T> GetByIdAsync(ulong id) => await userManager.FindByIdAsync(id);
+    public async Task<T> GetByIdAsync(long id) => await userManager.FindByIdAsync(id);
 
 
     public async Task<T> GetByUsernameAsync(string username) => await userManager.FindByNameAsync(username);
 
     public async Task<T> GetByEmailAsync(string email) => await userManager.FindByEmailAsync((email));
 
-    public async Task<IEnumerable<string>> GetRoles(ulong userId)
+    public async Task<IEnumerable<string>> GetRoles(long userId)
     {
         var user = await userManager.FindByIdAsync(userId);
 
@@ -403,7 +403,7 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
         CreatedBy = createdBy,
     };
 
-    public async Task<bool> SaveRefreshTokenAsync(ulong id, string token)
+    public async Task<bool> SaveRefreshTokenAsync(long id, string token)
     {
         //throw new NotImplementedException();
         var request = new SaveRefreshTokenRequest(id, token);
@@ -448,4 +448,4 @@ public abstract class AeroIdentityService<T, TKey> : IAeroIdentityService<T, TKe
     }
 }
 
-public record SaveRefreshTokenRequest(ulong userId, string token);
+public record SaveRefreshTokenRequest(long userId, string token);

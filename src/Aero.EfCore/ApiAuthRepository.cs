@@ -22,7 +22,7 @@ public sealed class ApiAuthRepository(AeroDbContext context, ILogger<ApiAuthRepo
         return Task.FromResult(accounts);
     }
 
-    public async Task<ApiAccountModel?> GetByKeyAsync(ulong key)
+    public async Task<ApiAccountModel?> GetByKeyAsync(long key)
     {
         var account = await apiAccountsDb
             .Include(x => x.Claims)
@@ -52,7 +52,7 @@ public sealed class ApiAuthRepository(AeroDbContext context, ILogger<ApiAuthRepo
         return Task.CompletedTask;
     }
 
-    public override async Task DeleteAsync(ulong id)
+    public override async Task DeleteAsync(long id)
     {
         var account = await apiAccountsDb
             .Include(x => x.Claims)

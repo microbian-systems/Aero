@@ -1,4 +1,6 @@
 using System.Security.Cryptography;
+using FlakeId;
+using FlakeId.Extensions;
 
 namespace Aero.Core;
 
@@ -14,28 +16,17 @@ public static class Snowflake
 
     static Snowflake()
     {
-        SnowflakeGuid.SetMachineID(MachineId);
+        
     }
 
 
     /// <summary>
     /// /Gets a new snowflake id
     /// </summary>
-    /// <returns>snowflake id of type ulong</returns>
-    public static ulong NewId()
+    /// <returns>snowflake id of type long</returns>
+    public static long NewId()
     {
-        var snowflake = SnowflakeGuid.Create();
-        return snowflake.Id; // for ef core / db reasons
-    }
-
-    /// <summary>
-    /// Sets the id of the snowflake generator machine
-    /// </summary>
-    /// <param name="machineId">the numeric id of the snowflake generation machine</param>
-    /// <exception cref="ArgumentException">machineId cannot be greater than 1023</exception>
-    static void SetMachineId(ushort machineId)
-    {
-        if (machineId > 1023) throw new ArgumentException($"{nameof(machineId)} cannot be greater than 1023");
-        SnowflakeGuid.SetMachineID(machineId);
+        var snowflake = Id.Create();
+        return snowflake; // for ef core / db reasons
     }
 }

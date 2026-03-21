@@ -24,7 +24,7 @@ public interface IEntity<TKey> where TKey : IEquatable<TKey>
 /// <summary>
 /// Represents a persisted entity for Aero
 /// </summary>
-public abstract class Entity : Entity<ulong>, IEntity {}
+public abstract class Entity : Entity<long>, IEntity {}
 
 /// <summary>
 /// Represents a persisted entity for Aero

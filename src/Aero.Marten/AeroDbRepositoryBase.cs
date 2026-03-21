@@ -18,7 +18,7 @@ public abstract class AeroDbRepositoryBase<TEntity>(
         return await session.Query<TEntity>().LongCountAsync();
     }
 
-    public override async Task<bool> ExistsAsync(ulong id)
+    public override async Task<bool> ExistsAsync(long id)
     {
         return await session.Query<TEntity>().AnyAsync(x => x.Id == id);
     }
@@ -30,7 +30,7 @@ public abstract class AeroDbRepositoryBase<TEntity>(
         return res;
     }
 
-    public override async Task<Option<TEntity>> FindByIdAsync(ulong id)
+    public override async Task<Option<TEntity>> FindByIdAsync(long id)
     {
         var entity = await session.Query<TEntity>().FirstOrDefaultAsync(x => x.Id == id);
         var res = entity is not null ? Some(entity) : Prelude.None;
@@ -86,7 +86,7 @@ public abstract class AeroDbRepositoryBase<TEntity>(
         }
     }
 
-    public override async Task<bool> DeleteAsync(ulong id)
+    public override async Task<bool> DeleteAsync(long id)
     {
         try
         {
@@ -128,13 +128,13 @@ public abstract class AeroDbRepositoryBase<TEntity>(
         return results ?? [];
     }
 
-    public override async Task<Option<TEntity>> GetByIdAsync(ulong id)
+    public override async Task<Option<TEntity>> GetByIdAsync(long id)
     {
         var res = await FindByIdAsync(id);
         return res;
     }
 
-    public override async Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<ulong> ids)
+    public override async Task<IEnumerable<TEntity>> GetByIdsAsync(IEnumerable<long> ids)
     {
         return await FindAsync(x => ids.Contains(x.Id));
     }

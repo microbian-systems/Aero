@@ -681,7 +681,7 @@ public partial class AuthController(
         if (!string.IsNullOrEmpty(userId))
         {
             // Revoke all refresh tokens for this user (logout everywhere)
-            await refreshTokenService.RevokeAllUserTokensAsync(ulong.Parse(userId), cancellationToken);
+            await refreshTokenService.RevokeAllUserTokensAsync(long.Parse(userId), cancellationToken);
             logger.LogInformation("User {UserId} logged out (revoked all tokens)", userId);
         }
 
@@ -724,7 +724,7 @@ public partial class AuthController(
 
         if (!string.IsNullOrEmpty(userId))
         {
-            var id = ulong.Parse(userId);
+            var id = long.Parse(userId);
             // Revoke all refresh tokens
             await refreshTokenService.RevokeAllUserTokensAsync(id, cancellationToken);
             logger.LogInformation("User {UserId} logged out from app (revoked all tokens)", userId);
@@ -751,7 +751,7 @@ public partial class AuthController(
             return Unauthorized();
         }
 
-        var id = ulong.Parse(userId);
+        var id = long.Parse(userId);
         var sessions = await refreshTokenService.GetActiveTokensAsync(id, cancellationToken);
 
         return Ok(new
@@ -784,7 +784,7 @@ public partial class AuthController(
         }
 
         // Get the session to verify it belongs to this user
-        var id = ulong.Parse(sessionId);
+        var id = long.Parse(sessionId);
         var sessions = await refreshTokenService.GetActiveTokensAsync(id, cancellationToken);
         if (!sessions.Any(s => s.Id == id))
         {

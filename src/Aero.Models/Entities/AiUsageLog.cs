@@ -3,9 +3,9 @@ using Aero.Core.Entities;
 
 namespace Aero.Models.Entities;
 
-public class AiUsageLog : EntityBase<ulong>, ISnowflakeEntity
+public class AiUsageLog : EntityBase<long>, ISnowflakeEntity
 {
-    public ulong UserId { get; set; } 
+    public long UserId { get; set; } 
     [MaxLength(8000)]
     public string Provider { get; set; } = string.Empty;
     public DateTimeOffset Timestamp { get; set; }

@@ -16,10 +16,10 @@ public interface IGenericMartenRepository<T, TKey>
     Task SaveChangesAsync();
 }
 
-public interface IGenericMartenRepository<T> : IGenericRepository<T, ulong> where T : IEntity<ulong>, new();
+public interface IGenericMartenRepository<T> : IGenericRepository<T, long> where T : IEntity<long>, new();
 
 public abstract class GenericMartenRepository<T>(IDocumentSession session, ILogger<GenericMartenRepository<T>> log)
-    : GenericMartenRepository<T, ulong>(session, log), IGenericMartenRepository<T>
+    : GenericMartenRepository<T, long>(session, log), IGenericMartenRepository<T>
     where T : ISnowflakeEntity, new();
 
 public class GenericMartenRepository<T, TKey>(IDocumentSession session, ILogger<GenericMartenRepository<T, TKey>> log) 

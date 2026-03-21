@@ -41,7 +41,7 @@ public class SaveRefreshTokenCommand : IAsyncCommand<SaveRefreshTokenRequest, bo
 
 public class SaveRefreshTokenRequest : Entity
 {
-    public ulong UserId { get; set; }
+    public long UserId { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
     public string Token { get; set; }

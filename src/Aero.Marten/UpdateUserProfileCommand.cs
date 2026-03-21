@@ -7,7 +7,7 @@ using Aero.Models.Entities;
 namespace Aero.Marten;
 
 public class UpdateUserProfileCommand(
-    IGenericRepository<AeroUserProfile, ulong> db,
+    IGenericRepository<AeroUserProfile, long> db,
     ILogger<UpdateUserProfileCommand> log)
     : IAsyncCommand<AeroUserProfile, AeroUserProfile>
 {
