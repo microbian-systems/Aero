@@ -10,7 +10,7 @@ using Marten;
 
 namespace Aero.EfCore.Extensions;
 
-public static class DbContextExtensions
+public static class AeroDbExtensions
 {
 
     public static IServiceCollection AddAeroDataLayer(this IServiceCollection services, IConfiguration config, IWebHostEnvironment env)
@@ -23,14 +23,14 @@ public static class DbContextExtensions
         var connString = config.GetConnectionString("aero");
         services.AddDbContextPool<AeroApiContext>(o =>
                 o.UseNpgsql(connString,
-                    x => x.MigrationsHistoryTable("__aeroApiMigrations", Schemas.Api)
+                    x => x.MigrationsHistoryTable("__aeroApiMigrations", Schemas.Aero)
                         .MigrationsAssembly(migrationAssembly)))
             //.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
             ;
 
         services.AddDbContextPool<AeroDbContext>(o =>
                 o.UseNpgsql(connString,
-                    x => x.MigrationsHistoryTable("__aeroMigrations", Schemas.Api)
+                    x => x.MigrationsHistoryTable("__aeroMigrations", Schemas.Aero)
                         .MigrationsAssembly(migrationAssembly)))
             //.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
             ;
@@ -44,11 +44,11 @@ public static class DbContextExtensions
         services.AddScoped<IApiAuthRepository, ApiAuthRepository>();
 
 
-        var store = DocumentStore.For(c =>
-        {
-            c.DatabaseSchemaName = Schemas.Aero;
-            c.Connection(connString!);
-        });
+        // var store = DocumentStore.For(c =>
+        // {
+        //     c.DatabaseSchemaName = Schemas.Aero;
+        //     c.Connection(connString!);
+        // });
 
         services.AddMarten(opts =>
         {
@@ -57,6 +57,7 @@ public static class DbContextExtensions
             opts.Schema.For<AeroUser>().Identity(x => x.Id);
             // Optional: enable automatic schema creation for development
             //opts.AutoCreateSchemaObjects = SchemaMode.Development;
+            opts.DatabaseSchemaName = Schemas.Aero;
         });
 
         // todo - rename this project from EfCore to Data and move Marten stuff in same project 

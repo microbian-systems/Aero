@@ -3,6 +3,7 @@ using System.Linq;
 using Aero.Core;
 using Aero.Core.Entities;
 using Aero.Core.Identity;
+using Marten.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace Aero.Models.Entities;

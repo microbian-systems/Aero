@@ -6,7 +6,7 @@ public class AeroApiContext(DbContextOptions<AeroApiContext> options) : DbContex
 {
     public DbSet<ApiAccountModel> ApiAccounts { get; set; }
     public DbSet<ApiClaimsModel> Claims { get; set; }
-    private const string schemaName = Schemas.Api;
+    private const string schemaName = Schemas.Aero;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
