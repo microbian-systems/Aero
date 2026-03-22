@@ -50,10 +50,19 @@ public static class AeroDbExtensions
         //     c.Connection(connString!);
         // });
 
+        // todo - move this to the application/client level - anything that needs IDocumentSession can get it via DI
+        // and instantiation at this level is too low.  There are other indexes this library is not aware of that need to be added
 services.AddMarten(opts =>
         {
             opts.Connection(connString!);
-            opts.UseSystemTextJsonForSerialization();
+            opts.UseSystemTextJsonForSerialization(configure: o =>
+            {
+                // Required for [JsonDerivedType] / [JsonPolymorphic] with PostgreSQL jsonb.
+                // jsonb doesn't guarantee property order, so the type discriminator (e.g. $blockType)
+                // can appear at any position in the JSON object. Without this, STJ throws:
+                // "must specify a type discriminator" on deserialization.
+                o.AllowOutOfOrderMetadataProperties = true;
+            });
             opts.Schema.For<AeroRole>().Identity(x => x.Id);
             opts.Schema.For<AeroUser>().Identity(x => x.Id);
             // Optional: enable automatic schema creation for development
