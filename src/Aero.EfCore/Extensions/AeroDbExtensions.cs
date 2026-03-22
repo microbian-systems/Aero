@@ -53,6 +53,7 @@ public static class AeroDbExtensions
         services.AddMarten(opts =>
         {
             opts.Connection(connString!);
+            opts.UseSystemTextJsonForSerialization();
             opts.Schema.For<AeroRole>().Identity(x => x.Id);
             opts.Schema.For<AeroUser>().Identity(x => x.Id);
             // Optional: enable automatic schema creation for development
