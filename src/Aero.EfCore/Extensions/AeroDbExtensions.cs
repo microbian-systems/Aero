@@ -50,7 +50,7 @@ public static class AeroDbExtensions
         //     c.Connection(connString!);
         // });
 
-        services.AddMarten(opts =>
+services.AddMarten(opts =>
         {
             opts.Connection(connString!);
             opts.UseSystemTextJsonForSerialization();

@@ -1,4 +1,4 @@
-﻿using Aero.Marten;
+using Aero.Marten;
 using JasperFx;
 using Marten;
 
