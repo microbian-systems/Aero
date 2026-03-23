@@ -3,31 +3,22 @@ namespace Aero.DataStructures.Trees;
 /// <summary>
 /// Represents a B+ Tree node wrapper for ITreeNode interface.
 /// </summary>
-public class BPlusTreeNodeWrapper<T> : ITreeNode<T>
+public class BPlusTreeNodeWrapper<T>(BPlusTreeNode<T> node, int keyIndex) : ITreeNode<T>
 {
-    private readonly BPlusTreeNode<T> _node;
-    private readonly int _keyIndex;
-
-    public BPlusTreeNodeWrapper(BPlusTreeNode<T> node, int keyIndex)
-    {
-        _node = node;
-        _keyIndex = keyIndex;
-    }
-
     public T Value
     {
-        get => _node.Keys[_keyIndex];
-        set => _node.Keys[_keyIndex] = value;
+        get => node.Keys[keyIndex];
+        set => node.Keys[keyIndex] = value;
     }
 
     public IEnumerable<ITreeNode<T>> Children
     {
         get
         {
-            if (_node.IsLeaf) yield break;
-            for (int i = 0; i < _node.Children.Count; i++)
+            if (node.IsLeaf) yield break;
+            for (int i = 0; i < node.Children.Count; i++)
             {
-                var child = _node.Children[i];
+                var child = node.Children[i];
                 for (int j = 0; j < child.Keys.Count; j++)
                 {
                     yield return new BPlusTreeNodeWrapper<T>(child, j);
@@ -41,16 +32,10 @@ public class BPlusTreeNodeWrapper<T> : ITreeNode<T>
 /// Represents a B+ Tree.
 /// </summary>
 /// <typeparam name="T">The type of the keys in the B+ Tree, must be comparable.</typeparam>
-public class BPlusTree<T> : ITree<T> where T : IComparable<T>
+public class BPlusTree<T>(int degree) : ITree<T>
+    where T : IComparable<T>
 {
-    public BPlusTreeNode<T> Root { get; private set; }
-    private readonly int _degree;
-
-    public BPlusTree(int degree)
-    {
-        _degree = degree;
-        Root = new BPlusTreeNode<T>(degree) { IsLeaf = true };
-    }
+    public BPlusTreeNode<T> Root { get; private set; } = new(degree) { IsLeaf = true };
 
     /// <summary>
     /// Finds a key in the B+ Tree and returns it if found.
@@ -123,7 +108,7 @@ public class BPlusTree<T> : ITree<T> where T : IComparable<T>
         var leaf = FindLeaf(key);
         InsertIntoLeaf(leaf, key);
 
-        if (leaf.Keys.Count <= _degree) return;
+        if (leaf.Keys.Count <= degree) return;
             
         var newLeaf = SplitLeaf(leaf);
         InsertIntoParent(leaf, newLeaf.Keys[0], newLeaf);
@@ -135,7 +120,7 @@ public class BPlusTree<T> : ITree<T> where T : IComparable<T>
 
         if (parent == null)
         {
-            Root = new BPlusTreeNode<T>(_degree);
+            Root = new BPlusTreeNode<T>(degree);
             Root.Keys.Add(key);
             Root.Children.Add(left);
             Root.Children.Add(right);
@@ -146,10 +131,10 @@ public class BPlusTree<T> : ITree<T> where T : IComparable<T>
         parent.Keys.Insert(index, key);
         parent.Children.Insert(index + 1, right);
 
-        if (parent.Keys.Count > _degree)
+        if (parent.Keys.Count > degree)
         {
             // Split parent
-            var newParent = new BPlusTreeNode<T>(_degree);
+            var newParent = new BPlusTreeNode<T>(degree);
             int mid = parent.Keys.Count / 2;
                 
             newParent.Keys.AddRange(parent.Keys.GetRange(mid + 1, parent.Keys.Count - (mid + 1)));
@@ -176,7 +161,7 @@ public class BPlusTree<T> : ITree<T> where T : IComparable<T>
 
         leaf.Keys.RemoveAt(index);
             
-        if (leaf.Keys.Count >= _degree / 2 || leaf == Root) return;
+        if (leaf.Keys.Count >= degree / 2 || leaf == Root) return;
 
         var parent = GetParent(Root, leaf);
         if(parent == null) return;
@@ -193,7 +178,7 @@ public class BPlusTree<T> : ITree<T> where T : IComparable<T>
         {
             // Merge with left sibling
             var leftSibling = parent.Children[index - 1];
-            if (leftSibling.Keys.Count + node.Keys.Count <= _degree)
+            if (leftSibling.Keys.Count + node.Keys.Count <= degree)
             {
                 leftSibling.Keys.AddRange(node.Keys);
                 leftSibling.Next = node.Next;
@@ -205,7 +190,7 @@ public class BPlusTree<T> : ITree<T> where T : IComparable<T>
         {
             // Merge with right sibling
             var rightSibling = parent.Children[index + 1];
-            if (rightSibling.Keys.Count + node.Keys.Count <= _degree)
+            if (rightSibling.Keys.Count + node.Keys.Count <= degree)
             {
                 node.Keys.AddRange(rightSibling.Keys);
                 node.Next = rightSibling.Next;
@@ -262,7 +247,7 @@ public class BPlusTree<T> : ITree<T> where T : IComparable<T>
         
     private BPlusTreeNode<T> SplitLeaf(BPlusTreeNode<T> leaf)
     {
-        var newLeaf = new BPlusTreeNode<T>(_degree) { IsLeaf = true };
+        var newLeaf = new BPlusTreeNode<T>(degree) { IsLeaf = true };
         var mid = leaf.Keys.Count / 2;
                 
         newLeaf.Keys.AddRange(leaf.Keys.GetRange(mid, leaf.Keys.Count - mid));

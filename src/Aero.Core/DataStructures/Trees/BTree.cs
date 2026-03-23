@@ -3,31 +3,22 @@ namespace Aero.DataStructures.Trees;
 /// <summary>
 /// Represents a B-Tree node wrapper for ITreeNode interface.
 /// </summary>
-public class BTreeNodeWrapper<T> : ITreeNode<T>
+public class BTreeNodeWrapper<T>(BTreeNode<T> node, int keyIndex) : ITreeNode<T>
 {
-    private readonly BTreeNode<T> _node;
-    private readonly int _keyIndex;
-
-    public BTreeNodeWrapper(BTreeNode<T> node, int keyIndex)
-    {
-        _node = node;
-        _keyIndex = keyIndex;
-    }
-
     public T Value
     {
-        get => _node.Keys[_keyIndex];
-        set => _node.Keys[_keyIndex] = value;
+        get => node.Keys[keyIndex];
+        set => node.Keys[keyIndex] = value;
     }
 
     public IEnumerable<ITreeNode<T>> Children
     {
         get
         {
-            if (_node.IsLeaf) yield break;
-            for (int i = 0; i < _node.Children.Count; i++)
+            if (node.IsLeaf) yield break;
+            for (int i = 0; i < node.Children.Count; i++)
             {
-                var child = _node.Children[i];
+                var child = node.Children[i];
                 for (int j = 0; j < child.Keys.Count; j++)
                 {
                     yield return new BTreeNodeWrapper<T>(child, j);
@@ -41,16 +32,12 @@ public class BTreeNodeWrapper<T> : ITreeNode<T>
 /// Represents a B-Tree.
 /// </summary>
 /// <typeparam name="T">The type of the keys in the B-Tree, must be comparable.</typeparam>
-public class BTree<T> : ITree<T> where T : IComparable<T>
+public class BTree<T>(int degree) : ITree<T>
+    where T : IComparable<T>
 {
-    public BTreeNode<T> Root { get; private set; }
-    private readonly int _degree; // Minimum degree
+    public BTreeNode<T> Root { get; private set; } = new(degree);
 
-    public BTree(int degree)
-    {
-        _degree = degree;
-        Root = new BTreeNode<T>(degree);
-    }
+    // Minimum degree
 
     /// <summary>
     /// Finds a key in the B-Tree and returns true if found.
@@ -87,9 +74,9 @@ public class BTree<T> : ITree<T> where T : IComparable<T>
     public void Insert(T key)
     {
         var root = Root;
-        if (root.Keys.Count == 2 * _degree - 1)
+        if (root.Keys.Count == 2 * degree - 1)
         {
-            var newRoot = new BTreeNode<T>(_degree);
+            var newRoot = new BTreeNode<T>(degree);
             Root = newRoot;
             newRoot.Children.Add(root);
             SplitChild(newRoot, 0);
@@ -121,7 +108,7 @@ public class BTree<T> : ITree<T> where T : IComparable<T>
                 i--;
             }
             i++;
-            if (node.Children[i].Keys.Count == 2 * _degree - 1)
+            if (node.Children[i].Keys.Count == 2 * degree - 1)
             {
                 SplitChild(node, i);
                 if (key.CompareTo(node.Keys[i]) > 0)
@@ -136,18 +123,18 @@ public class BTree<T> : ITree<T> where T : IComparable<T>
     private void SplitChild(BTreeNode<T> parentNode, int childIndex)
     {
         var fullNode = parentNode.Children[childIndex];
-        var newNode = new BTreeNode<T>(_degree);
+        var newNode = new BTreeNode<T>(degree);
             
-        parentNode.Keys.Insert(childIndex, fullNode.Keys[_degree - 1]);
+        parentNode.Keys.Insert(childIndex, fullNode.Keys[degree - 1]);
         parentNode.Children.Insert(childIndex + 1, newNode);
 
-        newNode.Keys.AddRange(fullNode.Keys.GetRange(_degree, _degree - 1));
-        fullNode.Keys.RemoveRange(_degree - 1, _degree);
+        newNode.Keys.AddRange(fullNode.Keys.GetRange(degree, degree - 1));
+        fullNode.Keys.RemoveRange(degree - 1, degree);
 
         if (!fullNode.IsLeaf)
         {
-            newNode.Children.AddRange(fullNode.Children.GetRange(_degree, _degree));
-            fullNode.Children.RemoveRange(_degree, _degree);
+            newNode.Children.AddRange(fullNode.Children.GetRange(degree, degree));
+            fullNode.Children.RemoveRange(degree, degree);
         }
     }
         
@@ -178,7 +165,7 @@ public class BTree<T> : ITree<T> where T : IComparable<T>
 
             bool flag = (idx == node.Keys.Count);
 
-            if (node.Children[idx].Keys.Count < _degree)
+            if (node.Children[idx].Keys.Count < degree)
                 Fill(node, idx);
 
             if (flag && idx > node.Keys.Count)
@@ -197,13 +184,13 @@ public class BTree<T> : ITree<T> where T : IComparable<T>
     {
         T key = node.Keys[idx];
 
-        if (node.Children[idx].Keys.Count >= _degree)
+        if (node.Children[idx].Keys.Count >= degree)
         {
             T pred = GetPred(node, idx);
             node.Keys[idx] = pred;
             Remove(node.Children[idx], pred);
         }
-        else if (node.Children[idx + 1].Keys.Count >= _degree)
+        else if (node.Children[idx + 1].Keys.Count >= degree)
         {
             T succ = GetSucc(node, idx);
             node.Keys[idx] = succ;
@@ -234,9 +221,9 @@ public class BTree<T> : ITree<T> where T : IComparable<T>
 
     private void Fill(BTreeNode<T> node, int idx)
     {
-        if (idx != 0 && node.Children[idx - 1].Keys.Count >= _degree)
+        if (idx != 0 && node.Children[idx - 1].Keys.Count >= degree)
             BorrowFromPrev(node, idx);
-        else if (idx != node.Keys.Count && node.Children[idx + 1].Keys.Count >= _degree)
+        else if (idx != node.Keys.Count && node.Children[idx + 1].Keys.Count >= degree)
             BorrowFromNext(node, idx);
         else
         {

@@ -1,7 +1,6 @@
 ﻿using Aero.MartenDB.Identity;
 using Aero.Models.Entities;
 using Microsoft.AspNetCore.Identity;
-using ThrowGuard;
 
 namespace Aero.MartenDB;
 

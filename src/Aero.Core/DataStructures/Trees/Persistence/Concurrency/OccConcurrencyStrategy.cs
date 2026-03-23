@@ -57,16 +57,9 @@ public sealed class OccConcurrencyStrategy : IConcurrencyStrategy
 
     public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 
-    private sealed class UnboundedSnapshot : IReadSnapshot
+    private sealed class UnboundedSnapshot(long txnId) : IReadSnapshot
     {
-        private readonly long _txnId;
-
-        public UnboundedSnapshot(long txnId)
-        {
-            _txnId = txnId;
-        }
-
-        public long SnapshotTransactionId => _txnId;
+        public long SnapshotTransactionId => txnId;
         public bool IsVisible(long xmin, long xmax) => true;
         public void Dispose() { }
     }

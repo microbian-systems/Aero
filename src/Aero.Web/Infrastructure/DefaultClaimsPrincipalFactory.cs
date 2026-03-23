@@ -22,17 +22,9 @@ public interface IClaimsPrincipalFactory
 /// Default implementation for the <see cref="IClaimsPrincipalFactory"/> service.
 /// Creates a principal with the single claim of the owner ID.
 /// </summary>
-public sealed class ClaimsPrincipalFactory : IClaimsPrincipalFactory
+public sealed class ClaimsPrincipalFactory(IApiKeyFactory apiKeyFactory, ILogger<ClaimsPrincipalFactory> log)
+    : IClaimsPrincipalFactory
 {
-    private readonly IApiKeyFactory apiKeyFactory;
-    private readonly ILogger<ClaimsPrincipalFactory> log;
-
-    public ClaimsPrincipalFactory(IApiKeyFactory apiKeyFactory, ILogger<ClaimsPrincipalFactory> log)
-    {
-        this.apiKeyFactory = apiKeyFactory;
-        this.log = log;
-    }
-    
     public Task<ClaimsPrincipal> CreateClaimsPrincipal(string apiKeyOwnerId, string? apiKey = null)
     {
         if (string.IsNullOrEmpty(apiKey))

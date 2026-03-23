@@ -8,24 +8,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class XProvider : SocialProviderBase
+public class XProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<XProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "x";
     public override string Name => "X";
     public override string[] Scopes => Array.Empty<string>();
     public override int MaxConcurrentJobs => 1;
     public override string? Tooltip => "You will be logged in into your current account, if you would like a different account, change it first on X";
-
-    public XProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<XProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null)
     {
@@ -417,9 +410,9 @@ public class XProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetApiKey() => _configuration["X_API_KEY"] ?? throw new InvalidOperationException("X_API_KEY not configured");
-    private string GetApiSecret() => _configuration["X_API_SECRET"] ?? throw new InvalidOperationException("X_API_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetApiKey() => configuration["X_API_KEY"] ?? throw new InvalidOperationException("X_API_KEY not configured");
+    private string GetApiSecret() => configuration["X_API_SECRET"] ?? throw new InvalidOperationException("X_API_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

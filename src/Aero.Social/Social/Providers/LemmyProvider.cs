@@ -8,23 +8,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class LemmyProvider : SocialProviderBase
+public class LemmyProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<LemmyProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration = configuration;
 
     public override string Identifier => "lemmy";
     public override string Name => "Lemmy";
     public override string[] Scopes => Array.Empty<string>();
     public override int MaxConcurrentJobs => 3;
-
-    public LemmyProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<LemmyProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 10000;
 

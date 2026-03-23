@@ -1,5 +1,4 @@
 using Aero.Common.Commands;
-using Aero.Core.Entities;
 
 
 namespace Aero.Marten;

@@ -1,23 +1,12 @@
 namespace Aero.DataStructures.Trees.Persistence.Heap;
 
-public sealed class RecordDeletedException : Exception
+public sealed class RecordDeletedException(HeapAddress address)
+    : Exception($"Record at address ({address.PageId}, {address.SlotIndex}) has been deleted.")
 {
-    public HeapAddress Address { get; }
-
-    public RecordDeletedException(HeapAddress address)
-        : base($"Record at address ({address.PageId}, {address.SlotIndex}) has been deleted.")
-    {
-        Address = address;
-    }
+    public HeapAddress Address { get; } = address;
 }
 
-public sealed class DuplicateKeyException : Exception
+public sealed class DuplicateKeyException(Guid id) : Exception($"A document with ID '{id}' already exists.")
 {
-    public Guid Id { get; }
-
-    public DuplicateKeyException(Guid id)
-        : base($"A document with ID '{id}' already exists.")
-    {
-        Id = id;
-    }
+    public Guid Id { get; } = id;
 }

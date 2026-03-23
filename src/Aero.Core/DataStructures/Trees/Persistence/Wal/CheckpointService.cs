@@ -1,38 +1,27 @@
 using Aero.DataStructures.Trees.Persistence.Storage;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Aero.DataStructures.Trees.Persistence.Wal;
 
-public sealed class CheckpointService : BackgroundService
+public sealed class CheckpointService(
+    IWalStorageBackend walBackend,
+    IWalWriter walWriter,
+    IWalReader walReader,
+    IStorageBackend innerBackend,
+    TransactionManager txnManager,
+    IOptions<CheckpointOptions> options,
+    ILogger<CheckpointService> logger)
+    : BackgroundService
 {
-    private readonly IWalStorageBackend _walBackend;
-    private readonly IWalWriter _walWriter;
-    private readonly IWalReader _walReader;
-    private readonly IStorageBackend _innerBackend;
-    private readonly TransactionManager _txnManager;
-    private readonly CheckpointOptions _options;
-    private readonly ILogger<CheckpointService> _logger;
+    private readonly IWalStorageBackend _walBackend = walBackend ?? throw new ArgumentNullException(nameof(walBackend));
+    private readonly IWalWriter _walWriter = walWriter ?? throw new ArgumentNullException(nameof(walWriter));
+    private readonly IWalReader _walReader = walReader ?? throw new ArgumentNullException(nameof(walReader));
+    private readonly IStorageBackend _innerBackend = innerBackend ?? throw new ArgumentNullException(nameof(innerBackend));
+    private readonly TransactionManager _txnManager = txnManager ?? throw new ArgumentNullException(nameof(txnManager));
+    private readonly CheckpointOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+    private readonly ILogger<CheckpointService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private int _entriesSinceLastCheckpoint;
-
-    public CheckpointService(
-        IWalStorageBackend walBackend,
-        IWalWriter walWriter,
-        IWalReader walReader,
-        IStorageBackend innerBackend,
-        TransactionManager txnManager,
-        IOptions<CheckpointOptions> options,
-        ILogger<CheckpointService> logger)
-    {
-        _walBackend = walBackend ?? throw new ArgumentNullException(nameof(walBackend));
-        _walWriter = walWriter ?? throw new ArgumentNullException(nameof(walWriter));
-        _walReader = walReader ?? throw new ArgumentNullException(nameof(walReader));
-        _innerBackend = innerBackend ?? throw new ArgumentNullException(nameof(innerBackend));
-        _txnManager = txnManager ?? throw new ArgumentNullException(nameof(txnManager));
-        _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
 
     protected override async Task ExecuteAsync(CancellationToken ct)
     {

@@ -9,23 +9,14 @@ namespace Aero.Auth.Services;
 /// All tokens are stored as SHA-256 hashes for security (plaintext never stored).
 /// Supports token rotation with one-time use enforcement.
 /// </summary>
-public class RefreshTokenService : IRefreshTokenService
+public class RefreshTokenService(
+    IDocumentSession session,
+    ILogger<RefreshTokenService> logger,
+    IConfiguration config)
+    : IRefreshTokenService
 {
-    private readonly IDocumentSession session;
-    readonly ILogger<RefreshTokenService> logger;
-    readonly IConfiguration config;
-    readonly int refreshTokenLifetimeDays;
-
-    public RefreshTokenService(
-        IDocumentSession session,
-        ILogger<RefreshTokenService> logger,
-        IConfiguration config)
-    {
-        this.session = session;
-        this.logger = logger;
-        this.config = config;
-        refreshTokenLifetimeDays = config.GetValue("Auth:RefreshTokenLifetimeDays", 30);
-    }
+    readonly IConfiguration config = config;
+    readonly int refreshTokenLifetimeDays = config.GetValue("Auth:RefreshTokenLifetimeDays", 30);
 
     public async Task<string> GenerateRefreshTokenAsync(
         long userId,

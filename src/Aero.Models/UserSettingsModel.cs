@@ -1,5 +1,4 @@
 using Aero.Core.Entities;
-using Aero.Models.Entities;
 
 namespace Aero.Models;
 

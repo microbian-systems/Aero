@@ -1,6 +1,5 @@
 using System.Security.Cryptography;
 using FlakeId;
-using FlakeId.Extensions;
 
 namespace Aero.Core;
 

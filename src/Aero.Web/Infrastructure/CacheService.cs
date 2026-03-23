@@ -23,18 +23,9 @@ public interface IApiKeysCacheService
 }
 
 
-public class ApiKeyCacheService : IApiKeysCacheService
+public class ApiKeyCacheService(IMemoryCache memoryCache, IClientsService clientsService) : IApiKeysCacheService
 {
     private static readonly TimeSpan cacheKeysTimeToLive = new(1, 0, 0);
-
-    private readonly IMemoryCache memoryCache;
-    private readonly IClientsService clientsService;
-
-    public ApiKeyCacheService(IMemoryCache memoryCache, IClientsService clientsService)
-    {
-        this.memoryCache = memoryCache;
-        this.clientsService = clientsService;
-    }
 
     public async ValueTask<string?> GetOwnerIdFromApiKey(string apiKey)
     {

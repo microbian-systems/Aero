@@ -6,24 +6,16 @@ using Aero.DataStructures.Trees.Persistence.Linq.Translation;
 
 namespace Aero.DataStructures.Trees.Persistence.Linq;
 
-public sealed class DocumentQueryProvider<TDocument> : IQueryProvider
+public sealed class DocumentQueryProvider<TDocument>(
+    IDocumentCollection<TDocument> collection,
+    IDocumentIndexRegistry<TDocument> registry,
+    IQueryDiagnostics? diagnostics = null)
+    : IQueryProvider
     where TDocument : class
 {
-    private readonly IDocumentCollection<TDocument> _collection;
-    private readonly IDocumentIndexRegistry<TDocument> _registry;
-    private readonly QueryTranslator<TDocument> _translator;
-    private readonly QueryPlanner<TDocument> _planner;
-
-    public DocumentQueryProvider(
-        IDocumentCollection<TDocument> collection,
-        IDocumentIndexRegistry<TDocument> registry,
-        IQueryDiagnostics? diagnostics = null)
-    {
-        _collection = collection;
-        _registry = registry;
-        _translator = new QueryTranslator<TDocument>(registry);
-        _planner = new QueryPlanner<TDocument>(registry, diagnostics);
-    }
+    private readonly IDocumentIndexRegistry<TDocument> _registry = registry;
+    private readonly QueryTranslator<TDocument> _translator = new(registry);
+    private readonly QueryPlanner<TDocument> _planner = new(registry, diagnostics);
 
     public IQueryable CreateQuery(Expression expression) =>
         new DocumentQueryable<TDocument>(this, expression);
@@ -44,7 +36,7 @@ public sealed class DocumentQueryProvider<TDocument> : IQueryProvider
     {
         var query = _translator.Translate(expression);
         var plan = _planner.Plan(query);
-        var docs = plan.ExecuteAsync(_collection, CancellationToken.None)
+        var docs = plan.ExecuteAsync(collection, CancellationToken.None)
             .ToBlockingEnumerable()
             .ToList();
         return (TResult)(object)docs;
@@ -56,6 +48,6 @@ public sealed class DocumentQueryProvider<TDocument> : IQueryProvider
     {
         var query = _translator.Translate(expression);
         var plan = _planner.Plan(query);
-        return plan.ExecuteAsync(_collection, ct);
+        return plan.ExecuteAsync(collection, ct);
     }
 }

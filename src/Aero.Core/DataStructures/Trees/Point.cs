@@ -3,16 +3,10 @@ namespace Aero.DataStructures.Trees;
 /// <summary>
 /// Represents a point in 2D space.
 /// </summary>
-public class Point
+public class Point(double x, double y)
 {
-    public double X { get; }
-    public double Y { get; }
-
-    public Point(double x, double y)
-    {
-        X = x;
-        Y = y;
-    }
+    public double X { get; } = x;
+    public double Y { get; } = y;
 
     public double DistanceTo(Point other)
     {

@@ -1,14 +1,9 @@
 ﻿namespace Aero.Services.Features;
 
-public abstract class FeatureStoreBase : IFeatureStore
+public abstract class FeatureStoreBase(ILogger<FeatureStoreBase> log) : IFeatureStore
 {
-    protected readonly ILogger<FeatureStoreBase> log;
+    protected readonly ILogger<FeatureStoreBase> log = log;
 
-    protected FeatureStoreBase(ILogger<FeatureStoreBase> log)
-    {
-        this.log = log;
-    }
-        
     public virtual Features GetFeature(string value) => GetFeatureAsync(value).GetAwaiter().GetResult();
         
     public abstract Task<Features> GetFeatureAsync(string value);

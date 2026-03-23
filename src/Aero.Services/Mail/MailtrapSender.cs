@@ -1,5 +1,4 @@
 using System.Net.Mail;
-using System.Threading;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Core.Models;
 using FluentEmail.Smtp;

@@ -1,16 +1,11 @@
 ﻿namespace Aero.Core.Converters;
 
-public class TimeOnlyConverter : JsonConverter<TimeOnly>
+public class TimeOnlyConverter(string? serializationFormat) : JsonConverter<TimeOnly>
 {
-    private readonly string serializationFormat;
+    private readonly string serializationFormat = serializationFormat ?? "HH:mm:ss.fff";
 
     public TimeOnlyConverter() : this(null)
     {
-    }
-
-    public TimeOnlyConverter(string? serializationFormat)
-    {
-        this.serializationFormat = serializationFormat ?? "HH:mm:ss.fff";
     }
 
     public override TimeOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

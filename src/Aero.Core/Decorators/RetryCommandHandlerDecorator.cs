@@ -4,17 +4,11 @@ using Polly;
 namespace Aero.Common.Decorators;
 
 // todo - replace polly with the microsoft.extensions.resilience package
-public class RetryCommandHandlerDecorator<TCommand> : IAsyncCommand<TCommand>
+public class RetryCommandHandlerDecorator<TCommand>(
+    IAsyncCommand<TCommand> handler,
+    ILogger<RetryCommandHandlerDecorator<TCommand>> log)
+    : IAsyncCommand<TCommand>
 {
-    private readonly ILogger<RetryCommandHandlerDecorator<TCommand>> log;
-    private readonly IAsyncCommand<TCommand> handler;
-
-    public RetryCommandHandlerDecorator(IAsyncCommand<TCommand> handler, ILogger<RetryCommandHandlerDecorator<TCommand>> log)
-    {
-        this.log = log;
-        this.handler = handler;
-    }
-
     // todo - investigate the following url for return async void as I'm doing here
     // https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
     public async Task ExecuteAsync(TCommand command)
@@ -35,17 +29,9 @@ public class RetryCommandHandlerDecorator<TCommand> : IAsyncCommand<TCommand>
 }
 
 
-public class RetryCommandHandlerDecorator<TCommand, TResult> : IAsyncCommand<TCommand, TResult>
+public class RetryCommandHandlerDecorator<TCommand, TResult>(IAsyncCommand<TCommand, TResult> handler, ILogger log)
+    : IAsyncCommand<TCommand, TResult>
 {
-    private readonly ILogger log;
-    private readonly IAsyncCommand<TCommand, TResult> handler;
-
-    public RetryCommandHandlerDecorator(IAsyncCommand<TCommand, TResult> handler, ILogger log)
-    {
-        this.log = log;
-        this.handler = handler;
-    }
-
     // todo - investigate the following url for return async void as I'm doing here
     // https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
     public async Task<TResult> ExecuteAsync(TCommand command)

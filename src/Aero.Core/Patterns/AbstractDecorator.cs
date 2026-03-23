@@ -1,23 +1,20 @@
 
 namespace Aero.Common.Patterns;
 
-public abstract class AbstractDecorator : IDecorator
+public abstract class AbstractDecorator(ILogger log) : IDecorator
 {
-    private readonly ILogger log;
-    public AbstractDecorator(ILogger log) => this.log = log;
+    private readonly ILogger log = log;
     public abstract void Execute();
 }
 
-public abstract class AbstractDecorator<T> : IDecorator<T>
+public abstract class AbstractDecorator<T>(ILogger log) : IDecorator<T>
 {
-    private readonly ILogger log;
-    public AbstractDecorator(ILogger log) => this.log = log;
+    private readonly ILogger log = log;
     public abstract void Execute(T param);
 }
     
-public abstract class AbstractDecorator<T, TReturn> : IDecorator<T, TReturn>
+public abstract class AbstractDecorator<T, TReturn>(ILogger log) : IDecorator<T, TReturn>
 {
-    private readonly ILogger log;
-    public AbstractDecorator(ILogger log) => this.log = log;
+    private readonly ILogger log = log;
     public abstract TReturn Execute(T param);
 }

@@ -2,16 +2,10 @@ using System.Buffers.Binary;
 
 namespace Aero.DataStructures.Trees.Persistence.Heap;
 
-public ref struct SlottedPage
+public ref struct SlottedPage(Span<byte> page)
 {
-    private readonly Span<byte> _page;
-    private readonly int _pageSize;
-
-    public SlottedPage(Span<byte> page)
-    {
-        _page = page;
-        _pageSize = page.Length;
-    }
+    private readonly Span<byte> _page = page;
+    private readonly int _pageSize = page.Length;
 
     public ulong PageLsn
     {

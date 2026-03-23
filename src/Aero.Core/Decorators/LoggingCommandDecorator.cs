@@ -2,17 +2,8 @@ using Aero.Common.Commands;
 
 namespace Aero.Common.Decorators;
 
-public class LoggingCommandDecorator : IAsyncCommand
+public class LoggingCommandDecorator(IAsyncCommand decorated, ILogger log) : IAsyncCommand
 {
-    private readonly ILogger log;
-    private readonly IAsyncCommand decorated;
-
-    public LoggingCommandDecorator(IAsyncCommand decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-
     public async Task ExecuteAsync()
     {
         var type = decorated.GetType();
@@ -22,17 +13,8 @@ public class LoggingCommandDecorator : IAsyncCommand
     }
 }
     
-public class LoggingCommandDecorator<TCommand> : IAsyncCommand<TCommand>
+public class LoggingCommandDecorator<TCommand>(IAsyncCommand<TCommand> decorated, ILogger log) : IAsyncCommand<TCommand>
 {
-    private readonly ILogger log;
-    private readonly IAsyncCommand<TCommand> decorated;
-
-    public LoggingCommandDecorator(IAsyncCommand<TCommand> decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-
     public async Task ExecuteAsync(TCommand param)
     {
         var type = decorated.GetType();
@@ -42,17 +24,9 @@ public class LoggingCommandDecorator<TCommand> : IAsyncCommand<TCommand>
     }
 }
     
-public class LoggingCommandDecorator<TCommand, TReturn> : IAsyncCommand<TCommand, TReturn>
+public class LoggingCommandDecorator<TCommand, TReturn>(IAsyncCommand<TCommand, TReturn> decorated, ILogger log)
+    : IAsyncCommand<TCommand, TReturn>
 {
-    private readonly ILogger log;
-    private readonly IAsyncCommand<TCommand, TReturn> decorated;
-
-    public LoggingCommandDecorator(IAsyncCommand<TCommand, TReturn> decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-
     public async Task<TReturn> ExecuteAsync(TCommand param)
     {
         var type = decorated.GetType();

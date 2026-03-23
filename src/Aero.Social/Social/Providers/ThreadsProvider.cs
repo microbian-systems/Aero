@@ -6,10 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class ThreadsProvider : SocialProviderBase
+public class ThreadsProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<ThreadsProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "threads";
     public override string Name => "Threads";
     public override string[] Scopes => new[]
@@ -20,15 +22,6 @@ public class ThreadsProvider : SocialProviderBase
         "threads_manage_insights"
     };
     public override int MaxConcurrentJobs => 2;
-
-    public ThreadsProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<ThreadsProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 500;
 
@@ -485,9 +478,9 @@ public class ThreadsProvider : SocialProviderBase
         return char.ToUpper(input[0]) + input.Substring(1);
     }
 
-    private string GetAppId() => _configuration["THREADS_APP_ID"] ?? throw new InvalidOperationException("THREADS_APP_ID not configured");
-    private string GetAppSecret() => _configuration["THREADS_APP_SECRET"] ?? throw new InvalidOperationException("THREADS_APP_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetAppId() => configuration["THREADS_APP_ID"] ?? throw new InvalidOperationException("THREADS_APP_ID not configured");
+    private string GetAppSecret() => configuration["THREADS_APP_SECRET"] ?? throw new InvalidOperationException("THREADS_APP_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

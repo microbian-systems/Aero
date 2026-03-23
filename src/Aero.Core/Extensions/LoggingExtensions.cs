@@ -1,13 +1,10 @@
 ﻿
 // todo - consider moving LoggerConfig into its own csproj
 
-using Aero.Core.Railway;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Extensions.Hosting;
-using Aero.Core.Railway;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Aero.Core.Extensions;

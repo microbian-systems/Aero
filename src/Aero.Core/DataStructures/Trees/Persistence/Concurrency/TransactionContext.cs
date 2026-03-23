@@ -17,21 +17,15 @@ public static class TransactionContext
         return new RestoreScope(previous);
     }
 
-    private sealed class RestoreScope : IDisposable
+    private sealed class RestoreScope(long previous) : IDisposable
     {
-        private readonly long _previous;
         private bool _disposed;
-
-        public RestoreScope(long previous)
-        {
-            _previous = previous;
-        }
 
         public void Dispose()
         {
             if (!_disposed)
             {
-                _current.Value = _previous;
+                _current.Value = previous;
                 _disposed = true;
             }
         }

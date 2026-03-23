@@ -8,19 +8,11 @@ using WebResponse = Aero.Models.WebResponse;
 
 namespace Aero.Common.Web.Commands;
 
-public class ContactUsCommand : IAsyncCommand<ContactUsModel, WebResponse>
+public class ContactUsCommand(IDynamicMartenRepository db, IEmailSender emailer, ILogger log)
+    : IAsyncCommand<ContactUsModel, WebResponse>
 {
-    private readonly ILogger log;
-    private readonly IDynamicMartenRepository db;
-    private readonly IEmailSender emailer;
+    private readonly IDynamicMartenRepository db = db;
 
-    public ContactUsCommand(IDynamicMartenRepository db, IEmailSender emailer, ILogger log)
-    {
-        this.log = log;
-        this.db = db;
-        this.emailer = emailer;
-    }
-        
     public async Task<WebResponse> ExecuteAsync(ContactUsModel model)
     {
         log.Information($"contact-us message recieved from: {model.Name} - {model.Email}");

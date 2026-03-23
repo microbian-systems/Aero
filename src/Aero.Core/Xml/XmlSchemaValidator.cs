@@ -6,16 +6,9 @@ namespace Aero.Common.Xml;
 
 public class XsdSchemaValidator
 {
-    public List<XmlSchema> Schemas { get; set; }
-    public List<String> Errors { get; protected set; }
-    public List<String> Warnings { get; protected set; }
-
-    public XsdSchemaValidator()
-    {
-        Schemas = new List<XmlSchema>();
-        Errors = new List<string>();
-        Warnings = new List<string>();
-    }
+    public List<XmlSchema> Schemas { get; set; } = new();
+    public List<String> Errors { get; protected set; } = new();
+    public List<String> Warnings { get; protected set; } = new();
 
     /// <summary>
     /// Add a schema to be used during the validation of the XML document

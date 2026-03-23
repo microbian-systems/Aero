@@ -7,9 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class LinkedInPageProvider : LinkedInProvider
+public class LinkedInPageProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<LinkedInPageProvider> logger)
+    : LinkedInProvider(httpClient, configuration, logger)
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration = configuration;
 
     public override string Identifier => "linkedin-page";
     public override string Name => "LinkedIn Page";
@@ -26,15 +30,6 @@ public class LinkedInPageProvider : LinkedInProvider
         "w_organization_social",
         "r_organization_social"
     };
-
-    public LinkedInPageProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<LinkedInPageProvider> logger)
-        : base(httpClient, configuration, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,

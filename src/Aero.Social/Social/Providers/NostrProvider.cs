@@ -9,9 +9,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class NostrProvider : SocialProviderBase
+public class NostrProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<NostrProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration = configuration;
     private static readonly string[] DefaultRelays = new[]
     {
         "wss://nos.lol",
@@ -27,15 +31,6 @@ public class NostrProvider : SocialProviderBase
     public override int MaxConcurrentJobs => 5;
     public override bool IsWeb3 => true;
     public override string? Tooltip => "Make sure you provide a HEX key of your Nostr private key, you can get it from websites like iris.to";
-
-    public NostrProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<NostrProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 100000;
 

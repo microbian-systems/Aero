@@ -8,10 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class YouTubeProvider : SocialProviderBase
+public class YouTubeProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<YouTubeProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "youtube";
     public override string Name => "YouTube";
     public override bool IsBetweenSteps => true;
@@ -27,15 +29,6 @@ public class YouTubeProvider : SocialProviderBase
         "https://www.googleapis.com/auth/yt-analytics.readonly"
     };
     public override int MaxConcurrentJobs => 200;
-
-    public YouTubeProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<YouTubeProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 5000;
 
@@ -347,9 +340,9 @@ public class YouTubeProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetClientId() => _configuration["YOUTUBE_CLIENT_ID"] ?? throw new InvalidOperationException("YOUTUBE_CLIENT_ID not configured");
-    private string GetClientSecret() => _configuration["YOUTUBE_CLIENT_SECRET"] ?? throw new InvalidOperationException("YOUTUBE_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["YOUTUBE_CLIENT_ID"] ?? throw new InvalidOperationException("YOUTUBE_CLIENT_ID not configured");
+    private string GetClientSecret() => configuration["YOUTUBE_CLIENT_SECRET"] ?? throw new InvalidOperationException("YOUTUBE_CLIENT_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

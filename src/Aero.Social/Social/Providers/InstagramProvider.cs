@@ -7,10 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class InstagramProvider : SocialProviderBase
+public class InstagramProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<InstagramProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "instagram";
     public override string Name => "Instagram (Facebook Business)";
     public override bool IsBetweenSteps => true;
@@ -26,15 +28,6 @@ public class InstagramProvider : SocialProviderBase
         "instagram_manage_insights"
     };
     public override int MaxConcurrentJobs => 200;
-
-    public InstagramProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<InstagramProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 2200;
 
@@ -424,9 +417,9 @@ public class InstagramProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetAppId() => _configuration["FACEBOOK_APP_ID"] ?? throw new InvalidOperationException("FACEBOOK_APP_ID not configured");
-    private string GetAppSecret() => _configuration["FACEBOOK_APP_SECRET"] ?? throw new InvalidOperationException("FACEBOOK_APP_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetAppId() => configuration["FACEBOOK_APP_ID"] ?? throw new InvalidOperationException("FACEBOOK_APP_ID not configured");
+    private string GetAppSecret() => configuration["FACEBOOK_APP_SECRET"] ?? throw new InvalidOperationException("FACEBOOK_APP_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

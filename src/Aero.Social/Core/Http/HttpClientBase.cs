@@ -5,19 +5,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Core.Http;
 
-public abstract class HttpClientBase
+public abstract class HttpClientBase(
+    HttpClient httpClient,
+    ILogger logger,
+    Polly.ResiliencePipeline<HttpResponseMessage>? resiliencePipeline = null)
 {
-    protected readonly ILogger Logger;
-    protected readonly HttpClient HttpClient;
+    protected readonly ILogger Logger = logger;
+    protected readonly HttpClient HttpClient = httpClient;
     protected readonly string JsonMediaType = "application/json";
-    protected readonly Polly.ResiliencePipeline<HttpResponseMessage>? ResiliencePipeline;
-
-    protected HttpClientBase(HttpClient httpClient, ILogger logger, Polly.ResiliencePipeline<HttpResponseMessage>? resiliencePipeline = null)
-    {
-        HttpClient = httpClient;
-        Logger = logger;
-        ResiliencePipeline = resiliencePipeline;
-    }
+    protected readonly Polly.ResiliencePipeline<HttpResponseMessage>? ResiliencePipeline = resiliencePipeline;
 
     protected virtual async Task<HttpResponseMessage> GetAsync(string url)
     {

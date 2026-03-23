@@ -7,23 +7,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class DribbbleProvider : SocialProviderBase
+public class DribbbleProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<DribbbleProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "dribbble";
     public override string Name => "Dribbble";
     public override string[] Scopes => new[] { "public", "upload" };
     public override int MaxConcurrentJobs => 3;
-
-    public DribbbleProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<DribbbleProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 40000;
 
@@ -215,9 +208,9 @@ public class DribbbleProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetClientId() => _configuration["DRIBBBLE_CLIENT_ID"] ?? throw new InvalidOperationException("DRIBBBLE_CLIENT_ID not configured");
-    private string GetClientSecret() => _configuration["DRIBBBLE_CLIENT_SECRET"] ?? throw new InvalidOperationException("DRIBBBLE_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["DRIBBBLE_CLIENT_ID"] ?? throw new InvalidOperationException("DRIBBBLE_CLIENT_ID not configured");
+    private string GetClientSecret() => configuration["DRIBBBLE_CLIENT_SECRET"] ?? throw new InvalidOperationException("DRIBBBLE_CLIENT_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

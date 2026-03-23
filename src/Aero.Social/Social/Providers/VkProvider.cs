@@ -8,10 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class VkProvider : SocialProviderBase
+public class VkProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<VkProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "vk";
     public override string Name => "VK";
     public override string[] Scopes => new[]
@@ -27,15 +29,6 @@ public class VkProvider : SocialProviderBase
 
     public override int MaxConcurrentJobs => 2;
     public override int MaxLength(object? additionalSettings = null) => 2048;
-
-    public VkProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<VkProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
@@ -375,8 +368,8 @@ public class VkProvider : SocialProviderBase
             .Replace('/', '_');
     }
 
-    private string GetClientId() => _configuration["VK_ID"] ?? throw new InvalidOperationException("VK_ID not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["VK_ID"] ?? throw new InvalidOperationException("VK_ID not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

@@ -1,11 +1,12 @@
 namespace Aero.DataStructures.Trees.Persistence.Wal;
 
-internal sealed class TransactionContext : ITransactionContext
+internal sealed class TransactionContext(
+    long transactionId,
+    Lsn beginLsn,
+    IWalWriter walWriter,
+    TransactionManager manager)
+    : ITransactionContext
 {
-    private readonly long _transactionId;
-    private readonly Lsn _beginLsn;
-    private readonly IWalWriter _walWriter;
-    private readonly TransactionManager _manager;
     private readonly Dictionary<long, ReadOnlyMemory<byte>> _dirtyPages = new();
     private readonly Dictionary<long, Lsn> _writeLsns = new();
     private readonly Dictionary<long, uint> _readSet = new();
@@ -13,24 +14,12 @@ internal sealed class TransactionContext : ITransactionContext
     private bool _aborted;
     private bool _disposed;
 
-    public long TransactionId => _transactionId;
-    public Lsn BeginLsn => _beginLsn;
+    public long TransactionId => transactionId;
+    public Lsn BeginLsn => beginLsn;
     public bool IsCommitted => _committed;
     public bool IsAborted => _aborted;
     public IReadOnlyDictionary<long, ReadOnlyMemory<byte>> DirtyPages => _dirtyPages;
     public IReadOnlyDictionary<long, uint> ReadSet => _readSet;
-
-    public TransactionContext(
-        long transactionId,
-        Lsn beginLsn,
-        IWalWriter walWriter,
-        TransactionManager manager)
-    {
-        _transactionId = transactionId;
-        _beginLsn = beginLsn;
-        _walWriter = walWriter;
-        _manager = manager;
-    }
 
     public void TrackRead(long pageId)
     {
@@ -77,15 +66,15 @@ internal sealed class TransactionContext : ITransactionContext
             Header =
             {
                 Type = WalEntryType.Commit,
-                TransactionId = _transactionId,
+                TransactionId = transactionId,
             }
         };
 
-        await _walWriter.AppendAsync(commitEntry, ct);
-        await _walWriter.FlushAsync(ct);
+        await walWriter.AppendAsync(commitEntry, ct);
+        await walWriter.FlushAsync(ct);
 
         _committed = true;
-        _manager.Complete(_transactionId);
+        manager.Complete(transactionId);
     }
 
     public async ValueTask RollbackAsync(CancellationToken ct = default)
@@ -102,7 +91,7 @@ internal sealed class TransactionContext : ITransactionContext
                 Header =
                 {
                     Type = WalEntryType.Clr,
-                    TransactionId = _transactionId,
+                    TransactionId = transactionId,
                     PageId = pageId,
                     ReferenceLsn = _writeLsns.GetValueOrDefault(pageId, Lsn.Zero),
                     ImageLength = beforeImage.Length,
@@ -111,7 +100,7 @@ internal sealed class TransactionContext : ITransactionContext
                 AfterImage = beforeImage,
             };
 
-            await _walWriter.AppendAsync(clrEntry, ct);
+            await walWriter.AppendAsync(clrEntry, ct);
         }
 
         var abortEntry = new WalEntry
@@ -119,15 +108,15 @@ internal sealed class TransactionContext : ITransactionContext
             Header =
             {
                 Type = WalEntryType.Abort,
-                TransactionId = _transactionId,
+                TransactionId = transactionId,
             }
         };
 
-        await _walWriter.AppendAsync(abortEntry, ct);
-        await _walWriter.FlushAsync(ct);
+        await walWriter.AppendAsync(abortEntry, ct);
+        await walWriter.FlushAsync(ct);
 
         _aborted = true;
-        _manager.Complete(_transactionId);
+        manager.Complete(transactionId);
     }
 
     public async ValueTask DisposeAsync()

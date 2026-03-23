@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Aero.MartenDB.Extensions;
+﻿namespace Aero.MartenDB.Extensions;
 
 public static class MartenDbExtensions
 {

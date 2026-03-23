@@ -2,17 +2,9 @@ using Aero.Common.Patterns;
 
 namespace Aero.Common.Decorators;
 
-public class ExceptionQueryHandlerDecorator<TReturn> : IAsyncQueryHandler<TReturn>
+public class ExceptionQueryHandlerDecorator<TReturn>(IAsyncQueryHandler<TReturn> decorated, ILogger log)
+    : IAsyncQueryHandler<TReturn>
 {
-    private readonly ILogger log;
-    private readonly IAsyncQueryHandler<TReturn> decorated;
-
-    public ExceptionQueryHandlerDecorator(IAsyncQueryHandler<TReturn> decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-        
     public async Task<TReturn> ExecuteAsync()
     {
         var result = default(TReturn);
@@ -29,17 +21,9 @@ public class ExceptionQueryHandlerDecorator<TReturn> : IAsyncQueryHandler<TRetur
     }
 }
     
-public class ExceptionQueryHandlerDecorator<TParam, TReturn> : IAsyncQueryHandler<TParam, TReturn>
+public class ExceptionQueryHandlerDecorator<TParam, TReturn>(IAsyncQueryHandler<TParam, TReturn> decorated, ILogger log)
+    : IAsyncQueryHandler<TParam, TReturn>
 {
-    private readonly ILogger log;
-    private readonly IAsyncQueryHandler<TParam, TReturn> decorated;
-
-    public ExceptionQueryHandlerDecorator(IAsyncQueryHandler<TParam, TReturn> decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-        
     public async Task<TReturn> ExecuteAsync(TParam param)
     {
         var result = default(TReturn);

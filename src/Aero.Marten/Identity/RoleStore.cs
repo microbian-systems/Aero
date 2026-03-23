@@ -1,5 +1,4 @@
 using Aero.Core.Identity;
-using Marten;
 using Microsoft.AspNetCore.Identity;
 
 namespace Aero.MartenDB.Identity;
@@ -8,17 +7,12 @@ namespace Aero.MartenDB.Identity;
 /// AeroDB store for roles.
 /// </summary>
 /// <typeparam name="TRole">The role type.</typeparam>
-public class RoleStore<TRole> :
+public class RoleStore<TRole>(IDocumentSession session) :
     IQueryableRoleStore<TRole>,
     IRoleClaimStore<TRole>
     where TRole : AeroRole, new()
 {
-    private readonly IDocumentSession _session;
-
-    public RoleStore(IDocumentSession session)
-    {
-        _session = session ?? throw new ArgumentNullException(nameof(session));
-    }
+    private readonly IDocumentSession _session = session ?? throw new ArgumentNullException(nameof(session));
 
     public IQueryable<TRole> Roles => _session.Query<TRole>();
 

@@ -1,10 +1,8 @@
 using Aero.Core.Data;
 using Aero.Core.Identity;
-using Aero.Models.Entities;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 using Aero.MartenDB;
 using Marten;
 
@@ -13,7 +11,7 @@ namespace Aero.EfCore.Extensions;
 public static class AeroDbExtensions
 {
 
-    public static IServiceCollection AddAeroDataLayer(this IServiceCollection services, IConfiguration config, IWebHostEnvironment env)
+    public static IServiceCollection AddAeroDataLayer(this IServiceCollection services, IConfiguration config, IHostEnvironment env)
     {
         var migrationAssembly = typeof(AeroApiContext)
             //.GetTypeInfo()

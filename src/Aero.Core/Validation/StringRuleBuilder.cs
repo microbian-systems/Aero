@@ -9,18 +9,12 @@ using Aero.Common.Constants;
 /// the concrete type through the chain — no casts needed at the call site.
 /// </summary>
 /// <typeparam name="TBuilder">The concrete builder type (CRTP self-reference).</typeparam>
-public abstract class StringRuleBuilder<TBuilder> : IFieldValidator
+public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? value) : IFieldValidator
     where TBuilder : StringRuleBuilder<TBuilder>
 {
-    protected readonly string FieldName;
-    protected readonly string? Value;
+    protected readonly string FieldName = fieldName;
+    protected readonly string? Value = value;
     private readonly List<Func<string?, string, ValidationError?>> _rules = [];
-
-    protected StringRuleBuilder(string fieldName, string? value)
-    {
-        FieldName = fieldName;
-        Value = value;
-    }
 
     // -------------------------------------------------------------------------
     // Presence

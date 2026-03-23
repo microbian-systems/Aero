@@ -1,7 +1,5 @@
-using System.IO;
 using Aero.Core.Identity;
 using Aero.MartenDB.Extensions;
-using Aero.Auth.Services;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.DataProtection;
 

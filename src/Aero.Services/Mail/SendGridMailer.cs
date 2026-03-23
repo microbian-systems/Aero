@@ -5,17 +5,8 @@ using SendGrid.Helpers.Mail;
 
 namespace Aero.Services.Mail;
 
-public class SendGridMailer : IEmailSender
+public class SendGridMailer(IConfiguration config, ILogger<SendGridMailer> log) : IEmailSender
 {
-    private readonly IConfiguration config;
-    private readonly ILogger<SendGridMailer> log;
-
-    public SendGridMailer(IConfiguration config, ILogger<SendGridMailer> log)
-    {
-        this.log = log;
-        this.config = config;
-    }
-
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
         log.LogInformation($"sending contactus email to {email} via send grid");

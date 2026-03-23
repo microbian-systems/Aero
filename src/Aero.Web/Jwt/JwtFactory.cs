@@ -5,16 +5,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Aero.Common.Web.Jwt;
 
-public class JwtFactory : JwtFactoryBase, IJwtFactory
+public class JwtFactory(IOptions<JwtOptions> options, ILogger<JwtFactory> log) : JwtFactoryBase(log), IJwtFactory
 {
-    private readonly JwtOptions options;
+    private readonly JwtOptions options = options.Value;
 
-    public JwtFactory(IOptions<JwtOptions> options, ILogger<JwtFactory> log)
-        : base(log)
-    {
-        this.options = options.Value;
-    }
-    
     // todo - use of type Tuple<,> is not recommended due to positional arguments breaking changes if args are added or order is changed
     // use the newer Tuple type (DateTimeOffset expiry, string token) instead
     public override JwtResponseModel GenerateAccessToken(List<Claim> claims)

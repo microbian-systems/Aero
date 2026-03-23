@@ -8,9 +8,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class HashnodeProvider : SocialProviderBase
+public class HashnodeProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<HashnodeProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration = configuration;
     private const string GraphQLEndpoint = "https://gql.hashnode.com";
 
     public override string Identifier => "hashnode";
@@ -18,15 +22,6 @@ public class HashnodeProvider : SocialProviderBase
     public override string[] Scopes => Array.Empty<string>();
     public override int MaxConcurrentJobs => 3;
     public override EditorType Editor => EditorType.Markdown;
-
-    public HashnodeProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<HashnodeProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 10000;
 

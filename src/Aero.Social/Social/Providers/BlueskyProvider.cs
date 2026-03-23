@@ -8,24 +8,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class BlueskyProvider : SocialProviderBase
+public class BlueskyProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<BlueskyProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration = configuration;
 
     public override string Identifier => "bluesky";
     public override string Name => "Bluesky";
     public override string[] Scopes => new[] { "write:statuses", "profile", "write:media" };
     public override int MaxConcurrentJobs => 2;
     public override string? Tooltip => "We don't currently support two-factor authentication. If it's enabled on Bluesky, you'll need to disable it.";
-
-    public BlueskyProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<BlueskyProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 300;
 

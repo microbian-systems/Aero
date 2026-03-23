@@ -8,24 +8,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class FarcasterProvider : SocialProviderBase
+public class FarcasterProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<FarcasterProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "wrapcast";
     public override string Name => "Farcaster";
     public override string[] Scopes => Array.Empty<string>();
     public override int MaxConcurrentJobs => 3;
     public override bool IsWeb3 => true;
-
-    public FarcasterProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<FarcasterProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 800;
 
@@ -236,8 +229,8 @@ public class FarcasterProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetNeynarApiKey() => _configuration["NEYNAR_SECRET_KEY"] ?? "00000000-000-0000-000-000000000000";
-    private string GetNeynarClientId() => _configuration["NEYNAR_CLIENT_ID"] ?? "";
+    private string GetNeynarApiKey() => configuration["NEYNAR_SECRET_KEY"] ?? "00000000-000-0000-000-000000000000";
+    private string GetNeynarClientId() => configuration["NEYNAR_CLIENT_ID"] ?? "";
 
     //#region DTOs
 

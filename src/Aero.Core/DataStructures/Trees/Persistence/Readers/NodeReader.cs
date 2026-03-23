@@ -10,21 +10,15 @@ namespace Aero.DataStructures.Trees.Persistence.Readers;
 /// </summary>
 /// <typeparam name="TKey">The type of keys, must be unmanaged and comparable.</typeparam>
 /// <typeparam name="TValue">The type of values, must be unmanaged.</typeparam>
-internal abstract class NodeReader<TKey, TValue>
+internal abstract class NodeReader<TKey, TValue>(int leafCapacity, int internalDegree)
     where TKey : unmanaged, IComparable<TKey>
     where TValue : unmanaged
 {
     /// <summary>Maximum capacity of records per leaf page.</summary>
-    public int LeafCapacity { get; }
-    
-    /// <summary>Maximum degree (fan-out) for internal nodes.</summary>
-    public int InternalDegree { get; }
+    public int LeafCapacity { get; } = leafCapacity;
 
-    protected NodeReader(int leafCapacity, int internalDegree)
-    {
-        LeafCapacity = leafCapacity;
-        InternalDegree = internalDegree;
-    }
+    /// <summary>Maximum degree (fan-out) for internal nodes.</summary>
+    public int InternalDegree { get; } = internalDegree;
 
     /// <summary>Reads an internal node from the specified page.</summary>
     public abstract ValueTask<BPlusInternalNode<TKey>> ReadInternalAsync(long pageId, CancellationToken ct);
@@ -57,39 +51,35 @@ internal abstract class NodeReader<TKey, TValue>
 /// Fast path node reader using zero-copy access directly into memory-mapped pages.
 /// No allocation, no copying - direct mapped memory access.
 /// </summary>
-internal sealed class ZeroCopyNodeReader<TKey, TValue> : NodeReader<TKey, TValue>
+internal sealed class ZeroCopyNodeReader<TKey, TValue>(
+    IZeroCopyStorageBackend storage,
+    int leafCapacity,
+    int internalDegree)
+    : NodeReader<TKey, TValue>(leafCapacity, internalDegree)
     where TKey : unmanaged, IComparable<TKey>
     where TValue : unmanaged
 {
-    private readonly IZeroCopyStorageBackend _storage;
-
-    public ZeroCopyNodeReader(IZeroCopyStorageBackend storage, int leafCapacity, int internalDegree) 
-        : base(leafCapacity, internalDegree)
-    {
-        _storage = storage;
-    }
-
     public override ValueTask<BPlusInternalNode<TKey>> ReadInternalAsync(long pageId, CancellationToken ct)
     {
-        ref var node = ref _storage.GetPageRef<BPlusInternalNode<TKey>>(pageId);
+        ref var node = ref storage.GetPageRef<BPlusInternalNode<TKey>>(pageId);
         return ValueTask.FromResult(node);
     }
 
     public override ValueTask<BPlusLeafNode<TKey, TValue>> ReadLeafAsync(long pageId, CancellationToken ct)
     {
-        ref var node = ref _storage.GetPageRef<BPlusLeafNode<TKey, TValue>>(pageId);
+        ref var node = ref storage.GetPageRef<BPlusLeafNode<TKey, TValue>>(pageId);
         return ValueTask.FromResult(node);
     }
 
     public override ValueTask WriteInternalAsync(long pageId, BPlusInternalNode<TKey> node, CancellationToken ct)
     {
-        _storage.GetPageRef<BPlusInternalNode<TKey>>(pageId) = node;
+        storage.GetPageRef<BPlusInternalNode<TKey>>(pageId) = node;
         return ValueTask.CompletedTask;
     }
 
     public override ValueTask WriteLeafAsync(long pageId, BPlusLeafNode<TKey, TValue> node, CancellationToken ct)
     {
-        _storage.GetPageRef<BPlusLeafNode<TKey, TValue>>(pageId) = node;
+        storage.GetPageRef<BPlusLeafNode<TKey, TValue>>(pageId) = node;
         return ValueTask.CompletedTask;
     }
 }
@@ -98,41 +88,34 @@ internal sealed class ZeroCopyNodeReader<TKey, TValue> : NodeReader<TKey, TValue
 /// Standard path node reader using async I/O with copies.
 /// Works with any IStorageBackend implementation.
 /// </summary>
-internal sealed class CopyingNodeReader<TKey, TValue> : NodeReader<TKey, TValue>
+internal sealed class CopyingNodeReader<TKey, TValue>(IStorageBackend storage, int leafCapacity, int internalDegree)
+    : NodeReader<TKey, TValue>(leafCapacity, internalDegree)
     where TKey : unmanaged, IComparable<TKey>
     where TValue : unmanaged
 {
-    private readonly IStorageBackend _storage;
-
-    public CopyingNodeReader(IStorageBackend storage, int leafCapacity, int internalDegree) 
-        : base(leafCapacity, internalDegree)
-    {
-        _storage = storage;
-    }
-
     public override async ValueTask<BPlusInternalNode<TKey>> ReadInternalAsync(long pageId, CancellationToken ct)
     {
-        var page = await _storage.ReadPageAsync(pageId, ct);
+        var page = await storage.ReadPageAsync(pageId, ct);
         return MemoryMarshal.AsRef<BPlusInternalNode<TKey>>(page.Span);
     }
 
     public override async ValueTask<BPlusLeafNode<TKey, TValue>> ReadLeafAsync(long pageId, CancellationToken ct)
     {
-        var page = await _storage.ReadPageAsync(pageId, ct);
+        var page = await storage.ReadPageAsync(pageId, ct);
         return MemoryMarshal.AsRef<BPlusLeafNode<TKey, TValue>>(page.Span);
     }
 
     public override async ValueTask WriteInternalAsync(long pageId, BPlusInternalNode<TKey> node, CancellationToken ct)
     {
-        var buffer = new byte[_storage.PageSize];
+        var buffer = new byte[storage.PageSize];
         MemoryMarshal.Write(buffer, ref node);
-        await _storage.WritePageAsync(pageId, buffer, ct);
+        await storage.WritePageAsync(pageId, buffer, ct);
     }
 
     public override async ValueTask WriteLeafAsync(long pageId, BPlusLeafNode<TKey, TValue> node, CancellationToken ct)
     {
-        var buffer = new byte[_storage.PageSize];
+        var buffer = new byte[storage.PageSize];
         MemoryMarshal.Write(buffer, ref node);
-        await _storage.WritePageAsync(pageId, buffer, ct);
+        await storage.WritePageAsync(pageId, buffer, ct);
     }
 }

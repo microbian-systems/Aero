@@ -1,8 +1,4 @@
-﻿using Aero.Core.Entities;
-using Microsoft.Extensions.Logging;
-using Aero.Core.Data.Functional;
-
-namespace Aero.Marten.Optional;
+﻿namespace Aero.Marten.Optional;
 
 public interface IMartenReadonlyRepositorySyncOption<T, TKey> 
     : IReadonlyRepositorySyncOption<T,TKey> 

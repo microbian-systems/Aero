@@ -4,12 +4,8 @@ namespace Aero.DataStructures.Trees;
 /// Performs a Breadth-First Search (Level-Order) on a binary tree.
 /// </summary>
 /// <typeparam name="T">The type of the values in the tree.</typeparam>
-public class BfsSearch<T> : TreeSearch<T>
+public class BfsSearch<T>(ITree<T> tree) : TreeSearch<T>(tree)
 {
-    public BfsSearch(ITree<T> tree) : base(tree)
-    {
-    }
-
     public override IEnumerable<ITreeNode<T>> Search()
     {
         var binaryTree = Tree as BinaryTree<T>;

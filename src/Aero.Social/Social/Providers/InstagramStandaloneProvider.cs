@@ -6,10 +6,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class InstagramStandaloneProvider : SocialProviderBase
+public class InstagramStandaloneProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<InstagramStandaloneProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly InstagramProvider _instagramProvider;
-    private readonly IConfiguration _configuration;
+    private readonly InstagramProvider _instagramProvider = new(httpClient, configuration,
+        new LoggerFactory().CreateLogger<InstagramProvider>());
 
     public override string Identifier => "instagram-standalone";
     public override string Name => "Instagram\n(Standalone)";
@@ -22,17 +26,6 @@ public class InstagramStandaloneProvider : SocialProviderBase
     };
     public override int MaxConcurrentJobs => 200;
     public override bool IsBetweenSteps => false;
-
-    public InstagramStandaloneProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<InstagramStandaloneProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-        _instagramProvider = new InstagramProvider(httpClient, configuration,
-            new LoggerFactory().CreateLogger<InstagramProvider>());
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 2200;
 
@@ -200,9 +193,9 @@ public class InstagramStandaloneProvider : SocialProviderBase
         return await DeserializeAsync<InstagramUserInfo>(response);
     }
 
-    private string GetAppId() => _configuration["INSTAGRAM_APP_ID"] ?? throw new InvalidOperationException("INSTAGRAM_APP_ID not configured");
-    private string GetAppSecret() => _configuration["INSTAGRAM_APP_SECRET"] ?? throw new InvalidOperationException("INSTAGRAM_APP_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetAppId() => configuration["INSTAGRAM_APP_ID"] ?? throw new InvalidOperationException("INSTAGRAM_APP_ID not configured");
+    private string GetAppSecret() => configuration["INSTAGRAM_APP_SECRET"] ?? throw new InvalidOperationException("INSTAGRAM_APP_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

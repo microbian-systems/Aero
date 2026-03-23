@@ -36,7 +36,7 @@ public static class CloudFlareConnectingIpExtensions
     }
 }
 
-public class CloudFlareConnectingIpMiddleware
+public class CloudFlareConnectingIpMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
 {
     public const string CLOUDFLARE_CONNECTING_IP_HEADER_NAME = "CF_CONNECTING_IP";
 
@@ -65,19 +65,13 @@ public class CloudFlareConnectingIpMiddleware
         IPAddressRange.Parse("2a06:98c0::/29")
     ];
 
-    private readonly RequestDelegate _next;
-    private readonly ForwardedHeadersMiddleware _forwardedHeadersMiddleware;
-
-    public CloudFlareConnectingIpMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
-    {
-        _next = next ?? throw new ArgumentNullException(nameof(next));
-        _forwardedHeadersMiddleware = new ForwardedHeadersMiddleware(next, loggerFactory,
-            Microsoft.Extensions.Options.Options.Create(new ForwardedHeadersOptions
-            {
-                ForwardedForHeaderName = CLOUDFLARE_CONNECTING_IP_HEADER_NAME,
-                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
-            }));
-    }
+    private readonly RequestDelegate _next = next ?? throw new ArgumentNullException(nameof(next));
+    private readonly ForwardedHeadersMiddleware _forwardedHeadersMiddleware = new(next, loggerFactory,
+        Microsoft.Extensions.Options.Options.Create(new ForwardedHeadersOptions
+        {
+            ForwardedForHeaderName = CLOUDFLARE_CONNECTING_IP_HEADER_NAME,
+            ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
+        }));
 
     public Task Invoke(HttpContext context)
     {

@@ -4,20 +4,11 @@ using Aero.DataStructures.Trees.Persistence.Linq.Translation;
 
 namespace Aero.DataStructures.Trees.Persistence.Linq.Planning;
 
-public sealed class QueryPlanner<TDocument>
+public sealed class QueryPlanner<TDocument>(
+    IDocumentIndexRegistry<TDocument> registry,
+    IQueryDiagnostics? diagnostics = null)
     where TDocument : class
 {
-    private readonly IDocumentIndexRegistry<TDocument> _registry;
-    private readonly IQueryDiagnostics? _diagnostics;
-
-    public QueryPlanner(
-        IDocumentIndexRegistry<TDocument> registry,
-        IQueryDiagnostics? diagnostics = null)
-    {
-        _registry = registry;
-        _diagnostics = diagnostics;
-    }
-
     public ExecutionPlan<TDocument> Plan(TranslatedQuery<TDocument> query)
     {
         var indexSpec = SelectBestIndex(query.Filters);
@@ -26,7 +17,7 @@ public sealed class QueryPlanner<TDocument>
         {
             var predicate = BuildResidualPredicate(query.Filters);
 
-            _diagnostics?.ReportFullScan(typeof(TDocument).Name, query);
+            diagnostics?.ReportFullScan(typeof(TDocument).Name, query);
 
             return new FullScanPlan<TDocument>(predicate, query.Take, query.Skip);
         }
@@ -35,17 +26,17 @@ public sealed class QueryPlanner<TDocument>
         var residual = BuildResidualPredicate(residualFilters);
         bool needsSort = RequiresSortStep(indexSpec, query.OrderBys);
 
-        _diagnostics?.ReportIndexScan(typeof(TDocument).Name, indexSpec, residual is not null);
+        diagnostics?.ReportIndexScan(typeof(TDocument).Name, indexSpec, residual is not null);
 
         return indexSpec.IsPoint
             ? new IndexPointLookupPlan<TDocument>(
-                _registry.GetExecutor(indexSpec.Index),
+                registry.GetExecutor(indexSpec.Index),
                 indexSpec,
                 residual,
                 query.Take,
                 query.Skip)
             : new IndexRangeScanPlan<TDocument>(
-                _registry.GetExecutor(indexSpec.Index),
+                registry.GetExecutor(indexSpec.Index),
                 indexSpec,
                 residual,
                 query.Take,

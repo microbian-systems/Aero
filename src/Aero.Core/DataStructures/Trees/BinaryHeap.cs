@@ -10,15 +10,10 @@ public enum HeapType
 /// Represents a Binary Heap, a complete binary tree that satisfies the heap property.
 /// </summary>
 /// <typeparam name="T">The type of the values in the heap, must be comparable.</typeparam>
-public class BinaryHeap<T> : IHeap<T> where T : IComparable<T>
+public class BinaryHeap<T>(HeapType heapType) : IHeap<T>
+    where T : IComparable<T>
 {
     private readonly List<T> _items = new();
-    private readonly HeapType _heapType;
-
-    public BinaryHeap(HeapType heapType)
-    {
-        _heapType = heapType;
-    }
 
     public int Count => _items.Count;
 
@@ -84,7 +79,7 @@ public class BinaryHeap<T> : IHeap<T> where T : IComparable<T>
     private bool Compare(T item1, T item2)
     {
         var result = item1.CompareTo(item2);
-        return _heapType == HeapType.MinHeap ? result < 0 : result > 0;
+        return heapType == HeapType.MinHeap ? result < 0 : result > 0;
     }
 
     private void Swap(int index1, int index2)

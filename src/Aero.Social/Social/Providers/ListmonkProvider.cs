@@ -9,24 +9,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class ListmonkProvider : SocialProviderBase
+public class ListmonkProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<ListmonkProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "listmonk";
     public override string Name => "ListMonk";
     public override string[] Scopes => Array.Empty<string>();
     public override EditorType Editor => EditorType.Html;
     public override int MaxConcurrentJobs => 100;
-
-    public ListmonkProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<ListmonkProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 100000000;
 
@@ -317,7 +310,7 @@ public class ListmonkProvider : SocialProviderBase
 
     private string Decrypt(string encrypted)
     {
-        var key = _configuration["ENCRYPTION_KEY"] ?? "default-encryption-key-32-chars!!";
+        var key = configuration["ENCRYPTION_KEY"] ?? "default-encryption-key-32-chars!!";
         var fullCipher = Convert.FromBase64String(encrypted);
 
         var iv = new byte[16];

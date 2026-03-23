@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Aero.Cloudflare;
 
 public static class ExternalIpProviders

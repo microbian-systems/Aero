@@ -3,16 +3,10 @@
 
 namespace Aero.Services.Features;
 
-public abstract class FeatureServiceBase : IFeaturesService
+public abstract class FeatureServiceBase(IFeatureStore store, ILogger<FeatureServiceBase> log) : IFeaturesService
 {
-    protected readonly ILogger<FeatureServiceBase> log;
-    protected readonly IFeatureStore store;
-
-    protected FeatureServiceBase(IFeatureStore store, ILogger<FeatureServiceBase> log)
-    {
-        this.log = log;
-        this.store = store;
-    }
+    protected readonly ILogger<FeatureServiceBase> log = log;
+    protected readonly IFeatureStore store = store;
 
     public Features GetFeature(string feature) => GetFeatureAsync(feature).GetAwaiter().GetResult();
 

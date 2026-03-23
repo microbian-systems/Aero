@@ -6,25 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class TelegramProvider : SocialProviderBase
+public class TelegramProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<TelegramProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "telegram";
     public override string Name => "Telegram";
     public override string[] Scopes => Array.Empty<string>();
     public override EditorType Editor => EditorType.Html;
     public override bool IsWeb3 => true;
     public override int MaxConcurrentJobs => 3;
-
-    public TelegramProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<TelegramProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 4096;
 
@@ -353,7 +346,7 @@ public class TelegramProvider : SocialProviderBase
         return result;
     }
 
-    private string GetBotToken() => _configuration["TELEGRAM_TOKEN"] ?? throw new InvalidOperationException("TELEGRAM_TOKEN not configured");
+    private string GetBotToken() => configuration["TELEGRAM_TOKEN"] ?? throw new InvalidOperationException("TELEGRAM_TOKEN not configured");
 
     //#region DTOs
 

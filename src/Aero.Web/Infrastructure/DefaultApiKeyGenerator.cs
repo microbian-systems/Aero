@@ -18,14 +18,9 @@ public interface IApiKeyFactory
 /// Default implementation for the <see cref="IApiKeyFactory"/> service. 
 /// Uses <see cref="ApiKeyGenerationOptions"/> to generate keys with the secure <see cref="RandomNumberGenerator"/>.
 /// </summary>
-public sealed class DefaultApiKeyFactory : IApiKeyFactory
+public sealed class DefaultApiKeyFactory(IOptions<ApiKeyOptions> apiKeyOptions) : IApiKeyFactory
 {
-    private readonly ApiKeyOptions options;
-
-    public DefaultApiKeyFactory(IOptions<ApiKeyOptions> apiKeyOptions)
-    {
-        options = apiKeyOptions.Value;
-    }
+    private readonly ApiKeyOptions options = apiKeyOptions.Value;
 
     public string? GenerateApiKey()
     {

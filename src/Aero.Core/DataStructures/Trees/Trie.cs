@@ -3,15 +3,10 @@ namespace Aero.DataStructures.Trees;
 /// <summary>
 /// Represents a Trie node that wraps a complete word for ITreeNode interface.
 /// </summary>
-public class TrieWordNode : ITreeNode<string>
+public class TrieWordNode(string value) : ITreeNode<string>
 {
-    public string Value { get; set; }
+    public string Value { get; set; } = value;
     public IEnumerable<ITreeNode<string>> Children => Enumerable.Empty<ITreeNode<string>>();
-
-    public TrieWordNode(string value)
-    {
-        Value = value;
-    }
 }
 
 /// <summary>

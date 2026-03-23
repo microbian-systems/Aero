@@ -1,6 +1,5 @@
 using Aero.Core.Data;
 using Aero.Core.Entities;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 

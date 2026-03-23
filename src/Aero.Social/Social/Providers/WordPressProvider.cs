@@ -9,24 +9,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class WordPressProvider : SocialProviderBase
+public class WordPressProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<WordPressProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration = configuration;
 
     public override string Identifier => "wordpress";
     public override string Name => "WordPress";
     public override string[] Scopes => Array.Empty<string>();
     public override int MaxConcurrentJobs => 5;
     public override EditorType Editor => EditorType.Html;
-
-    public WordPressProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<WordPressProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 100000;
 

@@ -1,12 +1,11 @@
 using System.Security.Claims;
 using Aero.Core.Identity;
 using Aero.Models.Entities;
-using Marten;
 using Microsoft.AspNetCore.Identity;
 
 namespace Aero.MartenDB.Identity;
 
-public class UserStore<TUser, TRole> :
+public class UserStore<TUser, TRole>(IDocumentSession session) :
     IUserStore<TUser>,
     IUserLoginStore<TUser>,
     IUserClaimStore<TUser>,
@@ -24,12 +23,7 @@ public class UserStore<TUser, TRole> :
     where TUser : AeroUser, new()
     where TRole : AeroRole, new()
 {
-    private readonly IDocumentSession _session;
-
-    public UserStore(IDocumentSession session)
-    {
-        _session = session ?? throw new ArgumentNullException(nameof(session));
-    }
+    private readonly IDocumentSession _session = session ?? throw new ArgumentNullException(nameof(session));
 
     public IQueryable<TUser> Users => _session.Query<TUser>();
 
