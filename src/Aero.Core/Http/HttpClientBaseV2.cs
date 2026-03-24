@@ -1,11 +1,6 @@
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.Extensions.Logging;
+﻿namespace Aero.Core.Http;
 
-namespace Aero.Core.Http;
-
-public abstract class HttpClientBase(
+public abstract class HttpClientBaseV2(
     HttpClient httpClient,
     ILogger logger,
     Polly.ResiliencePipeline<HttpResponseMessage>? resiliencePipeline = null)
@@ -124,7 +119,7 @@ public abstract class HttpClientBase(
     private static async Task<HttpRequestMessage> CloneRequestAsync(HttpRequestMessage request)
     {
         var cloned = new HttpRequestMessage(request.Method, request.RequestUri);
-        
+
         foreach (var header in request.Headers)
         {
             cloned.Headers.TryAddWithoutValidation(header.Key, header.Value);
@@ -134,7 +129,7 @@ public abstract class HttpClientBase(
         {
             var content = await request.Content.ReadAsByteArrayAsync();
             cloned.Content = new ByteArrayContent(content);
-            
+
             foreach (var header in request.Content.Headers)
             {
                 cloned.Content.Headers.TryAddWithoutValidation(header.Key, header.Value);
@@ -163,7 +158,7 @@ public abstract class HttpClientBase(
             Logger.LogWarning("JSON was null or empty. Unable to convert to type {Type}", typeof(T).Name);
             return default;
         }
-        
+
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
         return await JsonSerializer.DeserializeAsync<T>(stream, opts);
     }
