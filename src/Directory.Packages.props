@@ -25,7 +25,7 @@
     <PackageVersion Include="LlmTornado.VectorDatabases.PgVector" Version="1.0.0" />
     <PackageVersion Include="MailKit" Version="4.15.1" />
     <PackageVersion Include="Markdig" Version="1.1.1" />
-    <PackageVersion Include="Marten" Version="8.26.0" />
+    <PackageVersion Include="Marten" Version="8.26.1" />
     <PackageVersion Include="Microsoft.Agents.AI" Version="1.0.0-rc4" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Facebook" Version="10.0.5" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.5" />
@@ -107,13 +107,13 @@
     <PackageVersion Include="Twilio.AspNet.Common" Version="8.1.2" />
     <PackageVersion Include="Twilio.AspNet.Core" Version="8.1.2" />
     <PackageVersion Include="WindowsAzure.Storage" Version="9.3.3" />
-    <PackageVersion Include="WolverineFx" Version="5.21.0" />
-    <PackageVersion Include="WolverineFx.AzureServiceBus" Version="5.21.0" />
-    <PackageVersion Include="WolverineFx.FluentValidation" Version="5.21.0" />
-    <PackageVersion Include="WolverineFx.Marten" Version="5.21.0" />
-    <PackageVersion Include="WolverineFx.Postgresql" Version="5.21.0" />
-    <PackageVersion Include="WolverineFx.RabbitMQ" Version="5.21.0" />
-    <PackageVersion Include="WolverineFx.SqlServer" Version="5.21.0" />
+    <PackageVersion Include="WolverineFx" Version="5.23.0" />
+    <PackageVersion Include="WolverineFx.AzureServiceBus" Version="5.23.0" />
+    <PackageVersion Include="WolverineFx.FluentValidation" Version="5.23.0" />
+    <PackageVersion Include="WolverineFx.Marten" Version="5.23.0" />
+    <PackageVersion Include="WolverineFx.Postgresql" Version="5.23.0" />
+    <PackageVersion Include="WolverineFx.RabbitMQ" Version="5.23.0" />
+    <PackageVersion Include="WolverineFx.SqlServer" Version="5.23.0" />
     <PackageVersion Include="ZiggyCreatures.FusionCache" Version="2.6.0" />
     <PackageVersion Include="ZiggyCreatures.FusionCache.Backplane.Memory" Version="2.6.0" />
     <PackageVersion Include="ZiggyCreatures.FusionCache.Backplane.StackExchangeRedis" Version="2.6.0" />
