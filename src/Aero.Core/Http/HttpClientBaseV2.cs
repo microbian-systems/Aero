@@ -1,4 +1,11 @@
-﻿namespace Aero.Core.Http;
+﻿using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Aero.Core.Railway;
+using Microsoft.Extensions.Logging;
+
+namespace Aero.Core.Http;
 
 public abstract class HttpClientBaseV2(
     HttpClient httpClient,
@@ -16,10 +23,23 @@ public abstract class HttpClientBaseV2(
         return await SendWithResilienceAsync(request);
     }
 
+    protected virtual async Task<Result<string, T>> GetResultAsync<T>(string url, CancellationToken ct = default)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        return await SendResultAsync<T>(request, ct);
+    }
+
     protected virtual async Task<HttpResponseMessage> PostAsync<T>(string url, T data) where T : class
     {
         var request = CreateRequest(url, HttpMethod.Post, data);
         return await SendWithResilienceAsync(request);
+    }
+
+    protected virtual async Task<Result<string, TResponse>> PostResultAsync<TRequest, TResponse>(string url, TRequest data, CancellationToken ct = default) 
+        where TRequest : class
+    {
+        var request = CreateRequest(url, HttpMethod.Post, data);
+        return await SendResultAsync<TResponse>(request, ct);
     }
 
     protected virtual Task<HttpResponseMessage> PostAsync<T>(Uri url, T data) where T : class
@@ -31,10 +51,41 @@ public abstract class HttpClientBaseV2(
         return await SendWithResilienceAsync(request);
     }
 
+    protected virtual async Task<Result<string, TResponse>> PutResultAsync<TRequest, TResponse>(string url, TRequest data, CancellationToken ct = default) 
+        where TRequest : class
+    {
+        var request = CreateRequest(url, HttpMethod.Put, data);
+        return await SendResultAsync<TResponse>(request, ct);
+    }
+
     protected virtual async Task<HttpResponseMessage> DeleteAsync(string url)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, url);
         return await SendWithResilienceAsync(request);
+    }
+
+    protected virtual async Task<Result<string, bool>> DeleteResultAsync(string url, CancellationToken ct = default)
+    {
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, url);
+            var response = await SendWithResilienceAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = $"DELETE {url} failed with status {response.StatusCode}";
+                Logger.LogWarning(error);
+                return error;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            var error = $"Exception during DELETE {url}";
+            Logger.LogError(ex, error);
+            return $"{error}: {ex.Message}";
+        }
     }
 
     protected virtual async Task<HttpResponseMessage> PatchAsync<T>(string url, T data) where T : class
@@ -56,6 +107,31 @@ public abstract class HttpClientBaseV2(
         return (result, response);
     }
 
+    protected virtual async Task<Result<string, T>> SendResultAsync<T>(HttpRequestMessage request, CancellationToken ct = default)
+    {
+        var url = request.RequestUri?.ToString() ?? "unknown";
+        try
+        {
+            var response = await SendWithResilienceAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = $"{request.Method} {url} failed with status {response.StatusCode}";
+                Logger.LogWarning(error);
+                return error;
+            }
+
+            var result = await DeserializeAsync<T>(response);
+            return result!;
+        }
+        catch (Exception ex)
+        {
+            var error = $"Exception during {request.Method} {url}";
+            Logger.LogError(ex, error);
+            return $"{error}: {ex.Message}";
+        }
+    }
+
     protected virtual HttpRequestMessage CreateRequest(string url, HttpMethod method)
         => CreateRequest<object>(url, method, null);
 
@@ -67,8 +143,10 @@ public abstract class HttpClientBaseV2(
 
     protected virtual HttpRequestMessage CreateRequest<T>(Uri uri, HttpMethod method, T? data) where T : class
     {
-        if (string.IsNullOrEmpty(uri.AbsoluteUri))
-            throw new ArgumentNullException(nameof(uri), "Url cannot be null or empty");
+        if (string.IsNullOrEmpty(uri.AbsoluteUri) && !uri.IsAbsoluteUri)
+             // Handle relative uris if base address is set on client
+             if (string.IsNullOrEmpty(uri.OriginalString))
+                throw new ArgumentNullException(nameof(uri), "Url cannot be null or empty");
 
         if (method is null)
             throw new ArgumentNullException(nameof(method), "HttpMethod cannot be null");
@@ -148,10 +226,10 @@ public abstract class HttpClientBaseV2(
             ReferenceHandler = ReferenceHandler.IgnoreCycles
         };
 
-    protected virtual Task<T?> DeserializeAsync<T>(string json) where T : class
+    protected virtual Task<T?> DeserializeAsync<T>(string json)
         => DeserializeAsync<T>(json, GetDefaultSerializerOptions());
 
-    protected virtual async Task<T?> DeserializeAsync<T>(string json, JsonSerializerOptions opts) where T : class
+    protected virtual async Task<T?> DeserializeAsync<T>(string json, JsonSerializerOptions opts)
     {
         if (string.IsNullOrEmpty(json))
         {
@@ -163,19 +241,19 @@ public abstract class HttpClientBaseV2(
         return await JsonSerializer.DeserializeAsync<T>(stream, opts);
     }
 
-    protected virtual async Task<T?> DeserializeAsync<T>(HttpResponseMessage response) where T : class
+    protected virtual async Task<T?> DeserializeAsync<T>(HttpResponseMessage response)
         => await DeserializeAsync<T>(response, GetDefaultSerializerOptions());
 
-    protected virtual async Task<T?> DeserializeAsync<T>(HttpResponseMessage response, JsonSerializerOptions opts) where T : class
+    protected virtual async Task<T?> DeserializeAsync<T>(HttpResponseMessage response, JsonSerializerOptions opts)
     {
         var str = await response.Content.ReadAsStringAsync();
         return await DeserializeAsync<T>(str, opts);
     }
 
-    protected virtual async Task<T?> DeserializeAsync<T>(Stream stream) where T : class
+    protected virtual async Task<T?> DeserializeAsync<T>(Stream stream)
         => await DeserializeAsync<T>(stream, GetDefaultSerializerOptions());
 
-    protected virtual async Task<T?> DeserializeAsync<T>(Stream stream, JsonSerializerOptions opts) where T : class
+    protected virtual async Task<T?> DeserializeAsync<T>(Stream stream, JsonSerializerOptions opts)
     {
         return await JsonSerializer.DeserializeAsync<T>(stream, opts);
     }
