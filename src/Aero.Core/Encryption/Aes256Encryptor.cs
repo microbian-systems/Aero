@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using Aero.Core.Extensions;
 
 namespace Aero.Core.Encryption;
 

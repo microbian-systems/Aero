@@ -1,7 +1,5 @@
-using System.IO;
 using Aero.Core.Identity;
 using Aero.MartenDB.Extensions;
-using Aero.Auth.Services;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.DataProtection;
 
@@ -35,7 +33,7 @@ public static class SocialLoginExtensions
             opts.SignIn.RequireConfirmedEmail = false; // Set to true if email confirmation is implemented
         });
 
-        services.AddAeroPersistence(config);
+        //services.AddAeroPersistence(config);
         identityBuilder.AddAerodentityStores<AeroUser, AeroRole>(options =>
         {
             options.AutoSaveChanges = true;

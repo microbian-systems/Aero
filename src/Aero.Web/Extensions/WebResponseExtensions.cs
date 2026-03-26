@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using Aero.Models;
+﻿using Aero.Models;
 
 namespace Aero.Common.Web.Extensions;
 

@@ -4,31 +4,20 @@ using Aero.DataStructures.Trees.Persistence.Serialization;
 
 namespace Aero.DataStructures.Trees.Persistence.Documents;
 
-public sealed class IndexRebuildService<TDocument>
+public sealed class IndexRebuildService<TDocument>(
+    IDocumentCollection<TDocument> collection,
+    DocumentIndexRegistry<TDocument> registry,
+    IDocumentSerializer<TDocument> serializer,
+    IHeapFile heap)
     where TDocument : class
 {
-    private readonly IDocumentCollection<TDocument> _collection;
-    private readonly DocumentIndexRegistry<TDocument> _registry;
-    private readonly IDocumentSerializer<TDocument> _serializer;
-    private readonly IHeapFile _heap;
-
-    public IndexRebuildService(
-        IDocumentCollection<TDocument> collection,
-        DocumentIndexRegistry<TDocument> registry,
-        IDocumentSerializer<TDocument> serializer,
-        IHeapFile heap)
-    {
-        _collection = collection;
-        _registry = registry;
-        _serializer = serializer;
-        _heap = heap;
-    }
+    private readonly IDocumentCollection<TDocument> _collection = collection;
 
     public async ValueTask RebuildAllAsync(
         IProgress<int>? progress = null,
         CancellationToken ct = default)
     {
-        foreach (var index in _registry.AllIndexes)
+        foreach (var index in registry.AllIndexes)
             await RebuildIndexAsync(index.FieldName, progress, ct);
     }
 
@@ -37,18 +26,18 @@ public sealed class IndexRebuildService<TDocument>
         IProgress<int>? progress = null,
         CancellationToken ct = default)
     {
-        var def = _registry.FindByField(fieldName)
+        var def = registry.FindByField(fieldName)
                   ?? throw new ArgumentException($"No index found for field '{fieldName}'.");
-        var updater = _registry.GetUpdater(fieldName)
+        var updater = registry.GetUpdater(fieldName)
                       ?? throw new ArgumentException($"No updater found for field '{fieldName}'.");
 
         int count = 0;
 
-        await foreach (var (_, data) in _heap.ScanAllAsync(ct))
+        await foreach (var (_, data) in heap.ScanAllAsync(ct))
         {
             ct.ThrowIfCancellationRequested();
 
-            var document = _serializer.Deserialize(data);
+            var document = serializer.Deserialize(data);
             var id = ExtractId(document);
 
             await updater.OnInsertAsync(id, document, ct);

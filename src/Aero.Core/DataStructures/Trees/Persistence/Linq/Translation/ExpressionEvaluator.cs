@@ -44,8 +44,4 @@ public static class ExpressionEvaluator
     }
 }
 
-public sealed class NotSupportedInQueryException : Exception
-{
-    public NotSupportedInQueryException(string message, Exception? inner = null)
-        : base(message, inner) { }
-}
+public sealed class NotSupportedInQueryException(string message, Exception? inner = null) : Exception(message, inner);

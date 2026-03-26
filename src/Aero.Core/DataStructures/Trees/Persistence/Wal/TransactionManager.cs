@@ -2,18 +2,12 @@ using System.Collections.Concurrent;
 
 namespace Aero.DataStructures.Trees.Persistence.Wal;
 
-public sealed class TransactionManager : IAsyncDisposable
+public sealed class TransactionManager(IWalWriter wal) : IAsyncDisposable
 {
-    private readonly IWalWriter _wal;
-    private long _nextTransactionId;
+    private readonly IWalWriter _wal = wal ?? throw new ArgumentNullException(nameof(wal));
+    private long _nextTransactionId = 0;
     private readonly ConcurrentDictionary<long, ITransactionContext> _active = new();
     private bool _disposed;
-
-    public TransactionManager(IWalWriter wal)
-    {
-        _wal = wal ?? throw new ArgumentNullException(nameof(wal));
-        _nextTransactionId = 0;
-    }
 
     public async ValueTask<ITransactionContext> BeginAsync(CancellationToken ct = default)
     {

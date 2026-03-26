@@ -7,19 +7,15 @@ namespace Aero.Services;
 
 
 // todo - finish implementing feature store
-public class RepositoryFeaturesStore : FeatureStoreBase
+public class RepositoryFeaturesStore(
+    IGenericRepository<Features.Features> repo,
+    AppSettings settings,
+    ILogger<RepositoryFeaturesStore> log)
+    : FeatureStoreBase(log)
 {
     private readonly string appName;
-    private readonly IGenericRepository<Features.Features> repo;
-    private readonly AppSettings settings;
-
-    public RepositoryFeaturesStore(
-        IGenericRepository<Features.Features> repo,
-        AppSettings settings, ILogger<RepositoryFeaturesStore> log) : base(log)
-    {
-        this.repo = repo;
-        this.settings = settings;
-    }
+    private readonly IGenericRepository<Features.Features> repo = repo;
+    private readonly AppSettings settings = settings;
 
     public override async Task<Features.Features> GetFeatureAsync(string value)
     {

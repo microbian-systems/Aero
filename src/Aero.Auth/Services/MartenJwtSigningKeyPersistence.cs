@@ -1,26 +1,20 @@
 using Aero.MartenDB;
 using Marten;
 using Marten.Patching;
-using Microsoft.Extensions.Logging;
 
 namespace Aero.Auth.Services;
 
 /// <summary>
 /// Marten implementation of JWT signing key persistence.
 /// </summary>
-public class MartenJwtSigningKeyPersistence : IJwtSigningKeyPersistence
+public class MartenJwtSigningKeyPersistence(
+    IAeroDb uow,
+    ILogger<MartenJwtSigningKeyPersistence> logger)
+    : IJwtSigningKeyPersistence
 {
-    private readonly IAeroDbUnitOfWork _uow;
-    private readonly ILogger<MartenJwtSigningKeyPersistence> _logger;
+    private readonly IAeroDb _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+    private readonly ILogger<MartenJwtSigningKeyPersistence> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private const string KeyCollectionName = "JwtSigningKeys";
-
-    public MartenJwtSigningKeyPersistence(
-        IAeroDbUnitOfWork uow,
-        ILogger<MartenJwtSigningKeyPersistence> logger)
-    {
-        _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
 
     public async Task<JwtSigningKey?> GetCurrentSigningKeyAsync(CancellationToken cancellationToken = default)
     {

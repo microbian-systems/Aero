@@ -1,32 +1,22 @@
 namespace Aero.Common.Patterns;
 
-public abstract  class AbstractAsyncDecorator : IAsyncDecorator
+public abstract class AbstractAsyncDecorator(ILogger log) : IAsyncDecorator
 {
-    private readonly ILogger log;
-
-    protected AbstractAsyncDecorator(ILogger log) => this.log = log;
+    private readonly ILogger log = log;
 
     public abstract Task ExecuteAsync();
 }
 
-public abstract class AbstractAsyncDecorator<T> : IAsyncDecorator<T>
+public abstract class AbstractAsyncDecorator<T>(ILogger log) : IAsyncDecorator<T>
 {
-    private readonly ILogger log;
+    private readonly ILogger log = log;
 
-    public AbstractAsyncDecorator(ILogger log)
-    {
-        this.log = log;
-    }
     public abstract Task ExecuteAsync(T parameter);
 }
     
-public abstract class AbstractAsyncDecorator<T, TResult> : IAsyncDecorator<T, TResult>
+public abstract class AbstractAsyncDecorator<T, TResult>(ILogger log) : IAsyncDecorator<T, TResult>
 {
-    private readonly ILogger log;
+    private readonly ILogger log = log;
 
-    public AbstractAsyncDecorator(ILogger log)
-    {
-        this.log = log;
-    }
     public abstract Task<TResult> ExecuteAsync(T parameter);
 }

@@ -1,50 +1,33 @@
 namespace Aero.Social;
 
-public class RefreshTokenException : Exception
+public class RefreshTokenException(
+    string identifier,
+    string? responseBody = null,
+    object? requestBody = null,
+    string? message = null)
+    : Exception(message ?? "Token refresh required")
 {
-    public string Identifier { get; }
-    public string? ResponseBody { get; }
-    public object? RequestBody { get; }
-
-    public RefreshTokenException(string identifier, string? responseBody = null, object? requestBody = null, string? message = null)
-        : base(message ?? "Token refresh required")
-    {
-        Identifier = identifier;
-        ResponseBody = responseBody;
-        RequestBody = requestBody;
-    }
+    public string Identifier { get; } = identifier;
+    public string? ResponseBody { get; } = responseBody;
+    public object? RequestBody { get; } = requestBody;
 }
 
-public class BadBodyException : Exception
+public class BadBodyException(
+    string identifier,
+    string? responseBody = null,
+    object? requestBody = null,
+    string? message = null)
+    : Exception(message ?? "Bad request body")
 {
-    public string Identifier { get; }
-    public string? ResponseBody { get; }
-    public object? RequestBody { get; }
-
-    public BadBodyException(string identifier, string? responseBody = null, object? requestBody = null, string? message = null)
-        : base(message ?? "Bad request body")
-    {
-        Identifier = identifier;
-        ResponseBody = responseBody;
-        RequestBody = requestBody;
-    }
+    public string Identifier { get; } = identifier;
+    public string? ResponseBody { get; } = responseBody;
+    public object? RequestBody { get; } = requestBody;
 }
 
-public class NotEnoughScopesException : Exception
-{
-    public NotEnoughScopesException(string message = "Not enough OAuth scopes granted")
-        : base(message)
-    {
-    }
-}
+public class NotEnoughScopesException(string message = "Not enough OAuth scopes granted") : Exception(message);
 
-public class RateLimitException : Exception
+public class RateLimitException(TimeSpan? retryAfter = null, string? message = null)
+    : Exception(message ?? "Rate limit exceeded")
 {
-    public TimeSpan? RetryAfter { get; }
-
-    public RateLimitException(TimeSpan? retryAfter = null, string? message = null)
-        : base(message ?? "Rate limit exceeded")
-    {
-        RetryAfter = retryAfter;
-    }
+    public TimeSpan? RetryAfter { get; } = retryAfter;
 }

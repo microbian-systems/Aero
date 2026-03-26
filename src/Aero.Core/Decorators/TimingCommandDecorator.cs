@@ -3,17 +3,8 @@ using Aero.Common.Commands;
 
 namespace Aero.Common.Decorators;
 
-public class TimingCommandDecorator : IAsyncCommand
+public class TimingCommandDecorator(IAsyncCommand decorated, ILogger log) : IAsyncCommand
 {
-    private readonly ILogger log;
-    readonly IAsyncCommand decorated;
-
-    public TimingCommandDecorator(IAsyncCommand decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-
     public async Task ExecuteAsync()
     {
         log.LogInformation($"entered Timing decorator");
@@ -25,17 +16,8 @@ public class TimingCommandDecorator : IAsyncCommand
     }
 }
 
-public class TimingCommandDecorator<TCommand> : IAsyncCommand<TCommand>
+public class TimingCommandDecorator<TCommand>(IAsyncCommand<TCommand> decorated, ILogger log) : IAsyncCommand<TCommand>
 {
-    private readonly ILogger log;
-    readonly IAsyncCommand<TCommand> decorated;
-
-    public TimingCommandDecorator(IAsyncCommand<TCommand> decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-
     public async Task ExecuteAsync(TCommand param)
     {
         var sw = new Stopwatch();
@@ -46,17 +28,9 @@ public class TimingCommandDecorator<TCommand> : IAsyncCommand<TCommand>
     }
 }
 
-public class TimingCommandDecorator<TCommand, TReturn> : IAsyncCommand<TCommand, TReturn>
+public class TimingCommandDecorator<TCommand, TReturn>(IAsyncCommand<TCommand, TReturn> decorated, ILogger log)
+    : IAsyncCommand<TCommand, TReturn>
 {
-    private readonly ILogger log;
-    readonly IAsyncCommand<TCommand, TReturn> decorated;
-
-    public TimingCommandDecorator(IAsyncCommand<TCommand, TReturn> decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-
     public async Task<TReturn> ExecuteAsync(TCommand param)
     {
         var sw = new Stopwatch();

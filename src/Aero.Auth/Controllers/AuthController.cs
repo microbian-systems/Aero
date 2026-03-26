@@ -56,7 +56,7 @@ public partial class AuthController(
         {
             return LocalRedirect(returnUrl ?? "/");
         }
-        
+
         ViewBag.ReturnUrl = returnUrl;
         return View("Login", new LoginViewModel { ReturnUrl = returnUrl });
     }
@@ -365,7 +365,7 @@ public partial class AuthController(
         }
 
         var result = await userManager.AddLoginAsync(user, info);
-        
+
         if (result.Succeeded)
         {
             logger.LogInformation("User {UserId} registered a passkey", userId);
@@ -424,7 +424,7 @@ public partial class AuthController(
         {
             var email = info.Principal.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
             logger.LogInformation("User {Email} logged in via passkey", email);
-            
+
             if (Request.ContentType?.Contains("application/json") == true)
             {
                 var user = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
@@ -436,7 +436,7 @@ public partial class AuthController(
                     Email = user?.Email
                 });
             }
-            
+
             return LocalRedirect(returnUrl ?? "~/");
         }
 
@@ -474,7 +474,7 @@ public partial class AuthController(
             {
                 Id = p.ProviderKey,
                 p.ProviderDisplayName,
-                RegisteredAt = DateTimeOffset.UtcNow 
+                RegisteredAt = DateTimeOffset.UtcNow
             })
         });
     }
@@ -502,7 +502,7 @@ public partial class AuthController(
         }
 
         var logins = await userManager.GetLoginsAsync(user);
-        var passkey = logins.FirstOrDefault(l => 
+        var passkey = logins.FirstOrDefault(l =>
             l.LoginProvider == "passkey" && l.ProviderKey == passkeyId);
 
         if (passkey == null)
@@ -511,7 +511,7 @@ public partial class AuthController(
         }
 
         var result = await userManager.RemoveLoginAsync(user, passkey.LoginProvider, passkey.ProviderKey);
-        
+
         if (result.Succeeded)
         {
             logger.LogInformation("User {UserId} removed passkey {PasskeyId}", userId, passkeyId);
@@ -622,7 +622,7 @@ public partial class AuthController(
 
         // Validate and get user ID from refresh token
         var userId = await refreshTokenService.ValidateRefreshTokenAsync(request.RefreshToken, cancellationToken);
-        if (string.IsNullOrEmpty(userId))
+        //if (string.IsNullOrEmpty(userId))
         {
             logger.LogWarning("Invalid refresh token attempt");
             return Unauthorized(new RefreshTokenResponse
@@ -632,7 +632,7 @@ public partial class AuthController(
             });
         }
 
-        var user = await userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId.ToString());
         if (user == null)
         {
             return Unauthorized(new RefreshTokenResponse
@@ -681,7 +681,7 @@ public partial class AuthController(
         if (!string.IsNullOrEmpty(userId))
         {
             // Revoke all refresh tokens for this user (logout everywhere)
-            await refreshTokenService.RevokeAllUserTokensAsync(userId, cancellationToken);
+            await refreshTokenService.RevokeAllUserTokensAsync(long.Parse(userId), cancellationToken);
             logger.LogInformation("User {UserId} logged out (revoked all tokens)", userId);
         }
 
@@ -700,14 +700,14 @@ public partial class AuthController(
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-             // For GET, we should probably confirm or just logout.
-             // Ideally we show a confirmation page, but for simplicity we redirect to a logic that handles logout
-             // Or just call LogoutWeb.
-             // Security note: GET logout is vulnerable to CSRF.
-             // Best practice: Show a page with a form button to logout.
-             // But requirement says: "Show confirmation page or redirect directly"
-             // I'll show a simple confirmation view to be safe.
-             return View("Logout");
+            // For GET, we should probably confirm or just logout.
+            // Ideally we show a confirmation page, but for simplicity we redirect to a logic that handles logout
+            // Or just call LogoutWeb.
+            // Security note: GET logout is vulnerable to CSRF.
+            // Best practice: Show a page with a form button to logout.
+            // But requirement says: "Show confirmation page or redirect directly"
+            // I'll show a simple confirmation view to be safe.
+            return View("Logout");
         }
         return LocalRedirect("~/");
     }
@@ -724,8 +724,9 @@ public partial class AuthController(
 
         if (!string.IsNullOrEmpty(userId))
         {
+            var id = long.Parse(userId);
             // Revoke all refresh tokens
-            await refreshTokenService.RevokeAllUserTokensAsync(userId, cancellationToken);
+            await refreshTokenService.RevokeAllUserTokensAsync(id, cancellationToken);
             logger.LogInformation("User {UserId} logged out from app (revoked all tokens)", userId);
         }
 
@@ -750,7 +751,8 @@ public partial class AuthController(
             return Unauthorized();
         }
 
-        var sessions = await refreshTokenService.GetActiveTokensAsync(userId, cancellationToken);
+        var id = long.Parse(userId);
+        var sessions = await refreshTokenService.GetActiveTokensAsync(id, cancellationToken);
 
         return Ok(new
         {
@@ -782,8 +784,9 @@ public partial class AuthController(
         }
 
         // Get the session to verify it belongs to this user
-        var sessions = await refreshTokenService.GetActiveTokensAsync(userId, cancellationToken);
-        if (!sessions.Any(s => s.Id == sessionId))
+        var id = long.Parse(sessionId);
+        var sessions = await refreshTokenService.GetActiveTokensAsync(id, cancellationToken);
+        if (!sessions.Any(s => s.Id == id))
         {
             return NotFound();
         }
@@ -811,10 +814,10 @@ public partial class AuthController(
         [FromQuery] string clientType = "web")
     {
         // Determine the callback action based on client type
-        var callbackAction = clientType == "web" 
-            ? nameof(ExternalLoginCallback) 
+        var callbackAction = clientType == "web"
+            ? nameof(ExternalLoginCallback)
             : nameof(ExternalLoginCallbackApp);
-    
+
         // Build the full callback URL
         var redirectUrl = Url.Action(
             callbackAction,
@@ -826,10 +829,10 @@ public partial class AuthController(
         var properties = signInManager.ConfigureExternalAuthenticationProperties(
             provider,
             redirectUrl);
-    
+
         // Store clientType in authentication properties for callback
         properties.Items["clientType"] = clientType;
-    
+
         return Challenge(properties, provider);
     }
 

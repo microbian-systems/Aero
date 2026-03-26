@@ -3,16 +3,10 @@ namespace Aero.DataStructures.Trees;
 /// <summary>
 /// Represents the minimum bounding rectangle (MBR) for an R-Tree node.
 /// </summary>
-public class Mbr
+public class Mbr(Point min, Point max)
 {
-    public Point Min { get; }
-    public Point Max { get; }
-
-    public Mbr(Point min, Point max)
-    {
-        Min = min;
-        Max = max;
-    }
+    public Point Min { get; } = min;
+    public Point Max { get; } = max;
 
     public double Area()
     {

@@ -6,10 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class SlackProvider : SocialProviderBase
+public class SlackProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<SlackProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "slack";
     public override string Name => "Slack";
     public override string[] Scopes => new[]
@@ -22,15 +24,6 @@ public class SlackProvider : SocialProviderBase
         "chat:write.customize"
     };
     public override int MaxConcurrentJobs => 3;
-
-    public SlackProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<SlackProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 400000;
 
@@ -304,9 +297,9 @@ public class SlackProvider : SocialProviderBase
         return userResponse.User;
     }
 
-    private string GetClientId() => _configuration["SLACK_ID"] ?? throw new InvalidOperationException("SLACK_ID not configured");
-    private string GetClientSecret() => _configuration["SLACK_SECRET"] ?? throw new InvalidOperationException("SLACK_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["SLACK_ID"] ?? throw new InvalidOperationException("SLACK_ID not configured");
+    private string GetClientSecret() => configuration["SLACK_SECRET"] ?? throw new InvalidOperationException("SLACK_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

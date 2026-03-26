@@ -1,22 +1,15 @@
-using System.Threading.Tasks;
 using FluentValidation;
 using Aero.Common.Commands;
 using Microsoft.Extensions.Logging;
 
 namespace Aero.Validators;
 
-public class ValidationCommandHandlerDecorator<TCommand> : IAsyncCommand<TCommand>
+public class ValidationCommandHandlerDecorator<TCommand>(
+    IValidator<TCommand> validator,
+    IAsyncCommand<TCommand> handler,
+    ILogger log)
+    : IAsyncCommand<TCommand>
 {
-    private readonly ILogger log;
-    private readonly IAsyncCommand<TCommand> handler;
-    private readonly IValidator<TCommand> validator;
-
-    public ValidationCommandHandlerDecorator(IValidator<TCommand> validator, IAsyncCommand<TCommand> handler, ILogger log) {
-        this.log = log;
-        this.handler  = handler;
-        this.validator = validator;
-    }
-
     // todo - investigate the following url for return async void as I'm doing here
     // https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
     public async Task ExecuteAsync(TCommand command) 
@@ -29,18 +22,12 @@ public class ValidationCommandHandlerDecorator<TCommand> : IAsyncCommand<TComman
     }
 }
     
-public class ValidationCommandHandlerDecorator<TCommand, TResult> : IAsyncCommand<TCommand, TResult> 
+public class ValidationCommandHandlerDecorator<TCommand, TResult>(
+    IValidator<TCommand> validator,
+    IAsyncCommand<TCommand, TResult> handler,
+    ILogger log)
+    : IAsyncCommand<TCommand, TResult>
 {
-    private readonly ILogger log;
-    private readonly IAsyncCommand<TCommand, TResult> handler;
-    private readonly IValidator<TCommand> validator;
-
-    public ValidationCommandHandlerDecorator(IValidator<TCommand> validator, IAsyncCommand<TCommand, TResult> handler, ILogger log) {
-        this.log = log;
-        this.handler = handler;
-        this.validator = validator;
-    }
-
     // todo - investigate the following url for return async void as I'm doing here
     // https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
     public async Task<TResult> ExecuteAsync(TCommand command) 

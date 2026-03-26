@@ -6,22 +6,15 @@ namespace Aero.Common.Web.Commands;
 
 public class DeleteRefreshTokenRequest
 {
-    public string UserId { get; set; }
+    public long UserId { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
     public string RefreshToken { get; set; }
 }
     
-public class DeleteRefreshTokenCommand : IAsyncCommand<DeleteRefreshTokenRequest, bool>
+public class DeleteRefreshTokenCommand(IDynamicMartenRepository db) : IAsyncCommand<DeleteRefreshTokenRequest, bool>
 {
-    private readonly IDynamicMartenRepository db;
-
-    public DeleteRefreshTokenCommand(IDynamicMartenRepository db)
-    {
-        this.db = db;
-    }
-
-    public async Task<bool> DeleteRefreshToken(string id, string refreshToken)
+    public async Task<bool> DeleteRefreshToken(long id, string refreshToken)
     {
         var record = await db.FindSingle<RefreshToken>(x => x.UserId == id);
         if (record != null)

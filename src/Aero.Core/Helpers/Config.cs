@@ -1,5 +1,5 @@
-﻿using System.Configuration;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 using ILogger = Serilog.ILogger;
 
 namespace Aero.Core.Helpers;

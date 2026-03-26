@@ -7,10 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class LinkedInProvider : SocialProviderBase
+public class LinkedInProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<LinkedInProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "linkedin";
     public override string Name => "LinkedIn";
     public override string[] Scopes => new[]
@@ -26,15 +28,6 @@ public class LinkedInProvider : SocialProviderBase
     public override bool OneTimeToken => true;
     public override bool RefreshWait => true;
     public override int MaxConcurrentJobs => 2;
-
-    public LinkedInProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<LinkedInProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 3000;
 
@@ -373,9 +366,9 @@ public class LinkedInProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    protected string GetClientId() => _configuration["LINKEDIN_CLIENT_ID"] ?? throw new InvalidOperationException("LINKEDIN_CLIENT_ID not configured");
-    protected string GetClientSecret() => _configuration["LINKEDIN_CLIENT_SECRET"] ?? throw new InvalidOperationException("LINKEDIN_CLIENT_SECRET not configured");
-    protected string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    protected string GetClientId() => configuration["LINKEDIN_CLIENT_ID"] ?? throw new InvalidOperationException("LINKEDIN_CLIENT_ID not configured");
+    protected string GetClientSecret() => configuration["LINKEDIN_CLIENT_SECRET"] ?? throw new InvalidOperationException("LINKEDIN_CLIENT_SECRET not configured");
+    protected string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

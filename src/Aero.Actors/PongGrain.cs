@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿
+using Aero.Core;
 
 namespace Aero.Actors;
 
@@ -26,7 +27,7 @@ public class PongGrain(ILogger<PongGrain> log) : AeroGrain(log), IPongGrain
     {
         log.LogInformation($"Ping received: {message.content}");
 
-        var id = NewId.NextSequentialGuid();
+        var id = Snowflake.NewId();
         // Create a response message
         var responseMessage = new Message(id, $"pong! ping received: {message.content}");
 

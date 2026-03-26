@@ -1,25 +1,18 @@
 using Aero.DataStructures.Trees.Persistence.Interfaces;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Aero.DataStructures.Trees.Persistence.Vacuum;
 
-public sealed class AutoVacuumService : BackgroundService
+public sealed class AutoVacuumService(
+    IVacuumable tree,
+    IOptions<AutoVacuumOptions> options,
+    ILogger<AutoVacuumService> logger)
+    : BackgroundService
 {
-    private readonly IVacuumable _tree;
-    private readonly AutoVacuumOptions _options;
-    private readonly ILogger<AutoVacuumService> _logger;
-
-    public AutoVacuumService(
-        IVacuumable tree,
-        IOptions<AutoVacuumOptions> options,
-        ILogger<AutoVacuumService> logger)
-    {
-        _tree = tree ?? throw new ArgumentNullException(nameof(tree));
-        _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
+    private readonly IVacuumable _tree = tree ?? throw new ArgumentNullException(nameof(tree));
+    private readonly AutoVacuumOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+    private readonly ILogger<AutoVacuumService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     protected override async Task ExecuteAsync(CancellationToken ct)
     {

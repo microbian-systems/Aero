@@ -2,23 +2,21 @@ using Aero.Common.Commands;
 
 namespace Aero.Common.Patterns;
 
-public abstract class AbstractAsyncCommandHandler : IAsyncCommand
+public abstract class AbstractAsyncCommandHandler(ILogger<AbstractAsyncCommandHandler> log) : IAsyncCommand
 {
-    private readonly ILogger<AbstractAsyncCommandHandler> log;
-    protected AbstractAsyncCommandHandler(ILogger<AbstractAsyncCommandHandler> log) => this.log = log;
+    private readonly ILogger<AbstractAsyncCommandHandler> log = log;
     public abstract Task ExecuteAsync();
 }
     
-public abstract class AbstractAsyncCommandHandler<T> : IAsyncCommand<T>
+public abstract class AbstractAsyncCommandHandler<T>(ILogger<AbstractAsyncCommandHandler> log) : IAsyncCommand<T>
 {
-    private readonly ILogger<AbstractAsyncCommandHandler> log;
-    protected AbstractAsyncCommandHandler(ILogger<AbstractAsyncCommandHandler> log) => this.log = log;
+    private readonly ILogger<AbstractAsyncCommandHandler> log = log;
     public abstract Task ExecuteAsync(T param);
 }
     
-public abstract class AbstractAsyncCommandHandler<T, TReturn> : IAsyncCommand<T, TReturn>
+public abstract class AbstractAsyncCommandHandler<T, TReturn>(ILogger<AbstractAsyncCommandHandler> log)
+    : IAsyncCommand<T, TReturn>
 {
-    private readonly ILogger<AbstractAsyncCommandHandler> log;
-    protected AbstractAsyncCommandHandler(ILogger<AbstractAsyncCommandHandler> log) => this.log = log;
+    private readonly ILogger<AbstractAsyncCommandHandler> log = log;
     public abstract Task<TReturn> ExecuteAsync(T param);
 }

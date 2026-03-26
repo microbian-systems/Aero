@@ -3,20 +3,13 @@ using Aero.DataStructures.Trees.Persistence.Indexes;
 
 namespace Aero.DataStructures.Trees.Persistence.Linq.Translation;
 
-public sealed class QueryTranslator<TDocument>
+public sealed class QueryTranslator<TDocument>(IDocumentIndexRegistry<TDocument> registry)
     where TDocument : class
 {
-    private readonly IDocumentIndexRegistry<TDocument> _registry;
-
     private readonly List<FilterClause> _filters = new();
     private readonly List<OrderClause> _orderBys = new();
     private int? _take;
     private int? _skip;
-
-    public QueryTranslator(IDocumentIndexRegistry<TDocument> registry)
-    {
-        _registry = registry;
-    }
 
     public TranslatedQuery<TDocument> Translate(Expression expression)
     {
@@ -210,7 +203,7 @@ public sealed class QueryTranslator<TDocument>
                 $"Only direct field access (e.g. c.Age) is supported.");
 
         var fieldName = memberExpr.Member.Name;
-        var indexDef = _registry.FindByField(fieldName);
+        var indexDef = registry.FindByField(fieldName);
         return new MemberAccess(fieldName, indexDef);
     }
 

@@ -11,7 +11,7 @@ namespace Aero.Social.Abstractions;
 /// Base class for all social media provider implementations.
 /// Provides common functionality for HTTP requests, error handling, retry logic, and plug support.
 /// </summary>
-public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
+public abstract class SocialProviderBase : HttpClientBaseV2, ISocialProvider
 {
     /// <inheritdoc/>
     public abstract string Identifier { get; }

@@ -7,14 +7,9 @@ namespace Aero.Social.Forem;
 
 // todo - stitch this in: https://dev.to/tiaeastwood/how-to-use-the-forem-api-to-display-your-devto-blog-posts-on-your-website-easy-3dl3
 
-public class ForemArticleService : HttpClientBase
+public class ForemArticleService(HttpClient client, ILogger<ForemArticleService> log) : HttpClientBase(client, log)
 {
-    private readonly HttpClient _httpClient;
-
-    public ForemArticleService(HttpClient client, ILogger<ForemArticleService> log) : base(client, log)
-    {
-        _httpClient = client;
-    }
+    private readonly HttpClient _httpClient = client;
 
     public async Task<ArticleCreateResponse?> CreateArticleAsync(ArticleCreateRequest request, CancellationToken cancellationToken = default)
     {

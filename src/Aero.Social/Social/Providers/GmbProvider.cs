@@ -8,10 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class GmbProvider : SocialProviderBase
+public class GmbProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<GmbProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "gmb";
     public override string Name => "Google My Business";
     public override string[] Scopes => new[]
@@ -22,15 +24,6 @@ public class GmbProvider : SocialProviderBase
     };
     public override int MaxConcurrentJobs => 3;
     public override bool IsBetweenSteps => true;
-
-    public GmbProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<GmbProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 1500;
 
@@ -365,9 +358,9 @@ public class GmbProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetClientId() => _configuration["GOOGLE_GMB_CLIENT_ID"] ?? _configuration["YOUTUBE_CLIENT_ID"] ?? throw new InvalidOperationException("GOOGLE_GMB_CLIENT_ID not configured");
-    private string GetClientSecret() => _configuration["GOOGLE_GMB_CLIENT_SECRET"] ?? _configuration["YOUTUBE_CLIENT_SECRET"] ?? throw new InvalidOperationException("GOOGLE_GMB_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["GOOGLE_GMB_CLIENT_ID"] ?? configuration["YOUTUBE_CLIENT_ID"] ?? throw new InvalidOperationException("GOOGLE_GMB_CLIENT_ID not configured");
+    private string GetClientSecret() => configuration["GOOGLE_GMB_CLIENT_SECRET"] ?? configuration["YOUTUBE_CLIENT_SECRET"] ?? throw new InvalidOperationException("GOOGLE_GMB_CLIENT_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

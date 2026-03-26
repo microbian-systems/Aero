@@ -4,31 +4,30 @@ using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Exceptions;
 using Serilog.Sinks.OpenTelemetry;
-using ThrowGuard;
 
 namespace Aero.Common.Web.Extensions;
 
 public static class SerilogExtensions
 {
     public static WebApplicationBuilder ConfigureSerilog(this WebApplicationBuilder builder,
-        IConfiguration config, string serviceName, string serviceVersion="1.0.0")
+        IConfiguration config, string serviceName, string serviceVersion = "1.0.0")
     {
-        if(string.IsNullOrEmpty(serviceName))
-            Throw.BadArg(nameof(serviceName), "serviceName cannot be null or empty");
+        if (string.IsNullOrEmpty(serviceName))
+            ThrowGuard.Throw.BadArg(nameof(serviceName), "serviceName cannot be null or empty");
         var log = GetLogger(config, serviceName, serviceVersion, builder.Environment.EnvironmentName);
         builder.Host.UseSerilog(log, dispose: true);
         return builder;
     }
 
-    public static IHostBuilder ConfigureSerilog(this HostBuilder builder, IConfiguration configuration, string? serviceName=null)
+    public static IHostBuilder ConfigureSerilog(this HostBuilder builder, IConfiguration configuration, string? serviceName = null)
     {
-        serviceName??= "Aero.Web";
+        serviceName ??= "Aero.Web";
         var serviceVersion = typeof(SerilogExtensions).Assembly.GetName().Version?.ToString() ?? "1.0.0";
         // todo - get the environment from the IHostEnvironment interface
         var environment = configuration["ASPNETCORE_ENVIRONMENT"] ?? "Production";
         if (string.IsNullOrEmpty(environment))
-            Throw.BadArg(nameof(environment), "environment cannot be null or empty");
-        
+            ThrowGuard.Throw.BadArg(nameof(environment), "environment cannot be null or empty");
+
         var log = GetLogger(configuration, serviceName, serviceVersion, environment);
 
         return builder.UseSerilog(log);
@@ -56,13 +55,13 @@ public static class SerilogExtensions
             {
                 // Configure the OpenTelemetry protocol
                 options.Protocol = OtlpProtocol.Grpc;
-            
+
                 // Set endpoint if configured
                 if (!string.IsNullOrEmpty(configuration["OpenTelemetry:Endpoint"]))
                 {
                     options.Endpoint = configuration["OpenTelemetry:Endpoint"];
                 }
-            
+
                 // Add resource attributes
                 options.ResourceAttributes = new Dictionary<string, object>
                 {
@@ -73,11 +72,11 @@ public static class SerilogExtensions
                 };
             })
             .CreateBootstrapLogger();
-        
+
         return logger;
     }
-    
-    private static Serilog.ILogger GetLogger(IConfiguration configuration, string serviceName, string serviceVersion, string environment) 
+
+    private static Serilog.ILogger GetLogger(IConfiguration configuration, string serviceName, string serviceVersion, string environment)
     {
         var opts = configuration.GetHoneycombOptions();
         var logger = new LoggerConfiguration()
@@ -97,13 +96,13 @@ public static class SerilogExtensions
             {
                 // Configure the OpenTelemetry protocol
                 options.Protocol = OtlpProtocol.Grpc;
-            
+
                 // Set endpoint if configured
                 if (!string.IsNullOrEmpty(configuration["OpenTelemetry:Endpoint"]))
                 {
                     options.Endpoint = configuration["OpenTelemetry:Endpoint"];
                 }
-            
+
                 // Add resource attributes
                 options.ResourceAttributes = new Dictionary<string, object>
                 {
@@ -114,7 +113,7 @@ public static class SerilogExtensions
                 };
             })
             .CreateLogger();
-        
+
         return logger;
     }
 }

@@ -2,17 +2,8 @@ using Aero.Common.Commands;
 
 namespace Aero.Common.Decorators;
 
-public class ExceptionCommandHandlerDecorator : IAsyncCommand
+public class ExceptionCommandHandlerDecorator(IAsyncCommand decorated, ILogger log) : IAsyncCommand
 {
-    private readonly ILogger log;
-    private readonly IAsyncCommand decorated;
-
-    public ExceptionCommandHandlerDecorator(IAsyncCommand decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-        
     public async Task ExecuteAsync()
     {
         try
@@ -26,17 +17,9 @@ public class ExceptionCommandHandlerDecorator : IAsyncCommand
     }
 }
     
-public class ExceptionCommandHandlerDecorator<TCommand> : IAsyncCommand<TCommand>
+public class ExceptionCommandHandlerDecorator<TCommand>(IAsyncCommand<TCommand> decorated, ILogger log)
+    : IAsyncCommand<TCommand>
 {
-    private readonly ILogger log;
-    private readonly IAsyncCommand<TCommand> decorated;
-
-    public ExceptionCommandHandlerDecorator(IAsyncCommand<TCommand> decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-        
     public async Task ExecuteAsync(TCommand param)
     {
         try
@@ -51,17 +34,10 @@ public class ExceptionCommandHandlerDecorator<TCommand> : IAsyncCommand<TCommand
     }
 }
     
-public class ExceptionCommandHandlerDecorator<TCommand, TReturn> : IAsyncCommand<TCommand, TReturn>
+public class ExceptionCommandHandlerDecorator<TCommand, TReturn>(
+    IAsyncCommand<TCommand, TReturn> decorated,
+    ILogger log) : IAsyncCommand<TCommand, TReturn>
 {
-    private readonly ILogger log;
-    private readonly IAsyncCommand<TCommand, TReturn> decorated;
-
-    public ExceptionCommandHandlerDecorator(IAsyncCommand<TCommand, TReturn> decorated, ILogger log)
-    {
-        this.log = log;
-        this.decorated = decorated;
-    }
-        
     public async Task<TReturn> ExecuteAsync(TCommand param)
     {
         var result = default(TReturn);

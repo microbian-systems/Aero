@@ -1,4 +1,4 @@
-﻿using Aero.Marten;
+using Aero.Marten;
 using JasperFx;
 using Marten;
 
@@ -8,7 +8,7 @@ public static class MartenExtensions
 {
     public static IServiceCollection ConfigureMarten(this IServiceCollection services, IConfiguration config, IWebHostEnvironment host)
     {
-        var connString = config.GetConnectionString("Postgres");
+        var connString = config.GetConnectionString("aero");
 
         var marten = services.AddMarten(opts =>
         {

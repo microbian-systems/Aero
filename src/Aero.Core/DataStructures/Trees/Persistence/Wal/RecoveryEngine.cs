@@ -11,23 +11,16 @@ public sealed record RecoveryResult(
     Lsn RecoveredUpToLsn
 );
 
-public sealed class RecoveryEngine
+public sealed class RecoveryEngine(
+    IStorageBackend inner,
+    IWalReader walReader,
+    IWalWriter walWriter)
 {
-    private readonly IStorageBackend _inner;
-    private readonly IWalReader _walReader;
-    private readonly IWalWriter _walWriter;
+    private readonly IStorageBackend _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+    private readonly IWalReader _walReader = walReader ?? throw new ArgumentNullException(nameof(walReader));
+    private readonly IWalWriter _walWriter = walWriter ?? throw new ArgumentNullException(nameof(walWriter));
 
     public RecoveryResult? LastRecoveryResult { get; private set; }
-
-    public RecoveryEngine(
-        IStorageBackend inner,
-        IWalReader walReader,
-        IWalWriter walWriter)
-    {
-        _inner = inner ?? throw new ArgumentNullException(nameof(inner));
-        _walReader = walReader ?? throw new ArgumentNullException(nameof(walReader));
-        _walWriter = walWriter ?? throw new ArgumentNullException(nameof(walWriter));
-    }
 
     public async ValueTask RecoverAsync(Lsn lastCheckpointLsn, CancellationToken ct = default)
     {

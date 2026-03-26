@@ -1,23 +1,17 @@
 using System.Buffers;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Aero.DataStructures.Trees.Persistence.Serialization;
 
-public sealed class SystemTextJsonSerializer<TDocument> : IDocumentSerializer<TDocument>
+public sealed class SystemTextJsonSerializer<TDocument>(JsonSerializerOptions? options = null)
+    : IDocumentSerializer<TDocument>
     where TDocument : class
 {
-    private readonly JsonSerializerOptions _options;
-
-    public SystemTextJsonSerializer(JsonSerializerOptions? options = null)
+    private readonly JsonSerializerOptions _options = options ?? new JsonSerializerOptions
     {
-        _options = options ?? new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            WriteIndented = false,
-        };
-    }
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        WriteIndented = false,
+    };
 
     public ReadOnlyMemory<byte> Serialize(TDocument document)
     {

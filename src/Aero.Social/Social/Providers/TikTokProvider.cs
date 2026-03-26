@@ -7,10 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class TikTokProvider : SocialProviderBase
+public class TikTokProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<TikTokProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "tiktok";
     public override string Name => "TikTok";
     public override bool ConvertToJpeg => true;
@@ -24,15 +26,6 @@ public class TikTokProvider : SocialProviderBase
         "user.info.stats"
     };
     public override int MaxConcurrentJobs => 1;
-
-    public TikTokProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<TikTokProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 2000;
 
@@ -368,9 +361,9 @@ public class TikTokProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetClientId() => _configuration["TIKTOK_CLIENT_ID"] ?? throw new InvalidOperationException("TIKTOK_CLIENT_ID not configured");
-    private string GetClientSecret() => _configuration["TIKTOK_CLIENT_SECRET"] ?? throw new InvalidOperationException("TIKTOK_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["TIKTOK_CLIENT_ID"] ?? throw new InvalidOperationException("TIKTOK_CLIENT_ID not configured");
+    private string GetClientSecret() => configuration["TIKTOK_CLIENT_SECRET"] ?? throw new InvalidOperationException("TIKTOK_CLIENT_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

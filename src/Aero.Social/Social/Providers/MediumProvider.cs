@@ -8,24 +8,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class MediumProvider : SocialProviderBase
+public class MediumProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<MediumProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration = configuration;
 
     public override string Identifier => "medium";
     public override string Name => "Medium";
     public override string[] Scopes => Array.Empty<string>();
     public override EditorType Editor => EditorType.Markdown;
     public override int MaxConcurrentJobs => 3;
-
-    public MediumProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<MediumProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 100000;
 

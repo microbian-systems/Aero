@@ -9,23 +9,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class KickProvider : SocialProviderBase
+public class KickProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<KickProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "kick";
     public override string Name => "Kick";
     public override string[] Scopes => new[] { "chat:write", "user:read", "channel:read" };
     public override int MaxConcurrentJobs => 3;
-
-    public KickProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<KickProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 500;
 
@@ -258,9 +251,9 @@ public class KickProvider : SocialProviderBase
         return request;
     }
 
-    private string GetClientId() => _configuration["KICK_CLIENT_ID"] ?? throw new InvalidOperationException("KICK_CLIENT_ID not configured");
-    private string GetClientSecret() => _configuration["KICK_SECRET"] ?? throw new InvalidOperationException("KICK_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["KICK_CLIENT_ID"] ?? throw new InvalidOperationException("KICK_CLIENT_ID not configured");
+    private string GetClientSecret() => configuration["KICK_SECRET"] ?? throw new InvalidOperationException("KICK_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

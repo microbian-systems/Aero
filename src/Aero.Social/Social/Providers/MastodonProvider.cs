@@ -6,23 +6,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class MastodonProvider : SocialProviderBase
+public class MastodonProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<MastodonProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "mastodon";
     public override string Name => "Mastodon";
     public override string[] Scopes => new[] { "write:statuses", "profile", "write:media" };
     public override int MaxConcurrentJobs => 5;
-
-    public MastodonProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<MastodonProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 500;
 
@@ -270,10 +263,10 @@ public class MastodonProvider : SocialProviderBase
         return await DeserializeAsync<MastodonUserInfo>(response);
     }
 
-    private string GetInstanceUrl() => _configuration["MASTODON_URL"] ?? "https://mastodon.social";
-    private string GetClientId() => _configuration["MASTODON_CLIENT_ID"] ?? throw new InvalidOperationException("MASTODON_CLIENT_ID not configured");
-    private string GetClientSecret() => _configuration["MASTODON_CLIENT_SECRET"] ?? throw new InvalidOperationException("MASTODON_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetInstanceUrl() => configuration["MASTODON_URL"] ?? "https://mastodon.social";
+    private string GetClientId() => configuration["MASTODON_CLIENT_ID"] ?? throw new InvalidOperationException("MASTODON_CLIENT_ID not configured");
+    private string GetClientSecret() => configuration["MASTODON_CLIENT_SECRET"] ?? throw new InvalidOperationException("MASTODON_CLIENT_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

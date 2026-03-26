@@ -8,23 +8,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class TwitchProvider : SocialProviderBase
+public class TwitchProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<TwitchProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "twitch";
     public override string Name => "Twitch";
     public override string[] Scopes => new[] { "user:write:chat", "user:read:chat", "moderator:manage:announcements" };
     public override int MaxConcurrentJobs => 1;
-
-    public TwitchProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<TwitchProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 500;
 
@@ -329,9 +322,9 @@ public class TwitchProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetClientId() => _configuration["TWITCH_CLIENT_ID"] ?? throw new InvalidOperationException("TWITCH_CLIENT_ID not configured");
-    private string GetClientSecret() => _configuration["TWITCH_CLIENT_SECRET"] ?? throw new InvalidOperationException("TWITCH_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["TWITCH_CLIENT_ID"] ?? throw new InvalidOperationException("TWITCH_CLIENT_ID not configured");
+    private string GetClientSecret() => configuration["TWITCH_CLIENT_SECRET"] ?? throw new InvalidOperationException("TWITCH_CLIENT_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

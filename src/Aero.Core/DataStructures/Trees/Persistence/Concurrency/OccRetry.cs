@@ -2,15 +2,10 @@ using Aero.DataStructures.Trees.Persistence.Wal;
 
 namespace Aero.DataStructures.Trees.Persistence.Concurrency;
 
-public sealed class MaxRetriesExceededException : Exception
+public sealed class MaxRetriesExceededException(int maxRetries)
+    : Exception($"Operation failed after {maxRetries} attempts due to conflicts.")
 {
-    public int MaxRetries { get; }
-
-    public MaxRetriesExceededException(int maxRetries)
-        : base($"Operation failed after {maxRetries} attempts due to conflicts.")
-    {
-        MaxRetries = maxRetries;
-    }
+    public int MaxRetries { get; } = maxRetries;
 }
 
 public static class OccRetry

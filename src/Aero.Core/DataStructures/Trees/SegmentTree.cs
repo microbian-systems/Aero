@@ -3,18 +3,11 @@ namespace Aero.DataStructures.Trees;
 /// <summary>
 /// Represents a node in a Segment Tree for ITreeNode interface.
 /// </summary>
-public class SegmentTreeNodeWrapper : ITreeNode<int>
+public class SegmentTreeNodeWrapper(SegmentTreeNode node) : ITreeNode<int>
 {
-    private readonly SegmentTreeNode _node;
-
-    public SegmentTreeNodeWrapper(SegmentTreeNode node)
-    {
-        _node = node;
-    }
-
     public int Value
     {
-        get => _node.Sum;
+        get => node.Sum;
         set => throw new NotSupportedException("Cannot set value directly on SegmentTree node. Use Update instead.");
     }
 
@@ -22,10 +15,10 @@ public class SegmentTreeNodeWrapper : ITreeNode<int>
     {
         get
         {
-            if (_node.Left != null)
-                yield return new SegmentTreeNodeWrapper(_node.Left);
-            if (_node.Right != null)
-                yield return new SegmentTreeNodeWrapper(_node.Right);
+            if (node.Left != null)
+                yield return new SegmentTreeNodeWrapper(node.Left);
+            if (node.Right != null)
+                yield return new SegmentTreeNodeWrapper(node.Right);
         }
     }
 }

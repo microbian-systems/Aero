@@ -1,6 +1,5 @@
 ﻿using Foundatio.Utility;
 using Serilog;
-using Serilog.Events;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Aero.Common.Web.Extensions;
@@ -78,26 +77,26 @@ public static class LoggingExtensions
         return builder;
     }
 
-    public static IApplicationBuilder UseDefaultLogging(this IApplicationBuilder app)
-    {
-        app.UseSerilogRequestLogging(options =>
-        {
-            // Customize the message template
-            options.MessageTemplate = "Handled {RequestPath}";
-
-            // Emit debug-level events instead of the defaults
-            var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
-            if(env.IsDevelopment())
-                options.GetLevel = (httpContext, elapsed, ex) => LogEventLevel.Debug;
-
-            // Attach additional properties to the request completion event
-            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-            {
-                diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
-                diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
-            };
-        });
-
-        return app;
-    }
+    // public static IApplicationBuilder UseDefaultLogging(this IApplicationBuilder app)
+    // {
+    //     app.UseSerilogRequestLogging(options =>
+    //     {
+    //         // Customize the message template
+    //         options.MessageTemplate = "Handled {RequestPath}";
+    //
+    //         // Emit debug-level events instead of the defaults
+    //         var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
+    //         if(env.IsDevelopment())
+    //             options.GetLevel = (httpContext, elapsed, ex) => LogEventLevel.Debug;
+    //
+    //         // Attach additional properties to the request completion event
+    //         options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+    //         {
+    //             diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+    //             diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+    //         };
+    //     });
+    //
+    //     return app;
+    // }
 }

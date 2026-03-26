@@ -1,29 +1,20 @@
 namespace Aero.Social.Plugs;
 
 [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
-public class PlugAttribute : Attribute
+public class PlugAttribute(
+    string identifier,
+    string title,
+    string description,
+    int runEveryMilliseconds,
+    int totalRuns = 0)
+    : Attribute
 {
-    public string Identifier { get; }
-    public string Title { get; }
-    public string Description { get; }
-    public int RunEveryMilliseconds { get; }
-    public int TotalRuns { get; }
-    public List<PlugField> Fields { get; }
-
-    public PlugAttribute(
-        string identifier,
-        string title,
-        string description,
-        int runEveryMilliseconds,
-        int totalRuns = 0)
-    {
-        Identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
-        Title = title ?? throw new ArgumentNullException(nameof(title));
-        Description = description ?? throw new ArgumentNullException(nameof(description));
-        RunEveryMilliseconds = runEveryMilliseconds;
-        TotalRuns = totalRuns;
-        Fields = new List<PlugField>();
-    }
+    public string Identifier { get; } = identifier ?? throw new ArgumentNullException(nameof(identifier));
+    public string Title { get; } = title ?? throw new ArgumentNullException(nameof(title));
+    public string Description { get; } = description ?? throw new ArgumentNullException(nameof(description));
+    public int RunEveryMilliseconds { get; } = runEveryMilliseconds;
+    public int TotalRuns { get; } = totalRuns;
+    public List<PlugField> Fields { get; } = new();
 
     public PlugAttribute AddField(PlugField field)
     {
@@ -32,26 +23,17 @@ public class PlugAttribute : Attribute
     }
 }
 
-public class PlugField
+public class PlugField(
+    string name,
+    string type,
+    string? placeholder = null,
+    string? description = null)
 {
-    public string Name { get; }
-    public string Type { get; }
-    public string? Placeholder { get; }
-    public string? Description { get; }
-    public List<IFieldValidation> Validations { get; }
-
-    public PlugField(
-        string name,
-        string type,
-        string? placeholder = null,
-        string? description = null)
-    {
-        Name = name ?? throw new ArgumentNullException(nameof(name));
-        Type = type ?? throw new ArgumentNullException(nameof(type));
-        Placeholder = placeholder;
-        Description = description;
-        Validations = new List<IFieldValidation>();
-    }
+    public string Name { get; } = name ?? throw new ArgumentNullException(nameof(name));
+    public string Type { get; } = type ?? throw new ArgumentNullException(nameof(type));
+    public string? Placeholder { get; } = placeholder;
+    public string? Description { get; } = description;
+    public List<IFieldValidation> Validations { get; } = new();
 
     public PlugField AddValidation(IFieldValidation validation)
     {
@@ -67,15 +49,10 @@ public interface IFieldValidation
     bool Validate(object? value);
 }
 
-public class RequiredValidation : IFieldValidation
+public class RequiredValidation(string? errorMessage = null) : IFieldValidation
 {
     public string Type => "required";
-    public string? ErrorMessage { get; }
-
-    public RequiredValidation(string? errorMessage = null)
-    {
-        ErrorMessage = errorMessage ?? "This field is required";
-    }
+    public string? ErrorMessage { get; } = errorMessage ?? "This field is required";
 
     public bool Validate(object? value)
     {
@@ -85,17 +62,11 @@ public class RequiredValidation : IFieldValidation
     }
 }
 
-public class MinValueValidation : IFieldValidation
+public class MinValueValidation(int minValue, string? errorMessage = null) : IFieldValidation
 {
     public string Type => "min";
-    public string? ErrorMessage { get; }
-    public int MinValue { get; }
-
-    public MinValueValidation(int minValue, string? errorMessage = null)
-    {
-        MinValue = minValue;
-        ErrorMessage = errorMessage ?? $"Value must be at least {minValue}";
-    }
+    public string? ErrorMessage { get; } = errorMessage ?? $"Value must be at least {minValue}";
+    public int MinValue { get; } = minValue;
 
     public bool Validate(object? value)
     {
@@ -108,17 +79,11 @@ public class MinValueValidation : IFieldValidation
     }
 }
 
-public class MaxValueValidation : IFieldValidation
+public class MaxValueValidation(int maxValue, string? errorMessage = null) : IFieldValidation
 {
     public string Type => "max";
-    public string? ErrorMessage { get; }
-    public int MaxValue { get; }
-
-    public MaxValueValidation(int maxValue, string? errorMessage = null)
-    {
-        MaxValue = maxValue;
-        ErrorMessage = errorMessage ?? $"Value must be at most {maxValue}";
-    }
+    public string? ErrorMessage { get; } = errorMessage ?? $"Value must be at most {maxValue}";
+    public int MaxValue { get; } = maxValue;
 
     public bool Validate(object? value)
     {
@@ -131,19 +96,12 @@ public class MaxValueValidation : IFieldValidation
     }
 }
 
-public class RangeValidation : IFieldValidation
+public class RangeValidation(int minValue, int maxValue, string? errorMessage = null) : IFieldValidation
 {
     public string Type => "range";
-    public string? ErrorMessage { get; }
-    public int MinValue { get; }
-    public int MaxValue { get; }
-
-    public RangeValidation(int minValue, int maxValue, string? errorMessage = null)
-    {
-        MinValue = minValue;
-        MaxValue = maxValue;
-        ErrorMessage = errorMessage ?? $"Value must be between {minValue} and {maxValue}";
-    }
+    public string? ErrorMessage { get; } = errorMessage ?? $"Value must be between {minValue} and {maxValue}";
+    public int MinValue { get; } = minValue;
+    public int MaxValue { get; } = maxValue;
 
     public bool Validate(object? value)
     {
@@ -156,17 +114,11 @@ public class RangeValidation : IFieldValidation
     }
 }
 
-public class PatternValidation : IFieldValidation
+public class PatternValidation(string pattern, string? errorMessage = null) : IFieldValidation
 {
     public string Type => "pattern";
-    public string? ErrorMessage { get; }
-    public string Pattern { get; }
-
-    public PatternValidation(string pattern, string? errorMessage = null)
-    {
-        Pattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
-        ErrorMessage = errorMessage ?? "Value does not match the required pattern";
-    }
+    public string? ErrorMessage { get; } = errorMessage ?? "Value does not match the required pattern";
+    public string Pattern { get; } = pattern ?? throw new ArgumentNullException(nameof(pattern));
 
     public bool Validate(object? value)
     {

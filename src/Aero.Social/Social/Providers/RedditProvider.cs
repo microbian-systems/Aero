@@ -8,23 +8,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class RedditProvider : SocialProviderBase
+public class RedditProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<RedditProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "reddit";
     public override string Name => "Reddit";
     public override string[] Scopes => new[] { "read", "identity", "submit", "flair" };
     public override int MaxConcurrentJobs => 1;
-
-    public RedditProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<RedditProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 10000;
 
@@ -410,9 +403,9 @@ public class RedditProvider : SocialProviderBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetClientId() => _configuration["REDDIT_CLIENT_ID"] ?? throw new InvalidOperationException("REDDIT_CLIENT_ID not configured");
-    private string GetClientSecret() => _configuration["REDDIT_CLIENT_SECRET"] ?? throw new InvalidOperationException("REDDIT_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["REDDIT_CLIENT_ID"] ?? throw new InvalidOperationException("REDDIT_CLIENT_ID not configured");
+    private string GetClientSecret() => configuration["REDDIT_CLIENT_SECRET"] ?? throw new InvalidOperationException("REDDIT_CLIENT_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 

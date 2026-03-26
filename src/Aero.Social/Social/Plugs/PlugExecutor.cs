@@ -7,15 +7,8 @@ namespace Aero.Social.Plugs;
 /// <summary>
 /// Default implementation of the plug executor
 /// </summary>
-public class PlugExecutor : IPlugExecutor
+public class PlugExecutor(ILogger<PlugExecutor>? logger = null) : IPlugExecutor
 {
-    private readonly ILogger<PlugExecutor>? _logger;
-
-    public PlugExecutor(ILogger<PlugExecutor>? logger = null)
-    {
-        _logger = logger;
-    }
-
     /// <inheritdoc />
     public async Task<PlugExecutionResult> ExecuteAsync(
         MethodInfo plugMethod,
@@ -26,7 +19,7 @@ public class PlugExecutor : IPlugExecutor
     {
         try
         {
-            _logger?.LogInformation(
+            logger?.LogInformation(
                 "Executing plug {PlugIdentifier} on provider {ProviderIdentifier}",
                 plugMethod.Name,
                 provider.Identifier);
@@ -53,7 +46,7 @@ public class PlugExecutor : IPlugExecutor
         }
         catch (TargetInvocationException tie) when (tie.InnerException != null)
         {
-            _logger?.LogError(
+            logger?.LogError(
                 tie.InnerException,
                 "Plug {PlugIdentifier} threw an exception",
                 plugMethod.Name);
@@ -64,7 +57,7 @@ public class PlugExecutor : IPlugExecutor
         }
         catch (Exception ex)
         {
-            _logger?.LogError(
+            logger?.LogError(
                 ex,
                 "Failed to execute plug {PlugIdentifier}",
                 plugMethod.Name);
@@ -121,7 +114,7 @@ public class PlugExecutor : IPlugExecutor
         // Check if we've exceeded the total runs
         if (attribute.TotalRuns > 0 && executionCount >= attribute.TotalRuns)
         {
-            _logger?.LogDebug(
+            logger?.LogDebug(
                 "Plug {PlugIdentifier} has reached max runs ({ExecutionCount}/{TotalRuns})",
                 attribute.Identifier,
                 executionCount,
@@ -135,7 +128,7 @@ public class PlugExecutor : IPlugExecutor
             var nextRunTime = lastRunTime.Value.AddMilliseconds(attribute.RunEveryMilliseconds);
             if (DateTime.UtcNow < nextRunTime)
             {
-                _logger?.LogDebug(
+                logger?.LogDebug(
                     "Plug {PlugIdentifier} not ready to run. Next run at {NextRunTime}",
                     attribute.Identifier,
                     nextRunTime);
@@ -152,7 +145,7 @@ public class PlugExecutor : IPlugExecutor
         // Check if we've exceeded the total runs
         if (attribute.TotalRuns > 0 && executionCount >= attribute.TotalRuns)
         {
-            _logger?.LogDebug(
+            logger?.LogDebug(
                 "Plug {PlugIdentifier} has reached max runs ({ExecutionCount}/{TotalRuns})",
                 attribute.Identifier,
                 executionCount,
@@ -166,7 +159,7 @@ public class PlugExecutor : IPlugExecutor
             var nextRunTime = lastRunTime.Value.AddMilliseconds(attribute.RunEveryMilliseconds);
             if (DateTime.UtcNow < nextRunTime)
             {
-                _logger?.LogDebug(
+                logger?.LogDebug(
                     "Plug {PlugIdentifier} not ready to run. Next run at {NextRunTime}",
                     attribute.Identifier,
                     nextRunTime);

@@ -2,30 +2,20 @@
 
 namespace Aero.Common.Decorators;
 
-public abstract class DecoratorBaseAsync<T> : ICommandAsync<T>
+public abstract class DecoratorBaseAsync<T>(ICommandAsync<T> cmd, ILogger<DecoratorBaseAsync<T>> log) : ICommandAsync<T>
 {
-    protected readonly ICommandAsync<T> cmd;
-    protected readonly ILogger<DecoratorBaseAsync<T>> log;
+    protected readonly ICommandAsync<T> cmd = cmd;
+    protected readonly ILogger<DecoratorBaseAsync<T>> log = log;
 
-    protected DecoratorBaseAsync(ICommandAsync<T> cmd, ILogger<DecoratorBaseAsync<T>> log)
-    {
-        this.cmd = cmd;
-        this.log = log;
-    }
-        
     public abstract Task ExecuteAsync(T parameter);
 }
 
-public abstract class DecoratorBase<T, TReturn> : ICommandAsync<T, TReturn> where T : ICommandParameter
+public abstract class DecoratorBase<T, TReturn>(ICommandAsync<T, TReturn> cmd, ILogger<DecoratorBaseAsync<T>> log)
+    : ICommandAsync<T, TReturn>
+    where T : ICommandParameter
 {
-    private readonly ICommandAsync<T, TReturn> cmd;
-    private readonly ILogger<DecoratorBaseAsync<T>> log;
+    private readonly ICommandAsync<T, TReturn> cmd = cmd;
 
-    protected DecoratorBase(ICommandAsync<T, TReturn> cmd, ILogger<DecoratorBaseAsync<T>> log)
-    {
-        this.cmd = cmd;
-        this.log = log;
-    }
     public abstract Task<TReturn> ExecuteAsync(T param);
         
     public virtual async Task<TReturn> ExecuteAsync(Func<T, Task<TReturn>> func, T parameter)

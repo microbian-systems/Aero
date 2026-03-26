@@ -7,24 +7,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-public class DiscordProvider : SocialProviderBase
+public class DiscordProvider(
+    HttpClient httpClient,
+    IConfiguration configuration,
+    ILogger<DiscordProvider> logger)
+    : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration;
-
     public override string Identifier => "discord";
     public override string Name => "Discord";
     public override string[] Scopes => new[] { "identify", "guilds" };
     public override EditorType Editor => EditorType.Markdown;
     public override int MaxConcurrentJobs => 5;
-
-    public DiscordProvider(
-        HttpClient httpClient,
-        IConfiguration configuration,
-        ILogger<DiscordProvider> logger)
-        : base(httpClient, logger)
-    {
-        _configuration = configuration;
-    }
 
     public override int MaxLength(object? additionalSettings = null) => 1980;
 
@@ -389,10 +382,10 @@ public class DiscordProvider : SocialProviderBase
         return path.Split('/').Last();
     }
 
-    private string GetClientId() => _configuration["DISCORD_CLIENT_ID"] ?? throw new InvalidOperationException("DISCORD_CLIENT_ID not configured");
-    private string GetClientSecret() => _configuration["DISCORD_CLIENT_SECRET"] ?? throw new InvalidOperationException("DISCORD_CLIENT_SECRET not configured");
-    private string GetBotToken() => _configuration["DISCORD_BOT_TOKEN_ID"] ?? throw new InvalidOperationException("DISCORD_BOT_TOKEN_ID not configured");
-    private string GetFrontendUrl() => _configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["DISCORD_CLIENT_ID"] ?? throw new InvalidOperationException("DISCORD_CLIENT_ID not configured");
+    private string GetClientSecret() => configuration["DISCORD_CLIENT_SECRET"] ?? throw new InvalidOperationException("DISCORD_CLIENT_SECRET not configured");
+    private string GetBotToken() => configuration["DISCORD_BOT_TOKEN_ID"] ?? throw new InvalidOperationException("DISCORD_BOT_TOKEN_ID not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
     
     private string GetBasicCredentials()
     {

@@ -7,24 +7,18 @@ namespace Aero.Auth.Services;
 /// Keys are persisted via abstracted persistence layer for flexibility (AeroDB, EF Core, etc).
 /// Can be rotated without downtime, with in-memory caching for performance.
 /// </summary>
-public class JwtSigningKeyStore : IJwtSigningKeyStore
+public class JwtSigningKeyStore(
+    IJwtSigningKeyPersistence persistence,
+    ILogger<JwtSigningKeyStore> logger,
+    IMemoryCache cache)
+    : IJwtSigningKeyStore
 {
-    private readonly IJwtSigningKeyPersistence _persistence;
-    private readonly ILogger<JwtSigningKeyStore> _logger;
-    private readonly IMemoryCache _cache;
+    private readonly IJwtSigningKeyPersistence _persistence = persistence ?? throw new ArgumentNullException(nameof(persistence));
+    private readonly ILogger<JwtSigningKeyStore> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly IMemoryCache _cache = cache ?? throw new ArgumentNullException(nameof(cache));
     private const string CurrentKeyIdCacheKey = "jwt:current_key_id";
     private const string AllKeysCacheKey = "jwt:all_keys";
     private const int CacheDurationMinutes = 5;
-
-    public JwtSigningKeyStore(
-        IJwtSigningKeyPersistence persistence,
-        ILogger<JwtSigningKeyStore> logger,
-        IMemoryCache cache)
-    {
-        _persistence = persistence ?? throw new ArgumentNullException(nameof(persistence));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-    }
 
     public async Task<SecurityKey> GetCurrentSigningKeyAsync(CancellationToken cancellationToken = default)
     {

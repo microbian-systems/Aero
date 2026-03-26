@@ -1,5 +1,6 @@
 using Marten;
 using System.Security.Cryptography;
+using Aero.Core;
 
 namespace Aero.Auth.Services;
 
@@ -8,26 +9,17 @@ namespace Aero.Auth.Services;
 /// All tokens are stored as SHA-256 hashes for security (plaintext never stored).
 /// Supports token rotation with one-time use enforcement.
 /// </summary>
-public class RefreshTokenService : IRefreshTokenService
+public class RefreshTokenService(
+    IDocumentSession session,
+    ILogger<RefreshTokenService> logger,
+    IConfiguration config)
+    : IRefreshTokenService
 {
-    private readonly IDocumentSession session;
-    readonly ILogger<RefreshTokenService> logger;
-    readonly IConfiguration config;
-    readonly int refreshTokenLifetimeDays;
-
-    public RefreshTokenService(
-        IDocumentSession session,
-        ILogger<RefreshTokenService> logger,
-        IConfiguration config)
-    {
-        this.session = session;
-        this.logger = logger;
-        this.config = config;
-        refreshTokenLifetimeDays = config.GetValue("Auth:RefreshTokenLifetimeDays", 30);
-    }
+    readonly IConfiguration config = config;
+    readonly int refreshTokenLifetimeDays = config.GetValue("Auth:RefreshTokenLifetimeDays", 30);
 
     public async Task<string> GenerateRefreshTokenAsync(
-        string userId,
+        long userId,
         string clientType,
         string? ipAddress = null,
         string? userAgent = null,
@@ -38,7 +30,7 @@ public class RefreshTokenService : IRefreshTokenService
 
         var refreshToken = new RefreshToken
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Snowflake.NewId(),
             UserId = userId,
             TokenHash = tokenHash,
             CreatedOn = DateTimeOffset.UtcNow,
@@ -59,7 +51,7 @@ public class RefreshTokenService : IRefreshTokenService
         return token;
     }
 
-    public async Task<string?> ValidateRefreshTokenAsync(
+    public async Task<long?> ValidateRefreshTokenAsync(
         string token,
         CancellationToken cancellationToken = default)
     {
@@ -98,10 +90,10 @@ public class RefreshTokenService : IRefreshTokenService
     {
         // Validate and get user ID from old token
         var userId = await ValidateRefreshTokenAsync(oldToken, cancellationToken);
-        if (string.IsNullOrEmpty(userId))
-        {
-            throw new InvalidOperationException("Invalid refresh token");
-        }
+        // if (string.IsNullOrEmpty(userId))
+        // {
+        //     throw new InvalidOperationException("Invalid refresh token");
+        // }
 
         // Mark old token as rotated
         var oldTokenHash = HashToken(oldToken);
@@ -115,8 +107,8 @@ public class RefreshTokenService : IRefreshTokenService
             var newToken = GenerateRandomToken(64);
             var newRefreshToken = new RefreshToken
             {
-                Id = Guid.NewGuid().ToString(),
-                UserId = userId,
+                Id = Snowflake.NewId(),
+                UserId = userId.Value,
                 TokenHash = HashToken(newToken),
                 CreatedOn = DateTimeOffset.UtcNow,
                 ExpiresAt = DateTimeOffset.UtcNow.AddDays(refreshTokenLifetimeDays),
@@ -160,7 +152,7 @@ public class RefreshTokenService : IRefreshTokenService
     }
 
     public async Task RevokeAllUserTokensAsync(
-        string userId,
+        long userId,
         CancellationToken cancellationToken = default)
     {
         
@@ -181,8 +173,8 @@ public class RefreshTokenService : IRefreshTokenService
         }
     }
 
-    public async Task<IEnumerable<(string Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
-        string userId,
+    public async Task<IEnumerable<(long Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
+        long userId,
         CancellationToken cancellationToken = default)
     {
 

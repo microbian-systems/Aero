@@ -10,6 +10,9 @@ public abstract record Result<TError, TValue>
     public sealed record Ok(TValue Value) : Result<TError, TValue>;
     public sealed record Failure(TError Error) : Result<TError, TValue>;
 
+    public bool IsSuccess => this is Ok;
+    public bool IsFailure => this is Failure;
+
     public static implicit operator Result<TError, TValue>(TValue value) => new Ok(value);
     public static implicit operator Result<TError, TValue>(TError error) => new Failure(error);
 

@@ -1,20 +1,17 @@
-﻿using System.Globalization;
-using Aero.Common.Extensions;
+﻿using Aero.Common.Extensions;
 using Aero.Core;
 using Aero.Core.Extensions;
 using Aero.Core.Helpers;
+using System.Globalization;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using ILogger = Serilog.ILogger;
 
 namespace Aero.Common;
 
-public class AzureBlobStorageClient : IBlobStorageClient
+public class AzureBlobStorageClient(ILogger<AzureBlobStorageClient> log) : IBlobStorageClient
 {
-    private readonly ILogger log;
 
-    public AzureBlobStorageClient(ILogger log) =>
-        this.log = log; // ?? JobLog.GetLog();
+    // ?? JobLog.GetLog();
 
     // todo - convert MemorySTream to Stream
     public void Post(MemoryStream ms, string filename, bool compress = true) =>
@@ -30,13 +27,13 @@ public class AzureBlobStorageClient : IBlobStorageClient
 
         if (string.IsNullOrEmpty(path))
         {
-            log.Information($"blob storage container name was null. defaulting to feeds");
+            log.LogInformation($"blob storage container name was null. defaulting to feeds");
             path = "feeds";
         }
 
         path = path.ToLower();
         var acct = CloudStorageAccount.Parse(connString);
-        log.Information($"getting blob storage for {acct.BlobStorageUri} and file {filename} - compressed = {compress}");
+        log.LogInformation($"getting blob storage for {acct.BlobStorageUri} and file {filename} - compressed = {compress}");
         var cbc = acct.CreateCloudBlobClient();
         //var blob = cbc.GetBlobReference(container + "/" + filename);
         var bsp = ParseContainerPath(path);
@@ -62,7 +59,7 @@ public class AzureBlobStorageClient : IBlobStorageClient
             await blob.UploadFromStreamAsync(ms); // todo - make this async compat
         //blob.UploadFromStream(ms.Compress());
         //blob.UploadByteArray(ms.Compress().ToArray());
-        log.Information($"successfully uploaded blob storage file {filename} at {acct.BlobStorageUri} @ {path}");
+        log.LogInformation($"successfully uploaded blob storage file {filename} at {acct.BlobStorageUri} @ {path}");
     }
 
 

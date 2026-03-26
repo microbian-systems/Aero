@@ -1,0 +1,78 @@
+using Aero.Core.Data;
+using Aero.Core.Identity;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Aero.MartenDB;
+using Marten;
+
+namespace Aero.EfCore.Extensions;
+
+public static class AeroDbExtensions
+{
+
+    public static IServiceCollection AddAeroDataLayer(this IServiceCollection services, IConfiguration config, IHostEnvironment env)
+    {
+        var migrationAssembly = typeof(AeroApiContext)
+            //.GetTypeInfo()
+            .Assembly
+            .GetName().Name;
+
+        var connString = config.GetConnectionString("aero");
+        services.AddDbContextPool<AeroApiContext>(o =>
+                o.UseNpgsql(connString,
+                    x => x.MigrationsHistoryTable("__aeroApiMigrations", Schemas.Aero)
+                        .MigrationsAssembly(migrationAssembly)))
+            //.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+            ;
+
+        services.AddDbContextPool<AeroDbContext>(o =>
+                o.UseNpgsql(connString,
+                    x => x.MigrationsHistoryTable("__aeroMigrations", Schemas.Aero)
+                        .MigrationsAssembly(migrationAssembly)))
+            //.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+            ;
+
+        // todo - verify these DI service registrations are valid and test them
+        // todo - do these DI registrations belong in the dbcontext registration
+        // services.AddScoped(typeof(IGenericRepository<>), typeof(GenericEntityFrameworkRepository<>));
+        // services.AddScoped(typeof(IGenericEntityFrameworkRepository<>), typeof(GenericEntityFrameworkRepository<>));
+        // services.AddScoped(typeof(IGenericEntityFrameworkRepository<,>), typeof(GenericEntityFrameworkRepository<,>));
+        services.AddScoped<IAiUsageLogRepository, AiUsageLogsRepository>();
+        services.AddScoped<IApiAuthRepository, ApiAuthRepository>();
+
+
+        // var store = DocumentStore.For(c =>
+        // {
+        //     c.DatabaseSchemaName = Schemas.Aero;
+        //     c.Connection(connString!);
+        // });
+
+        // todo - move this to the application/client level - anything that needs IDocumentSession can get it via DI
+        // and instantiation at this level is too low.  There are other indexes this library is not aware of that need to be added
+services.AddMarten(opts =>
+        {
+            opts.Connection(connString!);
+            opts.UseSystemTextJsonForSerialization(configure: o =>
+            {
+                // Required for [JsonDerivedType] / [JsonPolymorphic] with PostgreSQL jsonb.
+                // jsonb doesn't guarantee property order, so the type discriminator (e.g. $blockType)
+                // can appear at any position in the JSON object. Without this, STJ throws:
+                // "must specify a type discriminator" on deserialization.
+                o.AllowOutOfOrderMetadataProperties = true;
+            });
+            opts.Schema.For<AeroRole>().Identity(x => x.Id);
+            opts.Schema.For<AeroUser>().Identity(x => x.Id);
+            // Optional: enable automatic schema creation for development
+            //opts.AutoCreateSchemaObjects = SchemaMode.Development;
+            opts.DatabaseSchemaName = Schemas.Aero;
+        });
+
+        // todo - rename this project from EfCore to Data and move Marten stuff in same project 
+        services.AddScoped<IAeroDb, AeroDb>();
+        services.AddScoped<IAeroUserRepository>(ctx =>
+            ctx.GetRequiredService<IAeroDb>().Users);
+
+        return services;
+    }
+}

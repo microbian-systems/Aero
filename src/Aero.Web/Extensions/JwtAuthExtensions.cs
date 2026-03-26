@@ -1,28 +1,27 @@
 ﻿using Aero.Common.Web.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using ThrowGuard;
 
 namespace Aero.Common.Web.Extensions;
 
 public static class JwtAuthExtensions
 {
     public static IServiceCollection AddJwtAuthorization(
-        this IServiceCollection services, 
+        this IServiceCollection services,
         IConfiguration config)
     {
-        
+
         var jwtOptions = new JwtOptions();
         config.GetSection("jwt").Bind(jwtOptions);
         services.Configure<JwtOptions>(config.GetSection("jwt"));
 
-        if(string.IsNullOrEmpty(jwtOptions.Key))
-            Throw.AppException("JwtOptions is null or JwtOptions.Key is null or empty");
+        if (string.IsNullOrEmpty(jwtOptions.Key))
+            ThrowGuard.Throw.AppException("JwtOptions is null or JwtOptions.Key is null or empty");
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key));
         var issuer = jwtOptions.Issuer;
         var audience = jwtOptions.Audience;
-        
+
         services.Configure<JsonOptions>(options =>
         {
             options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
@@ -31,7 +30,7 @@ public static class JwtAuthExtensions
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             // options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
         });
-        
+
         services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
@@ -66,13 +65,13 @@ public static class JwtAuthExtensions
 
         return services;
     }
-    
+
     public static WebApplicationBuilder AddJwtAuthorization(this WebApplicationBuilder builder)
     {
         var config = builder.Configuration;
 
         builder.Services.AddJwtAuthorization(config);
-        
+
         return builder;
     }
 }

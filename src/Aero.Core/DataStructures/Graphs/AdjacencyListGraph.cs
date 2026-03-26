@@ -1,21 +1,16 @@
 namespace Aero.DataStructures.Graphs;
 
-public class AdjacencyListGraph<T> where T : notnull
+public class AdjacencyListGraph<T>(bool isDirected = true)
+    where T : notnull
 {
     private readonly Dictionary<T, Dictionary<T, int>> _adjacencyList = new();
-    private readonly bool _isDirected;
-    
+
     public const int NoEdge = int.MinValue;
     public const int Unreachable = int.MaxValue;
 
     public int VertexCount => _adjacencyList.Count;
     public int EdgeCount { get; private set; }
-    public bool IsDirected => _isDirected;
-
-    public AdjacencyListGraph(bool isDirected = true)
-    {
-        _isDirected = isDirected;
-    }
+    public bool IsDirected => isDirected;
 
     public void AddVertex(T vertex)
     {
@@ -39,7 +34,7 @@ public class AdjacencyListGraph<T> where T : notnull
                 edgeCount++;
         }
 
-        EdgeCount -= _isDirected ? edgeCount : edgeCount / 2;
+        EdgeCount -= isDirected ? edgeCount : edgeCount / 2;
         return true;
     }
 
@@ -53,7 +48,7 @@ public class AdjacencyListGraph<T> where T : notnull
 
         _adjacencyList[source][destination] = weight;
 
-        if (!_isDirected)
+        if (!isDirected)
         {
             _adjacencyList[destination][source] = weight;
         }
@@ -69,7 +64,7 @@ public class AdjacencyListGraph<T> where T : notnull
 
         EdgeCount--;
 
-        if (!_isDirected && _adjacencyList.TryGetValue(destination, out var reverseEdges))
+        if (!isDirected && _adjacencyList.TryGetValue(destination, out var reverseEdges))
         {
             reverseEdges.Remove(source);
         }
@@ -231,8 +226,6 @@ public class AdjacencyListGraph<T> where T : notnull
 }
 
 [Obsolete("Use AdjacencyListGraph<T> instead. This class will be removed in a future version.")]
-public class Graph<T> : AdjacencyListGraph<T> where T : notnull
-{
-    public Graph(bool isDirected = true) : base(isDirected) { }
-}
+public class Graph<T>(bool isDirected = true) : AdjacencyListGraph<T>(isDirected)
+    where T : notnull;
 

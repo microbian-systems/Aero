@@ -1,4 +1,3 @@
-using System.Net.Http;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Aero.Services.Geo;

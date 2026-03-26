@@ -6,17 +6,11 @@ using Aero.Marten;
 namespace Aero.Common.Web.Commands;
 
 // todo - move this to the marten cqs project
-public class SaveRefreshTokenCommand : IAsyncCommand<SaveRefreshTokenRequest, bool>
+public class SaveRefreshTokenCommand(
+    IDynamicMartenRepository db,
+    IAsyncCommand<DeleteRefreshTokenRequest, bool> command)
+    : IAsyncCommand<SaveRefreshTokenRequest, bool>
 {
-    private readonly IDynamicMartenRepository db;
-    private readonly IAsyncCommand<DeleteRefreshTokenRequest, bool> command;
-
-    public SaveRefreshTokenCommand(IDynamicMartenRepository db, IAsyncCommand<DeleteRefreshTokenRequest, bool> command)
-    {
-        this.db = db;
-        this.command = command;
-    }
-        
     public async Task<bool> SaveRefreshToken(SaveRefreshTokenRequest request)
     {
         var success = await command.ExecuteAsync(new DeleteRefreshTokenRequest()
@@ -41,7 +35,7 @@ public class SaveRefreshTokenCommand : IAsyncCommand<SaveRefreshTokenRequest, bo
 
 public class SaveRefreshTokenRequest : Entity
 {
-    public string UserId { get; set; }
+    public long UserId { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
     public string Token { get; set; }

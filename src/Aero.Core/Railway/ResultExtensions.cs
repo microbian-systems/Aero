@@ -52,6 +52,16 @@ namespace Aero.Core.Railway;
 public static partial class ResultExtensions
 {
     /// <summary>
+    /// Gets a value indicating whether the Result is Ok.
+    /// </summary>
+    public static bool IsSuccess<TError, TValue>(this Result<TError, TValue> r) => r is Result<TError, TValue>.Ok;
+
+    /// <summary>
+    /// Gets a value indicating whether the Result is Failure.
+    /// </summary>
+    public static bool IsFailure<TError, TValue>(this Result<TError, TValue> r) => r is Result<TError, TValue>.Failure;
+
+    /// <summary>
     /// Transforms the success value of a Result using the provided function, preserving any error.
     /// </summary>
     /// <typeparam name="TError">The type of the error.</typeparam>

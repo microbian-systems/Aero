@@ -52,22 +52,14 @@ public sealed class DocumentIndexRegistry<TDocument> : IDocumentIndexRegistry<TD
     }
 }
 
-internal sealed class CompositeIndexExecutor<TDocument, TField> : IIndexExecutor<TDocument>
+internal sealed class CompositeIndexExecutor<TDocument, TField>(
+    IndexDefinition definition,
+    IOrderedKeyValueTree<CompositeKey<TField, Guid>, Guid> tree)
+    : IIndexExecutor<TDocument>
     where TDocument : class
     where TField : unmanaged, IComparable<TField>
 {
-    private readonly IndexDefinition _definition;
-    private readonly IOrderedKeyValueTree<CompositeKey<TField, Guid>, Guid> _tree;
-
-    public IndexDefinition Definition => _definition;
-
-    public CompositeIndexExecutor(
-        IndexDefinition definition,
-        IOrderedKeyValueTree<CompositeKey<TField, Guid>, Guid> tree)
-    {
-        _definition = definition;
-        _tree = tree;
-    }
+    public IndexDefinition Definition => definition;
 
     public async IAsyncEnumerable<Guid> LookupAsync(
         object fieldValue,
@@ -77,7 +69,7 @@ internal sealed class CompositeIndexExecutor<TDocument, TField> : IIndexExecutor
         var from = CompositeKey<TField, Guid>.RangeLo(field);
         var to = CompositeKey<TField, Guid>.RangeHi(field);
 
-        await foreach (var key in _tree.ScanAsync(from, to, ct))
+        await foreach (var key in tree.ScanAsync(from, to, ct))
         {
             yield return key.Id;
         }
@@ -94,7 +86,7 @@ internal sealed class CompositeIndexExecutor<TDocument, TField> : IIndexExecutor
         var fromKey = CompositeKey<TField, Guid>.RangeLo(fromField);
         var toKey = CompositeKey<TField, Guid>.RangeHi(toField);
 
-        await foreach (var key in _tree.ScanAsync(fromKey, toKey, ct))
+        await foreach (var key in tree.ScanAsync(fromKey, toKey, ct))
         {
             yield return key.Id;
         }
@@ -112,29 +104,21 @@ internal sealed class CompositeIndexExecutor<TDocument, TField> : IIndexExecutor
     }
 }
 
-internal sealed class UniqueIndexExecutor<TDocument, TField> : IIndexExecutor<TDocument>
+internal sealed class UniqueIndexExecutor<TDocument, TField>(
+    IndexDefinition definition,
+    IOrderedKeyValueTree<TField, Guid> tree)
+    : IIndexExecutor<TDocument>
     where TDocument : class
     where TField : unmanaged, IComparable<TField>
 {
-    private readonly IndexDefinition _definition;
-    private readonly IOrderedKeyValueTree<TField, Guid> _tree;
-
-    public IndexDefinition Definition => _definition;
-
-    public UniqueIndexExecutor(
-        IndexDefinition definition,
-        IOrderedKeyValueTree<TField, Guid> tree)
-    {
-        _definition = definition;
-        _tree = tree;
-    }
+    public IndexDefinition Definition => definition;
 
     public async IAsyncEnumerable<Guid> LookupAsync(
         object fieldValue,
         [EnumeratorCancellation] CancellationToken ct = default)
     {
         var field = (TField)Convert.ChangeType(fieldValue, typeof(TField));
-        var (found, id) = await _tree.TryGetAsync(field, ct);
+        var (found, id) = await tree.TryGetAsync(field, ct);
         if (found)
             yield return id;
     }
@@ -147,9 +131,9 @@ internal sealed class UniqueIndexExecutor<TDocument, TField> : IIndexExecutor<TD
         TField fromField = from is null ? default : (TField)Convert.ChangeType(from, typeof(TField));
         TField toField = to is null ? GetMaxValue() : (TField)Convert.ChangeType(to, typeof(TField));
 
-        await foreach (var key in _tree.ScanAsync(fromField, toField, ct))
+        await foreach (var key in tree.ScanAsync(fromField, toField, ct))
         {
-            var (found, id) = await _tree.TryGetAsync(key, ct);
+            var (found, id) = await tree.TryGetAsync(key, ct);
             if (found)
                 yield return id;
         }

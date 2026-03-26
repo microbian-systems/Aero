@@ -5,16 +5,11 @@ using Aero.Core.Entities;
 
 namespace Aero.Services;
 
-public class GraphService<TEntity, TKey> : IGraphService<TEntity, TKey> 
+public class GraphService<TEntity, TKey>(IGraphRepository<TEntity, TKey> repository) : IGraphService<TEntity, TKey>
     where TEntity : class, IEntity<TKey>
     where TKey : IEquatable<TKey>, IComparable<TKey>
 {
-    protected readonly IGraphRepository<TEntity, TKey> _repository;
-
-    public GraphService(IGraphRepository<TEntity, TKey> repository)
-    {
-        _repository = repository;
-    }
+    protected readonly IGraphRepository<TEntity, TKey> _repository = repository;
 
     public TEntity Add(TEntity entity)
     {

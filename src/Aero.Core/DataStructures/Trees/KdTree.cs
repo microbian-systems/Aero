@@ -3,18 +3,11 @@ namespace Aero.DataStructures.Trees;
 /// <summary>
 /// Represents a KD-Tree node wrapper for ITreeNode interface.
 /// </summary>
-public class KdTreeNodeWrapper : ITreeNode<Point>
+public class KdTreeNodeWrapper(KdTreeNode node) : ITreeNode<Point>
 {
-    private readonly KdTreeNode _node;
-
-    public KdTreeNodeWrapper(KdTreeNode node)
-    {
-        _node = node;
-    }
-
     public Point Value
     {
-        get => _node.Point;
+        get => node.Point;
         set => throw new NotSupportedException("Cannot modify KD-Tree node value directly");
     }
 
@@ -22,10 +15,10 @@ public class KdTreeNodeWrapper : ITreeNode<Point>
     {
         get
         {
-            if (_node.Left != null)
-                yield return new KdTreeNodeWrapper(_node.Left);
-            if (_node.Right != null)
-                yield return new KdTreeNodeWrapper(_node.Right);
+            if (node.Left != null)
+                yield return new KdTreeNodeWrapper(node.Left);
+            if (node.Right != null)
+                yield return new KdTreeNodeWrapper(node.Right);
         }
     }
 }
@@ -238,20 +231,12 @@ public class KdTree : ITree<Point>
 /// <summary>
 /// Represents a rectangle for range queries.
 /// </summary>
-public class Rect
+public class Rect(double xmin, double ymin, double xmax, double ymax)
 {
-    public double XMin { get; }
-    public double YMin { get; }
-    public double XMax { get; }
-    public double YMax { get; }
-
-    public Rect(double xmin, double ymin, double xmax, double ymax)
-    {
-        XMin = xmin;
-        YMin = ymin;
-        XMax = xmax;
-        YMax = ymax;
-    }
+    public double XMin { get; } = xmin;
+    public double YMin { get; } = ymin;
+    public double XMax { get; } = xmax;
+    public double YMax { get; } = ymax;
 
     public bool Contains(Point p)
     {

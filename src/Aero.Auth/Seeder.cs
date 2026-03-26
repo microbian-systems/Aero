@@ -60,9 +60,6 @@ public class Seeder
                         UserName = adminEmail,
                         Email = adminEmail,
                         EmailConfirmed = true,
-                        Profile = new AeroUserProfile
-                        {
-                        }
                     };
 
                     await userManager.CreateAsync(adminUser, adminPassword);

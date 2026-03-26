@@ -6,16 +6,9 @@ namespace Aero.Common.Web.Errors;
 /// Middleware to handle 404 page not found errors
 /// </summary>
 /// https://joonasw.net/view/custom-error-pages
-public class Handle404Middleware
+public class Handle404Middleware(RequestDelegate next, ILogger logger)
 {
-    readonly ILogger log;
-    readonly RequestDelegate next;
-
-    public Handle404Middleware(RequestDelegate next, ILogger logger)
-    {
-        log = logger;
-        this.next = next;
-    }
+    readonly ILogger log = logger;
 
     public async Task InvokeAsync(HttpContext context)
     {

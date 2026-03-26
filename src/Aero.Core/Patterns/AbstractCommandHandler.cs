@@ -2,17 +2,15 @@ using Aero.Common.Commands;
 
 namespace Aero.Common.Patterns;
 
-public abstract class AbstractCommandHandler : ICommand
+public abstract class AbstractCommandHandler(ILogger log) : ICommand
 {
-    private readonly ILogger log;
-    public AbstractCommandHandler(ILogger log) => this.log = log;
+    private readonly ILogger log = log;
     public abstract void Execute();
 }
     
-public abstract class AbstractCommandHandler<T> : ICommand<T>
+public abstract class AbstractCommandHandler<T>(ILogger log) : ICommand<T>
 {
-    private readonly ILogger log;
-    public AbstractCommandHandler(ILogger log) => this.log = log;
+    private readonly ILogger log = log;
     public abstract void Execute(T param);
     public void Execute(ICommandParameter param)
     {
@@ -20,9 +18,8 @@ public abstract class AbstractCommandHandler<T> : ICommand<T>
     }
 }
     
-public abstract class AbstractCommandHandler<T, TReturn> : ICommand<T, TReturn>
+public abstract class AbstractCommandHandler<T, TReturn>(ILogger log) : ICommand<T, TReturn>
 {
-    private readonly ILogger log;
-    public AbstractCommandHandler(ILogger log) => this.log = log;
+    private readonly ILogger log = log;
     public abstract TReturn Execute(T param);
 }
