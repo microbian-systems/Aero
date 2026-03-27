@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -89,7 +89,7 @@ public abstract class HttpClientBaseV2(
     }
 
     protected virtual async Task<HttpResponseMessage> PatchAsync<T>(string url, T data) where T : class
-        => await PatchAsync(new Uri(url), data);
+        => await PatchAsync(new Uri(url, UriKind.RelativeOrAbsolute), data);
 
     protected virtual async Task<HttpResponseMessage> PatchAsync<T>(Uri url, T data) where T : class
     {
@@ -110,6 +110,7 @@ public abstract class HttpClientBaseV2(
     protected virtual async Task<Result<string, T>> SendResultAsync<T>(HttpRequestMessage request, CancellationToken ct = default)
     {
         var url = request.RequestUri?.ToString() ?? "unknown";
+        Logger.LogInformation("Sending {Method} request to {Url}...", request.Method, url);
         try
         {
             var response = await SendWithResilienceAsync(request);
@@ -139,14 +140,12 @@ public abstract class HttpClientBaseV2(
         => CreateRequest<object>(uri, method, null);
 
     protected virtual HttpRequestMessage CreateRequest<T>(string url, HttpMethod method, T? data) where T : class
-        => CreateRequest(new Uri(url), method, data);
+        => CreateRequest(new Uri(url, UriKind.RelativeOrAbsolute), method, data);
 
     protected virtual HttpRequestMessage CreateRequest<T>(Uri uri, HttpMethod method, T? data) where T : class
     {
-        if (string.IsNullOrEmpty(uri.AbsoluteUri) && !uri.IsAbsoluteUri)
-             // Handle relative uris if base address is set on client
-             if (string.IsNullOrEmpty(uri.OriginalString))
-                throw new ArgumentNullException(nameof(uri), "Url cannot be null or empty");
+        if (uri == null || (uri.IsAbsoluteUri && string.IsNullOrEmpty(uri.AbsoluteUri)) || (!uri.IsAbsoluteUri && string.IsNullOrEmpty(uri.OriginalString)))
+             throw new ArgumentNullException(nameof(uri), "Url cannot be null or empty");
 
         if (method is null)
             throw new ArgumentNullException(nameof(method), "HttpMethod cannot be null");
