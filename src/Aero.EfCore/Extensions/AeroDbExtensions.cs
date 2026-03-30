@@ -1,17 +1,22 @@
 using Aero.Core.Data;
 using Aero.Core.Identity;
-using Microsoft.Extensions.Hosting;
+using Aero.MartenDB;
+using JasperFx;
+using Marten;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Aero.MartenDB;
-using Marten;
+using Microsoft.Extensions.Hosting;
 
 namespace Aero.EfCore.Extensions;
 
 public static class AeroDbExtensions
 {
 
-    public static IServiceCollection AddAeroDataLayer(this IServiceCollection services, IConfiguration config, IHostEnvironment env)
+    public static IServiceCollection AddAeroDataLayer(
+        this IServiceCollection services, 
+        IConfiguration config, 
+        IHostEnvironment env,
+        Action<StoreOptions>? UpdateMartenOptions = null)
     {
         var migrationAssembly = typeof(AeroApiContext)
             //.GetTypeInfo()
@@ -50,23 +55,29 @@ public static class AeroDbExtensions
 
         // todo - move this to the application/client level - anything that needs IDocumentSession can get it via DI
         // and instantiation at this level is too low.  There are other indexes this library is not aware of that need to be added
-services.AddMarten(opts =>
-        {
-            opts.Connection(connString!);
-            opts.UseSystemTextJsonForSerialization(configure: o =>
-            {
-                // Required for [JsonDerivedType] / [JsonPolymorphic] with PostgreSQL jsonb.
-                // jsonb doesn't guarantee property order, so the type discriminator (e.g. $blockType)
-                // can appear at any position in the JSON object. Without this, STJ throws:
-                // "must specify a type discriminator" on deserialization.
-                o.AllowOutOfOrderMetadataProperties = true;
-            });
-            opts.Schema.For<AeroRole>().Identity(x => x.Id);
-            opts.Schema.For<AeroUser>().Identity(x => x.Id);
-            // Optional: enable automatic schema creation for development
-            //opts.AutoCreateSchemaObjects = SchemaMode.Development;
-            opts.DatabaseSchemaName = Schemas.Aero;
-        });
+        services.AddMarten(opts =>
+                {
+                    opts.Connection(connString!);
+                    opts.DatabaseSchemaName = Schemas.Aero;
+
+                    opts.UseSystemTextJsonForSerialization(configure: o =>
+                    {
+                        // Required for [JsonDerivedType] / [JsonPolymorphic] with PostgreSQL jsonb.
+                        // jsonb doesn't guarantee property order, so the type discriminator (e.g. $blockType)
+                        // can appear at any position in the JSON object. Without this, STJ throws:
+                        // "must specify a type discriminator" on deserialization.
+                        o.AllowOutOfOrderMetadataProperties = true;
+                    });
+                    opts.Schema.For<AeroRole>().Identity(x => x.Id);
+                    opts.Schema.For<AeroUser>().Identity(x => x.Id);
+
+                    if(UpdateMartenOptions is not null)
+                        UpdateMartenOptions(opts);
+
+                    // enable automatic schema creation for development
+                    if (env.IsDevelopment())
+                        opts.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
+                });
 
         // todo - rename this project from EfCore to Data and move Marten stuff in same project 
         services.AddScoped<IAeroDb, AeroDb>();
