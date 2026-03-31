@@ -77,7 +77,7 @@ public static class Prelude
     /// // Equivalent to: Option&lt;string&gt; name = "Alice";
     /// </code>
     /// </example>
-    public static Option<T> Some<T>(T value) => new Option<T>.Some(value);
+    public static Option<T> Some<T>(T value) => value;
 
     /// <summary>
     /// Represents the absence of a value (None case) for use in Option.
@@ -92,7 +92,7 @@ public static class Prelude
     /// // Equivalent to: Option&lt;string&gt; name = new Option&lt;string&gt;.None();
     /// </code>
     /// </example>
-    public static None None => default;
+    public static readonly NoneType None = default;
     
     /// <summary>
     /// Creates a Result representing success with the specified value.

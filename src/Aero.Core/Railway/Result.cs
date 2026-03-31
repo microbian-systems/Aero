@@ -37,6 +37,8 @@ public abstract record Result<TError, TValue>
 /// <typeparam name="T">The type of the value that may be present.</typeparam>
 public abstract record Option<T>
 {
+    private Option() { } // Prevent external inheritance
+
     public sealed record Some(T Value) : Option<T>;
     public sealed record None : Option<T>;
 
@@ -50,21 +52,32 @@ public abstract record Option<T>
     /// </summary>
     public bool IsNone => this is None;
 
+    /// <summary>
+    /// Implicitly converts a value to Some if non-null, otherwise None.
+    /// </summary>
     public static implicit operator Option<T>(T value) =>
         value is not null ? new Some(value) : new None();
 
-    public static implicit operator Option<T>(Railway.None _) => new None();
+    /// <summary>
+    /// Implicitly converts the None struct to Option.None.
+    /// </summary>
+    public static implicit operator Option<T>(Railway.NoneType _) => new None();
 
-    public static explicit operator T(Option<T> option) =>
-        option switch
-        {
-            Some(var value) => value,
-            None => throw new InvalidCastException("Cannot cast None to value"),
-        };
+    // todo - this allows unsafe casting and removes the point of ROP
+    // if we want to enforce pattern matching, we can remove these explicit operators and require users to match on Some/None explicitly. This can help prevent accidental casts and make the intent clearer in code.
+    // Optional: Remove if you want to enforce pattern matching
+    //public static explicit operator T(Option<T> option) =>
+    //    option switch
+    //    {
+    //        Some(var value) => value,
+    //        None => throw new InvalidCastException("Cannot cast None to value"),
+    //    };
 }
 
 /// <summary>
 /// Represents the absence of a value, used primarily for type inference in generic contexts.
 /// </summary>
-public readonly struct None { }
+public readonly struct NoneType {
+    //public static None Value => default;
+}
 

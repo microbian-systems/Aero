@@ -1,5 +1,6 @@
 using Aero.Core.Data;
 using Aero.MartenDB.Extensions;
+using Aero.Models.Entities;
 
 namespace Aero.MartenDB;
 
@@ -10,7 +11,8 @@ public interface IAeroDb : IAsyncUnitOfWork
 {
     IDocumentSession Session { get; }
 
-    IAeroUserRepository Users { get; }
+    IQueryable<AeroUser> Users { get; }
+
 
     // todo - add all AeroCMS repositories as properties on AeroDb class + IAeroDB interface
     // todo - add Posts data access
@@ -21,16 +23,14 @@ public interface IAeroDb : IAsyncUnitOfWork
 
 public class AeroDb(
     IDocumentSession session,
-    IAeroUserRepository users,
-    ILogger<AeroDb> log,
-    ILoggerFactory loggerFactory)
+    ILogger<AeroDb> log)
     : IAeroDb
 {
     public IDocumentSession Session => session;
 
     // Lazy initialization ensures the repo is only created when accessed
     // and guarantees it uses the UoW's specific session.
-    public IAeroUserRepository Users => users;
+    public IQueryable<AeroUser> Users => session.Query<AeroUser>();
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

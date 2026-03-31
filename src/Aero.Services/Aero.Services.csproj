@@ -49,7 +49,6 @@
     <PackageReference Include="Twilio.AspNet.Core" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Aero.Cms.Events\Aero.Cms.Events.csproj" />
     <ProjectReference Include="..\Aero.Caching\Aero.Caching.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
     <ProjectReference Include="..\Aero.Marten\Aero.Marten.csproj" />
