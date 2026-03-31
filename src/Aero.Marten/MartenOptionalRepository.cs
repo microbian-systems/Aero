@@ -104,11 +104,11 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
 
     public override async Task<Option<T>> FindByIdAsync(long id, CancellationToken ct = default)
     {
-        return await session.LoadAsync<T>(id, ct) switch
-        {
-            not null => Some(_),
-            _ => None
-        };
+        var res = await session.LoadAsync<T>(id, ct);
+        
+        return res is not null
+            ? Some(res)
+            : None;
     }
 
     public override async Task<IEnumerable<T>> GetAllAsync(int page = 1, int num = 10, CancellationToken ct = default)

@@ -81,8 +81,7 @@ public static class AeroDbExtensions
 
         // todo - rename this project from EfCore to Data and move Marten stuff in same project 
         services.AddScoped<IAeroDb, AeroDb>();
-        services.AddScoped<IAeroUserRepository>(ctx =>
-            ctx.GetRequiredService<IAeroDb>().Users);
+        services.AddScoped<IAeroUserRepository, AeroUserRepository>();
 
         return services;
     }
