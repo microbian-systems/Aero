@@ -22,6 +22,12 @@ public interface IReadonlyRepositoryAsyncOption<T, TKey> where T
 
     // read here: https://stackoverflow.com/questions/793571/why-would-you-use-expressionfunct-rather-than-funct
     public Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+
+    public Task<IEnumerable<T>> FindAsync(
+        Expression<Func<T, bool>> predicate,
+        int page = 1,
+        int pageSize = 10,
+        CancellationToken ct = default);
 }
 
 public interface IReadOnlyRepositoryOption<T, TKey>
@@ -81,16 +87,21 @@ public abstract class GenericRepositoryOption<T, TKey>(ILogger log)
     public abstract Task<bool> ExistsAsync(TKey id, CancellationToken ct = default);
 
     public abstract Task<IEnumerable<T>> GetAllAsync(int page=1, int num=10, CancellationToken ct = default);
-    public abstract Task<Option<T>> GetByIdAsync(TKey id, CancellationToken ct = default);
 
     public abstract Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<TKey> ids, CancellationToken ct = default);
 
     public virtual Option<T> FindById(TKey id) => FindByIdAsync(id).GetAwaiter().GetResult();
 
     public virtual IEnumerable<T> Find(Expression<Func<T, bool>> predicate) =>
-        FindAsync(predicate).GetAwaiter().GetResult();
+        FindAsync(predicate, default(CancellationToken)).GetAwaiter().GetResult();
 
     public abstract Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+
+    public abstract Task<IEnumerable<T>> FindAsync(
+        Expression<Func<T, bool>> predicate,
+        int page = 1,
+        int pageSize = 10,
+        CancellationToken ct = default);
 
     public abstract Task<Option<T>> FindByIdAsync(TKey id, CancellationToken ct = default);
 

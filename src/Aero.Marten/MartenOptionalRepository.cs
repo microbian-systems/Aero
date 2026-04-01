@@ -78,10 +78,10 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
 
 
     // todo - use paging w/ find (add to base interface):
-    public async Task<IEnumerable<T>> FindAsync(
+    public override async Task<IEnumerable<T>> FindAsync(
         Expression<Func<T, bool>> predicate,
-        int page=1,
-        int pageSize=10,
+        int page = 1,
+        int pageSize = 10,
         CancellationToken ct = default)
     {
         var results = await session.Query<T>()
@@ -122,17 +122,6 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
             .Take(num)
             .ToListAsync(ct);
         return records?.AsEnumerable() ?? [];
-    }
-
-    public override async Task<Option<T>> GetByIdAsync(long id, CancellationToken ct = default)
-    {
-        var entity = await session.LoadAsync<T>(id, ct);
-        
-        return entity switch
-        {
-            not null => Some(entity),
-            _ => None
-        };
     }
 
     public override async Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<long> ids, CancellationToken ct = default)
