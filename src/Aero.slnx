@@ -30,6 +30,7 @@
     <Project Path="../Tests/Aero.SendGrid.Tests/Aero.SendGrid.Tests.csproj" />
     <Project Path="../Tests/Aero.Social.Twitter/Aero.Social.Twitter.csproj" />
   </Folder>
+  <Project Path="Aero.Actors.Abstractions/Aero.Actors.Abstractions.csproj" Id="d207bb85-9421-4841-b0e9-d86e216f8970" />
   <Project Path="Aero.Actors/Aero.Actors.csproj" />
   <Project Path="Aero.Auth/Aero.Auth.csproj" />
   <Project Path="Aero.Caching/Aero.Caching.csproj" />

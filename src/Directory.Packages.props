@@ -65,6 +65,7 @@
     <PackageVersion Include="MagicOnion.Server" Version="7.10.0" />
     <PackageVersion Include="Microsoft.Orleans.Core" Version="10.0.1" />
     <PackageVersion Include="Microsoft.Orleans.Core.Abstractions" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Orleans.Sdk" Version="10.0.1" />
     <PackageVersion Include="MimeKit" Version="4.15.1" />
     <PackageVersion Include="MiniProfiler" Version="4.5.4" />
     <PackageVersion Include="MiniProfiler.AspNetCore" Version="4.5.4" />
