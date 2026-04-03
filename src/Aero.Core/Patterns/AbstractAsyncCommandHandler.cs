@@ -18,5 +18,6 @@ public abstract class AbstractAsyncCommandHandler<T, TReturn>(ILogger<AbstractAs
     : IAsyncCommand<T, TReturn>
 {
     private readonly ILogger<AbstractAsyncCommandHandler> log = log;
+
     public abstract Task<TReturn> ExecuteAsync(T param);
 }

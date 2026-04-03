@@ -1,0 +1,17 @@
+namespace Aero.Core.Requests;
+
+/// <summary>
+/// Generally useful as/in parameter to methods
+/// </summary>
+/// <remarks>compatible with orleans serialization</remarks>
+public interface IRequest;
+
+/// <summary>
+/// Generally useful as/in paramters to methods
+/// </summary>
+/// <typeparam name="T">The type of data payload</typeparam>
+/// <remarks>compatible with orleans serialization</remarks>
+public interface IRequest<T>
+{
+    T Data { get; set; }
+}
