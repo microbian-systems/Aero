@@ -22,6 +22,8 @@ public interface IAeroError ;
 /// error reporting across the application.</remarks>
 public abstract record AeroError : IAeroError
 {
+    ///
+    public sealed record NotAllowed(string msg) : AeroError;
     /// <summary>
     /// Represents an error indicating that a requested resource was not found.
     /// </summary>
