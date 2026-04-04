@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using ILogger = Serilog.ILogger;
 using Marten;
+using Aero.Core.Entities;
 
 namespace Aero.Cms.Web.Core.Modules;
 
@@ -81,6 +82,17 @@ public abstract class AeroModuleBase : IAeroModule, IConfigureMarten, IDisposabl
     {
         Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    public virtual void Configure<T>(IServiceProvider services, StoreOptions opts, bool index = true)
+        where T : Entity
+    {
+        if (index == false) return;
+        opts.Schema.For<T>().Identity(x => x.Id);
+        opts.Schema.For<T>().Index(x => x.CreatedBy);
+        opts.Schema.For<T>().Index(x => x.ModifiedBy);
+        opts.Schema.For<T>().Index(x => x.CreatedOn);
+        opts.Schema.For<T>().Index(x => x.ModifiedOn);
     }
 
     // todo - add documentation for the marten configuration method and how it is used to configure document schemas, indexes, etc. and how it is called during application startup

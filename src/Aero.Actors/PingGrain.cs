@@ -7,7 +7,8 @@ namespace Aero.Actors;
 
 
 [StatelessWorker]
-public class PingGrain(ILogger<PingGrain> log, IGrainFactory grainFactory) : AeroActor(log), IPingGrain
+public class PingGrain(IGrainFactory grainFactory, ILogger<PingGrain> log) 
+    : AeroActor(log), IPingGrain
 {
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
@@ -29,7 +30,7 @@ public class PingGrain(ILogger<PingGrain> log, IGrainFactory grainFactory) : Aer
 
         activity?.SetTag("message.id", id.ToString());
 
-        var pong = grainFactory.GetGrain<IPongGrain>(id);
+        var pong = grainFactory.GetGrain<IPongGrain>(id, "pong");
         var message = new Message(id, "pong!");
 
         log.LogInformation("sending pong response");

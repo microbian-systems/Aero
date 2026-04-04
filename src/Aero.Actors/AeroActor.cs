@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace Aero.Actors;
 
 
-public interface IAeroActor : IGrainWithIntegerKey;
+public interface IAeroActor : IGrainWithIntegerCompoundKey;
 
 /// <summary>
 /// Base grain class for actors
