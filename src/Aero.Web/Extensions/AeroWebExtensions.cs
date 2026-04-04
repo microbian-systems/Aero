@@ -1,8 +1,8 @@
-using Aero.Common.Web.Exceptions;
 using Aero.Common.Web.Middleware;
 using Aero.Services;
 using Aero.Services.Geo;
 using Aero.Services.Mail;
+using Aero.Web.Exceptions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -86,6 +86,7 @@ public static class AeroWebExtensions
         // todo - analyzle if we still need any of the middleware here in this library - may move to cms project
 
         //services.AddAntiforgery();
+        services.AddExceptionHandler<AeroGlobalExceptionHandler>();
         services.AddHttpContextAccessor();
         services.AddScoped<ITokenValidationService, AeroJwtValidationService>();
         services.AddEmailServies(config, host);
@@ -110,7 +111,8 @@ public static class AeroWebExtensions
     public static IApplicationBuilder UseAeroMiddleware(this IApplicationBuilder app)
     {
         // todo - analyzle if we still need any of the middleware here in this library - may move to cms project
-        app.ConfigureExceptionMiddleware();
+        app.UseExceptionHandler();
+        
         //app.UseDefaultLogging();
         app.UseRequestCultureMiddleware();
         //app.UsePerfLogging();

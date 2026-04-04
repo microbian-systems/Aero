@@ -32,7 +32,7 @@ public abstract class AeroCompiledQueryScalar<T, TOut> : AeroCompiledQuery<T, TO
 /// Base class for compiled queries that return a list of entities with Snowflake IDs.
 /// </summary>
 /// <typeparam name="T">The entity type.</typeparam>
-public abstract class AeroCompiledQuery<T> : ICompiledQuery<T, IList<T>>
+public abstract class AeroCompiledQueryList<T> : ICompiledQuery<T, IList<T>>
     where T : Entity, ISnowflakeEntity
 {
     /// <summary>
