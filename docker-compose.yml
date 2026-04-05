@@ -161,22 +161,25 @@ services:
 
   lavinmq:
     image: cloudamqp/lavinmq:latest
-    # container_name: ... (REMOVE THIS: must be unique for scaling)
+    entrypoint: ["/bin/sh", "-c"]
     command: 
-      - "--clustering"
-      - "--clustering-etcd-endpoints=http://etcd:2379"
-      # In Docker, the container hostname is dynamic. 
-      # LavinMQ can often auto-discover this if the advertised URI is omitted or set via script.
+      - |
+        lavinmq --clustering \
+                --clustering-etcd-endpoints=http://etcd:2379 \
+                --clustering-bind=0.0.0.0 \
+                --clustering-advertised-uri=tcp://$(hostname):5679 \
+                --amqp-bind=0.0.0.0 \
+                --http-bind=0.0.0.0 \
+                --default-user-only-loopback=false
     environment:
       LAVINMQ_USER: admin
       LAVINMQ_PASSWORD: "*strongPassword1"
-    # ports: 
-    #   - "5672"   # (REMOVE specific host ports like '5672:5672' or they will conflict)
-    #   - "15672"  # Let Docker assign random host ports or use a Load Balancer
     depends_on:
-      - etcd
+      etcd:
+        condition: service_healthy
     networks:
       - aero-net
+
 
   # lavinmq1:
   #   image: cloudamqp/lavinmq:latest
