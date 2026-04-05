@@ -83,5 +83,10 @@ public abstract record AeroError : IAeroError
     /// </summary>
     /// <param name="msg">The error message that describes the existence conflict.</param>
     public sealed record Exists(string msg) : AeroError;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="msg0"></param>
+    public sealed record HttpClientRequest(string msg0) : AeroError;
 }
 
