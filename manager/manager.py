@@ -90,10 +90,20 @@ def docker_checker():
     print('listening for events...', file=stderr)
     open(HEALTHCHECK_FILE, 'a').close()
     for event in client.events(decode=True, filters=filters):
-        worker_name = event['Actor']['Attributes']['name']
-        status = event['status']
-
-        status=actions[status](conn, worker_name)
+        try:
+            worker_name = event['Actor']['Attributes']['name']
+            # strip slash if present (docker names often start with /)
+            if worker_name.startswith('/'):
+                worker_name = worker_name[1:]
+                
+            status = event.get('status') or event.get('Action')
+            
+            if status in actions:
+                actions[status](conn, worker_name)
+            else:
+                print(f"received unknown status '{status}' for {worker_name}", file=stderr)
+        except Exception as e:
+            print(f"Error processing event: {e}. Event data: {event}", file=stderr)
 
 
 # implemented to make Docker exit faster (it sends sigterm)
