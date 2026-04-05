@@ -97,15 +97,18 @@ services:
   #     - aero-net
 
   openobserve:
-    image: public.ecr.aws/zinclabs/openobserve:latest
-    container_name: openobserve
+    image: openobserve/openobserve:latest
+    container_name: openobserve-temp
     ports:
-      - "5080:5080"
+      - "5081:5080"
+      - "8001:8000"
     environment:
-      - ZO_ROOT_USER_EMAIL=socials@microbians.com
-      - ZO_ROOT_USER_PASSWORD=*strongPassword1
+      ZO_ROOT_USER_EMAIL: aero@getaero.net
+      ZO_ROOT_USER_PASSWORD: "*strongPassword1"
+      ZO_DATA_DIR: /data
     volumes:
-      - openobserve-data:/data
+      - ./openobserve_data:/data
+    restart: always
     networks:
       - aero-net
 
@@ -156,62 +159,81 @@ services:
     networks:
       - aero-net
 
-  lavinmq1:
+  lavinmq:
     image: cloudamqp/lavinmq:latest
-    hostname: lavinmq1
-    container_name: lavinmq1
-    ports:
-      - 5672:5672
-      - 5679:5679
-      - 15672:15672
-    volumes:
-      - lavinmq-data:/var/lib/lavinmq/data
-    configs:
-      - source: lavinmq_config
-        target: /etc/lavinmq/lavinmq.ini
+    # container_name: ... (REMOVE THIS: must be unique for scaling)
+    command: 
+      - "--clustering"
+      - "--clustering-etcd-endpoints=http://etcd:2379"
+      # In Docker, the container hostname is dynamic. 
+      # LavinMQ can often auto-discover this if the advertised URI is omitted or set via script.
+    environment:
+      LAVINMQ_USER: admin
+      LAVINMQ_PASSWORD: "*strongPassword1"
+    # ports: 
+    #   - "5672"   # (REMOVE specific host ports like '5672:5672' or they will conflict)
+    #   - "15672"  # Let Docker assign random host ports or use a Load Balancer
     depends_on:
-      etcd:
-        condition: service_healthy
+      - etcd
     networks:
       - aero-net
 
-  lavinmq2:
-    image: cloudamqp/lavinmq:latest
-    hostname: lavinmq2
-    container_name: lavinmq2
-    ports:
-      - 5673:5672
-      - 15679:5679
-      - 25672:15672
-    volumes:
-      - lavinmq-data:/var/lib/lavinmq/data
-    configs:
-      - source: lavinmq_config
-        target: /etc/lavinmq/lavinmq.ini
-    depends_on:
-      etcd:
-        condition: service_healthy
-    networks:
-      - aero-net
+  # lavinmq1:
+  #   image: cloudamqp/lavinmq:latest
+  #   hostname: lavinmq1
+  #   container_name: lavinmq1
+  #   ports:
+  #     - 5672:5672
+  #     - 5679:5679
+  #     - 15672:15672
+  #   volumes:
+  #     - lavinmq-data:/var/lib/lavinmq/data
+  #   configs:
+  #     - source: lavinmq_config
+  #       target: /etc/lavinmq/lavinmq.ini
+  #   depends_on:
+  #     etcd:
+  #       condition: service_healthy
+  #   networks:
+  #     - aero-net
 
-  lavinmq3:
-    image: cloudamqp/lavinmq:latest
-    hostname: lavinmq3
-    container_name: lavinmq3
-    ports:
-      - 5674:5672
-      - 25679:5679
-      - 35672:15672
-    volumes:
-      - lavinmq-data:/var/lib/lavinmq/data
-    configs:
-      - source: lavinmq_config
-        target: /etc/lavinmq/lavinmq.ini
-    depends_on:
-      etcd:
-        condition: service_healthy
-    networks:
-      - aero-net
+  # lavinmq2:
+  #   image: cloudamqp/lavinmq:latest
+  #   hostname: lavinmq2
+  #   container_name: lavinmq2
+  #   ports:
+  #     - 5673:5672
+  #     - 15679:5679
+  #     - 25672:15672
+  #   volumes:
+  #     - lavinmq-data:/var/lib/lavinmq/data
+  #   configs:
+  #     - source: lavinmq_config
+  #       target: /etc/lavinmq/lavinmq.ini
+  #   depends_on:
+  #     etcd:
+  #       condition: service_healthy
+  #   networks:
+  #     - aero-net
+
+  # lavinmq3:
+  #   image: cloudamqp/lavinmq:latest
+  #   hostname: lavinmq3
+  #   container_name: lavinmq3
+  #   ports:
+  #     - 5674:5672
+  #     - 25679:5679
+  #     - 35672:15672
+  #   volumes:
+  #     - lavinmq-data:/var/lib/lavinmq/data
+  #   configs:
+  #     - source: lavinmq_config
+  #       target: /etc/lavinmq/lavinmq.ini
+  #   depends_on:
+  #     etcd:
+  #       condition: service_healthy
+  #   networks:
+  #     - aero-net
 
   etcd:
     image: gcr.io/etcd-development/etcd:v3.6.5
