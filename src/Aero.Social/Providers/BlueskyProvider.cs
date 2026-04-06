@@ -9,11 +9,12 @@ using Microsoft.Extensions.Logging;
 namespace Aero.Social.Providers;
 
 public class BlueskyProvider(
-    HttpClient httpClient,
+    HttpClient client,
     IConfiguration configuration,
     ILogger<BlueskyProvider> logger)
-    : SocialProviderBase(httpClient, logger)
+    : SocialProviderBase(client, logger)
 {
+
     private readonly IConfiguration _configuration = configuration;
 
     public override string Identifier => "bluesky";
@@ -218,7 +219,7 @@ public class BlueskyProvider(
         var json = JsonSerializer.Serialize(payload);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await HttpClient.PostAsync(url, content, cancellationToken);
+        var response = await PostAsync(url, content, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -239,7 +240,7 @@ public class BlueskyProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await DeserializeAsync<BlueskyProfile>(response);
@@ -304,7 +305,7 @@ public class BlueskyProvider(
 
         if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
         {
-            imageBuffer = await HttpClient.GetByteArrayAsync(url, cancellationToken);
+            imageBuffer = await client.GetByteArrayAsync(url, cancellationToken);
         }
         else
         {
@@ -341,7 +342,7 @@ public class BlueskyProvider(
         var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {session.AccessJwt}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var result = await DeserializeAsync<BlueskyUploadBlobResponse>(response);
@@ -362,7 +363,7 @@ public class BlueskyProvider(
         var authRequest = new HttpRequestMessage(HttpMethod.Get, serviceAuthUrl);
         authRequest.Headers.TryAddWithoutValidation("Authorization", $"Bearer {session.AccessJwt}");
 
-        var authResponse = await HttpClient.SendAsync(authRequest, cancellationToken);
+        var authResponse = await SendAsync(authRequest, cancellationToken);
         authResponse.EnsureSuccessStatusCode();
 
         var authResult = await DeserializeAsync<BlueskyServiceAuthResponse>(authResponse);
@@ -370,7 +371,7 @@ public class BlueskyProvider(
         byte[] videoBytes;
         if (videoUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
         {
-            videoBytes = await HttpClient.GetByteArrayAsync(videoUrl, cancellationToken);
+            videoBytes = await client.GetByteArrayAsync(videoUrl, cancellationToken);
         }
         else
         {
@@ -386,7 +387,7 @@ public class BlueskyProvider(
         var uploadRequest = new HttpRequestMessage(HttpMethod.Post, uploadUrl) { Content = uploadContent };
         uploadRequest.Headers.TryAddWithoutValidation("Authorization", $"Bearer {authResult.Token}");
 
-        var uploadResponse = await HttpClient.SendAsync(uploadRequest, cancellationToken);
+        var uploadResponse = await SendAsync(uploadRequest, cancellationToken);
         uploadResponse.EnsureSuccessStatusCode();
 
         var jobStatus = await DeserializeAsync<BlueskyVideoJobStatus>(uploadResponse);
@@ -397,7 +398,7 @@ public class BlueskyProvider(
             await Task.Delay(30000, cancellationToken);
 
             var statusUrl = $"https://video.bsky.app/xrpc/app.bsky.video.getJobStatus?jobId={jobStatus.JobId}";
-            var statusResponse = await HttpClient.GetAsync(statusUrl, cancellationToken);
+            var statusResponse = await GetAsync(statusUrl, cancellationToken);
             statusResponse.EnsureSuccessStatusCode();
 
             var statusResult = await DeserializeAsync<BlueskyVideoJobStatusResponse>(statusResponse);
@@ -447,7 +448,7 @@ public class BlueskyProvider(
         var request = new HttpRequestMessage(HttpMethod.Post, url) { Content = content };
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {session.AccessJwt}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await DeserializeAsync<BlueskyCreateRecordResponse>(response);
@@ -464,7 +465,7 @@ public class BlueskyProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {session.AccessJwt}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await DeserializeAsync<BlueskyPostThreadResponse>(response) is { } result

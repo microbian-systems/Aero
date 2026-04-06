@@ -1,4 +1,4 @@
-namespace Aero.Social;
+namespace Aero.Social.Abstractions;
 
 public class RefreshTokenException(
     string identifier,

@@ -3,7 +3,6 @@ using Aero.Core.Http;
 using Aero.Social.Models;
 using Aero.Social.Plugs;
 using Microsoft.Extensions.Logging;
-using Polly;
 
 namespace Aero.Social.Abstractions;
 
@@ -11,7 +10,7 @@ namespace Aero.Social.Abstractions;
 /// Base class for all social media provider implementations.
 /// Provides common functionality for HTTP requests, error handling, retry logic, and plug support.
 /// </summary>
-public abstract class SocialProviderBase : HttpClientBaseV2, ISocialProvider
+public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
 {
     /// <inheritdoc/>
     public abstract string Identifier { get; }
@@ -51,12 +50,10 @@ public abstract class SocialProviderBase : HttpClientBaseV2, ISocialProvider
     /// </summary>
     /// <param name="httpClient">The HTTP client for making API requests.</param>
     /// <param name="logger">The logger for this provider.</param>
-    /// <param name="resiliencePipeline">Optional resilience pipeline for retry logic.</param>
     protected SocialProviderBase(
         HttpClient httpClient,
-        ILogger logger,
-        ResiliencePipeline<HttpResponseMessage>? resiliencePipeline = null)
-        : base(httpClient, logger, resiliencePipeline)
+        ILogger<SocialProviderBase> log)
+        : base(httpClient, log)
     {
     }
 
@@ -240,7 +237,7 @@ public abstract class SocialProviderBase : HttpClientBaseV2, ISocialProvider
         int maxRetries = 3,
         CancellationToken cancellationToken = default)
     {
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await this.SendAsync(request);
 
         if (response.IsSuccessStatusCode)
         {

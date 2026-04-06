@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Core.Http;
 
+[Obsolete("This class is deprecated. Please use HttpClientBaseV3 instead.", true)]
 public abstract class HttpClientBaseV2(
     HttpClient httpClient,
     ILogger logger,
@@ -257,17 +258,5 @@ public abstract class HttpClientBaseV2(
         return await JsonSerializer.DeserializeAsync<T>(stream, opts);
     }
 
-    protected virtual async Task<byte[]?> DownloadBytesAsync(string url)
-    {
-        var response = await GetAsync(url);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsByteArrayAsync();
-    }
 
-    protected virtual async Task<Stream?> DownloadStreamAsync(string url)
-    {
-        var response = await GetAsync(url);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStreamAsync();
-    }
 }
