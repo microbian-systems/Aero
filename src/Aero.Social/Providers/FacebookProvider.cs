@@ -79,7 +79,7 @@ public class FacebookProvider(
             Username = string.Empty
         });
     }
-
+    
     public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -210,7 +210,7 @@ public class FacebookProvider(
         var url = $"https://graph.facebook.com/v20.0/{pageId}/feed?access_token={accessToken}&fields=id,permalink_url";
 
         var request = CreateRequest(url, HttpMethod.Post, payload);
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var postResponse = await DeserializeAsync<FacebookPostResponse>(response);
@@ -245,7 +245,7 @@ public class FacebookProvider(
         var url = $"https://graph.facebook.com/v20.0/{pageId}/videos?access_token={accessToken}&fields=id,permalink_url";
 
         var request = CreateRequest(url, HttpMethod.Post, payload);
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var videoResponse = await DeserializeAsync<FacebookVideoResponse>(response);
@@ -287,7 +287,7 @@ public class FacebookProvider(
         var url = $"https://graph.facebook.com/v20.0/{replyToId}/comments?access_token={accessToken}&fields=id,permalink_url";
 
         var request = CreateRequest(url, HttpMethod.Post, payload);
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var commentResponse = await DeserializeAsync<FacebookPostResponse>(response);
@@ -350,7 +350,7 @@ public class FacebookProvider(
         };
 
         var request = CreateRequest(url, HttpMethod.Post, payload);
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var photoResponse = await DeserializeAsync<FacebookPhotoResponse>(response);

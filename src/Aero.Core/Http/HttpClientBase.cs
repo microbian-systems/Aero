@@ -10,11 +10,17 @@ public abstract class HttpClientBase(HttpClient httpClient, ILogger<HttpClientBa
     protected readonly HttpClient httpClient = httpClient;
     protected readonly string jsonMediaType = "application/json";
 
-    public virtual async Task<HttpResponseMessage> GetAsync(string url, CancellationToken ct = default)
-    {
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        var response = await httpClient.SendAsync(request, ct);
+    public virtual async Task<HttpResponseMessage> GetAsync(string url, CancellationToken ct = default) 
+        => await GetAsync(new Uri(url), ct);
 
+    public virtual async Task<HttpResponseMessage> GetAsync(Uri uri, CancellationToken ct = default)
+    {
+        var response = await httpClient.GetAsync(uri, ct);
+        if(!response.IsSuccessStatusCode)
+        {
+            var ex = new HttpRequestException($"Failed http GET request for {response.RequestMessage.RequestUri}: {response.StatusCode} : {response.ReasonPhrase}");
+            log.LogError(ex, ex.Message);
+        }
         return response;
     }
 
@@ -40,22 +46,6 @@ public abstract class HttpClientBase(HttpClient httpClient, ILogger<HttpClientBa
         where T : class
     {
         return PostAsync(url.ToString(), data);
-    }
-
-    public virtual Task<HttpResponseMessage> PutAsJsonAsync<T>(string url, T data, CancellationToken ct = default) 
-        where T : class => PutAsJsonAsync(new Uri(url), data, ct);
-
-    public virtual async Task<HttpResponseMessage> PutAsJsonAsync<T>(Uri uri, T data, CancellationToken ct = default)
-    {
-        var request = new HttpRequestMessage(HttpMethod.Put, uri);
-        var json = JsonSerializer.Serialize(data);
-        var response = await httpClient.PutAsJsonAsync<T>(uri, data, ct);
-        if (!response.IsSuccessStatusCode)
-        {
-            var ex = new HttpRequestException($"Failed http PUT request for {response.RequestMessage.RequestUri}: {response.StatusCode} : {response.ReasonPhrase}");
-            log.LogError(ex, ex.Message);
-        }
-        return response;
     }
 
     public virtual Task<HttpResponseMessage> PutAsync<T>(string url, T data, CancellationToken ct = default) 

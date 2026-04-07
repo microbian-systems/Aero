@@ -3,27 +3,28 @@ namespace Aero.Core.Railway;
 /// <summary>
 /// Represents a computation that can either succeed with a value or fail with an error.
 /// </summary>
+/// <typeparam name="T">The type of the success value.</typeparam>
 /// <typeparam name="TError">The type of the error value in case of failure.</typeparam>
-/// <typeparam name="TValue">The type of the success value.</typeparam>
-public abstract record Result<TError, TValue>
+public abstract record Result<T, TError>
+    where TError : AeroError
 {
-    public sealed record Ok(TValue Value) : Result<TError, TValue>;
-    public sealed record Failure(TError Error) : Result<TError, TValue>;
+    public sealed record Ok(T Value) : Result<T, TError>;
+    public sealed record Failure(TError Error) : Result<T, TError>;
 
     public bool IsSuccess => this is Ok;
     public bool IsFailure => this is Failure;
 
-    public static implicit operator Result<TError, TValue>(TValue value) => new Ok(value);
-    public static implicit operator Result<TError, TValue>(TError error) => new Failure(error);
+    public static implicit operator Result<T, TError>(T value) => new Ok(value);
+    public static implicit operator Result<T, TError>(TError error) => new Failure(error);
 
-    public static explicit operator TValue(Result<TError, TValue> result) =>
+    public static explicit operator T(Result<T, TError> result) =>
         result switch
         {
             Ok(var value) => value,
             Failure(var error) => throw new InvalidCastException($"Result was Failure: {error}"),
         };
 
-    public static explicit operator TError(Result<TError, TValue> result) =>
+    public static explicit operator TError(Result<T, TError> result) =>
         result switch
         {
             Failure(var error) => error,
