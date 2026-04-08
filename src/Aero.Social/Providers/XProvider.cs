@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -8,24 +10,38 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Provides integration with X (formerly Twitter) for posting tweets and media.
+/// </summary>
 public class XProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<XProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
+    /// <inheritdoc/>
     public override string Identifier => "x";
+
+    /// <inheritdoc/>
     public override string Name => "X";
+
+    /// <inheritdoc/>
     public override string[] Scopes => Array.Empty<string>();
+
+    /// <inheritdoc/>
     public override int MaxConcurrentJobs => 1;
+
+    /// <inheritdoc/>
     public override string? Tooltip => "You will be logged in into your current account, if you would like a different account, change it first on X";
 
+    /// <inheritdoc/>
     public override int MaxLength(object? additionalSettings = null)
     {
         var isPremium = additionalSettings is bool premium && premium;
         return isPremium ? 4000 : 200;
     }
 
+    /// <inheritdoc/>
     protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (responseBody.Contains("Unsupported Authentication"))
@@ -46,7 +62,8 @@ public class XProvider(
         return null;
     }
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -57,19 +74,17 @@ public class XProvider(
 
         var callbackUrl = $"{frontendUrl}/integrations/social/x";
 
-        var requestToken = await GetRequestTokenAsync(apiKey, apiSecret, callbackUrl, cancellationToken);
-
-        var url = $"https://api.twitter.com/oauth/authenticate?oauth_token={requestToken.Token}";
-
-        return new GenerateAuthUrlResponse
-        {
-            Url = url,
-            CodeVerifier = $"{requestToken.Token}:{requestToken.TokenSecret}",
-            State = state
-        };
+        return await GetRequestTokenAsync(apiKey, apiSecret, callbackUrl, cancellationToken)
+            .MapAsync<XRequestToken, AeroError, GenerateAuthUrlResponse>(requestToken => new GenerateAuthUrlResponse
+            {
+                Url = $"https://api.twitter.com/oauth/authenticate?oauth_token={requestToken.Token}",
+                CodeVerifier = $"{requestToken.Token}:{requestToken.TokenSecret}",
+                State = state
+            });
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -78,40 +93,44 @@ public class XProvider(
         var apiSecret = GetApiSecret();
 
         var parts = parameters.CodeVerifier.Split(':');
+        if (parts.Length < 2) return AeroError.CreateError("Invalid code verifier");
+        
         var oauthToken = parts[0];
         var oauthTokenSecret = parts[1];
 
-        var accessToken = await GetAccessTokenAsync(apiKey, apiSecret, oauthToken, oauthTokenSecret, parameters.Code, cancellationToken);
-
-        var userInfo = await GetUserInfoAsync(apiKey, apiSecret, accessToken.Token, accessToken.TokenSecret, cancellationToken);
-
-        return new AuthTokenDetails
-        {
-            Id = userInfo.Id,
-            Name = userInfo.Name,
-            AccessToken = $"{accessToken.Token}:{accessToken.TokenSecret}",
-            RefreshToken = string.Empty,
-            ExpiresIn = 999999999,
-            Picture = userInfo.ProfileImageUrl ?? string.Empty,
-            Username = userInfo.Username,
-            AdditionalSettings = new List<AdditionalSetting>
+        return await GetAccessTokenAsync(apiKey, apiSecret, oauthToken, oauthTokenSecret, parameters.Code, cancellationToken)
+            .BindAsync<XAccessToken, AeroError, AuthTokenDetails>(async accessToken =>
             {
-                new()
-                {
-                    Title = "Verified",
-                    Description = "Is this a verified user? (Premium)",
-                    Type = AdditionalSettingType.Checkbox,
-                    Value = userInfo.Verified
-                }
-            }
-        };
+                return await GetUserInfoAsync(apiKey, apiSecret, accessToken.Token, accessToken.TokenSecret, cancellationToken)
+                    .MapAsync<XUserInfo, AeroError, AuthTokenDetails>((XUserInfo userInfo) => new AuthTokenDetails
+                    {
+                        Id = userInfo.Id,
+                        Name = userInfo.Name,
+                        AccessToken = $"{accessToken.Token}:{accessToken.TokenSecret}",
+                        RefreshToken = string.Empty,
+                        ExpiresIn = 999999999,
+                        Picture = userInfo.ProfileImageUrl ?? string.Empty,
+                        Username = userInfo.Username,
+                        AdditionalSettings = new List<AdditionalSetting>
+                        {
+                            new()
+                            {
+                                Title = "Verified",
+                                Description = "Is this a verified user? (Premium)",
+                                Type = AdditionalSettingType.Checkbox,
+                                Value = userInfo.Verified
+                            }
+                        }
+                    });
+            });
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    /// <inheritdoc/>
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = string.Empty,
             ExpiresIn = 0,
@@ -123,7 +142,8 @@ public class XProvider(
         });
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -136,58 +156,69 @@ public class XProvider(
         var apiKey = GetApiKey();
         var apiSecret = GetApiSecret();
         var tokenParts = accessToken.Split(':');
+        if (tokenParts.Length < 2) return AeroError.CreateError("Invalid access token");
+        
         var token = tokenParts[0];
         var tokenSecret = tokenParts[1];
 
-        var mediaIds = await UploadMediaAsync(apiKey, apiSecret, token, tokenSecret, new List<PostDetails> { firstPost }, cancellationToken);
-
-        var userInfo = await GetUserInfoAsync(apiKey, apiSecret, token, tokenSecret, cancellationToken);
-
-        var tweetData = new Dictionary<string, object>
-        {
-            ["text"] = firstPost.Message
-        };
-
-        var replySettings = GetSettingValue<string>(settings, "who_can_reply_post");
-        if (!string.IsNullOrEmpty(replySettings) && replySettings != "everyone")
-        {
-            tweetData["reply_settings"] = replySettings;
-        }
-
-        var community = GetSettingValue<string>(settings, "community");
-        if (!string.IsNullOrEmpty(community))
-        {
-            tweetData["share_with_followers"] = true;
-            tweetData["community_id"] = community.Split('/').Last();
-        }
-
-        if (mediaIds.Count > 0)
-        {
-            tweetData["media"] = new { media_ids = mediaIds.ToArray() };
-        }
-
-        var request = CreateRequest("https://api.twitter.com/2/tweets", HttpMethod.Post, tweetData);
-        AddOAuthHeader(request, apiKey, apiSecret, token, tokenSecret, "POST", "https://api.twitter.com/2/tweets");
-
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var tweetResponse = await DeserializeAsync<XTweetResponse>(response);
-        var tweetId = tweetResponse.Data.Id;
-
-        return new[]
-        {
-            new PostResponse
+        return await UploadMediaAsync(apiKey, apiSecret, token, tokenSecret, new List<PostDetails> { firstPost }, cancellationToken)
+            .BindAsync<List<string>, AeroError, PostResponse[]>(async mediaIds =>
             {
-                Id = firstPost.Id,
-                PostId = tweetId,
-                ReleaseUrl = $"https://twitter.com/{userInfo.Username}/status/{tweetId}",
-                Status = "posted"
-            }
-        };
+                return await GetUserInfoAsync(apiKey, apiSecret, token, tokenSecret, cancellationToken)
+                    .BindAsync<XUserInfo, AeroError, PostResponse[]>(async userInfo =>
+                    {
+                        var tweetData = new Dictionary<string, object>
+                        {
+                            ["text"] = firstPost.Message
+                        };
+
+                        var replySettings = GetSettingValue<string>(settings, "who_can_reply_post");
+                        if (!string.IsNullOrEmpty(replySettings) && replySettings != "everyone")
+                        {
+                            tweetData["reply_settings"] = replySettings;
+                        }
+
+                        var community = GetSettingValue<string>(settings, "community");
+                        if (!string.IsNullOrEmpty(community))
+                        {
+                            tweetData["share_with_followers"] = true;
+                            tweetData["community_id"] = community.Split('/').Last();
+                        }
+
+                        if (mediaIds.Count > 0)
+                        {
+                            tweetData["media"] = new { media_ids = mediaIds.ToArray() };
+                        }
+
+                        var request = CreateRequest("https://api.twitter.com/2/tweets", HttpMethod.Post, tweetData);
+                        AddOAuthHeader(request, apiKey, apiSecret, token, tokenSecret, "POST", "https://api.twitter.com/2/tweets");
+
+                        return await SendRequestAsync<XTweetResponse>(request, cancellationToken)
+                            .MapAsync<XTweetResponse, AeroError, PostResponse[]>((XTweetResponse tweetResponse) => new[]
+                            {
+                                new PostResponse
+                                {
+                                    Id = firstPost.Id,
+                                    PostId = tweetResponse.Data.Id,
+                                    ReleaseUrl = $"https://twitter.com/{userInfo.Username}/status/{tweetResponse.Data.Id}",
+                                    Status = "posted"
+                                }
+                            });
+                    });
+            });
     }
 
-    private async Task<List<string>> UploadMediaAsync(
+    /// <summary>
+    /// Uploads media files associated with a post to X.
+    /// </summary>
+    /// <param name="apiKey">The X API key.</param>
+    /// <param name="apiSecret">The X API secret.</param>
+    /// <param name="token">The user access token.</param>
+    /// <param name="tokenSecret">The user access token secret.</param>
+    /// <param name="posts">The post details containing media.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A result containing a list of uploaded media IDs or an AeroError.</returns>
+    private async Task<Result<List<string>, AeroError>> UploadMediaAsync(
         string apiKey,
         string apiSecret,
         string token,
@@ -201,26 +232,47 @@ public class XProvider(
         {
             foreach (var media in post.Media ?? new List<MediaContent>())
             {
-                var mediaBytes = await ReadOrFetchAsync(media.Path, cancellationToken);
+                var fetchResult = await ReadOrFetchAsync(media.Path, cancellationToken);
+                if (fetchResult is Result<byte[], AeroError>.Failure failure) 
+                {
+                    return failure.Error;
+                }
+                
+                var mediaBytes = fetchResult switch
+                {
+                    Result<byte[], AeroError>.Ok ok => ok.Value,
+                    _ => throw new InvalidOperationException("Unexpected result state")
+                };
+
                 var isVideo = media.Path.Contains(".mp4", StringComparison.OrdinalIgnoreCase);
 
+                Result<string, AeroError> uploadResult;
                 if (isVideo)
                 {
-                    var mediaId = await UploadVideoAsync(apiKey, apiSecret, token, tokenSecret, mediaBytes, cancellationToken);
-                    mediaIds.Add(mediaId);
+                    uploadResult = await UploadVideoAsync(apiKey, apiSecret, token, tokenSecret, mediaBytes, cancellationToken);
                 }
                 else
                 {
-                    var mediaId = await UploadImageAsync(apiKey, apiSecret, token, tokenSecret, mediaBytes, cancellationToken);
-                    mediaIds.Add(mediaId);
+                    uploadResult = await UploadImageAsync(apiKey, apiSecret, token, tokenSecret, mediaBytes, cancellationToken);
                 }
+
+                if (uploadResult is Result<string, AeroError>.Failure uploadFailure) return uploadFailure.Error;
+                
+                mediaIds.Add(uploadResult switch
+                {
+                    Result<string, AeroError>.Ok ok => ok.Value,
+                    _ => throw new InvalidOperationException("Unexpected upload result state")
+                });
             }
         }
 
         return mediaIds;
     }
 
-    private async Task<string> UploadImageAsync(string apiKey, string apiSecret, string token, string tokenSecret, byte[] imageData, CancellationToken cancellationToken)
+    /// <summary>
+    /// Uploads an image to X.
+    /// </summary>
+    private async Task<Result<string, AeroError>> UploadImageAsync(string apiKey, string apiSecret, string token, string tokenSecret, byte[] imageData, CancellationToken cancellationToken)
     {
         var content = new MultipartFormDataContent
         {
@@ -233,15 +285,17 @@ public class XProvider(
         };
         AddOAuthHeader(request, apiKey, apiSecret, token, tokenSecret, "POST", "https://upload.twitter.com/1.1/media/upload.json");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var uploadResponse = await DeserializeAsync<XMediaUploadResponse>(response);
-        return uploadResponse.MediaIdString;
+        return await SendRequestAsync<XMediaUploadResponse>(request, cancellationToken)
+            .MapAsync<XMediaUploadResponse, AeroError, string>((XMediaUploadResponse uploadResponse) => uploadResponse.MediaIdString);
     }
 
-    private async Task<string> UploadVideoAsync(string apiKey, string apiSecret, string token, string tokenSecret, byte[] videoData, CancellationToken cancellationToken)
+    /// <summary>
+    /// Uploads a video to X using the resumable media upload process (INIT, APPEND, FINALIZE).
+    /// </summary>
+    private async Task<Result<string, AeroError>> UploadVideoAsync(string apiKey, string apiSecret, string token, string tokenSecret, byte[] videoData, CancellationToken cancellationToken)
     {
+        var url = "https://upload.twitter.com/1.1/media/upload.json";
+        
         var initContent = new FormUrlEncodedContent(new Dictionary<string, string>
         {
             ["command"] = "INIT",
@@ -249,52 +303,47 @@ public class XProvider(
             ["total_bytes"] = videoData.Length.ToString()
         });
 
-        var initRequest = new HttpRequestMessage(HttpMethod.Post, "https://upload.twitter.com/1.1/media/upload.json")
-        {
-            Content = initContent
-        };
-        AddOAuthHeader(initRequest, apiKey, apiSecret, token, tokenSecret, "POST", "https://upload.twitter.com/1.1/media/upload.json");
+        var initRequest = new HttpRequestMessage(HttpMethod.Post, url) { Content = initContent };
+        AddOAuthHeader(initRequest, apiKey, apiSecret, token, tokenSecret, "POST", url);
 
-        var initResponse = await HttpClient.SendAsync(initRequest, cancellationToken);
-        initResponse.EnsureSuccessStatusCode();
+        return await SendRequestAsync<XMediaUploadResponse>(initRequest, cancellationToken)
+            .BindAsync<XMediaUploadResponse, AeroError, string>(async initResult =>
+            {
+                var mediaId = initResult.MediaIdString;
 
-        var initResult = await DeserializeAsync<XMediaUploadResponse>(initResponse);
-        var mediaId = initResult.MediaIdString;
+                var appendContent = new MultipartFormDataContent
+                {
+                    { new StringContent("APPEND"), "command" },
+                    { new StringContent(mediaId), "media_id" },
+                    { new StringContent("0"), "segment_index" },
+                    { new ByteArrayContent(videoData), "media", "video.mp4" }
+                };
 
-        var appendContent = new MultipartFormDataContent
-        {
-            { new StringContent("APPEND"), "command" },
-            { new StringContent(mediaId), "media_id" },
-            { new StringContent("0"), "segment_index" },
-            { new ByteArrayContent(videoData), "media", "video.mp4" }
-        };
+                var appendRequest = new HttpRequestMessage(HttpMethod.Post, url) { Content = appendContent };
+                AddOAuthHeader(appendRequest, apiKey, apiSecret, token, tokenSecret, "POST", url);
 
-        var appendRequest = new HttpRequestMessage(HttpMethod.Post, "https://upload.twitter.com/1.1/media/upload.json")
-        {
-            Content = appendContent
-        };
-        AddOAuthHeader(appendRequest, apiKey, apiSecret, token, tokenSecret, "POST", "https://upload.twitter.com/1.1/media/upload.json");
+                return await SendRequestAsync(appendRequest, cancellationToken)
+                    .BindAsync<HttpResponseMessage, AeroError, string>(async _ =>
+                    {
+                        var finalizeContent = new FormUrlEncodedContent(new Dictionary<string, string>
+                        {
+                            ["command"] = "FINALIZE",
+                            ["media_id"] = mediaId
+                        });
 
-        await HttpClient.SendAsync(appendRequest, cancellationToken);
+                        var finalizeRequest = new HttpRequestMessage(HttpMethod.Post, url) { Content = finalizeContent };
+                        AddOAuthHeader(finalizeRequest, apiKey, apiSecret, token, tokenSecret, "POST", url);
 
-        var finalizeContent = new FormUrlEncodedContent(new Dictionary<string, string>
-        {
-            ["command"] = "FINALIZE",
-            ["media_id"] = mediaId
-        });
-
-        var finalizeRequest = new HttpRequestMessage(HttpMethod.Post, "https://upload.twitter.com/1.1/media/upload.json")
-        {
-            Content = finalizeContent
-        };
-        AddOAuthHeader(finalizeRequest, apiKey, apiSecret, token, tokenSecret, "POST", "https://upload.twitter.com/1.1/media/upload.json");
-
-        await HttpClient.SendAsync(finalizeRequest, cancellationToken);
-
-        return mediaId;
+                        return await SendRequestAsync(finalizeRequest, cancellationToken)
+                            .MapAsync<HttpResponseMessage, AeroError, string>((HttpResponseMessage _) => mediaId);
+                    });
+            });
     }
 
-    private async Task<XRequestToken> GetRequestTokenAsync(string apiKey, string apiSecret, string callbackUrl, CancellationToken cancellationToken)
+    /// <summary>
+    /// Gets an OAuth request token from X.
+    /// </summary>
+    private async Task<Result<XRequestToken, AeroError>> GetRequestTokenAsync(string apiKey, string apiSecret, string callbackUrl, CancellationToken cancellationToken)
     {
         var content = new FormUrlEncodedContent(new Dictionary<string, string>
         {
@@ -307,22 +356,29 @@ public class XProvider(
         };
         AddOAuthHeader(request, apiKey, apiSecret, null, null, "POST", "https://api.twitter.com/oauth/request_token");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync<HttpResponseMessage, AeroError, XRequestToken>(async response =>
+            {
+                var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
+                var pairs = responseText.Split('&')
+                    .Select(p => p.Split('='))
+                    .ToDictionary(p => p[0], p => p[1]);
 
-        var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
-        var pairs = responseText.Split('&')
-            .Select(p => p.Split('='))
-            .ToDictionary(p => p[0], p => p[1]);
+                if (!pairs.ContainsKey("oauth_token") || !pairs.ContainsKey("oauth_token_secret"))
+                    return AeroError.CreateError("Invalid request token response");
 
-        return new XRequestToken
-        {
-            Token = pairs["oauth_token"],
-            TokenSecret = pairs["oauth_token_secret"]
-        };
+                return new XRequestToken
+                {
+                    Token = pairs["oauth_token"],
+                    TokenSecret = pairs["oauth_token_secret"]
+                };
+            });
     }
 
-    private async Task<XAccessToken> GetAccessTokenAsync(string apiKey, string apiSecret, string oauthToken, string oauthTokenSecret, string verifier, CancellationToken cancellationToken)
+    /// <summary>
+    /// Exchanges a verifier for an OAuth access token from X.
+    /// </summary>
+    private async Task<Result<XAccessToken, AeroError>> GetAccessTokenAsync(string apiKey, string apiSecret, string oauthToken, string oauthTokenSecret, string verifier, CancellationToken cancellationToken)
     {
         var content = new FormUrlEncodedContent(new Dictionary<string, string>
         {
@@ -335,33 +391,40 @@ public class XProvider(
         };
         AddOAuthHeader(request, apiKey, apiSecret, oauthToken, oauthTokenSecret, "POST", "https://api.twitter.com/oauth/access_token");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync<HttpResponseMessage, AeroError, XAccessToken>(async response =>
+            {
+                var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
+                var pairs = responseText.Split('&')
+                    .Select(p => p.Split('='))
+                    .ToDictionary(p => p[0], p => p[1]);
 
-        var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
-        var pairs = responseText.Split('&')
-            .Select(p => p.Split('='))
-            .ToDictionary(p => p[0], p => p[1]);
+                if (!pairs.ContainsKey("oauth_token") || !pairs.ContainsKey("oauth_token_secret"))
+                    return AeroError.CreateError("Invalid access token response");
 
-        return new XAccessToken
-        {
-            Token = pairs["oauth_token"],
-            TokenSecret = pairs["oauth_token_secret"]
-        };
+                return new XAccessToken
+                {
+                    Token = pairs["oauth_token"],
+                    TokenSecret = pairs["oauth_token_secret"]
+                };
+            });
     }
 
-    private async Task<XUserInfo> GetUserInfoAsync(string apiKey, string apiSecret, string token, string tokenSecret, CancellationToken cancellationToken)
+    /// <summary>
+    /// Retrieves information about the authenticated user from X.
+    /// </summary>
+    private async Task<Result<XUserInfo, AeroError>> GetUserInfoAsync(string apiKey, string apiSecret, string token, string tokenSecret, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "https://api.twitter.com/2/users/me?user.fields=username,verified,verified_type,profile_image_url,name");
         AddOAuthHeader(request, apiKey, apiSecret, token, tokenSecret, "GET", "https://api.twitter.com/2/users/me");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var userResponse = await DeserializeAsync<XUserResponse>(response);
-        return userResponse.Data;
+        return await SendRequestAsync<XUserResponse>(request, cancellationToken)
+            .MapAsync<XUserResponse, AeroError, XUserInfo>((XUserResponse userResponse) => userResponse.Data);
     }
 
+    /// <summary>
+    /// Adds OAuth 1.0a authorization headers to an HTTP request.
+    /// </summary>
     private void AddOAuthHeader(HttpRequestMessage request, string apiKey, string apiSecret, string? token, string? tokenSecret, string method, string url)
     {
         var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
@@ -388,6 +451,9 @@ public class XProvider(
         request.Headers.Add("Authorization", authHeader);
     }
 
+    /// <summary>
+    /// Generates an OAuth 1.0a signature.
+    /// </summary>
     private static string GenerateOAuthSignature(string method, string url, Dictionary<string, string> parameters, string apiSecret, string? tokenSecret)
     {
         var baseString = $"{method}&{Uri.EscapeDataString(url)}&{Uri.EscapeDataString(string.Join("&", parameters.OrderBy(p => p.Key).Select(p => $"{p.Key}={Uri.EscapeDataString(p.Value)}")))}";
@@ -398,6 +464,9 @@ public class XProvider(
         return Convert.ToBase64String(hash);
     }
 
+    /// <summary>
+    /// Safely retrieves a setting value from a dictionary.
+    /// </summary>
     private static T? GetSettingValue<T>(Dictionary<string, object> settings, string key)
     {
         if (!settings.TryGetValue(key, out var value))
@@ -416,56 +485,118 @@ public class XProvider(
 
     //#region DTOs
 
+    /// <summary>
+    /// Represents an OAuth request token response from X.
+    /// </summary>
     private class XRequestToken
     {
+        /// <summary>
+        /// Gets or sets the OAuth token.
+        /// </summary>
         public string Token { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the OAuth token secret.
+        /// </summary>
         public string TokenSecret { get; set; } = string.Empty;
     }
 
+    /// <summary>
+    /// Represents an OAuth access token response from X.
+    /// </summary>
     private class XAccessToken
     {
+        /// <summary>
+        /// Gets or sets the OAuth access token.
+        /// </summary>
         public string Token { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the OAuth access token secret.
+        /// </summary>
         public string TokenSecret { get; set; } = string.Empty;
     }
 
+    /// <summary>
+    /// Represents a user response from the X API v2.
+    /// </summary>
     private class XUserResponse
     {
+        /// <summary>
+        /// Gets or sets the user data.
+        /// </summary>
         [JsonPropertyName("data")]
         public XUserInfo Data { get; set; } = new();
     }
 
+    /// <summary>
+    /// Represents detailed information about an X user.
+    /// </summary>
     private class XUserInfo
     {
+        /// <summary>
+        /// Gets or sets the unique identifier for the user.
+        /// </summary>
         [JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets the display name of the user.
+        /// </summary>
         [JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets the user's handle (username).
+        /// </summary>
         [JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets the URL of the user's profile image.
+        /// </summary>
         [JsonPropertyName("profile_image_url")]
         public string? ProfileImageUrl { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the user is verified.
+        /// </summary>
         [JsonPropertyName("verified")]
         public bool Verified { get; set; }
     }
 
+    /// <summary>
+    /// Represents a tweet creation response from X.
+    /// </summary>
     private class XTweetResponse
     {
+        /// <summary>
+        /// Gets or sets the tweet data.
+        /// </summary>
         [JsonPropertyName("data")]
         public XTweetData Data { get; set; } = new();
     }
 
+    /// <summary>
+    /// Represents the data returned after creating a tweet.
+    /// </summary>
     private class XTweetData
     {
+        /// <summary>
+        /// Gets or sets the unique ID of the created tweet.
+        /// </summary>
         [JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
+    /// <summary>
+    /// Represents a media upload response from X.
+    /// </summary>
     private class XMediaUploadResponse
     {
+        /// <summary>
+        /// Gets or sets the ID of the uploaded media as a string.
+        /// </summary>
         [JsonPropertyName("media_id_string")]
         public string MediaIdString { get; set; } = string.Empty;
     }

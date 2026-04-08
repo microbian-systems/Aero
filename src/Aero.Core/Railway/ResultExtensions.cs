@@ -322,6 +322,19 @@ public static partial class ResultExtensions
         };
 
     /// <summary>
+    /// Asynchronously applies one of two async functions based on whether the Result is Ok or Failure.
+    /// </summary>
+    public static async Task<TResult> MatchAsync<TValue, TError, TResult>(
+        this Result<TValue, TError> result,
+        Func<TValue, Task<TResult>> onOk,
+        Func<TError, Task<TResult>> onFailure) where TError : AeroError =>
+        result switch
+        {
+            Result<TValue, TError>.Ok(var value) => await onOk(value),
+            Result<TValue, TError>.Failure(var error) => await onFailure(error),
+        };
+
+    /// <summary>
     /// Filters a Result based on a predicate, converting Ok to Failure if the predicate returns false.
     /// </summary>
     /// <typeparam name="TError">The type of the error.</typeparam>

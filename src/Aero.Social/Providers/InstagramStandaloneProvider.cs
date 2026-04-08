@@ -29,75 +29,109 @@ public class InstagramStandaloneProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 2200;
 
+    /// <inheritdoc/>
     protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
-        return _instagramProvider.HandleErrors(responseBody);
+        if (responseBody.Contains("checkpoint_required"))
+            return new ErrorHandlingResult(ErrorHandlingType.Reconnect, "Instagram requires a checkpoint. Please log in manually.");
+
+        if (responseBody.Contains("login_required"))
+            return new ErrorHandlingResult(ErrorHandlingType.Reconnect, "Instagram login required. Please reconnect.");
+
+        return null;
     }
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        var state = MakeId(6);
-        var appId = GetAppId();
-        var frontendUrl = GetFrontendUrl();
-        var redirectUri = $"{frontendUrl}/integrations/social/instagram-standalone";
+        return await GetAppId()
+            .BindAsync(appId => GetFrontendUrl()
+                .Map(frontendUrl =>
+                {
+                    var state = MakeId(6);
+                    var redirectUri = $"{frontendUrl}/integrations/social/instagram-standalone";
 
-        if (frontendUrl.StartsWith("http://"))
-        {
-            redirectUri = $"https://redirectmeto.com/{frontendUrl}/integrations/social/instagram-standalone";
-        }
+                    if (frontendUrl.StartsWith("http://"))
+                    {
+                        redirectUri = $"https://redirectmeto.com/{frontendUrl}/integrations/social/instagram-standalone";
+                    }
 
-        var url = "https://www.instagram.com/oauth/authorize" +
-                  "?enable_fb_login=0" +
-                  $"&client_id={appId}" +
-                  $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
-                  "&response_type=code" +
-                  $"&scope={Uri.EscapeDataString(string.Join(",", Scopes))}" +
-                  $"&state={state}";
+                    var url = "https://www.instagram.com/oauth/authorize" +
+                              "?enable_fb_login=0" +
+                              $"&client_id={appId}" +
+                              $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
+                              "&response_type=code" +
+                              $"&scope={Uri.EscapeDataString(string.Join(",", Scopes))}" +
+                              $"&state={state}";
 
-        return new GenerateAuthUrlResponse
-        {
-            Url = url,
-            CodeVerifier = MakeId(10),
-            State = state
-        };
+                    return new GenerateAuthUrlResponse
+                    {
+                        Url = url,
+                        CodeVerifier = MakeId(10),
+                        State = state
+                    };
+                }));
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        var appId = GetAppId();
-        var appSecret = GetAppSecret();
-        var frontendUrl = GetFrontendUrl();
-        var redirectUri = $"{frontendUrl}/integrations/social/instagram-standalone";
+        return await GetAppId()
+            .BindAsync(appId => GetAppSecret()
+                .BindAsync(async appSecret => await GetFrontendUrl()
+                    .BindAsync(async frontendUrl =>
+                    {
+                        var redirectUri = $"{frontendUrl}/integrations/social/instagram-standalone";
 
-        if (frontendUrl.StartsWith("http://"))
-        {
-            redirectUri = $"https://redirectmeto.com/{frontendUrl}/integrations/social/instagram-standalone";
-        }
+                        if (frontendUrl.StartsWith("http://"))
+                        {
+                            redirectUri = $"https://redirectmeto.com/{frontendUrl}/integrations/social/instagram-standalone";
+                        }
 
-        var form = new MultipartFormDataContent
-        {
-            { new StringContent(appId), "client_id" },
-            { new StringContent(appSecret), "client_secret" },
-            { new StringContent("authorization_code"), "grant_type" },
-            { new StringContent(redirectUri), "redirect_uri" },
-            { new StringContent(parameters.Code), "code" }
-        };
+                        var form = new MultipartFormDataContent
+                        {
+                            { new StringContent(appId), "client_id" },
+                            { new StringContent(appSecret), "client_secret" },
+                            { new StringContent("authorization_code"), "grant_type" },
+                            { new StringContent(redirectUri), "redirect_uri" },
+                            { new StringContent(parameters.Code), "code" }
+                        };
 
-        var tokenResponse = await HttpClient.PostAsync("https://api.instagram.com/oauth/access_token", form, cancellationToken);
-        tokenResponse.EnsureSuccessStatusCode();
+                        var tokenResponse = await HttpClient.PostAsync("https://api.instagram.com/oauth/access_token", form, cancellationToken);
+                        if (!tokenResponse.IsSuccessStatusCode)
+                        {
+                            var body = await tokenResponse.Content.ReadAsStringAsync(cancellationToken);
+                            return AeroError.CreateError($"Failed to get access token: {body}");
+                        }
 
-        var shortToken = await DeserializeAsync<InstagramShortTokenResponse>(tokenResponse);
+                        var shortToken = await DeserializeAsync<InstagramShortTokenResponse>(tokenResponse);
 
-        var exchangeUrl = "https://graph.instagram.com/access_token" +
-                          "?grant_type=ig_exchange_token" +
-                          $"&client_id={appId}" +
-                          $"&client_secret={appSecret}" +
-                          $"&access_token={shortToken.AccessToken}";
+                        var exchangeUrl = "https://graph.instagram.com/access_token" +
+                                          "?grant_type=ig_exchange_token" +
+                                          $"&client_id={appId}" +
+                                          $"&client_secret={appSecret}" +
+                                          $"&access_token={shortToken.AccessToken}";
+
+                        return await ReadOrFetchAsync<InstagramLongTokenResponse>(exchangeUrl, cancellationToken)
+                            .BindAsync(async longToken =>
+                            {
+                                var userUrl = $"https://graph.instagram.com/me?fields=id,username&access_token={longToken.AccessToken}";
+                                return await ReadOrFetchAsync<InstagramUserResponse>(userUrl, cancellationToken)
+                                    .Map(user => new AuthTokenDetails
+                                    {
+                                        AccessToken = longToken.AccessToken,
+                                        ExpiresIn = longToken.ExpiresIn,
+                                        AccountId = user.Id,
+                                        AccountName = user.Username
+                                    });
+                            });
+                    })));
+    }
 
         var exchangeResponse = await HttpClient.GetAsync(exchangeUrl, cancellationToken);
         exchangeResponse.EnsureSuccessStatusCode();

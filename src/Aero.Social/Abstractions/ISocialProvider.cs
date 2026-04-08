@@ -1,3 +1,5 @@
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Models;
 
 namespace Aero.Social.Abstractions;
@@ -80,7 +82,7 @@ public interface ISocialProvider
     /// <param name="integration">The integration configuration.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>An array of post responses containing the result of each post.</returns>
-    Task<PostResponse[]> PostAsync(
+    Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -98,7 +100,7 @@ public interface ISocialProvider
     /// <param name="integration">The integration configuration.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>An array of post responses, or null if commenting is not supported.</returns>
-    Task<PostResponse[]?> CommentAsync(
+    Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -113,7 +115,7 @@ public interface ISocialProvider
     /// <param name="clientInformation">Optional client-specific information for multi-tenant scenarios.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The authorization URL and associated state information.</returns>
-    Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default);
 
@@ -124,7 +126,7 @@ public interface ISocialProvider
     /// <param name="clientInformation">Optional client-specific information.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The authentication token details including access token and user information.</returns>
-    Task<AuthTokenDetails> AuthenticateAsync(
+    Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default);
@@ -135,7 +137,7 @@ public interface ISocialProvider
     /// <param name="refreshToken">The refresh token.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>New authentication token details.</returns>
-    Task<AuthTokenDetails> RefreshTokenAsync(
+    Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default);
 
@@ -147,7 +149,7 @@ public interface ISocialProvider
     /// <param name="accessToken">The access token.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Updated authentication token details, or null if not supported.</returns>
-    Task<AuthTokenDetails?> ReConnectAsync(
+    Task<Result<AuthTokenDetails?, AeroError>> ReConnectAsync(
         string id,
         string requiredId,
         string accessToken,
@@ -161,7 +163,7 @@ public interface ISocialProvider
     /// <param name="days">Number of days of analytics to retrieve.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Analytics data arrays, or null if not supported.</returns>
-    Task<AnalyticsData[]?> AnalyticsAsync(
+    Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
         string id,
         string accessToken,
         int days,
@@ -176,7 +178,7 @@ public interface ISocialProvider
     /// <param name="days">Number of days of analytics to retrieve.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Analytics data arrays, or null if not supported.</returns>
-    Task<AnalyticsData[]?> PostAnalyticsAsync(
+    Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
         string integrationId,
         string accessToken,
         string postId,
@@ -192,7 +194,7 @@ public interface ISocialProvider
     /// <param name="integration">The integration configuration.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A list of mentionable users, or null if not supported.</returns>
-    Task<object?> MentionAsync(
+    Task<Result<object?, AeroError>> MentionAsync(
         string token,
         MentionQuery query,
         string id,
@@ -214,7 +216,7 @@ public interface ISocialProvider
     /// <param name="data">Additional data for the request.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Page information result, or null if not supported.</returns>
-    Task<FetchPageInformationResult?> FetchPageInformationAsync(
+    Task<Result<FetchPageInformationResult?, AeroError>> FetchPageInformationAsync(
         string accessToken,
         object data,
         CancellationToken cancellationToken = default);

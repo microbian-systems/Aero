@@ -72,13 +72,62 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         return response;
     }
 
-    protected async Task<Result<HttpResponseMessage, AeroError>> SendRequestAsync(
-        HttpRequestMessage request,
-        CancellationToken ct = default)
-    {
-        var response = await SendRequestAsync(() => client.SendAsync(request, ct), request.RequestUri!, ct);
 
-        return response;
+
+    /// <summary>
+    /// Sends a GET request and returns the result as a type-safe <see cref="Result{T, AeroError}"/>.
+    /// </summary>
+    protected virtual async Task<Result<T, AeroError>> GetAsync<T>(string url, CancellationToken ct = default)
+        where T : class => await SendRequestAsync<T>(CreateRequest(url, HttpMethod.Get), ct);
+
+    /// <summary>
+    /// Sends a POST request and returns the result as a type-safe <see cref="Result{TResponse, AeroError}"/>.
+    /// </summary>
+    protected virtual async Task<Result<TResponse, AeroError>> PostAsync<TRequest, TResponse>(string url, TRequest data, CancellationToken ct = default)
+        where TRequest : class
+        where TResponse : class => await SendRequestAsync<TResponse>(CreateRequest(url, HttpMethod.Post, data), ct);
+
+    /// <summary>
+    /// Sends a POST request with an object payload and returns the result as a type-safe <see cref="Result{T, AeroError}"/>.
+    /// </summary>
+    protected virtual async Task<Result<T, AeroError>> PostAsync<T>(string url, object data, CancellationToken ct = default)
+        where T : class => await SendRequestAsync<T>(CreateRequest(url, HttpMethod.Post, data), ct);
+
+    /// <summary>
+    /// Sends a PUT request and returns the result as a type-safe <see cref="Result{TResponse, AeroError}"/>.
+    /// </summary>
+    protected virtual async Task<Result<TResponse, AeroError>> PutAsync<TRequest, TResponse>(string url, TRequest data, CancellationToken ct = default)
+        where TRequest : class
+        where TResponse : class => await SendRequestAsync<TResponse>(CreateRequest(url, HttpMethod.Put, data), ct);
+
+        protected virtual async Task<Result<HttpResponseMessage, AeroError>> SendRequestAsync(HttpRequestMessage request, CancellationToken ct = default)
+        => await SendRequestAsync(() => client.SendAsync(request, ct), request.RequestUri!, ct);
+
+    /// <summary>
+    /// Sends an HTTP request and returns the result as a type-safe <see cref="Result{T, AeroError}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type to deserialize the response body into.</typeparam>
+    /// <param name="request">The HTTP request message to send.</param>
+    /// <param name="ct">The cancellation token.</param>
+    /// <returns>A result containing the deserialized object if successful; otherwise, an error.</returns>
+    protected virtual async Task<Result<T, AeroError>> SendRequestAsync<T>(HttpRequestMessage request, CancellationToken ct = default)
+        where T : class
+    {
+        var result = await SendRequestAsync(request, ct);
+        return await result.BindAsync(async response =>
+        {
+            try
+            {
+                var data = await DeserializeAsync<T>(response, ct);
+                return data is null
+                    ? AeroError.HttpRequestError(response.StatusCode, "Deserialization returned null")
+                    : new Result<T, AeroError>.Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return (Result<T, AeroError>)AeroError.HttpRequestError(response.StatusCode, $"Deserialization failed: {ex.Message}");
+            }
+        });
     }
 
     protected async Task<Result<HttpResponseMessage, AeroError>> SendRequestAsync(
@@ -144,10 +193,10 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         };
     }
 
-    protected virtual Result<byte[], AeroError> GetStream(string url, CancellationToken ct = default)
+    protected virtual Result<Stream, AeroError> GetStream(string url, CancellationToken ct = default)
         => GetStream(new Uri(url), ct);
 
-    protected virtual Result<byte[], AeroError> GetStream(Uri uri, CancellationToken ct = default)
+    protected virtual Result<Stream, AeroError> GetStream(Uri uri, CancellationToken ct = default)
         => GetStreamAsync(uri, ct).GetAwaiter().GetResult();
 
     protected virtual async Task<Result<Stream, AeroError>> GetStreamAsync(Uri uri, CancellationToken ct = default)

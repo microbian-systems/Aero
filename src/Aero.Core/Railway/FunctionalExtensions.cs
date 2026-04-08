@@ -180,7 +180,31 @@ public static class FunctionalExtensions
     }
 
     /// <summary>
-    /// Binds over a Result wrapped in a Task.
+    /// Asynchronously maps over a Result wrapped in a Task using an async mapping function.
+    /// </summary>
+    public static async Task<Result<TResult, TError>> MapAsync<TValue, TError, TResult>(
+        this Task<Result<TValue, TError>> task,
+        Func<TValue, Task<TResult>> map)
+        where TError : AeroError
+    {
+        var result = await task.ConfigureAwait(false);
+        return await result.MapAsync(map).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Binds over a Result wrapped in a Task using a sync binding function.
+    /// </summary>
+    public static async Task<Result<TResult, TError>> BindAsync<TValue, TError, TResult>(
+        this Task<Result<TValue, TError>> task,
+        Func<TValue, Result<TResult, TError>> bind)
+        where TError : AeroError
+    {
+        var result = await task.ConfigureAwait(false);
+        return result.Bind(bind);
+    }
+
+    /// <summary>
+    /// Binds over a Result wrapped in a Task using an async binding function.
     /// </summary>
     public static async Task<Result<TResult, TError>> BindAsync<TValue, TError, TResult>(
         this Task<Result<TValue, TError>> task,

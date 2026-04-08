@@ -94,6 +94,11 @@ public abstract record AeroError : IAeroError
     /// <param name="msg">The error message that describes the HTTP error.</param>
     /// <param name="code">The HTTP status code associated with the error.</param>
     public sealed record HttpRequest(HttpStatusCode code, string? msg = null) : AeroError;
+    /// <summary>
+    /// Represents an error related to configuration or settings.
+    /// </summary>
+    /// <param name="msg">The error message that describes the configuration issue.</param>
+    public sealed record Configuration(string msg) : AeroError;
 
     public static implicit operator AeroError(string msg) => new Error(msg);
     public static implicit operator AeroError((HttpStatusCode code, string msg) err) => new HttpRequest(err.code, err.msg);
@@ -116,6 +121,7 @@ public abstract record AeroError : IAeroError
     public static InvalidRequest InvalidRequestError(string msg) => new InvalidRequest(msg);
     public static BadRequest BadRequestError(string msg) => new BadRequest(msg);
     public static Exists ExistsError(string msg) => new Exists(msg);
+    public static Configuration ConfigurationError(string msg) => new Configuration(msg);
     public static AeroError HttpRequestError(HttpStatusCode code, string msg) => new HttpRequest(code, msg);
 }
 

@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +24,7 @@ public class FarcasterProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 800;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -37,15 +39,27 @@ public class FarcasterProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        var dataBytes = Convert.FromBase64String(parameters.Code);
-        var dataJson = Encoding.UTF8.GetString(dataBytes);
-        var data = JsonSerializer.Deserialize<FarcasterAuthData>(dataJson)
-            ?? throw new BadBodyException(Identifier, "Invalid auth data");
+        FarcasterAuthData? data;
+        try
+        {
+            var dataBytes = Convert.FromBase64String(parameters.Code);
+            var dataJson = Encoding.UTF8.GetString(dataBytes);
+            data = JsonSerializer.Deserialize<FarcasterAuthData>(dataJson);
+        }
+        catch (Exception ex)
+        {
+            return AeroError.ValidationError([$"Invalid auth data: {ex.Message}"]);
+        }
+
+        if (data == null)
+        {
+            return AeroError.ValidationError(["Invalid auth data"]);
+        }
 
         return new AuthTokenDetails
         {
@@ -59,11 +73,11 @@ public class FarcasterProvider(
         };
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = "",
             ExpiresIn = 0,
@@ -75,7 +89,7 @@ public class FarcasterProvider(
         });
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -112,8 +126,15 @@ public class FarcasterProvider(
                 payload["channel_id"] = channel.Value.Id;
             }
 
-            var response = await PublishCastAsync(payload, cancellationToken);
-            results.Add((response.Hash, $"https://warpcast.com/{response.Username}/{response.Hash}"));
+            var publishResult = await PublishCastAsync(payload, cancellationToken);
+            if (publishResult is Result<FarcasterCastResponse, AeroError>.Ok ok)
+            {
+                results.Add((ok.Value.Hash, $"https://warpcast.com/{ok.Value.Username}/{ok.Value.Hash}"));
+            }
+            else if (publishResult is Result<FarcasterCastResponse, AeroError>.Failure failure)
+            {
+                return failure.Error;
+            }
         }
 
         return new[]
@@ -128,7 +149,7 @@ public class FarcasterProvider(
         };
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -159,11 +180,18 @@ public class FarcasterProvider(
                 payload["embeds"] = commentPost.Media.Select(m => new { url = m.Path }).ToArray();
             }
 
-            var response = await PublishCastAsync(payload, cancellationToken);
-            results.Add((response.Hash, $"https://warpcast.com/{response.Username}/{response.Hash}"));
+            var publishResult = await PublishCastAsync(payload, cancellationToken);
+            if (publishResult is Result<FarcasterCastResponse, AeroError>.Ok ok)
+            {
+                results.Add((ok.Value.Hash, $"https://warpcast.com/{ok.Value.Username}/{ok.Value.Hash}"));
+            }
+            else if (publishResult is Result<FarcasterCastResponse, AeroError>.Failure failure)
+            {
+                return failure.Error;
+            }
         }
 
-        return new[]
+        return (PostResponse[]?)new[]
         {
             new PostResponse
             {
@@ -175,7 +203,7 @@ public class FarcasterProvider(
         };
     }
 
-    public async Task<List<FarcasterChannel>> SearchChannelsAsync(string query, CancellationToken cancellationToken = default)
+    public async Task<Result<List<FarcasterChannel>, AeroError>> SearchChannelsAsync(string query, CancellationToken cancellationToken = default)
     {
         var apiKey = GetNeynarApiKey();
         var url = $"https://api.neynar.com/v2/farcaster/channel/search?q={Uri.EscapeDataString(query)}&limit=10";
@@ -183,38 +211,28 @@ public class FarcasterProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.TryAddWithoutValidation("x-api-key", apiKey);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var searchResult = await DeserializeAsync<FarcasterChannelSearchResponse>(response);
-
-        return searchResult.Channels?.Select(c => new FarcasterChannel
-        {
-            Title = c.Name ?? "",
-            Name = c.Name ?? "",
-            Id = c.Id ?? ""
-        }).ToList() ?? new List<FarcasterChannel>();
+        return await SendRequestAsync<FarcasterChannelSearchResponse>(request, cancellationToken)
+            .MapAsync<FarcasterChannelSearchResponse, AeroError, List<FarcasterChannel>>(searchResult => 
+                searchResult.Channels?.Select(c => new FarcasterChannel
+                {
+                    Title = c.Name ?? "",
+                    Name = c.Name ?? "",
+                    Id = c.Id ?? ""
+                }).ToList() ?? new List<FarcasterChannel>());
     }
 
-    private async Task<FarcasterCastResponse> PublishCastAsync(Dictionary<string, object?> payload, CancellationToken cancellationToken)
+    private async Task<Result<FarcasterCastResponse, AeroError>> PublishCastAsync(Dictionary<string, object?> payload, CancellationToken cancellationToken)
     {
         var apiKey = GetNeynarApiKey();
-
-        var json = JsonSerializer.Serialize(payload);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.neynar.com/v2/farcaster/cast") { Content = content };
+        var request = CreateRequest("https://api.neynar.com/v2/farcaster/cast", HttpMethod.Post, payload);
         request.Headers.TryAddWithoutValidation("x-api-key", apiKey);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var result = await DeserializeAsync<NeynarPublishCastResponse>(response);
-        return new FarcasterCastResponse
-        {
-            Hash = result.Cast?.Hash ?? "",
-            Username = result.Cast?.Author?.Username ?? ""
-        };
+        return await SendRequestAsync<NeynarPublishCastResponse>(request, cancellationToken)
+            .MapAsync<NeynarPublishCastResponse, AeroError, FarcasterCastResponse>(result => new FarcasterCastResponse
+            {
+                Hash = result.Cast?.Hash ?? "",
+                Username = result.Cast?.Author?.Username ?? ""
+            });
     }
 
     private static T? GetSettingValue<T>(Dictionary<string, object> settings, string key)

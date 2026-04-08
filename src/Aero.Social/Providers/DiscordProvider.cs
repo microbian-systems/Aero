@@ -1,5 +1,8 @@
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -7,105 +10,133 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Provides integration with Discord for authenticating users and posting messages.
+/// </summary>
+/// <param name="httpClient">The HTTP client instance.</param>
+/// <param name="configuration">The configuration instance.</param>
+/// <param name="logger">The logger instance.</param>
 public class DiscordProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<DiscordProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
+    private readonly IConfiguration _configuration = configuration;
+
+    /// <inheritdoc/>
     public override string Identifier => "discord";
+
+    /// <inheritdoc/>
     public override string Name => "Discord";
-    public override string[] Scopes => new[] { "identify", "guilds" };
-    public override EditorType Editor => EditorType.Markdown;
+
+    /// <inheritdoc/>
+    public override string[] Scopes => ["identify", "email", "guilds", "webhook.incoming"];
+
+    /// <inheritdoc/>
+    public override EditorType Editor => EditorType.Discord;
+
+    /// <inheritdoc/>
     public override int MaxConcurrentJobs => 5;
 
-    public override int MaxLength(object? additionalSettings = null) => 1980;
+    /// <inheritdoc/>
+    public override int MaxLength(object? additionalSettings = null) => 2000;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    /// <inheritdoc/>
+    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
         var state = MakeId(6);
-        var clientId = GetClientId();
-        var frontendUrl = GetFrontendUrl();
 
-        var url = $"https://discord.com/oauth2/authorize" +
-                  $"?client_id={clientId}" +
-                  $"&permissions=377957124096" +
-                  $"&response_type=code" +
-                  $"&redirect_uri={Uri.EscapeDataString($"{frontendUrl}/integrations/social/discord")}" +
-                  $"&integration_type=0" +
-                  $"&scope=bot+identify+guilds" +
-                  $"&state={state}";
+        return Task.FromResult(GetClientId().Bind(clientId =>
+            GetFrontendUrl().Map(frontendUrl =>
+            {
+                var url = $"https://discord.com/oauth2/authorize" +
+                          $"?client_id={clientId}" +
+                          $"&permissions=377957124096" +
+                          $"&response_type=code" +
+                          $"&redirect_uri={Uri.EscapeDataString($"{frontendUrl}/integrations/social/discord")}" +
+                          $"&integration_type=0" +
+                          $"&scope=bot+identify+guilds" +
+                          $"&state={state}";
 
-        return new GenerateAuthUrlResponse
-        {
-            Url = url,
-            CodeVerifier = MakeId(10),
-            State = state
-        };
+                return new GenerateAuthUrlResponse
+                {
+                    Url = url,
+                    CodeVerifier = MakeId(10),
+                    State = state
+                };
+            })));
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        var tokenResponse = await ExchangeCodeForTokenAsync(parameters.Code, cancellationToken);
-        
-        CheckScopes(Scopes, tokenResponse.Scope.Split(' '));
+        return await ExchangeCodeForTokenAsync(parameters.Code, cancellationToken)
+            .BindAsync(async tokenResponse =>
+            {
+                var scopeCheck = CheckScopes(Scopes, tokenResponse.Scope);
+                if (scopeCheck is Result<NoneType, AeroError>.Failure failure)
+                {
+                    return failure.Error;
+                }
 
-        var applicationInfo = await GetApplicationInfoAsync(tokenResponse.AccessToken, cancellationToken);
-
-        return new AuthTokenDetails
-        {
-            Id = tokenResponse.Guild?.Id ?? string.Empty,
-            Name = applicationInfo.Name,
-            AccessToken = tokenResponse.AccessToken,
-            RefreshToken = tokenResponse.RefreshToken,
-            ExpiresIn = tokenResponse.ExpiresIn,
-            Picture = $"https://cdn.discordapp.com/avatars/{applicationInfo.Bot.Id}/{applicationInfo.Bot.Avatar}.png",
-            Username = applicationInfo.Bot.Username
-        };
+                return await GetApplicationInfoAsync(tokenResponse.AccessToken, cancellationToken)
+                    .MapAsync(applicationInfo => new AuthTokenDetails
+                    {
+                        Id = tokenResponse.Guild?.Id ?? string.Empty,
+                        Name = applicationInfo.Name,
+                        AccessToken = tokenResponse.AccessToken,
+                        RefreshToken = tokenResponse.RefreshToken,
+                        ExpiresIn = tokenResponse.ExpiresIn,
+                        Picture = $"https://cdn.discordapp.com/avatars/{applicationInfo.Bot.Id}/{applicationInfo.Bot.Avatar}.png",
+                        Username = applicationInfo.Bot.Username
+                    });
+            });
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        var credentials = GetBasicCredentials();
-        var content = new FormUrlEncodedContent(new Dictionary<string, string>
+        return await GetBasicCredentials().BindAsync(async credentials =>
         {
-            ["refresh_token"] = refreshToken,
-            ["grant_type"] = "refresh_token"
+            var content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                ["refresh_token"] = refreshToken,
+                ["grant_type"] = "refresh_token"
+            });
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://discord.com/api/oauth2/token")
+            {
+                Content = content
+            };
+            request.Headers.Add("Authorization", $"Basic {credentials}");
+
+            return await SendRequestAsync<DiscordTokenResponse>(request, cancellationToken);
+        }).BindAsync(async tokenResponse =>
+        {
+            return await GetApplicationInfoAsync(tokenResponse.AccessToken, cancellationToken)
+                .MapAsync(applicationInfo => new AuthTokenDetails
+                {
+                    RefreshToken = tokenResponse.RefreshToken,
+                    ExpiresIn = tokenResponse.ExpiresIn,
+                    AccessToken = tokenResponse.AccessToken,
+                    Id = string.Empty,
+                    Name = applicationInfo.Name,
+                    Picture = string.Empty,
+                    Username = string.Empty
+                });
         });
-
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://discord.com/api/oauth2/token")
-        {
-            Content = content
-        };
-        request.Headers.Add("Authorization", $"Basic {credentials}");
-
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var tokenResponse = await DeserializeAsync<DiscordTokenResponse>(response);
-
-        var applicationInfo = await GetApplicationInfoAsync(tokenResponse.AccessToken, cancellationToken);
-
-        return new AuthTokenDetails
-        {
-            RefreshToken = tokenResponse.RefreshToken,
-            ExpiresIn = tokenResponse.ExpiresIn,
-            AccessToken = tokenResponse.AccessToken,
-            Id = string.Empty,
-            Name = applicationInfo.Name,
-            Picture = string.Empty,
-            Username = string.Empty
-        };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -113,8 +144,12 @@ public class DiscordProvider(
         CancellationToken cancellationToken = default)
     {
         var firstPost = posts.First();
-        var channel = firstPost.Settings?.GetValueOrDefault("channel")?.ToString() 
-            ?? throw new ArgumentException("Channel is required");
+        var channel = firstPost.Settings?.GetValueOrDefault("channel")?.ToString();
+        
+        if (string.IsNullOrEmpty(channel))
+        {
+            return AeroError.BadRequestError("Channel is required");
+        }
 
         var form = new MultipartFormDataContent();
         
@@ -134,26 +169,30 @@ public class DiscordProvider(
 
         if (firstPost.Media != null)
         {
-            for (var i = 0; i < firstPost.Media.Count; i++)
+            foreach (var (media, i) in firstPost.Media.Select((m, index) => (m, index)))
             {
-                var media = firstPost.Media[i];
-                var bytes = await ReadOrFetchAsync(media.Path, cancellationToken);
-                form.Add(new ByteArrayContent(bytes), $"files[{i}]", GetFileName(media.Path));
+                var mediaResult = await ReadOrFetchAsync(media.Path, cancellationToken);
+                if (mediaResult is Result<byte[], AeroError>.Ok(var bytes))
+                {
+                    form.Add(new ByteArrayContent(bytes), $"files[{i}]", GetFileName(media.Path));
+                }
+                else if (mediaResult is Result<byte[], AeroError>.Failure(var error))
+                {
+                    return error;
+                }
             }
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"https://discord.com/api/channels/{channel}/messages")
+        return await GetBotToken().BindAsync(async botToken =>
         {
-            Content = form
-        };
-        request.Headers.Add("Authorization", $"Bot {GetBotToken()}");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://discord.com/api/channels/{channel}/messages")
+            {
+                Content = form
+            };
+            request.Headers.Add("Authorization", $"Bot {botToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var messageResponse = await DeserializeAsync<DiscordMessageResponse>(response);
-
-        return new[]
+            return await SendRequestAsync<DiscordMessageResponse>(request, cancellationToken);
+        }).MapAsync(messageResponse => new[]
         {
             new PostResponse
             {
@@ -162,10 +201,11 @@ public class DiscordProvider(
                 ReleaseUrl = $"https://discord.com/channels/{id}/{channel}/{messageResponse.Id}",
                 Status = "success"
             }
-        };
+        });
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -175,15 +215,23 @@ public class DiscordProvider(
         CancellationToken cancellationToken = default)
     {
         var commentPost = posts.First();
-        var channel = commentPost.Settings?.GetValueOrDefault("channel")?.ToString()
-            ?? throw new ArgumentException("Channel is required");
+        var channel = commentPost.Settings?.GetValueOrDefault("channel")?.ToString();
+        
+        if (string.IsNullOrEmpty(channel))
+        {
+            return AeroError.BadRequestError("Channel is required");
+        }
 
         string threadChannel;
 
         if (string.IsNullOrEmpty(lastCommentId))
         {
-            var threadResponse = await CreateThreadAsync(channel, postId, cancellationToken);
-            threadChannel = threadResponse.Id;
+            var threadResult = await CreateThreadAsync(channel, postId, cancellationToken);
+            if (threadResult is Result<DiscordThreadResponse, AeroError>.Failure(var error))
+            {
+                return error;
+            }
+            threadChannel = ((Result<DiscordThreadResponse, AeroError>.Ok)threadResult).Value.Id;
         }
         else
         {
@@ -208,26 +256,30 @@ public class DiscordProvider(
 
         if (commentPost.Media != null)
         {
-            for (var i = 0; i < commentPost.Media.Count; i++)
+            foreach (var (media, i) in commentPost.Media.Select((m, index) => (m, index)))
             {
-                var media = commentPost.Media[i];
-                var bytes = await ReadOrFetchAsync(media.Path, cancellationToken);
-                form.Add(new ByteArrayContent(bytes), $"files[{i}]", GetFileName(media.Path));
+                var mediaResult = await ReadOrFetchAsync(media.Path, cancellationToken);
+                if (mediaResult is Result<byte[], AeroError>.Ok(var bytes))
+                {
+                    form.Add(new ByteArrayContent(bytes), $"files[{i}]", GetFileName(media.Path));
+                }
+                else if (mediaResult is Result<byte[], AeroError>.Failure(var error))
+                {
+                    return error;
+                }
             }
         }
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"https://discord.com/api/channels/{threadChannel}/messages")
+        return await GetBotToken().BindAsync(async botToken =>
         {
-            Content = form
-        };
-        request.Headers.Add("Authorization", $"Bot {GetBotToken()}");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://discord.com/api/channels/{threadChannel}/messages")
+            {
+                Content = form
+            };
+            request.Headers.Add("Authorization", $"Bot {botToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var messageResponse = await DeserializeAsync<DiscordMessageResponse>(response);
-
-        return new[]
+            return await SendRequestAsync<DiscordMessageResponse>(request, cancellationToken);
+        }).MapAsync(messageResponse => (PostResponse[]?)new[]
         {
             new PostResponse
             {
@@ -236,53 +288,55 @@ public class DiscordProvider(
                 ReleaseUrl = $"https://discord.com/channels/{id}/{threadChannel}/{messageResponse.Id}",
                 Status = "success"
             }
-        };
+        });
     }
 
-    public override async Task<object?> MentionAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<object?, AeroError>> MentionAsync(
         string token,
         MentionQuery query,
         string id,
         Integration integration,
         CancellationToken cancellationToken = default)
     {
-        var rolesTask = GetRolesAsync(id, cancellationToken);
-        var membersTask = SearchMembersAsync(id, query.Query, cancellationToken);
-
-        await Task.WhenAll(rolesTask, membersTask);
-
-        var roles = await rolesTask;
-        var members = await membersTask;
-
-        var result = new List<MentionResult>();
-
-        var specialMentions = new[]
-        {
-            new MentionResult { Id = "here", Label = "here", Image = string.Empty, DoNotCache = true },
-            new MentionResult { Id = "everyone", Label = "everyone", Image = string.Empty, DoNotCache = true }
-        }.Where(m => m.Label.Contains(query.Query, StringComparison.OrdinalIgnoreCase));
-
-        result.AddRange(specialMentions);
-        result.AddRange(roles
-            .Where(r => r.Name.Contains(query.Query, StringComparison.OrdinalIgnoreCase) &&
-                        r.Name != "@everyone" && r.Name != "@here")
-            .Select(r => new MentionResult
+        return await GetRolesAsync(id, cancellationToken)
+            .BindAsync(async roles =>
             {
-                Id = $"&{r.Id}",
-                Label = r.Name.TrimStart('@'),
-                Image = string.Empty,
-                DoNotCache = true
-            }));
-        result.AddRange(members.Select(m => new MentionResult
-        {
-            Id = m.User.Id,
-            Label = m.User.GlobalName ?? m.User.Username,
-            Image = $"https://cdn.discordapp.com/avatars/{m.User.Id}/{m.User.Avatar}.png"
-        }));
+                return await SearchMembersAsync(id, query.Query, cancellationToken)
+                    .MapAsync(members =>
+                    {
+                        var results = new List<MentionResult>();
 
-        return result;
+                        var specialMentions = new[]
+                        {
+                            new MentionResult { Id = "here", Label = "here", Image = string.Empty, DoNotCache = true },
+                            new MentionResult { Id = "everyone", Label = "everyone", Image = string.Empty, DoNotCache = true }
+                        }.Where(m => m.Label.Contains(query.Query, StringComparison.OrdinalIgnoreCase));
+
+                        results.AddRange(specialMentions);
+                        results.AddRange(roles
+                            .Where(r => r.Name.Contains(query.Query, StringComparison.OrdinalIgnoreCase) &&
+                                        r.Name != "@everyone" && r.Name != "@here")
+                            .Select(r => new MentionResult
+                            {
+                                Id = $"&{r.Id}",
+                                Label = r.Name.TrimStart('@'),
+                                Image = string.Empty,
+                                DoNotCache = true
+                            }));
+                        results.AddRange(members.Select(m => new MentionResult
+                        {
+                            Id = m.User.Id,
+                            Label = m.User.GlobalName ?? m.User.Username,
+                            Image = $"https://cdn.discordapp.com/avatars/{m.User.Id}/{m.User.Avatar}.png"
+                        }));
+
+                        return (object?)results;
+                    });
+            });
     }
 
+    /// <inheritdoc/>
     public override string? MentionFormat(string idOrHandle, string name)
     {
         if (name == "@here" || name == "@everyone")
@@ -293,80 +347,75 @@ public class DiscordProvider(
         return $"[[[@{idOrHandle.TrimStart('@')}]]]";
     }
 
-    private async Task<DiscordTokenResponse> ExchangeCodeForTokenAsync(string code, CancellationToken cancellationToken)
+    private async Task<Result<DiscordTokenResponse, AeroError>> ExchangeCodeForTokenAsync(string code, CancellationToken cancellationToken)
     {
-        var credentials = GetBasicCredentials();
-        var frontendUrl = GetFrontendUrl();
-        
-        var content = new FormUrlEncodedContent(new Dictionary<string, string>
-        {
-            ["code"] = code,
-            ["grant_type"] = "authorization_code",
-            ["redirect_uri"] = $"{frontendUrl}/integrations/social/discord"
-        });
+        return await GetBasicCredentials().BindAsync(credentials =>
+            GetFrontendUrl().BindAsync(async frontendUrl =>
+            {
+                var content = new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    ["code"] = code,
+                    ["grant_type"] = "authorization_code",
+                    ["redirect_uri"] = $"{frontendUrl}/integrations/social/discord"
+                });
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://discord.com/api/oauth2/token")
-        {
-            Content = content
-        };
-        request.Headers.Add("Authorization", $"Basic {credentials}");
+                var request = new HttpRequestMessage(HttpMethod.Post, "https://discord.com/api/oauth2/token")
+                {
+                    Content = content
+                };
+                request.Headers.Add("Authorization", $"Basic {credentials}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        return await DeserializeAsync<DiscordTokenResponse>(response);
+                return await SendRequestAsync<DiscordTokenResponse>(request, cancellationToken);
+            }));
     }
 
-    private async Task<DiscordApplicationInfo> GetApplicationInfoAsync(string accessToken, CancellationToken cancellationToken)
+    private async Task<Result<DiscordApplicationInfo, AeroError>> GetApplicationInfoAsync(string accessToken, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "https://discord.com/api/oauth2/@me");
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        return await DeserializeAsync<DiscordApplicationInfo>(response);
+        return await SendRequestAsync<DiscordApplicationInfo>(request, cancellationToken);
     }
 
-    private async Task<DiscordThreadResponse> CreateThreadAsync(string channelId, string messageId, CancellationToken cancellationToken)
+    private async Task<Result<DiscordThreadResponse, AeroError>> CreateThreadAsync(string channelId, string messageId, CancellationToken cancellationToken)
     {
-        var content = new StringContent(
-            JsonSerializer.Serialize(new { name = "Thread", auto_archive_duration = 1440 }),
-            System.Text.Encoding.UTF8,
-            "application/json");
-
-        var request = new HttpRequestMessage(HttpMethod.Post, $"https://discord.com/api/channels/{channelId}/messages/{messageId}/threads")
+        return await GetBotToken().BindAsync(async botToken =>
         {
-            Content = content
-        };
-        request.Headers.Add("Authorization", $"Bot {GetBotToken()}");
+            var content = new StringContent(
+                JsonSerializer.Serialize(new { name = "Thread", auto_archive_duration = 1440 }),
+                System.Text.Encoding.UTF8,
+                "application/json");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://discord.com/api/channels/{channelId}/messages/{messageId}/threads")
+            {
+                Content = content
+            };
+            request.Headers.Add("Authorization", $"Bot {botToken}");
 
-        return await DeserializeAsync<DiscordThreadResponse>(response);
+            return await SendRequestAsync<DiscordThreadResponse>(request, cancellationToken);
+        });
     }
 
-    private async Task<List<DiscordRole>> GetRolesAsync(string guildId, CancellationToken cancellationToken)
+    private async Task<Result<List<DiscordRole>, AeroError>> GetRolesAsync(string guildId, CancellationToken cancellationToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://discord.com/api/guilds/{guildId}/roles");
-        request.Headers.Add("Authorization", $"Bot {GetBotToken()}");
+        return await GetBotToken().BindAsync(async botToken =>
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://discord.com/api/guilds/{guildId}/roles");
+            request.Headers.Add("Authorization", $"Bot {botToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        return await DeserializeAsync<List<DiscordRole>>(response);
+            return await SendRequestAsync<List<DiscordRole>>(request, cancellationToken);
+        });
     }
 
-    private async Task<List<DiscordMember>> SearchMembersAsync(string guildId, string query, CancellationToken cancellationToken)
+    private async Task<Result<List<DiscordMember>, AeroError>> SearchMembersAsync(string guildId, string query, CancellationToken cancellationToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, $"https://discord.com/api/guilds/{guildId}/members/search?query={Uri.EscapeDataString(query)}");
-        request.Headers.Add("Authorization", $"Bot {GetBotToken()}");
+        return await GetBotToken().BindAsync(async botToken =>
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://discord.com/api/guilds/{guildId}/members/search?query={Uri.EscapeDataString(query)}");
+            request.Headers.Add("Authorization", $"Bot {botToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        return await DeserializeAsync<List<DiscordMember>>(response);
+            return await SendRequestAsync<List<DiscordMember>>(request, cancellationToken);
+        });
     }
 
     private static string FormatMessage(string message)
@@ -382,15 +431,19 @@ public class DiscordProvider(
         return path.Split('/').Last();
     }
 
-    private string GetClientId() => configuration["DISCORD_CLIENT_ID"] ?? throw new InvalidOperationException("DISCORD_CLIENT_ID not configured");
-    private string GetClientSecret() => configuration["DISCORD_CLIENT_SECRET"] ?? throw new InvalidOperationException("DISCORD_CLIENT_SECRET not configured");
-    private string GetBotToken() => configuration["DISCORD_BOT_TOKEN_ID"] ?? throw new InvalidOperationException("DISCORD_BOT_TOKEN_ID not configured");
-    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private Result<string, AeroError> GetClientId() => configuration["DISCORD_CLIENT_ID"] ?? AeroError.CreateError("DISCORD_CLIENT_ID not configured");
+    private Result<string, AeroError> GetClientSecret() => configuration["DISCORD_CLIENT_SECRET"] ?? AeroError.CreateError("DISCORD_CLIENT_SECRET not configured");
+    private Result<string, AeroError> GetBotToken() => configuration["DISCORD_BOT_TOKEN_ID"] ?? AeroError.CreateError("DISCORD_BOT_TOKEN_ID not configured");
+    private Result<string, AeroError> GetFrontendUrl() => configuration["FRONTEND_URL"] ?? AeroError.CreateError("FRONTEND_URL not configured");
     
-    private string GetBasicCredentials()
+    private Result<string, AeroError> GetBasicCredentials()
     {
-        var credentials = $"{GetClientId()}:{GetClientSecret()}";
-        return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(credentials));
+        return GetClientId().Bind(clientId => 
+            GetClientSecret().Map(clientSecret =>
+            {
+                var credentials = $"{clientId}:{clientSecret}";
+                return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(credentials));
+            }));
     }
 
     //#region DTOs

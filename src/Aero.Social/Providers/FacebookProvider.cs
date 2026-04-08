@@ -1,5 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -7,28 +9,44 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Provides integration with Facebook Pages for posting and analytics.
+/// </summary>
 public class FacebookProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<FacebookProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
+    private const string GraphApiBaseUrl = "https://graph.facebook.com/v20.0";
+
+    /// <inheritdoc/>
     public override string Identifier => "facebook";
+
+    /// <inheritdoc/>
     public override string Name => "Facebook Page";
+
+    /// <inheritdoc/>
     public override bool IsBetweenSteps => true;
-    public override string[] Scopes => new[]
-    {
+
+    /// <inheritdoc/>
+    public override string[] Scopes =>
+    [
         "pages_show_list",
         "business_management",
         "pages_manage_posts",
         "pages_manage_engagement",
         "pages_read_engagement",
         "read_insights"
-    };
+    ];
+
+    /// <inheritdoc/>
     public override int MaxConcurrentJobs => 100;
 
+    /// <inheritdoc/>
     public override int MaxLength(object? additionalSettings = null) => 63206;
 
+    /// <inheritdoc/>
     protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (responseBody.Contains("Error validating access token"))
@@ -64,11 +82,12 @@ public class FacebookProvider(
         return null;
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    /// <inheritdoc/>
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = string.Empty,
             ExpiresIn = 0,
@@ -79,15 +98,21 @@ public class FacebookProvider(
             Username = string.Empty
         });
     }
-    
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+
+    /// <inheritdoc/>
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        var state = MakeId(6);
-        var appId = GetAppId();
-        var frontendUrl = GetFrontendUrl();
+        var appId = configuration["FACEBOOK_APP_ID"];
+        var frontendUrl = configuration["FRONTEND_URL"];
 
+        if (string.IsNullOrEmpty(appId) || string.IsNullOrEmpty(frontendUrl))
+        {
+            return AeroError.CreateError("Facebook configuration missing (FACEBOOK_APP_ID or FRONTEND_URL)");
+        }
+
+        var state = MakeId(6);
         var url = $"https://www.facebook.com/v20.0/dialog/oauth" +
                   $"?client_id={appId}" +
                   $"&redirect_uri={Uri.EscapeDataString($"{frontendUrl}/integrations/social/facebook")}" +
@@ -102,55 +127,71 @@ public class FacebookProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        var appId = GetAppId();
-        var appSecret = GetAppSecret();
-        var frontendUrl = GetFrontendUrl();
+        var appId = configuration["FACEBOOK_APP_ID"];
+        var appSecret = configuration["FACEBOOK_APP_SECRET"];
+        var frontendUrl = configuration["FRONTEND_URL"];
+
+        if (string.IsNullOrEmpty(appId) || string.IsNullOrEmpty(appSecret) || string.IsNullOrEmpty(frontendUrl))
+        {
+            return AeroError.CreateError("Facebook configuration missing (FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, or FRONTEND_URL)");
+        }
+
         var redirectUri = $"{frontendUrl}/integrations/social/facebook";
 
-        var shortLivedToken = await ExchangeCodeForTokenAsync(appId, appSecret, redirectUri, parameters.Code, cancellationToken);
-        var longLivedToken = await ExchangeForLongLivedTokenAsync(appId, appSecret, shortLivedToken, cancellationToken);
+        return await ExchangeCodeForTokenAsync(appId, appSecret, redirectUri, parameters.Code, cancellationToken)
+            .BindAsync(shortLivedToken => ExchangeForLongLivedTokenAsync(appId, appSecret, shortLivedToken, cancellationToken))
+            .BindAsync(async longLivedToken =>
+            {
+                return await GetPermissionsAsync(longLivedToken, cancellationToken)
+                    .BindAsync(async permissions =>
+                    {
+                        var scopeCheck = CheckScopes(Scopes, permissions);
+                        if (scopeCheck is Result<NoneType, AeroError>.Failure failure)
+                        {
+                            return failure.Error;
+                        }
 
-        var permissions = await GetPermissionsAsync(longLivedToken, cancellationToken);
-        CheckScopes(Scopes, permissions);
-
-        var userInfo = await GetUserInfoAsync(longLivedToken, cancellationToken);
-
-        return new AuthTokenDetails
-        {
-            Id = userInfo.Id,
-            Name = userInfo.Name,
-            AccessToken = longLivedToken,
-            RefreshToken = longLivedToken,
-            ExpiresIn = (int)TimeSpan.FromDays(59).TotalSeconds,
-            Picture = userInfo.Picture?.Data?.Url ?? string.Empty,
-            Username = string.Empty
-        };
+                        return await GetUserInfoAsync(longLivedToken, cancellationToken)
+                            .MapAsync(async userInfo => new AuthTokenDetails
+                            {
+                                Id = userInfo.Id,
+                                Name = userInfo.Name,
+                                AccessToken = longLivedToken,
+                                RefreshToken = longLivedToken,
+                                ExpiresIn = (int)TimeSpan.FromDays(59).TotalSeconds,
+                                Picture = userInfo.Picture?.Data?.Url ?? string.Empty,
+                                Username = string.Empty
+                            });
+                    });
+            });
     }
 
-    public override async Task<AuthTokenDetails?> ReConnectAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<AuthTokenDetails?, AeroError>> ReConnectAsync(
         string id,
         string requiredId,
         string accessToken,
         CancellationToken cancellationToken = default)
     {
-        var page = await FetchPageInformationAsync(accessToken, new { page = requiredId }, cancellationToken);
-
-        return new AuthTokenDetails
-        {
-            Id = page.Id,
-            Name = page.Name,
-            AccessToken = page.AccessToken,
-            Picture = page.Picture,
-            Username = page.Username
-        };
+        return await FetchPageInformationAsync(accessToken, new { page = requiredId }, cancellationToken)
+            .MapAsync(async page => (AuthTokenDetails?)new AuthTokenDetails
+            {
+                Id = page!.Id,
+                Name = page.Name,
+                AccessToken = page.AccessToken,
+                Picture = page.Picture,
+                Username = page.Username
+            });
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -173,7 +214,7 @@ public class FacebookProvider(
         return await PostFeedAsync(id, accessToken, firstPost, linkUrl, cancellationToken);
     }
 
-    private async Task<PostResponse[]> PostFeedAsync(
+    private async Task<Result<PostResponse[], AeroError>> PostFeedAsync(
         string pageId,
         string accessToken,
         PostDetails post,
@@ -186,8 +227,15 @@ public class FacebookProvider(
         {
             foreach (var media in post.Media)
             {
-                var photoId = await UploadPhotoAsync(pageId, accessToken, media.Path, false, cancellationToken);
-                uploadedPhotoIds.Add(photoId);
+                var photoResult = await UploadPhotoAsync(pageId, accessToken, media.Path, false, cancellationToken);
+                if (photoResult is Result<string, AeroError>.Ok ok)
+                {
+                    uploadedPhotoIds.Add(ok.Value);
+                }
+                else
+                {
+                    return ((Result<string, AeroError>.Failure)photoResult).Error;
+                }
             }
         }
 
@@ -207,27 +255,27 @@ public class FacebookProvider(
             payload["link"] = linkUrl;
         }
 
-        var url = $"https://graph.facebook.com/v20.0/{pageId}/feed?access_token={accessToken}&fields=id,permalink_url";
-
+        var url = $"{GraphApiBaseUrl}/{pageId}/feed?access_token={accessToken}&fields=id,permalink_url";
         var request = CreateRequest(url, HttpMethod.Post, payload);
-        var response = await SendRequestAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var postResponse = await DeserializeAsync<FacebookPostResponse>(response);
-
-        return new[]
-        {
-            new PostResponse
+        
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response =>
             {
-                Id = post.Id,
-                PostId = postResponse.Id,
-                ReleaseUrl = postResponse.PermalinkUrl ?? string.Empty,
-                Status = "success"
-            }
-        };
+                var postResponse = await DeserializeAsync<FacebookPostResponse>(response, cancellationToken);
+                return new[]
+                {
+                    new PostResponse
+                    {
+                        Id = post.Id,
+                        PostId = postResponse.Id,
+                        ReleaseUrl = postResponse.PermalinkUrl ?? string.Empty,
+                        Status = "success"
+                    }
+                };
+            });
     }
 
-    private async Task<PostResponse[]> PostVideoAsync(
+    private async Task<Result<PostResponse[], AeroError>> PostVideoAsync(
         string pageId,
         string accessToken,
         PostDetails post,
@@ -242,27 +290,28 @@ public class FacebookProvider(
             ["published"] = true
         };
 
-        var url = $"https://graph.facebook.com/v20.0/{pageId}/videos?access_token={accessToken}&fields=id,permalink_url";
-
+        var url = $"{GraphApiBaseUrl}/{pageId}/videos?access_token={accessToken}&fields=id,permalink_url";
         var request = CreateRequest(url, HttpMethod.Post, payload);
-        var response = await SendRequestAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var videoResponse = await DeserializeAsync<FacebookVideoResponse>(response);
-
-        return new[]
-        {
-            new PostResponse
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response =>
             {
-                Id = post.Id,
-                PostId = videoResponse.Id,
-                ReleaseUrl = $"https://www.facebook.com/reel/{videoResponse.Id}",
-                Status = "success"
-            }
-        };
+                var videoResponse = await DeserializeAsync<FacebookVideoResponse>(response, cancellationToken);
+                return new[]
+                {
+                    new PostResponse
+                    {
+                        Id = post.Id,
+                        PostId = videoResponse.Id,
+                        ReleaseUrl = $"https://www.facebook.com/reel/{videoResponse.Id}",
+                        Status = "success"
+                    }
+                };
+            });
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -284,65 +333,73 @@ public class FacebookProvider(
             payload["attachment_url"] = commentPost.Media[0].Path;
         }
 
-        var url = $"https://graph.facebook.com/v20.0/{replyToId}/comments?access_token={accessToken}&fields=id,permalink_url";
-
+        var url = $"{GraphApiBaseUrl}/{replyToId}/comments?access_token={accessToken}&fields=id,permalink_url";
         var request = CreateRequest(url, HttpMethod.Post, payload);
-        var response = await SendRequestAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var commentResponse = await DeserializeAsync<FacebookPostResponse>(response);
-
-        return new[]
-        {
-            new PostResponse
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response =>
             {
-                Id = commentPost.Id,
-                PostId = commentResponse.Id,
-                ReleaseUrl = commentResponse.PermalinkUrl ?? string.Empty,
-                Status = "success"
-            }
-        };
+                var commentResponse = await DeserializeAsync<FacebookPostResponse>(response, cancellationToken);
+                return (PostResponse[]?)new[]
+                {
+                    new PostResponse
+                    {
+                        Id = commentPost.Id,
+                        PostId = commentResponse.Id,
+                        ReleaseUrl = commentResponse.PermalinkUrl ?? string.Empty,
+                        Status = "success"
+                    }
+                };
+            });
     }
 
-    public async Task<List<FacebookPage>> GetPagesAsync(string accessToken, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Retrieves the list of pages managed by the authenticated user.
+    /// </summary>
+    /// <param name="accessToken">The user access token.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A list of Facebook pages managed by the user.</returns>
+    public async Task<Result<List<FacebookPage>, AeroError>> GetPagesAsync(string accessToken, CancellationToken cancellationToken = default)
     {
-        var url = $"https://graph.facebook.com/v20.0/me/accounts?fields=id,username,name,picture.type(large)&access_token={accessToken}";
+        var url = $"{GraphApiBaseUrl}/me/accounts?fields=id,username,name,picture.type(large)&access_token={accessToken}";
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var pagesResponse = await DeserializeAsync<FacebookPagesResponse>(response);
-        return pagesResponse.Data ?? new List<FacebookPage>();
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response =>
+            {
+                var pagesResponse = await DeserializeAsync<FacebookPagesResponse>(response, cancellationToken);
+                return pagesResponse.Data ?? new List<FacebookPage>();
+            });
     }
 
-    public override async Task<FetchPageInformationResult?> FetchPageInformationAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<FetchPageInformationResult?, AeroError>> FetchPageInformationAsync(
         string accessToken,
         object data,
         CancellationToken cancellationToken = default)
     {
         var pageId = data.GetType().GetProperty("page")?.GetValue(data)?.ToString() ?? string.Empty;
+        var url = $"{GraphApiBaseUrl}/{pageId}?fields=username,access_token,name,picture.type(large)&access_token={accessToken}";
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-        var url = $"https://graph.facebook.com/v20.0/{pageId}?fields=username,access_token,name,picture.type(large)&access_token={accessToken}";
-
-        var response = await HttpClient.GetAsync(url, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var page = await DeserializeAsync<FacebookPageDetail>(response);
-
-        return new FetchPageInformationResult
-        {
-            Id = page.Id,
-            Name = page.Name,
-            AccessToken = page.AccessToken,
-            Picture = page.Picture?.Data?.Url ?? string.Empty,
-            Username = page.Username ?? string.Empty
-        };
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response =>
+            {
+                var page = await DeserializeAsync<FacebookPageDetail>(response, cancellationToken);
+                return (FetchPageInformationResult?)new FetchPageInformationResult
+                {
+                    Id = page.Id,
+                    Name = page.Name,
+                    AccessToken = page.AccessToken,
+                    Picture = page.Picture?.Data?.Url ?? string.Empty,
+                    Username = page.Username ?? string.Empty
+                };
+            });
     }
 
-    private async Task<string> UploadPhotoAsync(string pageId, string accessToken, string photoUrl, bool published, CancellationToken cancellationToken)
+    private async Task<Result<string, AeroError>> UploadPhotoAsync(string pageId, string accessToken, string photoUrl, bool published, CancellationToken cancellationToken)
     {
-        var url = $"https://graph.facebook.com/v20.0/{pageId}/photos?access_token={accessToken}";
-
+        var url = $"{GraphApiBaseUrl}/{pageId}/photos?access_token={accessToken}";
         var payload = new
         {
             url = photoUrl,
@@ -350,65 +407,71 @@ public class FacebookProvider(
         };
 
         var request = CreateRequest(url, HttpMethod.Post, payload);
-        var response = await SendRequestAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var photoResponse = await DeserializeAsync<FacebookPhotoResponse>(response);
-        return photoResponse.Id;
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response =>
+            {
+                var photoResponse = await DeserializeAsync<FacebookPhotoResponse>(response, cancellationToken);
+                return photoResponse.Id;
+            });
     }
 
-    private async Task<string> ExchangeCodeForTokenAsync(string appId, string appSecret, string redirectUri, string code, CancellationToken cancellationToken)
+    private async Task<Result<string, AeroError>> ExchangeCodeForTokenAsync(string appId, string appSecret, string redirectUri, string code, CancellationToken cancellationToken)
     {
-        var url = $"https://graph.facebook.com/v20.0/oauth/access_token" +
+        var url = $"{GraphApiBaseUrl}/oauth/access_token" +
                   $"?client_id={appId}" +
                   $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
                   $"&client_secret={appSecret}" +
                   $"&code={code}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response);
-        return tokenResponse.AccessToken;
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response =>
+            {
+                var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response, cancellationToken);
+                return tokenResponse.AccessToken;
+            });
     }
 
-    private async Task<string> ExchangeForLongLivedTokenAsync(string appId, string appSecret, string shortLivedToken, CancellationToken cancellationToken)
+    private async Task<Result<string, AeroError>> ExchangeForLongLivedTokenAsync(string appId, string appSecret, string shortLivedToken, CancellationToken cancellationToken)
     {
-        var url = $"https://graph.facebook.com/v20.0/oauth/access_token" +
+        var url = $"{GraphApiBaseUrl}/oauth/access_token" +
                   $"?grant_type=fb_exchange_token" +
                   $"&client_id={appId}" +
                   $"&client_secret={appSecret}" +
                   $"&fb_exchange_token={shortLivedToken}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response);
-        return tokenResponse.AccessToken;
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response =>
+            {
+                var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response, cancellationToken);
+                return tokenResponse.AccessToken;
+            });
     }
 
-    private async Task<string[]> GetPermissionsAsync(string accessToken, CancellationToken cancellationToken)
+    private async Task<Result<string[], AeroError>> GetPermissionsAsync(string accessToken, CancellationToken cancellationToken)
     {
-        var url = $"https://graph.facebook.com/v20.0/me/permissions?access_token={accessToken}";
+        var url = $"{GraphApiBaseUrl}/me/permissions?access_token={accessToken}";
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var permissionsResponse = await DeserializeAsync<FacebookPermissionsResponse>(response);
-        return permissionsResponse.Data
-            .Where(p => p.Status == "granted")
-            .Select(p => p.Permission)
-            .ToArray();
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response =>
+            {
+                var permissionsResponse = await DeserializeAsync<FacebookPermissionsResponse>(response, cancellationToken);
+                return permissionsResponse.Data
+                    .Where(p => p.Status == "granted")
+                    .Select(p => p.Permission)
+                    .ToArray();
+            });
     }
 
-    private async Task<FacebookUserInfo> GetUserInfoAsync(string accessToken, CancellationToken cancellationToken)
+    private async Task<Result<FacebookUserInfo, AeroError>> GetUserInfoAsync(string accessToken, CancellationToken cancellationToken)
     {
-        var url = $"https://graph.facebook.com/v20.0/me?fields=id,name,picture&access_token={accessToken}";
+        var url = $"{GraphApiBaseUrl}/me?fields=id,name,picture&access_token={accessToken}";
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        return await DeserializeAsync<FacebookUserInfo>(response);
+        return await SendRequestAsync(request, cancellationToken)
+            .BindAsync(async response => await DeserializeAsync<FacebookUserInfo>(response, cancellationToken));
     }
 
     private static T? GetSettingValue<T>(Dictionary<string, object> settings, string key)
@@ -422,10 +485,6 @@ public class FacebookProvider(
         var json = JsonSerializer.Serialize(value);
         return JsonSerializer.Deserialize<T>(json);
     }
-
-    private string GetAppId() => configuration["FACEBOOK_APP_ID"] ?? throw new InvalidOperationException("FACEBOOK_APP_ID not configured");
-    private string GetAppSecret() => configuration["FACEBOOK_APP_SECRET"] ?? throw new InvalidOperationException("FACEBOOK_APP_SECRET not configured");
-    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 
@@ -504,14 +563,26 @@ public class FacebookProvider(
         public List<FacebookPage>? Data { get; set; }
     }
 
+    /// <summary>
+    /// Represents a Facebook page.
+    /// </summary>
     public class FacebookPage
     {
+        /// <summary>
+        /// Gets or sets the page ID.
+        /// </summary>
         [JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets the page name.
+        /// </summary>
         [JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets the page username.
+        /// </summary>
         [JsonPropertyName("username")]
         public string? Username { get; set; }
     }

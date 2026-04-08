@@ -1,29 +1,43 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Provides integration with the Dev.to social media platform.
+/// </summary>
+/// <param name="httpClient">The HTTP client for making API requests.</param>
+/// <param name="logger">The logger for this provider.</param>
 public class DevToProvider(
     HttpClient httpClient,
-    IConfiguration configuration,
     ILogger<DevToProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration = configuration;
-
+    /// <inheritdoc/>
     public override string Identifier => "devto";
+
+    /// <inheritdoc/>
     public override string Name => "Dev.to";
+
+    /// <inheritdoc/>
     public override string[] Scopes => Array.Empty<string>();
+
+    /// <inheritdoc/>
     public override int MaxConcurrentJobs => 3;
+
+    /// <inheritdoc/>
     public override EditorType Editor => EditorType.Markdown;
 
+    /// <inheritdoc/>
     public override int MaxLength(object? additionalSettings = null) => 100000;
 
+    /// <inheritdoc/>
     protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (responseBody.Contains("Canonical url has already been taken"))
@@ -34,65 +48,64 @@ public class DevToProvider(
         return null;
     }
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    /// <inheritdoc/>
+    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
         var state = MakeId(6);
-        return new GenerateAuthUrlResponse
+        return Task.FromResult<Result<GenerateAuthUrlResponse, AeroError>>(new GenerateAuthUrlResponse
         {
             Url = "",
             CodeVerifier = MakeId(10),
             State = state
-        };
+        });
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        var bodyBytes = Convert.FromBase64String(parameters.Code);
-        var bodyJson = Encoding.UTF8.GetString(bodyBytes);
-        var authBody = JsonSerializer.Deserialize<DevToAuthBody>(bodyJson)
-            ?? throw new BadBodyException(Identifier, "Invalid auth body");
-
-        try
-        {
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://dev.to/api/users/me");
-            request.Headers.TryAddWithoutValidation("api-key", authBody.ApiKey);
-
-            var response = await SendRequestAsync(request, cancellationToken);
-
-            if (!response.IsSuccessStatusCode)
+        return await Result.Try(() => Convert.FromBase64String(parameters.Code))
+            .MapError(ex => AeroError.ValidationError([$"Invalid auth code: {ex.Message}"]))
+            .Map(Encoding.UTF8.GetString)
+            .Bind(bodyJson => Result.Try(() => JsonSerializer.Deserialize<DevToAuthBody>(bodyJson))
+                .MapError(ex => AeroError.ValidationError([$"Failed to parse auth body: {ex.Message}"])))
+            .Bind(authBody =>
             {
-                throw new BadBodyException(Identifier, "Invalid credentials");
-            }
-
-            var userInfo = await DeserializeAsync<DevToUserInfo>(response);
-
-            return new AuthTokenDetails
+                if (authBody == null || string.IsNullOrEmpty(authBody.ApiKey))
+                {
+                    return (Result<DevToAuthBody, AeroError>)AeroError.ValidationError(["Invalid auth body or missing ApiKey"]);
+                }
+                return authBody;
+            })
+            .BindAsync(async authBody =>
             {
-                RefreshToken = "",
-                ExpiresIn = (int)TimeSpan.FromDays(100).TotalSeconds,
-                AccessToken = authBody.ApiKey,
-                Id = userInfo.Id.ToString(),
-                Name = userInfo.Name ?? "",
-                Picture = userInfo.ProfileImage ?? string.Empty,
-                Username = userInfo.Username ?? ""
-            };
-        }
-        catch (Exception)
-        {
-            throw new BadBodyException(Identifier, "Invalid credentials");
-        }
+                var request = new HttpRequestMessage(HttpMethod.Get, "https://dev.to/api/users/me");
+                request.Headers.TryAddWithoutValidation("api-key", authBody.ApiKey);
+
+                return await SendRequestAsync<DevToUserInfo>(request, cancellationToken)
+                    .MapAsync<DevToUserInfo, AeroError, AuthTokenDetails>(userInfo => new AuthTokenDetails
+                    {
+                        RefreshToken = "",
+                        ExpiresIn = (int)TimeSpan.FromDays(100).TotalSeconds,
+                        AccessToken = authBody.ApiKey,
+                        Id = userInfo.Id.ToString(),
+                        Name = userInfo.Name ?? "",
+                        Picture = userInfo.ProfileImage ?? string.Empty,
+                        Username = userInfo.Username ?? ""
+                    });
+            });
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    /// <inheritdoc/>
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = "",
             ExpiresIn = 0,
@@ -104,7 +117,8 @@ public class DevToProvider(
         });
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    /// <inheritdoc/>
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -151,82 +165,79 @@ public class DevToProvider(
         }
 
         var payload = new { article };
-
-        var json = JsonSerializer.Serialize(payload);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://dev.to/api/articles") { Content = content };
+        var request = CreateRequest("https://dev.to/api/articles", HttpMethod.Post, payload);
         request.Headers.TryAddWithoutValidation("api-key", accessToken);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var articleResponse = await DeserializeAsync<DevToArticleResponse>(response);
-
-        return new[]
-        {
-            new PostResponse
+        return await SendRequestAsync<DevToArticleResponse>(request, cancellationToken)
+            .MapAsync<DevToArticleResponse, AeroError, PostResponse[]>(articleResponse => new[]
             {
-                Id = firstPost.Id,
-                Status = "completed",
-                PostId = articleResponse.Id.ToString(),
-                ReleaseUrl = articleResponse.Url ?? ""
-            }
-        };
+                new PostResponse
+                {
+                    Id = firstPost.Id,
+                    Status = "completed",
+                    PostId = articleResponse.Id.ToString(),
+                    ReleaseUrl = articleResponse.Url ?? ""
+                }
+            });
     }
 
-    public async Task<List<DevToTag>> GetTagsAsync(string accessToken, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Retrieves tags from the Dev.to API.
+    /// </summary>
+    /// <param name="accessToken">The API key.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A list of tags.</returns>
+    public async Task<Result<List<DevToTag>, AeroError>> GetTagsAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "https://dev.to/api/tags?per_page=1000&page=1");
         request.Headers.TryAddWithoutValidation("api-key", accessToken);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var tags = await DeserializeAsync<List<DevToTagResponse>>(response);
-        return tags?.Select(t => new DevToTag { Value = t.Id, Label = t.Name }).ToList() ?? new List<DevToTag>();
+        return await SendRequestAsync<List<DevToTagResponse>>(request, cancellationToken)
+            .MapAsync<List<DevToTagResponse>, AeroError, List<DevToTag>>(tags =>
+                tags.Select(t => new DevToTag { Value = t.Id, Label = t.Name }).ToList());
     }
 
-    public async Task<List<DevToOrganization>> GetOrganizationsAsync(string accessToken, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Retrieves organizations the user belongs to from the Dev.to API.
+    /// </summary>
+    /// <param name="accessToken">The API key.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A list of organizations.</returns>
+    public async Task<Result<List<DevToOrganization>, AeroError>> GetOrganizationsAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "https://dev.to/api/articles/me/all?per_page=1000");
         request.Headers.TryAddWithoutValidation("api-key", accessToken);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var articles = await DeserializeAsync<List<DevToArticleItem>>(response);
-
-        var orgUsernames = articles
-            ?.Where(a => a.Organization?.Username != null)
-            .Select(a => a.Organization!.Username!)
-            .Distinct()
-            .ToList() ?? new List<string>();
-
-        var organizations = new List<DevToOrganization>();
-
-        foreach (var orgUsername in orgUsernames)
-        {
-            var orgRequest = new HttpRequestMessage(HttpMethod.Get, $"https://dev.to/api/organizations/{orgUsername}");
-            orgRequest.Headers.TryAddWithoutValidation("api-key", accessToken);
-
-            var orgResponse = await HttpClient.SendAsync(orgRequest, cancellationToken);
-            if (orgResponse.IsSuccessStatusCode)
+        return await SendRequestAsync<List<DevToArticleItem>>(request, cancellationToken)
+            .BindAsync<List<DevToArticleItem>, AeroError, List<DevToOrganization>>(async articles =>
             {
-                var orgInfo = await DeserializeAsync<DevToOrganizationResponse>(orgResponse);
-                if (orgInfo != null)
-                {
-                    organizations.Add(new DevToOrganization
-                    {
-                        Id = orgInfo.Id.ToString(),
-                        Name = orgInfo.Name ?? "",
-                        Username = orgInfo.Username ?? ""
-                    });
-                }
-            }
-        }
+                var orgUsernames = articles
+                    .Where(a => a.Organization?.Username != null)
+                    .Select(a => a.Organization!.Username!)
+                    .Distinct()
+                    .ToList();
 
-        return organizations;
+                var organizations = new List<DevToOrganization>();
+
+                foreach (var orgUsername in orgUsernames)
+                {
+                    var orgRequest = new HttpRequestMessage(HttpMethod.Get, $"https://dev.to/api/organizations/{orgUsername}");
+                    orgRequest.Headers.TryAddWithoutValidation("api-key", accessToken);
+
+                    var orgResult = await SendRequestAsync<DevToOrganizationResponse>(orgRequest, cancellationToken);
+                    if (orgResult is Result<DevToOrganizationResponse, AeroError>.Ok ok)
+                    {
+                        organizations.Add(new DevToOrganization
+                        {
+                            Id = ok.Value.Id.ToString(),
+                            Name = ok.Value.Name ?? "",
+                            Username = ok.Value.Username ?? ""
+                        });
+                    }
+                }
+
+                return organizations;
+            });
     }
 
     private static T? GetSettingValue<T>(Dictionary<string, object> settings, string key)
@@ -240,8 +251,6 @@ public class DevToProvider(
         var json = JsonSerializer.Serialize(value);
         return JsonSerializer.Deserialize<T>(json);
     }
-
-    //#region DTOs
 
     private class DevToAuthBody
     {
@@ -306,18 +315,41 @@ public class DevToProvider(
         public string? Username { get; set; }
     }
 
+    /// <summary>
+    /// Represents a Dev.to tag.
+    /// </summary>
     public class DevToTag
     {
+        /// <summary>
+        /// Gets or sets the tag value (ID).
+        /// </summary>
         public string Value { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the tag label (Name).
+        /// </summary>
         public string Label { get; set; } = string.Empty;
     }
 
+    /// <summary>
+    /// Represents a Dev.to organization.
+    /// </summary>
     public class DevToOrganization
     {
+        /// <summary>
+        /// Gets or sets the organization ID.
+        /// </summary>
         public string Id { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the organization name.
+        /// </summary>
         public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the organization username.
+        /// </summary>
         public string Username { get; set; } = string.Empty;
     }
-
-    //#endregion
 }
+

@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +16,6 @@ public class HashnodeProvider(
     ILogger<HashnodeProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    private readonly IConfiguration _configuration = configuration;
     private const string GraphQLEndpoint = "https://gql.hashnode.com";
 
     public override string Identifier => "hashnode";
@@ -25,7 +26,7 @@ public class HashnodeProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 10000;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -38,52 +39,56 @@ public class HashnodeProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        var bodyBytes = Convert.FromBase64String(parameters.Code);
-        var bodyJson = Encoding.UTF8.GetString(bodyBytes);
-        var authBody = JsonSerializer.Deserialize<HashnodeAuthBody>(bodyJson)
-            ?? throw new BadBodyException(Identifier, "Invalid auth body");
-
+        HashnodeAuthBody? authBody;
         try
         {
-            var query = @"
-                query {
-                    me {
-                        name
-                        id
-                        profilePicture
-                        username
-                    }
-                }";
+            var bodyBytes = Convert.FromBase64String(parameters.Code);
+            var bodyJson = Encoding.UTF8.GetString(bodyBytes);
+            authBody = JsonSerializer.Deserialize<HashnodeAuthBody>(bodyJson);
+        }
+        catch (Exception ex)
+        {
+            return AeroError.ValidationError([$"Invalid auth body: {ex.Message}"]);
+        }
 
-            var result = await ExecuteGraphQLAsync<HashnodeMeResponse>(query, null, authBody.ApiKey, cancellationToken);
+        if (authBody == null || string.IsNullOrEmpty(authBody.ApiKey))
+        {
+            return AeroError.ValidationError(["Invalid auth body or missing ApiKey"]);
+        }
 
-            return new AuthTokenDetails
+        var query = @"
+            query {
+                me {
+                    name
+                    id
+                    profilePicture
+                    username
+                }
+            }";
+
+        return await ExecuteGraphQLAsync<HashnodeMeResponse>(query, null, authBody.ApiKey, cancellationToken)
+            .MapAsync<HashnodeMeResponse, AeroError, AuthTokenDetails>(response => new AuthTokenDetails
             {
                 RefreshToken = "",
                 ExpiresIn = (int)TimeSpan.FromDays(100).TotalSeconds,
                 AccessToken = authBody.ApiKey,
-                Id = result.Me.Id ?? "",
-                Name = result.Me.Name ?? "",
-                Picture = result.Me.ProfilePicture ?? string.Empty,
-                Username = result.Me.Username ?? ""
-            };
-        }
-        catch (Exception)
-        {
-            throw new BadBodyException(Identifier, "Invalid credentials");
-        }
+                Id = response.Me.Id ?? "",
+                Name = response.Me.Name ?? "",
+                Picture = response.Me.ProfilePicture ?? string.Empty,
+                Username = response.Me.Username ?? ""
+            });
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = "",
             ExpiresIn = 0,
@@ -95,7 +100,7 @@ public class HashnodeProvider(
         });
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -154,21 +159,20 @@ public class HashnodeProvider(
 
         var variables = new { input = inputObj };
 
-        var result = await ExecuteGraphQLAsync<HashnodePublishResponse>(mutation, variables, accessToken, cancellationToken);
-
-        return new[]
-        {
-            new PostResponse
+        return await ExecuteGraphQLAsync<HashnodePublishResponse>(mutation, variables, accessToken, cancellationToken)
+            .MapAsync<HashnodePublishResponse, AeroError, PostResponse[]>(response => new[]
             {
-                Id = firstPost.Id,
-                Status = "completed",
-                PostId = result.PublishPost.Post.Id ?? "",
-                ReleaseUrl = result.PublishPost.Post.Url ?? ""
-            }
-        };
+                new PostResponse
+                {
+                    Id = firstPost.Id,
+                    Status = "completed",
+                    PostId = response.PublishPost.Post.Id ?? "",
+                    ReleaseUrl = response.PublishPost.Post.Url ?? ""
+                }
+            });
     }
 
-    public async Task<List<HashnodePublication>> GetPublicationsAsync(string accessToken, CancellationToken cancellationToken = default)
+    public async Task<Result<List<HashnodePublication>, AeroError>> GetPublicationsAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var query = @"
             query {
@@ -185,30 +189,32 @@ public class HashnodeProvider(
             }";
 
         var result = await ExecuteGraphQLAsync<HashnodePublicationsResponse>(query, null, accessToken, cancellationToken);
+        if (result is Result<HashnodePublicationsResponse, AeroError>.Failure failure)
+        {
+            return failure.Error;
+        }
 
-        return result.Me.Publications.Edges
+        var okValue = ((Result<HashnodePublicationsResponse, AeroError>.Ok)result).Value;
+
+        return okValue.Me.Publications.Edges
             .Select(e => new HashnodePublication { Id = e.Node.Id ?? "", Name = e.Node.Title ?? "" })
             .ToList();
     }
 
-    private async Task<T> ExecuteGraphQLAsync<T>(
+    private async Task<Result<T, AeroError>> ExecuteGraphQLAsync<T>(
         string query,
         object? variables,
         string accessToken,
         CancellationToken cancellationToken)
+        where T : class
     {
         var payload = new { query, variables };
-        var json = JsonSerializer.Serialize(payload);
-        var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-        var request = new HttpRequestMessage(HttpMethod.Post, GraphQLEndpoint) { Content = content };
+        var request = CreateRequest(GraphQLEndpoint, HttpMethod.Post, payload);
         request.Headers.TryAddWithoutValidation("Authorization", accessToken);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var wrapper = await DeserializeAsync<GraphQLResponse<T>>(response);
-        return wrapper.Data;
+        var result = await SendRequestAsync<GraphQLResponse<T>>(request, cancellationToken);
+        
+        return result.Map(r => r.Data);
     }
 
     private static T? GetSettingValue<T>(Dictionary<string, object> settings, string key)
