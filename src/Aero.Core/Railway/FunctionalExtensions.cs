@@ -135,13 +135,14 @@ public static class FunctionalExtensions
     /// <summary>
     /// Converts a Result to an Option, discarding the error.
     /// </summary>
-    public static Option<TValue> ToOption<TError, TValue>(
-        this Result<TError, TValue> result)
+    public static Option<TValue> ToOption<TValue, TError>(
+        this Result<TValue, TError> result)
+        where TError : AeroError
     {
         return result switch
         {
-            Result<TError, TValue>.Ok(var value) => new Option<TValue>.Some(value),
-            Result<TError, TValue>.Failure => new Option<TValue>.None(),
+            Result<TValue, TError>.Ok(var value) => new Option<TValue>.Some(value),
+            Result<TValue, TError>.Failure => new Option<TValue>.None(),
             _ => new Option<TValue>.None()
         };
     }
@@ -149,15 +150,16 @@ public static class FunctionalExtensions
     /// <summary>
     /// Converts an Option to a Result with a specified error if None.
     /// </summary>
-    public static Result<TError, TValue> ToResult<TValue, TError>(
+    public static Result<TValue, TError> ToResult<TValue, TError>(
         this Option<TValue> option,
         TError error)
+        where TError : AeroError
     {
         return option switch
         {
-            Option<TValue>.Some(var value) => new Result<TError, TValue>.Ok(value),
-            Option<TValue>.None => new Result<TError, TValue>.Failure(error),
-            _ => new Result<TError, TValue>.Failure(error)
+            Option<TValue>.Some(var value) => new Result<TValue, TError>.Ok(value),
+            Option<TValue>.None => new Result<TValue, TError>.Failure(error),
+            _ => new Result<TValue, TError>.Failure(error)
         };
     }
 
@@ -168,9 +170,10 @@ public static class FunctionalExtensions
     /// <summary>
     /// Maps over a Result wrapped in a Task.
     /// </summary>
-    public static async Task<Result<TError, TResult>> MapAsync<TError, TValue, TResult>(
-        this Task<Result<TError, TValue>> task,
+    public static async Task<Result<TResult, TError>> MapAsync<TValue, TError, TResult>(
+        this Task<Result<TValue, TError>> task,
         Func<TValue, TResult> map)
+        where TError : AeroError
     {
         var result = await task.ConfigureAwait(false);
         return result.Map(map);
@@ -179,16 +182,17 @@ public static class FunctionalExtensions
     /// <summary>
     /// Binds over a Result wrapped in a Task.
     /// </summary>
-    public static async Task<Result<TError, TResult>> BindAsync<TError, TValue, TResult>(
-        this Task<Result<TError, TValue>> task,
-        Func<TValue, Task<Result<TError, TResult>>> bind)
+    public static async Task<Result<TResult, TError>> BindAsync<TValue, TError, TResult>(
+        this Task<Result<TValue, TError>> task,
+        Func<TValue, Task<Result<TResult, TError>>> bind)
+        where TError : AeroError
     {
         var result = await task.ConfigureAwait(false);
 
         return result switch
         {
-            Result<TError, TValue>.Ok(var value) => await bind(value).ConfigureAwait(false),
-            Result<TError, TValue>.Failure(var error) => new Result<TError, TResult>.Failure(error),
+            Result<TValue, TError>.Ok(var value) => await bind(value).ConfigureAwait(false),
+            Result<TValue, TError>.Failure(var error) => new Result<TResult, TError>.Failure(error),
             _ => throw new InvalidOperationException("Invalid Result state")
         };
     }

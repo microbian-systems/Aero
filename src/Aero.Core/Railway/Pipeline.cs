@@ -5,12 +5,12 @@ namespace Aero.Core.Railway;
 /// implementing the Railway-Oriented Programming pattern for complex workflows.
 /// </summary>
 /// <typeparam name="TInput">The type of the initial input to the pipeline.</typeparam>
-/// <typeparam name="TError">The type of error that can occur.</typeparam>
 /// <typeparam name="TOutput">The type of the final output.</typeparam>
+/// <typeparam name="TError">The type of error that can occur.</typeparam>
 /// <remarks>
 /// <para>
 /// The Pipeline class provides a higher-level abstraction for composing multiple operations
-/// that each return a <see cref="Result{TError, TOutput}"/>. It maintains the railway pattern
+/// that each return a <see cref="Result{TOutput, TError}"/>. It maintains the railway pattern
 /// across the entire pipeline: once any step fails, subsequent steps are bypassed.
 /// </para>
 /// <para>
@@ -37,14 +37,14 @@ namespace Aero.Core.Railway;
 /// </para>
 /// <para>
 /// Note: All steps in the pipeline share the same input type <typeparamref name="TInput"/>
-/// and return the same <c>Result&lt;TError, TOutput&gt;</c> type. For more flexible pipelines,
+/// and return the same <c>Result&lt;TOutput, TError&gt;</c> type. For more flexible pipelines,
 /// consider using the extension methods directly which allow type transformations between steps.
 /// </para>
 /// </remarks>
 /// <example>
 /// <code>
 /// // Building a reusable processing pipeline
-/// var orderPipeline = new Pipeline&lt;OrderRequest, string, ProcessedOrder&gt;()
+/// var orderPipeline = new Pipeline&lt;OrderRequest, ProcessedOrder, AeroError&gt;()
 ///     .AddStep(req => ValidateOrder(req))
 ///     .AddStep(req => CheckInventory(req))
 ///     .AddStep(req => ProcessPayment(req))
@@ -60,9 +60,9 @@ namespace Aero.Core.Railway;
 /// // - Only the first error is returned
 /// </code>
 /// </example>
-public class Pipeline<TInput, TError, TOutput>
+public class Pipeline<TInput, TOutput, TError> where TError : AeroError
 {
-    private readonly List<Func<TInput, Task<Result<TError, TOutput>>>> _steps = new();
+    private readonly List<Func<TInput, Task<Result<TOutput, TError>>>> _steps = new();
 
     /// <summary>
     /// Adds an asynchronous step to the pipeline.
@@ -79,20 +79,20 @@ public class Pipeline<TInput, TError, TOutput>
     /// </para>
     /// <para>
     /// For dependent operations (where step N+1 needs the output of step N), use the
-    /// <see cref="ResultExtensions.Bind{TError, TValue, TOut}"/> extension methods directly
+    /// <see cref="ResultExtensions.Bind{TValue, TError, TOut}"/> extension methods directly
     /// instead of this Pipeline class.
     /// </para>
     /// </remarks>
     /// <example>
     /// <code>
-    /// var pipeline = new Pipeline&lt;UserRegistration, string, RegistrationResult&gt;()
+    /// var pipeline = new Pipeline&lt;UserRegistration, RegistrationResult, AeroError&gt;()
     ///     .AddStep(reg => ValidateEmailAsync(reg))
     ///     .AddStep(reg => CheckUsernameAsync(reg))
     ///     .AddStep(reg => CreateAccountAsync(reg))
     ///     .AddStep(reg => SendWelcomeEmailAsync(reg));
     /// </code>
     /// </example>
-    public Pipeline<TInput, TError, TOutput> AddStep(Func<TInput, Task<Result<TError, TOutput>>> step)
+    public Pipeline<TInput, TOutput, TError> AddStep(Func<TInput, Task<Result<TOutput, TError>>> step)
     {
         _steps.Add(step);
         return this;
@@ -103,8 +103,8 @@ public class Pipeline<TInput, TError, TOutput>
     /// </summary>
     /// <param name="input">The input to pass to each step in the pipeline.</param>
     /// <returns>
-    /// A task that resolves to the first <see cref="Result{TError, TOutput}.Failure"/> encountered,
-    /// or the final <see cref="Result{TError, TOutput}.Ok"/> if all steps succeed.
+    /// A task that resolves to the first <see cref="Result{TOutput, TError}.Failure"/> encountered,
+    /// or the final <see cref="Result{TOutput, TError}.Ok"/> if all steps succeed.
     /// </returns>
     /// <remarks>
     /// <para>
@@ -130,7 +130,7 @@ public class Pipeline<TInput, TError, TOutput>
     /// </remarks>
     /// <example>
     /// <code>
-    /// var pipeline = new Pipeline&lt;Document, ValidationError, ProcessedDocument&gt;()
+    /// var pipeline = new Pipeline&lt;Document, ProcessedDocument, AeroError&gt;()
     ///     .AddStep(doc => ValidateFormatAsync(doc))
     ///     .AddStep(doc => ScanForVirusesAsync(doc))
     ///     .AddStep(doc => ExtractMetadataAsync(doc))
@@ -140,19 +140,19 @@ public class Pipeline<TInput, TError, TOutput>
     /// 
     /// var message = result.Match(
     ///     processed => $"Document stored: {processed.Id}",
-    ///     error => $"Failed at step: {error.Step} - {error.Message}"
+    ///     error => $"Failed at step: {error.Code} - {error.Message}"
     /// );
     /// </code>
     /// </example>
-    public async Task<Result<TError, TOutput>> Execute(TInput input)
+    public async Task<Result<TOutput, TError>> Execute(TInput input)
     {
-        Result<TError, TOutput> current = new Result<TError, TOutput>.Ok(default!);
+        Result<TOutput, TError> current = new Result<TOutput, TError>.Ok(default!);
 
         foreach (var step in _steps)
         {
             current = await step(input);
-            if (current is Result<TError, TOutput>.Failure)
-                return current;
+            if (current is Result<TOutput, TError>.Failure || current is null)
+                return current!;
         }
 
         return current;

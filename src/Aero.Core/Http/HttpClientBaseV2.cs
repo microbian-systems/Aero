@@ -4,10 +4,11 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Aero.Core.Railway;
 using Microsoft.Extensions.Logging;
+using Aero.Core;
 
 namespace Aero.Core.Http;
 
-[Obsolete("This class is deprecated. Please use HttpClientBaseV3 instead.", true)]
+[Obsolete("This class is deprecated. Please use HttpClientBase instead.", true)]
 public abstract class HttpClientBaseV2(
     HttpClient httpClient,
     ILogger logger,
@@ -24,7 +25,7 @@ public abstract class HttpClientBaseV2(
         return await SendWithResilienceAsync(request);
     }
 
-    protected virtual async Task<Result<string, T>> GetResultAsync<T>(string url, CancellationToken ct = default)
+    protected virtual async Task<Result<T, AeroError>> GetResultAsync<T>(string url, CancellationToken ct = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         return await SendResultAsync<T>(request, ct);
@@ -36,7 +37,7 @@ public abstract class HttpClientBaseV2(
         return await SendWithResilienceAsync(request);
     }
 
-    protected virtual async Task<Result<string, TResponse>> PostResultAsync<TRequest, TResponse>(string url, TRequest data, CancellationToken ct = default) 
+    protected virtual async Task<Result<TResponse, AeroError>> PostResultAsync<TRequest, TResponse>(string url, TRequest data, CancellationToken ct = default) 
         where TRequest : class
     {
         var request = CreateRequest(url, HttpMethod.Post, data);
@@ -52,7 +53,7 @@ public abstract class HttpClientBaseV2(
         return await SendWithResilienceAsync(request);
     }
 
-    protected virtual async Task<Result<string, TResponse>> PutResultAsync<TRequest, TResponse>(string url, TRequest data, CancellationToken ct = default) 
+    protected virtual async Task<Result<TResponse, AeroError>> PutResultAsync<TRequest, TResponse>(string url, TRequest data, CancellationToken ct = default) 
         where TRequest : class
     {
         var request = CreateRequest(url, HttpMethod.Put, data);
@@ -65,7 +66,7 @@ public abstract class HttpClientBaseV2(
         return await SendWithResilienceAsync(request);
     }
 
-    protected virtual async Task<Result<string, bool>> DeleteResultAsync(string url, CancellationToken ct = default)
+    protected virtual async Task<Result<bool, AeroError>> DeleteResultAsync(string url, CancellationToken ct = default)
     {
         try
         {
@@ -74,18 +75,15 @@ public abstract class HttpClientBaseV2(
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = $"DELETE {url} failed with status {response.StatusCode}";
-                Logger.LogWarning(error);
-                return error;
+                var errorMsg = await response.Content.ReadAsStringAsync(ct);
+                return AeroError.HttpRequest(response.StatusCode, string.IsNullOrWhiteSpace(errorMsg) ? response.ReasonPhrase : errorMsg);
             }
 
             return true;
         }
         catch (Exception ex)
         {
-            var error = $"Exception during DELETE {url}";
-            Logger.LogError(ex, error);
-            return $"{error}: {ex.Message}";
+            return AeroError.HttpRequestError($"Exception during DELETE {url}: {ex.Message}");
         }
     }
 
@@ -108,7 +106,7 @@ public abstract class HttpClientBaseV2(
         return (result, response);
     }
 
-    protected virtual async Task<Result<string, T>> SendResultAsync<T>(HttpRequestMessage request, CancellationToken ct = default)
+    protected virtual async Task<Result<T, AeroError>> SendResultAsync<T>(HttpRequestMessage request, CancellationToken ct = default)
     {
         var url = request.RequestUri?.ToString() ?? "unknown";
         Logger.LogInformation("Sending {Method} request to {Url}...", request.Method, url);
@@ -118,19 +116,16 @@ public abstract class HttpClientBaseV2(
 
             if (!response.IsSuccessStatusCode)
             {
-                var error = $"{request.Method} {url} failed with status {response.StatusCode}";
-                Logger.LogWarning(error);
-                return error;
+                var errorMsg = await response.Content.ReadAsStringAsync(ct);
+                return AeroError.HttpRequest(response.StatusCode, string.IsNullOrWhiteSpace(errorMsg) ? response.ReasonPhrase : errorMsg);
             }
 
-            var result = await DeserializeAsync<T>(response);
+            var result = await response.Content.ReadFromJsonAsync<T>(GetDefaultSerializerOptions(), ct);
             return result!;
         }
         catch (Exception ex)
         {
-            var error = $"Exception during {request.Method} {url}";
-            Logger.LogError(ex, error);
-            return $"{error}: {ex.Message}";
+            return AeroError.HttpRequestError($"Exception during {request.Method} {url}: {ex.Message}");
         }
     }
 
@@ -257,6 +252,4 @@ public abstract class HttpClientBaseV2(
     {
         return await JsonSerializer.DeserializeAsync<T>(stream, opts);
     }
-
-
 }

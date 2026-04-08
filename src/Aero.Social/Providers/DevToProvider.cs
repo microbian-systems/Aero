@@ -62,7 +62,7 @@ public class DevToProvider(
             var request = new HttpRequestMessage(HttpMethod.Get, "https://dev.to/api/users/me");
             request.Headers.TryAddWithoutValidation("api-key", authBody.ApiKey);
 
-            var response = await SendAsync(request, cancellationToken);
+            var response = await SendRequestAsync(request, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {

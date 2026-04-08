@@ -237,7 +237,7 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
         int maxRetries = 3,
         CancellationToken cancellationToken = default)
     {
-        var response = await this.SendAsync(request);
+        var response = await this.SendRequestAsync(request);
 
         if (response.IsSuccessStatusCode)
         {

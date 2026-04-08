@@ -8,6 +8,7 @@ namespace Aero.Core.Railway;
 public abstract record Result<T, TError>
     where TError : AeroError
 {
+    private Result() { } // Prevent external inheritance for exhaustiveness
     public sealed record Ok(T Value) : Result<T, TError>;
     public sealed record Failure(TError Error) : Result<T, TError>;
 
@@ -17,19 +18,19 @@ public abstract record Result<T, TError>
     public static implicit operator Result<T, TError>(T value) => new Ok(value);
     public static implicit operator Result<T, TError>(TError error) => new Failure(error);
 
-    public static explicit operator T(Result<T, TError> result) =>
-        result switch
-        {
-            Ok(var value) => value,
-            Failure(var error) => throw new InvalidCastException($"Result was Failure: {error}"),
-        };
+    //public static explicit operator T(Result<T, TError> result) =>
+    //    result switch
+    //    {
+    //        Ok(var value) => value,
+    //        Failure(var error) => throw new InvalidCastException($"Result was Failure: {error}"),
+    //    };
 
-    public static explicit operator TError(Result<T, TError> result) =>
-        result switch
-        {
-            Failure(var error) => error,
-            Ok(var value) => throw new InvalidCastException($"Result was Ok: {value}"),
-        };
+    //public static explicit operator TError(Result<T, TError> result) =>
+    //    result switch
+    //    {
+    //        Failure(var error) => error,
+    //        Ok(var value) => throw new InvalidCastException($"Result was Ok: {value}"),
+    //    };
 }
 
 /// <summary>

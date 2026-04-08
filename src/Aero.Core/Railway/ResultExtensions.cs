@@ -1,7 +1,9 @@
 namespace Aero.Core.Railway;
 
+using Aero.Core;
+
 /// <summary>
-/// Provides extension methods for working with <see cref="Result{TError, TValue}"/> types,
+/// Provides extension methods for working with <see cref="Result{TValue, TError}"/> types,
 /// enabling fluent, railway-oriented programming patterns.
 /// </summary>
 /// <remarks>
@@ -18,15 +20,15 @@ namespace Aero.Core.Railway;
 /// <list type="bullet">
 /// <item>
 /// <description>
-/// <b>Map (Functor lift):</b> Lifts a function <c>T -&gt; U</c> to operate on <c>Result&lt;E, T&gt; -&gt; Result&lt;E, U&gt;</c>.
+/// <b>Map (Functor lift):</b> Lifts a function <c>T -&gt; U</c> to operate on <c>Result&lt;T, E&gt; -&gt; Result&lt;U, E&gt;</c>.
 /// If the Result is Ok, the function is applied; if Failure, the error propagates unchanged.
 /// This preserves the error type while transforming the success value.
 /// </description>
 /// </item>
 /// <item>
 /// <description>
-/// <b>Bind (Monadic lift):</b> Lifts a function <c>T -&gt; Result&lt;E, U&gt;</c> to operate on 
-/// <c>Result&lt;E, T&gt; -&gt; Result&lt;E, U&gt;</c>. This is used for chaining operations that themselves
+/// <b>Bind (Monadic lift):</b> Lifts a function <c>T -&gt; Result&lt;U, E&gt;</c> to operate on 
+/// <c>Result&lt;T, E&gt; -&gt; Result&lt;U, E&gt;</c>. This is used for chaining operations that themselves
 /// can fail, flattening nested Results automatically.
 /// </description>
 /// </item>
@@ -42,10 +44,10 @@ namespace Aero.Core.Railway;
 /// var result = ParseInt("42")
 ///     .Map(n => n * 2)                    // Transforms 42 to 84
 ///     .Bind(n => Divide(100, n))          // Chains another Result-returning operation
-///     .Filter(n => n > 1, "Too small")    // Converts to Failure if condition fails
+///     .Filter(n => n > 1, new ValidationError("Too small"))    // Converts to Failure if condition fails
 ///     .Match(
 ///         value => $"Result: {value}",
-///         error => $"Error: {error}"
+///         error => $"Error: {error.Message}"
 ///     );
 /// </code>
 /// </example>
@@ -54,12 +56,12 @@ public static partial class ResultExtensions
     /// <summary>
     /// Gets a value indicating whether the Result is Ok.
     /// </summary>
-    public static bool IsSuccess<TError, TValue>(this Result<TError, TValue> r) => r is Result<TError, TValue>.Ok;
+    public static bool IsSuccess<TValue, TError>(this Result<TValue, TError> r) where TError : AeroError => r is Result<TValue, TError>.Ok;
 
     /// <summary>
     /// Gets a value indicating whether the Result is Failure.
     /// </summary>
-    public static bool IsFailure<TError, TValue>(this Result<TError, TValue> r) => r is Result<TError, TValue>.Failure;
+    public static bool IsFailure<TValue, TError>(this Result<TValue, TError> r) where TError : AeroError => r is Result<TValue, TError>.Failure;
 
     /// <summary>
     /// Transforms the success value of a Result using the provided function, preserving any error.
@@ -85,21 +87,21 @@ public static partial class ResultExtensions
     /// </remarks>
     /// <example>
     /// <code>
-    /// Result&lt;string, int&gt; result = 42;
-    /// Result&lt;string, string&gt; mapped = result.Map(n => $"Number: {n}");
+    /// Result&lt;int, ValidationError&gt; result = 42;
+    /// Result&lt;string, ValidationError&gt; mapped = result.Map(n => $"Number: {n}");
     /// // mapped is Ok("Number: 42")
     /// 
-    /// Result&lt;string, int&gt; failure = "Error";
-    /// Result&lt;string, string&gt; mapped2 = failure.Map(n => $"Number: {n}");
+    /// Result&lt;int, ValidationError&gt; failure = new ValidationError("Error");
+    /// Result&lt;string, ValidationError&gt; mapped2 = failure.Map(n => $"Number: {n}");
     /// // mapped2 is still Failure("Error") - the function was not called
     /// </code>
     /// </example>
-    public static Result<TError, TOut> Map<TError, TValue, TOut>(
-        this Result<TError, TValue> r, Func<TValue, TOut> f) =>
+    public static Result<TOut, TError> Map<TValue, TError, TOut>(
+        this Result<TValue, TError> r, Func<TValue, TOut> f) where TError : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) => new Result<TError, TOut>.Ok(f(value)),
-            Result<TError, TValue>.Failure(var error) => new Result<TError, TOut>.Failure(error),
+            Result<TValue, TError>.Ok(var value) => new Result<TOut, TError>.Ok(f(value)),
+            Result<TValue, TError>.Failure(var error) => new Result<TOut, TError>.Failure(error),
         };
 
     /// <summary>
@@ -121,17 +123,17 @@ public static partial class ResultExtensions
     /// </remarks>
     /// <example>
     /// <code>
-    /// Result&lt;string, int&gt; result = 42;
-    /// Result&lt;string, User&gt; userResult = await result.MapAsync(async id => 
+    /// Result&lt;int, ValidationError&gt; result = 42;
+    /// Result&lt;User, ValidationError&gt; userResult = await result.MapAsync(async id => 
     ///     await dbContext.Users.FindAsync(id));
     /// </code>
     /// </example>
-    public static async Task<Result<TError, TOut>> MapAsync<TError, TValue, TOut>(
-        this Result<TError, TValue> r, Func<TValue, Task<TOut>> f) =>
+    public static async Task<Result<TOut, TError>> MapAsync<TValue, TError, TOut>(
+        this Result<TValue, TError> r, Func<TValue, Task<TOut>> f) where TError : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) => new Result<TError, TOut>.Ok(await f(value)),
-            Result<TError, TValue>.Failure(var error) => new Result<TError, TOut>.Failure(error),
+            Result<TValue, TError>.Ok(var value) => new Result<TOut, TError>.Ok(await f(value)),
+            Result<TValue, TError>.Failure(var error) => new Result<TOut, TError>.Failure(error),
         };
 
     /// <summary>
@@ -158,21 +160,23 @@ public static partial class ResultExtensions
     /// </remarks>
     /// <example>
     /// <code>
-    /// Result&lt;Exception, int&gt; result = new Exception("DB error");
-    /// Result&lt;string, int&gt; mapped = result.MapError(ex => $"Database error: {ex.Message}");
+    /// Result&lt;int, DatabaseError&gt; result = new DatabaseError("DB error");
+    /// Result&lt;int, ValidationError&gt; mapped = result.MapError(ex => new ValidationError($"Database error: {ex.Message}"));
     /// // mapped is Failure("Database error: DB error")
     /// 
-    /// Result&lt;Exception, int&gt; success = 42;
-    /// Result&lt;string, int&gt; mapped2 = success.MapError(ex => ex.Message);
+    /// Result&lt;int, DatabaseError&gt; success = 42;
+    /// Result&lt;int, ValidationError&gt; mapped2 = success.MapError(ex => new ValidationError(ex.Message));
     /// // mapped2 is still Ok(42)
     /// </code>
     /// </example>
-    public static Result<TErrorOut, TValue> MapError<TError, TValue, TErrorOut>(
-        this Result<TError, TValue> r, Func<TError, TErrorOut> f) =>
+    public static Result<TValue, TErrorOut> MapError<TValue, TError, TErrorOut>(
+        this Result<TValue, TError> r, Func<TError, TErrorOut> f)
+        where TError : AeroError
+        where TErrorOut : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) => new Result<TErrorOut, TValue>.Ok(value),
-            Result<TError, TValue>.Failure(var error) => new Result<TErrorOut, TValue>.Failure(f(error)),
+            Result<TValue, TError>.Ok(var value) => new Result<TValue, TErrorOut>.Ok(value),
+            Result<TValue, TError>.Failure(var error) => new Result<TValue, TErrorOut>.Failure(f(error)),
         };
 
     /// <summary>
@@ -204,11 +208,11 @@ public static partial class ResultExtensions
     /// </remarks>
     /// <example>
     /// <code>
-    /// Result&lt;string, int&gt; ParseInt(string s) => 
-    ///     int.TryParse(s, out var n) ? n : "Parse error";
+    /// Result&lt;int, ValidationError&gt; ParseInt(string s) => 
+    ///     int.TryParse(s, out var n) ? n : new ValidationError("Parse error");
     /// 
-    /// Result&lt;string, int&gt; Divide(int a, int b) =>
-    ///     b == 0 ? "Division by zero" : a / b;
+    /// Result&lt;int, ValidationError&gt; Divide(int a, int b) =>
+    ///     b == 0 ? new ValidationError("Division by zero") : a / b;
     /// 
     /// var result = ParseInt("100")
     ///     .Bind(n => Divide(n, 2))   // Chains the division operation
@@ -220,12 +224,12 @@ public static partial class ResultExtensions
     /// // failure is Failure("Division by zero")
     /// </code>
     /// </example>
-    public static Result<TError, TOut> Bind<TError, TValue, TOut>(
-        this Result<TError, TValue> r, Func<TValue, Result<TError, TOut>> f) =>
+    public static Result<TOut, TError> Bind<TValue, TError, TOut>(
+        this Result<TValue, TError> r, Func<TValue, Result<TOut, TError>> f) where TError : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) => f(value),
-            Result<TError, TValue>.Failure(var error) => new Result<TError, TOut>.Failure(error),
+            Result<TValue, TError>.Ok(var value) => f(value),
+            Result<TValue, TError>.Failure(var error) => new Result<TOut, TError>.Failure(error),
         };
 
     /// <summary>
@@ -247,22 +251,22 @@ public static partial class ResultExtensions
     /// </remarks>
     /// <example>
     /// <code>
-    /// Result&lt;string, int&gt; userId = 42;
-    /// Result&lt;string, Order[]&gt; orders = await userId.BindAsync(async id =>
+    /// Result&lt;int, ValidationError&gt; userId = 42;
+    /// Result&lt;Order[], ValidationError&gt; orders = await userId.BindAsync(async id =>
     /// {
     ///     var user = await userService.GetByIdAsync(id);
     ///     return user.IsActive 
     ///         ? await orderService.GetForUserAsync(id)
-    ///         : (Result&lt;string, Order[]&gt;)"User inactive";
+    ///         : (Result&lt;Order[], ValidationError&gt;)new ValidationError("User inactive");
     /// });
     /// </code>
     /// </example>
-    public static async Task<Result<TError, TOut>> BindAsync<TError, TValue, TOut>(
-        this Result<TError, TValue> r, Func<TValue, Task<Result<TError, TOut>>> f) =>
+    public static async Task<Result<TOut, TError>> BindAsync<TValue, TError, TOut>(
+        this Result<TValue, TError> r, Func<TValue, Task<Result<TOut, TError>>> f) where TError : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) => await f(value),
-            Result<TError, TValue>.Failure(var error) => new Result<TError, TOut>.Failure(error),
+            Result<TValue, TError>.Ok(var value) => await f(value),
+            Result<TValue, TError>.Failure(var error) => new Result<TOut, TError>.Failure(error),
         };
 
     /// <summary>
@@ -307,14 +311,14 @@ public static partial class ResultExtensions
     /// // code is 404
     /// </code>
     /// </example>
-    public static T Match<TError, TValue, T>(
-        this Result<TError, TValue> r,
+    public static T Match<TValue, TError, T>(
+        this Result<TValue, TError> r,
         Func<TValue, T> onOk,
-        Func<TError, T> onFailure) =>
+        Func<TError, T> onFailure) where TError : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) => onOk(value),
-            Result<TError, TValue>.Failure(var error) => onFailure(error),
+            Result<TValue, TError>.Ok(var value) => onOk(value),
+            Result<TValue, TError>.Failure(var error) => onFailure(error),
         };
 
     /// <summary>
@@ -355,15 +359,15 @@ public static partial class ResultExtensions
     /// // filtered3 is still Failure("Parse error")
     /// </code>
     /// </example>
-    public static Result<TError, TValue> Filter<TError, TValue>(
-        this Result<TError, TValue> r,
+    public static Result<TValue, TError> Filter<TValue, TError>(
+        this Result<TValue, TError> r,
         Func<TValue, bool> predicate,
-        TError errorIfFalse) =>
+        TError errorIfFalse) where TError : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) when predicate(value) => r,
-            Result<TError, TValue>.Ok => new Result<TError, TValue>.Failure(errorIfFalse),
-            Result<TError, TValue>.Failure => r,
+            Result<TValue, TError>.Ok(var value) when predicate(value) => r,
+            Result<TValue, TError>.Ok => new Result<TValue, TError>.Failure(errorIfFalse),
+            Result<TValue, TError>.Failure => r,
         };
 
     /// <summary>
@@ -397,12 +401,12 @@ public static partial class ResultExtensions
     /// // value2 is 0 (the fallback)
     /// </code>
     /// </example>
-    public static TValue GetOrElse<TError, TValue>(
-        this Result<TError, TValue> r, TValue fallback) =>
+    public static TValue GetOrElse<TValue, TError>(
+        this Result<TValue, TError> r, TValue fallback) where TError : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) => value,
-            Result<TError, TValue>.Failure => fallback,
+            Result<TValue, TError>.Ok(var value) => value,
+            Result<TValue, TError>.Failure => fallback,
         };
 
     /// <summary>
@@ -433,12 +437,12 @@ public static partial class ResultExtensions
     /// // value is 404
     /// </code>
     /// </example>
-    public static TValue GetOrElse<TError, TValue>(
-        this Result<TError, TValue> r, Func<TError, TValue> fallback) =>
+    public static TValue GetOrElse<TValue, TError>(
+        this Result<TValue, TError> r, Func<TError, TValue> fallback) where TError : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) => value,
-            Result<TError, TValue>.Failure(var error) => fallback(error),
+            Result<TValue, TError>.Ok(var value) => value,
+            Result<TValue, TError>.Failure(var error) => fallback(error),
         };
 
     /// <summary>
@@ -471,12 +475,12 @@ public static partial class ResultExtensions
     /// User user2 = failure.GetOrThrow();  // Throws InvalidOperationException: "Result was Failure: Not authenticated"
     /// </code>
     /// </example>
-    public static TValue GetOrThrow<TError, TValue>(
-        this Result<TError, TValue> r, string? message = null) =>
+    public static TValue GetOrThrow<TValue, TError>(
+        this Result<TValue, TError> r, string? message = null) where TError : AeroError =>
         r switch
         {
-            Result<TError, TValue>.Ok(var value) => value,
-            Result<TError, TValue>.Failure(var error) =>
+            Result<TValue, TError>.Ok(var value) => value,
+            Result<TValue, TError>.Failure(var error) =>
                 throw new InvalidOperationException(message ?? $"Result was Failure: {error}"),
         };
 
@@ -508,10 +512,10 @@ public static partial class ResultExtensions
     ///     .Map(order => CalculateTotal(order));
     /// </code>
     /// </example>
-    public static Result<TError, TValue> Tap<TError, TValue>(
-        this Result<TError, TValue> r, Action<TValue> action)
+    public static Result<TValue, TError> Tap<TValue, TError>(
+        this Result<TValue, TError> r, Action<TValue> action) where TError : AeroError
     {
-        if (r is Result<TError, TValue>.Ok(var value)) action(value);
+        if (r is Result<TValue, TError>.Ok(var value)) action(value);
         return r;
     }
 
@@ -542,10 +546,10 @@ public static partial class ResultExtensions
     ///     .Map(order => CalculateTotal(order));
     /// </code>
     /// </example>
-    public static Result<TError, TValue> TapError<TError, TValue>(
-        this Result<TError, TValue> r, Action<TError> action)
+    public static Result<TValue, TError> TapError<TValue, TError>(
+        this Result<TValue, TError> r, Action<TError> action) where TError : AeroError
     {
-        if (r is Result<TError, TValue>.Failure(var error)) action(error);
+        if (r is Result<TValue, TError>.Failure(var error)) action(error);
         return r;
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Net;
 
 namespace Aero.Core;
@@ -24,6 +24,11 @@ public abstract record AeroError : IAeroError
     /// </summary>
     /// <param name="msg">The error message that describes the error condition. Cannot be null.</param>
     public sealed record Error(string msg) : AeroError;
+    /// <summary>
+    /// Represents an error indicating that an operatio was cancelled (Task)
+    /// </summary>
+    /// <param name="msg">The message that describes the reason for the cancellation.</param>
+    public sealed record Cancelled(string msg) : AeroError;
     /// <summary>
     /// Represents an error indicating that an operation is not allowed.
     /// </summary>
@@ -89,6 +94,7 @@ public abstract record AeroError : IAeroError
     /// <param name="msg">The error message that describes the HTTP error.</param>
     /// <param name="code">The HTTP status code associated with the error.</param>
     public sealed record HttpRequest(HttpStatusCode code, string? msg = null) : AeroError;
+
     public static implicit operator AeroError(string msg) => new Error(msg);
     public static implicit operator AeroError((HttpStatusCode code, string msg) err) => new HttpRequest(err.code, err.msg);
     public static implicit operator AeroError(string[] errors) => new Validation(errors.ToImmutableList());
@@ -101,6 +107,7 @@ public abstract record AeroError : IAeroError
     public static NotAllowed NotAllowedError(string msg) => new NotAllowed(msg);
     public static NotFound NotFoundError(string msg) => new NotFound(msg);
     public static Validation ValidationError(IEnumerable<string> errors) => new Validation(errors.ToImmutableList());
+    public static Cancelled CancelledError(string msg) => new Cancelled(msg);
     public static Conflict ConflictError(string msg) => new Conflict(msg);
     public static Database DatabaseError(string msg) => new Database(msg);
     public static Unauthorized UnauthorizedError(string msg) => new Unauthorized(msg);
@@ -109,6 +116,6 @@ public abstract record AeroError : IAeroError
     public static InvalidRequest InvalidRequestError(string msg) => new InvalidRequest(msg);
     public static BadRequest BadRequestError(string msg) => new BadRequest(msg);
     public static Exists ExistsError(string msg) => new Exists(msg);
-    public static HttpRequest HttpRequestError(HttpStatusCode code, string? msg = null) => new HttpRequest(code, msg);
+    public static AeroError HttpRequestError(HttpStatusCode code, string msg) => new HttpRequest(code, msg);
 }
 
