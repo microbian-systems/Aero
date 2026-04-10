@@ -1,4 +1,6 @@
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -44,8 +46,10 @@ public class LinkedInProviderTests : ProviderTestBase
     {
         var provider = CreateProvider();
         
-        var result = await provider.GenerateAuthUrlAsync();
-        
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
+
         result.Url.ShouldContain("linkedin.com/oauth/v2/authorization");
         result.Url.ShouldContain("client_id=test_client_id");
         result.Url.ShouldContain("redirect_uri=");

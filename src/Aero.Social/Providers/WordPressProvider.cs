@@ -2,6 +2,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +27,7 @@ public class WordPressProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 100000;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -38,15 +40,15 @@ public class WordPressProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
         var bodyBytes = Convert.FromBase64String(parameters.Code);
         var bodyJson = Encoding.UTF8.GetString(bodyBytes);
-        var authBody = JsonSerializer.Deserialize<WordPressAuthBody>(bodyJson)
-            ?? throw new BadBodyException(Identifier, "Invalid auth body");
+        var authBody = JsonSerializer.Deserialize<WordPressAuthBody>(bodyJson);
+        if (authBody == null) return AeroError.CreateError("Invalid auth body");
 
         try
         {
@@ -55,11 +57,11 @@ public class WordPressProvider(
             var request = new HttpRequestMessage(HttpMethod.Get, $"{authBody.Domain}/wp-json/wp/v2/users/me");
             request.Headers.TryAddWithoutValidation("Authorization", $"Basic {auth}");
 
-            var response = await HttpClient.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new BadBodyException(Identifier, "Invalid credentials");
+                return AeroError.CreateError("Invalid credentials");
             }
 
             var userInfo = await DeserializeAsync<WordPressUserInfo>(response);
@@ -88,15 +90,15 @@ public class WordPressProvider(
         }
         catch (Exception)
         {
-            throw new BadBodyException(Identifier, "Invalid credentials");
+            return AeroError.CreateError("Invalid credentials");
         }
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = "",
             ExpiresIn = 0,
@@ -108,7 +110,7 @@ public class WordPressProvider(
         });
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -120,8 +122,8 @@ public class WordPressProvider(
 
         var bodyBytes = Convert.FromBase64String(accessToken);
         var bodyJson = Encoding.UTF8.GetString(bodyBytes);
-        var authBody = JsonSerializer.Deserialize<WordPressAuthBody>(bodyJson)
-            ?? throw new BadBodyException(Identifier, "Invalid auth body");
+        var authBody = JsonSerializer.Deserialize<WordPressAuthBody>(bodyJson);
+        if (authBody == null) return AeroError.CreateError("Invalid auth body");
 
         var auth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{authBody.Username}:{authBody.Password}"));
 
@@ -160,7 +162,7 @@ public class WordPressProvider(
         var request = new HttpRequestMessage(HttpMethod.Post, $"{authBody.Domain}/wp-json/wp/v2/{postType}") { Content = content };
         request.Headers.TryAddWithoutValidation("Authorization", $"Basic {auth}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var postResponse = await DeserializeAsync<WordPressPostResponse>(response);
@@ -181,15 +183,15 @@ public class WordPressProvider(
     {
         var bodyBytes = Convert.FromBase64String(accessToken);
         var bodyJson = Encoding.UTF8.GetString(bodyBytes);
-        var authBody = JsonSerializer.Deserialize<WordPressAuthBody>(bodyJson)
-            ?? throw new BadBodyException(Identifier, "Invalid auth body");
+        var authBody = JsonSerializer.Deserialize<WordPressAuthBody>(bodyJson);
+        if (authBody == null) return new List<WordPressPostType>();
 
         var auth = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{authBody.Username}:{authBody.Password}"));
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"{authBody.Domain}/wp-json/wp/v2/types");
         request.Headers.TryAddWithoutValidation("Authorization", $"Basic {auth}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var rawJson = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -226,7 +228,7 @@ public class WordPressProvider(
 
         if (imageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
         {
-            imageBytes = await HttpClient.GetByteArrayAsync(imageUrl, cancellationToken);
+            imageBytes = await client.GetByteArrayAsync(imageUrl, cancellationToken);
             fileName = imageUrl.Split('/').Last() ?? "image.jpg";
         }
         else
@@ -244,7 +246,7 @@ public class WordPressProvider(
         request.Headers.TryAddWithoutValidation("Authorization", $"Basic {auth}");
         request.Headers.TryAddWithoutValidation("Content-Disposition", $"attachment; filename=\"{fileName}\"");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var mediaResponse = await DeserializeAsync<WordPressMediaResponse>(response);

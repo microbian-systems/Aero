@@ -89,6 +89,11 @@ public abstract record AeroError : IAeroError
     /// <param name="msg">The error message that describes the existence conflict.</param>
     public sealed record Exists(string msg) : AeroError;
     /// <summary>
+    /// Represents an error that occurs when a null reference is encountered.
+    /// </summary>
+    /// <param name="msg">The error message that describes the null reference condition.</param>
+    public sealed record NullReferro(string msg) : AeroError;
+    /// <summary>
     /// Represents an HTTP-related error with an associated status code and message.
     /// </summary>
     /// <param name="msg">The error message that describes the HTTP error.</param>
@@ -108,20 +113,102 @@ public abstract record AeroError : IAeroError
     public static implicit operator AeroError(List<string> errors) => new Validation(errors.ToImmutableList());
     public static implicit operator AeroError(HashSet<string> errors) => new Validation(errors.ToImmutableList());
 
+    /// <summary>
+    /// Creates a new instance of the Error class with the specified error message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the error.</param>
+    /// <returns>An Error object initialized with the specified error message.</returns>
     public static Error CreateError(string msg) => new Error(msg);
+    /// <summary>
+    /// Creates a new instance of the NotAllowed error with the specified message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the reason the operation is not allowed.</param>
+    /// <returns>A NotAllowed error initialized with the provided message.</returns>
     public static NotAllowed NotAllowedError(string msg) => new NotAllowed(msg);
+    /// <summary>
+    /// Creates a new NotFound error result with the specified message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the reason for the not found result. Cannot be null.</param>
+    /// <returns>A NotFound result containing the specified error message.</returns>
     public static NotFound NotFoundError(string msg) => new NotFound(msg);
+    /// <summary>
+    /// Creates a failed validation result containing the specified validation error messages.
+    /// </summary>
+    /// <param name="errors">A collection of error messages that describe the validation failures. Cannot be null.</param>
+    /// <returns>A Validation instance representing a failed validation with the provided error messages.</returns>
     public static Validation ValidationError(IEnumerable<string> errors) => new Validation(errors.ToImmutableList());
+    /// <summary>
+    /// Creates a new Cancelled error instance with the specified message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the reason for the cancellation.</param>
+    /// <returns>A Cancelled object initialized with the provided error message.</returns>
     public static Cancelled CancelledError(string msg) => new Cancelled(msg);
+    /// <summary>
+    /// Creates a new conflict error result with the specified message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the conflict.</param>
+    /// <returns>A Conflict result containing the specified error message.</returns>
     public static Conflict ConflictError(string msg) => new Conflict(msg);
+    /// <summary>
+    /// Creates a new database instance representing an error state with the specified error message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the database error. Cannot be null.</param>
+    /// <returns>A database instance initialized to represent the specified error condition.</returns>
     public static Database DatabaseError(string msg) => new Database(msg);
+    /// <summary>
+    /// Creates a new Unauthorized error result with the specified message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the reason for the unauthorized error. Cannot be null.</param>
+    /// <returns>An Unauthorized result containing the specified error message.</returns>
     public static Unauthorized UnauthorizedError(string msg) => new Unauthorized(msg);
+    /// <summary>
+    /// Creates a new Forbidden error result with the specified message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the reason for the forbidden result. Cannot be null.</param>
+    /// <returns>A Forbidden result containing the specified error message.</returns>
     public static Forbidden ForbiddenError(string msg) => new Forbidden(msg);
+    /// <summary>
+    /// Creates a new Timeout instance representing a timeout error with the specified message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the timeout condition.</param>
+    /// <returns>A Timeout instance initialized with the specified error message.</returns>
     public static Timeout TimeoutError(string msg) => new Timeout(msg);
+    /// <summary>
+    /// Creates a new instance of the InvalidRequest error with the specified message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the reason for the invalid request.</param>
+    /// <returns>An InvalidRequest object initialized with the specified error message.</returns>
     public static InvalidRequest InvalidRequestError(string msg) => new InvalidRequest(msg);
+    /// <summary>
+    /// Creates a new BadRequest error result with the specified error message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the reason for the bad request. Cannot be null.</param>
+    /// <returns>A BadRequest result containing the specified error message.</returns>
     public static BadRequest BadRequestError(string msg) => new BadRequest(msg);
+    /// <summary>
+    /// Creates a new instance of the Exists error type with the specified error message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the existence error.</param>
+    /// <returns>An Exists object initialized with the provided error message.</returns>
     public static Exists ExistsError(string msg) => new Exists(msg);
+    /// <summary>
+    /// Creates a new instance of the NullReferro exception with a specified error message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the reason for the exception. Cannot be null.</param>
+    /// <returns>A new NullReferro instance initialized with the specified error message.</returns>
+    public static NullReferro NullReferenceError(string msg) => new NullReferro(msg);
+    /// <summary>
+    /// Creates a configuration instance that represents an error state with the specified message.
+    /// </summary>
+    /// <param name="msg">The error message that describes the configuration issue. Cannot be null.</param>
+    /// <returns>A configuration instance initialized to represent an error with the provided message.</returns>
     public static Configuration ConfigurationError(string msg) => new Configuration(msg);
+    /// <summary>
+    /// Creates a new error instance representing an HTTP request failure with the specified status code and message.
+    /// </summary>
+    /// <param name="code">The HTTP status code associated with the error.</param>
+    /// <param name="msg">The error message that describes the HTTP request failure.</param>
+    /// <returns>An instance of AeroError representing the HTTP request error with the provided status code and message.</returns>
     public static AeroError HttpRequestError(HttpStatusCode code, string msg) => new HttpRequest(code, msg);
 }
 

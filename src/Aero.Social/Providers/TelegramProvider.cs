@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -21,11 +23,11 @@ public class TelegramProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 4096;
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = string.Empty,
             ExpiresIn = 0,
@@ -37,12 +39,12 @@ public class TelegramProvider(
         });
     }
 
-    public override Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
         var state = MakeId(17);
-        return Task.FromResult(new GenerateAuthUrlResponse
+        return Task.FromResult<Result<GenerateAuthUrlResponse, AeroError>>(new GenerateAuthUrlResponse
         {
             Url = state,
             CodeVerifier = MakeId(10),
@@ -50,7 +52,7 @@ public class TelegramProvider(
         });
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -61,7 +63,7 @@ public class TelegramProvider(
 
         if (string.IsNullOrEmpty(chat?.Id))
         {
-            throw new InvalidOperationException("No chat found");
+            return AeroError.CreateError("No chat found");
         }
 
         var photo = string.Empty;
@@ -84,7 +86,7 @@ public class TelegramProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -115,7 +117,7 @@ public class TelegramProvider(
         return Array.Empty<PostResponse>();
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -272,7 +274,7 @@ public class TelegramProvider(
         var url = $"https://api.telegram.org/bot{botToken}/{endpoint}";
 
         var request = CreateRequest(url, HttpMethod.Post, payload);
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
         return response;
     }
@@ -346,7 +348,7 @@ public class TelegramProvider(
         return result;
     }
 
-    private string GetBotToken() => configuration["TELEGRAM_TOKEN"] ?? throw new InvalidOperationException("TELEGRAM_TOKEN not configured");
+    private string GetBotToken() => configuration["TELEGRAM_TOKEN"] ?? string.Empty;
 
     //#region DTOs
 

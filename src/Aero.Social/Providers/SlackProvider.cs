@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -27,11 +29,11 @@ public class SlackProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 400000;
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = string.Empty,
             ExpiresIn = 1000000,
@@ -43,7 +45,7 @@ public class SlackProvider(
         });
     }
 
-    public override Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -58,7 +60,7 @@ public class SlackProvider(
                   $"&scope={string.Join(",", Scopes)}" +
                   $"&state={state}";
 
-        return Task.FromResult(new GenerateAuthUrlResponse
+        return Task.FromResult<Result<GenerateAuthUrlResponse, AeroError>>(new GenerateAuthUrlResponse
         {
             Url = url,
             CodeVerifier = MakeId(10),
@@ -66,7 +68,7 @@ public class SlackProvider(
         });
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -89,12 +91,13 @@ public class SlackProvider(
             Content = content
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<SlackTokenResponse>(response);
         
-        CheckScopes(Scopes, string.Join(",", tokenResponse.Scope.Split(' ', ',')));
+        var scopeCheck = CheckScopes(Scopes, string.Join(",", tokenResponse.Scope.Split(' ', ',')));
+        if (scopeCheck.IsFailure) return AeroError.ForbiddenError("Insufficient scopes granted.");
 
         var userInfo = await GetUserInfoAsync(tokenResponse.AccessToken, tokenResponse.BotUserId, cancellationToken);
 
@@ -110,7 +113,7 @@ public class SlackProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -118,8 +121,8 @@ public class SlackProvider(
         CancellationToken cancellationToken = default)
     {
         var firstPost = posts.First();
-        var channel = firstPost.Settings?.GetValueOrDefault("channel")?.ToString()
-            ?? throw new ArgumentException("Channel is required");
+        var channel = firstPost.Settings?.GetValueOrDefault("channel")?.ToString();
+        if (string.IsNullOrEmpty(channel)) return AeroError.BadRequestError("Channel is required");
 
         await JoinChannelAsync(channel, accessToken, cancellationToken);
 
@@ -160,7 +163,7 @@ public class SlackProvider(
         var request = CreateRequest("https://slack.com/api/chat.postMessage", HttpMethod.Post, payload);
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var postResponse = await DeserializeAsync<SlackPostResponse>(response);
@@ -179,7 +182,7 @@ public class SlackProvider(
         };
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -189,8 +192,8 @@ public class SlackProvider(
         CancellationToken cancellationToken = default)
     {
         var commentPost = posts.First();
-        var channel = commentPost.Settings?.GetValueOrDefault("channel")?.ToString()
-            ?? throw new ArgumentException("Channel is required");
+        var channel = commentPost.Settings?.GetValueOrDefault("channel")?.ToString();
+        if (string.IsNullOrEmpty(channel)) return AeroError.BadRequestError("Channel is required");
         var threadTs = lastCommentId ?? postId;
 
         var blocks = new List<object>
@@ -231,7 +234,7 @@ public class SlackProvider(
         var request = CreateRequest("https://slack.com/api/chat.postMessage", HttpMethod.Post, payload);
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var postResponse = await DeserializeAsync<SlackPostResponse>(response);
@@ -256,7 +259,7 @@ public class SlackProvider(
             "https://slack.com/api/conversations.list?types=public_channel,private_channel");
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var channelsResponse = await DeserializeAsync<SlackChannelsResponse>(response);
@@ -269,7 +272,7 @@ public class SlackProvider(
         var request = CreateRequest("https://slack.com/api/conversations.join", HttpMethod.Post, payload);
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        await HttpClient.SendAsync(request, cancellationToken);
+        await client.SendAsync(request, cancellationToken);
     }
 
     private async Task<string?> GetPermalinkAsync(string accessToken, string channel, string messageTs, CancellationToken cancellationToken)
@@ -278,7 +281,7 @@ public class SlackProvider(
             $"https://slack.com/api/chat.getPermalink?channel={channel}&message_ts={messageTs}");
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var permalinkResponse = await DeserializeAsync<SlackPermalinkResponse>(response);
@@ -290,7 +293,7 @@ public class SlackProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, $"https://slack.com/api/users.info?user={botUserId}");
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var userResponse = await DeserializeAsync<SlackUserResponse>(response);

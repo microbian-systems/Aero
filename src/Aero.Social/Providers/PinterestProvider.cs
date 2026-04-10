@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -40,7 +42,7 @@ public class PinterestProvider(
         return null;
     }
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -64,7 +66,7 @@ public class PinterestProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -90,11 +92,12 @@ public class PinterestProvider(
         };
         request.Headers.TryAddWithoutValidation("Authorization", $"Basic {credentials}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<PinterestTokenResponse>(response);
-        CheckScopes(Scopes, tokenInfo.Scope ?? "");
+        var scopeCheck = CheckScopes(Scopes, tokenInfo.Scope ?? "");
+        if (scopeCheck.IsFailure) return ((Result<NoneType, AeroError>.Failure)scopeCheck).Error;
 
         var userInfo = await FetchUserInfoAsync(tokenInfo.AccessToken, cancellationToken);
 
@@ -110,7 +113,7 @@ public class PinterestProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -136,7 +139,7 @@ public class PinterestProvider(
         };
         request.Headers.TryAddWithoutValidation("Authorization", $"Basic {credentials}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<PinterestTokenResponse>(response);
@@ -154,7 +157,7 @@ public class PinterestProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -230,7 +233,7 @@ public class PinterestProvider(
 
         var pinUrl = "https://api.pinterest.com/v5/pins";
         var pinRequest = CreateJsonRequest(pinUrl, HttpMethod.Post, pinPayload, accessToken);
-        var pinResponse = await HttpClient.SendAsync(pinRequest, cancellationToken);
+        var pinResponse = await client.SendAsync(pinRequest, cancellationToken);
         pinResponse.EnsureSuccessStatusCode();
 
         var pinResult = await DeserializeAsync<PinterestPinResponse>(pinResponse);
@@ -247,7 +250,7 @@ public class PinterestProvider(
         };
     }
 
-    public override async Task<AnalyticsData[]?> AnalyticsAsync(
+    public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
         string id,
         string accessToken,
         int days,
@@ -262,7 +265,7 @@ public class PinterestProvider(
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
         request.Headers.TryAddWithoutValidation("Content-Type", "application/json");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var analyticsResponse = await DeserializeAsync<PinterestAnalyticsResponse>(response);
@@ -300,7 +303,7 @@ public class PinterestProvider(
         return result.ToArray();
     }
 
-    public override async Task<AnalyticsData[]?> PostAnalyticsAsync(
+    public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
         string integrationId,
         string accessToken,
         string postId,
@@ -316,7 +319,7 @@ public class PinterestProvider(
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
         request.Headers.TryAddWithoutValidation("Content-Type", "application/json");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var analyticsResponse = await DeserializeAsync<PinterestPinAnalyticsResponse>(response);
@@ -388,7 +391,7 @@ public class PinterestProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var boardsResponse = await DeserializeAsync<PinterestBoardsResponse>(response);
@@ -402,12 +405,12 @@ public class PinterestProvider(
         var payload = new { media_type = "video" };
         var request = CreateJsonRequest(mediaUrl, HttpMethod.Post, payload, accessToken);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var mediaResponse = await DeserializeAsync<PinterestMediaUploadResponse>(response);
 
-        var videoBytes = await HttpClient.GetByteArrayAsync(videoUrl, cancellationToken);
+        var videoBytes = await client.GetByteArrayAsync(videoUrl, cancellationToken);
 
         var uploadForm = new MultipartFormDataContent();
         if (mediaResponse.UploadParameters != null)
@@ -422,7 +425,7 @@ public class PinterestProvider(
         }
         uploadForm.Add(new ByteArrayContent(videoBytes), "file", "video.mp4");
 
-        var uploadResponse = await HttpClient.PostAsync(mediaResponse.UploadUrl, uploadForm, cancellationToken);
+        var uploadResponse = await client.PostAsync(mediaResponse.UploadUrl, uploadForm, cancellationToken);
         uploadResponse.EnsureSuccessStatusCode();
 
         var status = "";
@@ -434,7 +437,7 @@ public class PinterestProvider(
             var statusRequest = new HttpRequestMessage(HttpMethod.Get, statusUrl);
             statusRequest.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-            var statusResponse = await HttpClient.SendAsync(statusRequest, cancellationToken);
+            var statusResponse = await client.SendAsync(statusRequest, cancellationToken);
             statusResponse.EnsureSuccessStatusCode();
 
             var statusResult = await DeserializeAsync<PinterestMediaStatusResponse>(statusResponse);
@@ -451,7 +454,7 @@ public class PinterestProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await DeserializeAsync<PinterestUserInfo>(response);

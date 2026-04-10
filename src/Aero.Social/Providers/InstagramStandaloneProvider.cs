@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -29,111 +31,77 @@ public class InstagramStandaloneProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 2200;
 
-    /// <inheritdoc/>
     protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
-        if (responseBody.Contains("checkpoint_required"))
-            return new ErrorHandlingResult(ErrorHandlingType.Reconnect, "Instagram requires a checkpoint. Please log in manually.");
-
-        if (responseBody.Contains("login_required"))
-            return new ErrorHandlingResult(ErrorHandlingType.Reconnect, "Instagram login required. Please reconnect.");
-
-        return null;
+        return _instagramProvider.HandleErrors(responseBody);
     }
 
-    /// <inheritdoc/>
     public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        return await GetAppId()
-            .BindAsync(appId => GetFrontendUrl()
-                .Map(frontendUrl =>
-                {
-                    var state = MakeId(6);
-                    var redirectUri = $"{frontendUrl}/integrations/social/instagram-standalone";
+        var state = MakeId(6);
+        var appId = GetAppId();
+        var frontendUrl = GetFrontendUrl();
+        var redirectUri = $"{frontendUrl}/integrations/social/instagram-standalone";
 
-                    if (frontendUrl.StartsWith("http://"))
-                    {
-                        redirectUri = $"https://redirectmeto.com/{frontendUrl}/integrations/social/instagram-standalone";
-                    }
+        if (frontendUrl.StartsWith("http://"))
+        {
+            redirectUri = $"https://redirectmeto.com/{frontendUrl}/integrations/social/instagram-standalone";
+        }
 
-                    var url = "https://www.instagram.com/oauth/authorize" +
-                              "?enable_fb_login=0" +
-                              $"&client_id={appId}" +
-                              $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
-                              "&response_type=code" +
-                              $"&scope={Uri.EscapeDataString(string.Join(",", Scopes))}" +
-                              $"&state={state}";
+        var url = "https://www.instagram.com/oauth/authorize" +
+                  "?enable_fb_login=0" +
+                  $"&client_id={appId}" +
+                  $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
+                  "&response_type=code" +
+                  $"&scope={Uri.EscapeDataString(string.Join(",", Scopes))}" +
+                  $"&state={state}";
 
-                    return new GenerateAuthUrlResponse
-                    {
-                        Url = url,
-                        CodeVerifier = MakeId(10),
-                        State = state
-                    };
-                }));
+        return new GenerateAuthUrlResponse
+        {
+            Url = url,
+            CodeVerifier = MakeId(10),
+            State = state
+        };
     }
 
-    /// <inheritdoc/>
     public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        return await GetAppId()
-            .BindAsync(appId => GetAppSecret()
-                .BindAsync(async appSecret => await GetFrontendUrl()
-                    .BindAsync(async frontendUrl =>
-                    {
-                        var redirectUri = $"{frontendUrl}/integrations/social/instagram-standalone";
+        var appId = GetAppId();
+        var appSecret = GetAppSecret();
+        var frontendUrl = GetFrontendUrl();
+        var redirectUri = $"{frontendUrl}/integrations/social/instagram-standalone";
 
-                        if (frontendUrl.StartsWith("http://"))
-                        {
-                            redirectUri = $"https://redirectmeto.com/{frontendUrl}/integrations/social/instagram-standalone";
-                        }
+        if (frontendUrl.StartsWith("http://"))
+        {
+            redirectUri = $"https://redirectmeto.com/{frontendUrl}/integrations/social/instagram-standalone";
+        }
 
-                        var form = new MultipartFormDataContent
-                        {
-                            { new StringContent(appId), "client_id" },
-                            { new StringContent(appSecret), "client_secret" },
-                            { new StringContent("authorization_code"), "grant_type" },
-                            { new StringContent(redirectUri), "redirect_uri" },
-                            { new StringContent(parameters.Code), "code" }
-                        };
+        var form = new MultipartFormDataContent
+        {
+            { new StringContent(appId), "client_id" },
+            { new StringContent(appSecret), "client_secret" },
+            { new StringContent("authorization_code"), "grant_type" },
+            { new StringContent(redirectUri), "redirect_uri" },
+            { new StringContent(parameters.Code), "code" }
+        };
 
-                        var tokenResponse = await HttpClient.PostAsync("https://api.instagram.com/oauth/access_token", form, cancellationToken);
-                        if (!tokenResponse.IsSuccessStatusCode)
-                        {
-                            var body = await tokenResponse.Content.ReadAsStringAsync(cancellationToken);
-                            return AeroError.CreateError($"Failed to get access token: {body}");
-                        }
+        var tokenResponse = await client.PostAsync("https://api.instagram.com/oauth/access_token", form, cancellationToken);
+        tokenResponse.EnsureSuccessStatusCode();
 
-                        var shortToken = await DeserializeAsync<InstagramShortTokenResponse>(tokenResponse);
+        var shortToken = await DeserializeAsync<InstagramShortTokenResponse>(tokenResponse);
 
-                        var exchangeUrl = "https://graph.instagram.com/access_token" +
-                                          "?grant_type=ig_exchange_token" +
-                                          $"&client_id={appId}" +
-                                          $"&client_secret={appSecret}" +
-                                          $"&access_token={shortToken.AccessToken}";
+        var exchangeUrl = "https://graph.instagram.com/access_token" +
+                          "?grant_type=ig_exchange_token" +
+                          $"&client_id={appId}" +
+                          $"&client_secret={appSecret}" +
+                          $"&access_token={shortToken.AccessToken}";
 
-                        return await ReadOrFetchAsync<InstagramLongTokenResponse>(exchangeUrl, cancellationToken)
-                            .BindAsync(async longToken =>
-                            {
-                                var userUrl = $"https://graph.instagram.com/me?fields=id,username&access_token={longToken.AccessToken}";
-                                return await ReadOrFetchAsync<InstagramUserResponse>(userUrl, cancellationToken)
-                                    .Map(user => new AuthTokenDetails
-                                    {
-                                        AccessToken = longToken.AccessToken,
-                                        ExpiresIn = longToken.ExpiresIn,
-                                        AccountId = user.Id,
-                                        AccountName = user.Username
-                                    });
-                            });
-                    })));
-    }
-
-        var exchangeResponse = await HttpClient.GetAsync(exchangeUrl, cancellationToken);
+        var exchangeResponse = await client.GetAsync(exchangeUrl, cancellationToken);
         exchangeResponse.EnsureSuccessStatusCode();
 
         var longToken = await DeserializeAsync<InstagramLongTokenResponse>(exchangeResponse);
@@ -152,13 +120,13 @@ public class InstagramStandaloneProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
         var url = $"https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token={refreshToken}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<InstagramRefreshTokenResponse>(response);
@@ -176,7 +144,7 @@ public class InstagramStandaloneProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -186,7 +154,7 @@ public class InstagramStandaloneProvider(
         return await _instagramProvider.PostAsync(id, accessToken, posts, integration, cancellationToken);
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -198,7 +166,7 @@ public class InstagramStandaloneProvider(
         return await _instagramProvider.CommentAsync(id, postId, lastCommentId, accessToken, posts, integration, cancellationToken);
     }
 
-    public override async Task<AnalyticsData[]?> AnalyticsAsync(
+    public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
         string id,
         string accessToken,
         int days,
@@ -207,7 +175,7 @@ public class InstagramStandaloneProvider(
         return await _instagramProvider.AnalyticsAsync(id, accessToken, days, cancellationToken);
     }
 
-    public override async Task<AnalyticsData[]?> PostAnalyticsAsync(
+    public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
         string integrationId,
         string accessToken,
         string postId,
@@ -221,7 +189,7 @@ public class InstagramStandaloneProvider(
     {
         var url = $"https://graph.instagram.com/v21.0/me?fields=user_id,username,name,profile_picture_url&access_token={accessToken}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await DeserializeAsync<InstagramUserInfo>(response);

@@ -1,4 +1,6 @@
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -45,8 +47,10 @@ public class InstagramProviderTests : ProviderTestBase
     {
         var provider = CreateProvider();
         
-        var result = await provider.GenerateAuthUrlAsync();
-        
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
+
         result.Url.ShouldContain("facebook.com");
         result.Url.ShouldContain("client_id=test_app_id");
         result.Url.ShouldContain("redirect_uri=");

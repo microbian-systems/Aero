@@ -144,32 +144,52 @@ public class FacebookProvider(
 
         var redirectUri = $"{frontendUrl}/integrations/social/facebook";
 
-        return await ExchangeCodeForTokenAsync(appId, appSecret, redirectUri, parameters.Code, cancellationToken)
-            .BindAsync(shortLivedToken => ExchangeForLongLivedTokenAsync(appId, appSecret, shortLivedToken, cancellationToken))
-            .BindAsync(async longLivedToken =>
-            {
-                return await GetPermissionsAsync(longLivedToken, cancellationToken)
-                    .BindAsync(async permissions =>
-                    {
-                        var scopeCheck = CheckScopes(Scopes, permissions);
-                        if (scopeCheck is Result<NoneType, AeroError>.Failure failure)
-                        {
-                            return failure.Error;
-                        }
+        var shortLivedTokenResult = await ExchangeCodeForTokenAsync(appId, appSecret, redirectUri, parameters.Code, cancellationToken);
+        if (shortLivedTokenResult is Result<string, AeroError>.Failure shortLivedFailure)
+        {
+            return shortLivedFailure.Error;
+        }
 
-                        return await GetUserInfoAsync(longLivedToken, cancellationToken)
-                            .MapAsync(async userInfo => new AuthTokenDetails
-                            {
-                                Id = userInfo.Id,
-                                Name = userInfo.Name,
-                                AccessToken = longLivedToken,
-                                RefreshToken = longLivedToken,
-                                ExpiresIn = (int)TimeSpan.FromDays(59).TotalSeconds,
-                                Picture = userInfo.Picture?.Data?.Url ?? string.Empty,
-                                Username = string.Empty
-                            });
-                    });
-            });
+        var shortLivedToken = ((Result<string, AeroError>.Ok)shortLivedTokenResult).Value;
+
+        var longLivedTokenResult = await ExchangeForLongLivedTokenAsync(appId, appSecret, shortLivedToken, cancellationToken);
+        if (longLivedTokenResult is Result<string, AeroError>.Failure longLivedFailure)
+        {
+            return longLivedFailure.Error;
+        }
+
+        var longLivedToken = ((Result<string, AeroError>.Ok)longLivedTokenResult).Value;
+
+        var permissionsResult = await GetPermissionsAsync(longLivedToken, cancellationToken);
+        if (permissionsResult is Result<string[], AeroError>.Failure permissionsFailure)
+        {
+            return permissionsFailure.Error;
+        }
+
+        var permissions = ((Result<string[], AeroError>.Ok)permissionsResult).Value;
+        var scopeCheck = CheckScopes(Scopes, permissions);
+        if (scopeCheck is Result<NoneType, AeroError>.Failure scopeFailure)
+        {
+            return scopeFailure.Error;
+        }
+
+        var userInfoResult = await GetUserInfoAsync(longLivedToken, cancellationToken);
+        if (userInfoResult is Result<FacebookUserInfo, AeroError>.Failure userInfoFailure)
+        {
+            return userInfoFailure.Error;
+        }
+
+        var userInfo = ((Result<FacebookUserInfo, AeroError>.Ok)userInfoResult).Value;
+        return new AuthTokenDetails
+        {
+            Id = userInfo.Id,
+            Name = userInfo.Name,
+            AccessToken = longLivedToken,
+            RefreshToken = longLivedToken,
+            ExpiresIn = (int)TimeSpan.FromDays(59).TotalSeconds,
+            Picture = userInfo.Picture?.Data?.Url ?? string.Empty,
+            Username = string.Empty
+        };
     }
 
     /// <inheritdoc/>
@@ -180,7 +200,7 @@ public class FacebookProvider(
         CancellationToken cancellationToken = default)
     {
         return await FetchPageInformationAsync(accessToken, new { page = requiredId }, cancellationToken)
-            .MapAsync(async page => (AuthTokenDetails?)new AuthTokenDetails
+            .MapAsync<FetchPageInformationResult, AeroError, AuthTokenDetails?>(async page => (AuthTokenDetails?)new AuthTokenDetails
             {
                 Id = page!.Id,
                 Name = page.Name,
@@ -259,7 +279,7 @@ public class FacebookProvider(
         var request = CreateRequest(url, HttpMethod.Post, payload);
         
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response =>
+            .BindAsync<HttpResponseMessage, AeroError, PostResponse[]>(async response =>
             {
                 var postResponse = await DeserializeAsync<FacebookPostResponse>(response, cancellationToken);
                 return new[]
@@ -294,7 +314,7 @@ public class FacebookProvider(
         var request = CreateRequest(url, HttpMethod.Post, payload);
 
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response =>
+            .BindAsync<HttpResponseMessage, AeroError, PostResponse[]>(async response =>
             {
                 var videoResponse = await DeserializeAsync<FacebookVideoResponse>(response, cancellationToken);
                 return new[]
@@ -337,11 +357,11 @@ public class FacebookProvider(
         var request = CreateRequest(url, HttpMethod.Post, payload);
 
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response =>
+            .BindAsync<HttpResponseMessage, AeroError, PostResponse[]?>(async response =>
             {
                 var commentResponse = await DeserializeAsync<FacebookPostResponse>(response, cancellationToken);
-                return (PostResponse[]?)new[]
-                {
+                return (PostResponse[]?)
+                [
                     new PostResponse
                     {
                         Id = commentPost.Id,
@@ -349,7 +369,7 @@ public class FacebookProvider(
                         ReleaseUrl = commentResponse.PermalinkUrl ?? string.Empty,
                         Status = "success"
                     }
-                };
+                ];
             });
     }
 
@@ -365,7 +385,7 @@ public class FacebookProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
 
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response =>
+            .BindAsync<HttpResponseMessage, AeroError, List<FacebookPage>>(async response =>
             {
                 var pagesResponse = await DeserializeAsync<FacebookPagesResponse>(response, cancellationToken);
                 return pagesResponse.Data ?? new List<FacebookPage>();
@@ -383,7 +403,7 @@ public class FacebookProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
 
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response =>
+            .BindAsync<HttpResponseMessage, AeroError, FetchPageInformationResult?>(async response =>
             {
                 var page = await DeserializeAsync<FacebookPageDetail>(response, cancellationToken);
                 return (FetchPageInformationResult?)new FetchPageInformationResult
@@ -408,7 +428,7 @@ public class FacebookProvider(
 
         var request = CreateRequest(url, HttpMethod.Post, payload);
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response =>
+            .BindAsync<HttpResponseMessage, AeroError, string>(async response =>
             {
                 var photoResponse = await DeserializeAsync<FacebookPhotoResponse>(response, cancellationToken);
                 return photoResponse.Id;
@@ -425,7 +445,7 @@ public class FacebookProvider(
 
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response =>
+            .BindAsync<HttpResponseMessage, AeroError, string>(async response =>
             {
                 var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response, cancellationToken);
                 return tokenResponse.AccessToken;
@@ -442,7 +462,7 @@ public class FacebookProvider(
 
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response =>
+            .BindAsync<HttpResponseMessage, AeroError, string>(async response =>
             {
                 var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response, cancellationToken);
                 return tokenResponse.AccessToken;
@@ -455,7 +475,7 @@ public class FacebookProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
 
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response =>
+            .BindAsync<HttpResponseMessage, AeroError, string[]>(async response =>
             {
                 var permissionsResponse = await DeserializeAsync<FacebookPermissionsResponse>(response, cancellationToken);
                 return permissionsResponse.Data
@@ -471,7 +491,7 @@ public class FacebookProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
 
         return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response => await DeserializeAsync<FacebookUserInfo>(response, cancellationToken));
+            .BindAsync<HttpResponseMessage, AeroError, FacebookUserInfo>(async response => await DeserializeAsync<FacebookUserInfo>(response, cancellationToken));
     }
 
     private static T? GetSettingValue<T>(Dictionary<string, object> settings, string key)

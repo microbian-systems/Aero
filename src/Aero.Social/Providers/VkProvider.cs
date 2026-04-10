@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +32,7 @@ public class VkProvider(
     public override int MaxConcurrentJobs => 2;
     public override int MaxLength(object? additionalSettings = null) => 2048;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -61,7 +63,7 @@ public class VkProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -91,7 +93,7 @@ public class VkProvider(
             Content = formData
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<VkTokenResponse>(response);
@@ -110,7 +112,7 @@ public class VkProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -135,7 +137,7 @@ public class VkProvider(
             Content = formData
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<VkTokenResponse>(response);
@@ -153,7 +155,7 @@ public class VkProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -162,7 +164,9 @@ public class VkProvider(
     {
         var firstPost = posts.First();
 
-        var mediaList = await UploadMediaAsync(id, accessToken, firstPost, cancellationToken);
+        var mediaListResult = await UploadMediaAsync(id, accessToken, firstPost, cancellationToken);
+        if (mediaListResult is Result<List<VkMedia>, AeroError>.Failure failure) return failure.Error;
+        var mediaList = ((Result<List<VkMedia>, AeroError>.Ok)mediaListResult).Value;
 
         var formData = new MultipartFormDataContent
         {
@@ -181,7 +185,7 @@ public class VkProvider(
             Content = formData
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var postResponse = await DeserializeAsync<VkWallPostResponse>(response);
@@ -198,7 +202,7 @@ public class VkProvider(
         };
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -209,7 +213,9 @@ public class VkProvider(
     {
         var commentPost = posts.First();
 
-        var mediaList = await UploadMediaAsync(id, accessToken, commentPost, cancellationToken);
+        var mediaListResult = await UploadMediaAsync(id, accessToken, commentPost, cancellationToken);
+        if (mediaListResult is Result<List<VkMedia>, AeroError>.Failure failure) return failure.Error;
+        var mediaList = ((Result<List<VkMedia>, AeroError>.Ok)mediaListResult).Value;
 
         var formData = new MultipartFormDataContent
         {
@@ -229,7 +235,7 @@ public class VkProvider(
             Content = formData
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var commentResponse = await DeserializeAsync<VkCommentResponse>(response);
@@ -261,14 +267,14 @@ public class VkProvider(
             Content = formData
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var userInfoResponse = await DeserializeAsync<VkUserInfoResponse>(response);
         return userInfoResponse.User;
     }
 
-    private async Task<List<VkMedia>> UploadMediaAsync(string userId, string accessToken, PostDetails post, CancellationToken cancellationToken)
+    private async Task<Result<List<VkMedia>, AeroError>> UploadMediaAsync(string userId, string accessToken, PostDetails post, CancellationToken cancellationToken)
     {
         var mediaList = new List<VkMedia>();
 
@@ -284,10 +290,12 @@ public class VkProvider(
             if (isVideo)
             {
                 var uploadServerRequest = new HttpRequestMessage(HttpMethod.Get, $"https://api.vk.com/method/video.save?access_token={accessToken}&v=5.251");
-                var uploadServerResponse = await HttpClient.SendAsync(uploadServerRequest, cancellationToken);
+                var uploadServerResponse = await client.SendAsync(uploadServerRequest, cancellationToken);
                 var uploadServerData = await DeserializeAsync<VkVideoUploadServerResponse>(uploadServerResponse);
 
-                var mediaBytes = await ReadOrFetchAsync(media.Path, cancellationToken);
+                var mediaBytesResult = await ReadOrFetchAsync(media.Path, cancellationToken);
+                if (mediaBytesResult is Result<byte[], AeroError>.Failure failure) return failure.Error;
+                var mediaBytes = ((Result<byte[], AeroError>.Ok)mediaBytesResult).Value;
 
                 var fileName = media.Path.Split('/').Last();
                 var uploadContent = new MultipartFormDataContent
@@ -295,7 +303,7 @@ public class VkProvider(
                     { new ByteArrayContent(mediaBytes), "video_file", fileName }
                 };
 
-                await HttpClient.PostAsync(uploadServerData.Response.UploadUrl, uploadContent, cancellationToken);
+                await client.PostAsync(uploadServerData.Response.UploadUrl, uploadContent, cancellationToken);
 
                 mediaList.Add(new VkMedia
                 {
@@ -306,10 +314,12 @@ public class VkProvider(
             else
             {
                 var uploadServerRequest = new HttpRequestMessage(HttpMethod.Get, $"https://api.vk.com/method/photos.getWallUploadServer?owner_id={userId}&access_token={accessToken}&v=5.251");
-                var uploadServerResponse = await HttpClient.SendAsync(uploadServerRequest, cancellationToken);
+                var uploadServerResponse = await client.SendAsync(uploadServerRequest, cancellationToken);
                 var uploadServerData = await DeserializeAsync<VkPhotoUploadServerResponse>(uploadServerResponse);
 
-                var mediaBytes = await ReadOrFetchAsync(media.Path, cancellationToken);
+                var mediaBytesResult = await ReadOrFetchAsync(media.Path, cancellationToken);
+                if (mediaBytesResult is Result<byte[], AeroError>.Failure failure) return failure.Error;
+                var mediaBytes = ((Result<byte[], AeroError>.Ok)mediaBytesResult).Value;
 
                 var fileName = media.Path.Split('/').Last();
                 var uploadContent = new MultipartFormDataContent
@@ -317,7 +327,7 @@ public class VkProvider(
                     { new ByteArrayContent(mediaBytes), "photo", fileName }
                 };
 
-                var uploadResponse = await HttpClient.PostAsync(uploadServerData.Response.UploadUrl, uploadContent, cancellationToken);
+                var uploadResponse = await client.PostAsync(uploadServerData.Response.UploadUrl, uploadContent, cancellationToken);
                 var uploadResult = await DeserializeAsync<VkPhotoUploadResult>(uploadResponse);
 
                 var saveFormData = new MultipartFormDataContent
@@ -332,7 +342,7 @@ public class VkProvider(
                     Content = saveFormData
                 };
 
-                var saveResponse = await HttpClient.SendAsync(saveRequest, cancellationToken);
+                var saveResponse = await client.SendAsync(saveRequest, cancellationToken);
                 var saveResult = await DeserializeAsync<VkSavePhotoResponse>(saveResponse);
 
                 if (saveResult.Response != null && saveResult.Response.Count > 0)

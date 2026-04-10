@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +25,7 @@ public class LemmyProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 10000;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -36,15 +38,18 @@ public class LemmyProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
         var bodyBytes = Convert.FromBase64String(parameters.Code);
         var bodyJson = Encoding.UTF8.GetString(bodyBytes);
-        var authBody = JsonSerializer.Deserialize<LemmyAuthBody>(bodyJson)
-            ?? throw new BadBodyException(Identifier, "Invalid auth body");
+        var authBody = JsonSerializer.Deserialize<LemmyAuthBody>(bodyJson);
+        if (authBody == null)
+        {
+            return AeroError.BadRequestError("Invalid auth body");
+        }
 
         var loginUrl = $"{authBody.Service}/api/v3/user/login";
 
@@ -57,11 +62,11 @@ public class LemmyProvider(
         var json = JsonSerializer.Serialize(payload);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await HttpClient.PostAsync(loginUrl, content, cancellationToken);
+        var response = await client.PostAsync(loginUrl, content, cancellationToken);
 
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
-            throw new BadBodyException(Identifier, "Invalid credentials");
+            return AeroError.BadRequestError("Invalid credentials");
         }
 
         response.EnsureSuccessStatusCode();
@@ -75,7 +80,7 @@ public class LemmyProvider(
             var userRequest = new HttpRequestMessage(HttpMethod.Get, userUrl);
             userRequest.Headers.TryAddWithoutValidation("Authorization", $"Bearer {loginResult.Jwt}");
 
-            var userResponse = await HttpClient.SendAsync(userRequest, cancellationToken);
+            var userResponse = await client.SendAsync(userRequest, cancellationToken);
             userResponse.EnsureSuccessStatusCode();
 
             var userResult = await DeserializeAsync<LemmyUserResponse>(userResponse);
@@ -95,15 +100,15 @@ public class LemmyProvider(
         }
         catch (Exception)
         {
-            throw new BadBodyException(Identifier, "Invalid credentials");
+            return AeroError.BadRequestError("Invalid credentials");
         }
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = string.Empty,
             ExpiresIn = 0,
@@ -115,7 +120,7 @@ public class LemmyProvider(
         });
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -166,7 +171,7 @@ public class LemmyProvider(
             var request = new HttpRequestMessage(HttpMethod.Post, postUrl) { Content = content };
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {jwt}");
 
-            var response = await HttpClient.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             var postResult = await DeserializeAsync<LemmyPostResponse>(response);
@@ -192,7 +197,7 @@ public class LemmyProvider(
         };
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -226,7 +231,7 @@ public class LemmyProvider(
             var request = new HttpRequestMessage(HttpMethod.Post, commentUrl) { Content = content };
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {jwt}");
 
-            var response = await HttpClient.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             var commentResult = await DeserializeAsync<LemmyCommentResponse>(response);
@@ -265,7 +270,7 @@ public class LemmyProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {jwt}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var searchResult = await DeserializeAsync<LemmySearchResponse>(response);
@@ -291,7 +296,7 @@ public class LemmyProvider(
         var json = JsonSerializer.Serialize(payload);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        var response = await HttpClient.PostAsync(loginUrl, content, cancellationToken);
+        var response = await client.PostAsync(loginUrl, content, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var loginResult = await DeserializeAsync<LemmyLoginResponse>(response);
@@ -300,15 +305,11 @@ public class LemmyProvider(
 
     private static LemmyAuthBody GetAuthBody(Integration integration)
     {
-        if (string.IsNullOrEmpty(integration.CustomInstanceDetails))
-        {
-            throw new InvalidOperationException("No custom instance details for Lemmy");
-        }
+        if (string.IsNullOrEmpty(integration.CustomInstanceDetails)) return null;
 
         var jsonBytes = Convert.FromBase64String(integration.CustomInstanceDetails);
         var json = Encoding.UTF8.GetString(jsonBytes);
-        return JsonSerializer.Deserialize<LemmyAuthBody>(json)
-            ?? throw new InvalidOperationException("Invalid auth body");
+        return JsonSerializer.Deserialize<LemmyAuthBody>(json);
     }
 
     private static T? GetSettingValue<T>(Dictionary<string, object> settings, string key)

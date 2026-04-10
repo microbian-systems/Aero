@@ -431,10 +431,10 @@ public class DiscordProvider(
         return path.Split('/').Last();
     }
 
-    private Result<string, AeroError> GetClientId() => configuration["DISCORD_CLIENT_ID"] ?? AeroError.CreateError("DISCORD_CLIENT_ID not configured");
-    private Result<string, AeroError> GetClientSecret() => configuration["DISCORD_CLIENT_SECRET"] ?? AeroError.CreateError("DISCORD_CLIENT_SECRET not configured");
-    private Result<string, AeroError> GetBotToken() => configuration["DISCORD_BOT_TOKEN_ID"] ?? AeroError.CreateError("DISCORD_BOT_TOKEN_ID not configured");
-    private Result<string, AeroError> GetFrontendUrl() => configuration["FRONTEND_URL"] ?? AeroError.CreateError("FRONTEND_URL not configured");
+    private Result<string, AeroError> GetClientId() => configuration["DISCORD_CLIENT_ID"] is { } value ? value : AeroError.CreateError("DISCORD_CLIENT_ID not configured");
+    private Result<string, AeroError> GetClientSecret() => configuration["DISCORD_CLIENT_SECRET"] is { } value ? value : AeroError.CreateError("DISCORD_CLIENT_SECRET not configured");
+    private Result<string, AeroError> GetBotToken() => configuration["DISCORD_BOT_TOKEN_ID"] is { } value ? value : AeroError.CreateError("DISCORD_BOT_TOKEN_ID not configured");
+    private Result<string, AeroError> GetFrontendUrl() => configuration["FRONTEND_URL"] is { } value ? value : AeroError.CreateError("FRONTEND_URL not configured");
     
     private Result<string, AeroError> GetBasicCredentials()
     {

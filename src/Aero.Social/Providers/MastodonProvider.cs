@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +21,7 @@ public class MastodonProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 500;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -43,7 +45,7 @@ public class MastodonProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -62,7 +64,7 @@ public class MastodonProvider(
         form.Add(new StringContent(string.Join(" ", Scopes)), "scope");
 
         var tokenUrl = $"{instanceUrl}/oauth/token";
-        var tokenResponse = await HttpClient.PostAsync(tokenUrl, form, cancellationToken);
+        var tokenResponse = await client.PostAsync(tokenUrl, form, cancellationToken);
         tokenResponse.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<MastodonTokenResponse>(tokenResponse);
@@ -80,11 +82,11 @@ public class MastodonProvider(
         };
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = string.Empty,
             ExpiresIn = 0,
@@ -96,7 +98,7 @@ public class MastodonProvider(
         });
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -136,7 +138,7 @@ public class MastodonProvider(
         };
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var statusInfo = await DeserializeAsync<MastodonStatusResponse>(response);
@@ -153,7 +155,7 @@ public class MastodonProvider(
         };
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -197,7 +199,7 @@ public class MastodonProvider(
         };
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var statusInfo = await DeserializeAsync<MastodonStatusResponse>(response);
@@ -223,7 +225,7 @@ public class MastodonProvider(
         byte[] mediaBytes;
         if (mediaUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
         {
-            mediaBytes = await HttpClient.GetByteArrayAsync(mediaUrl, cancellationToken);
+            mediaBytes = await client.GetByteArrayAsync(mediaUrl, cancellationToken);
         }
         else
         {
@@ -240,7 +242,7 @@ public class MastodonProvider(
         };
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var mediaInfo = await DeserializeAsync<MastodonMediaResponse>(response);
@@ -257,7 +259,7 @@ public class MastodonProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await DeserializeAsync<MastodonUserInfo>(response);

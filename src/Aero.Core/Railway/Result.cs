@@ -8,7 +8,7 @@ namespace Aero.Core.Railway;
 public abstract record Result<T, TError>
     where TError : AeroError
 {
-    private Result() { } // Prevent external inheritance for exhaustiveness
+    //private Result() { } // Prevent external inheritance for exhaustiveness
     public sealed record Ok(T Value) : Result<T, TError>;
     public sealed record Failure(TError Error) : Result<T, TError>;
 
@@ -31,6 +31,16 @@ public abstract record Result<T, TError>
     //        Failure(var error) => error,
     //        Ok(var value) => throw new InvalidCastException($"Result was Ok: {value}"),
     //    };
+
+    public override string ToString()
+    {
+        return this switch
+        {
+            Ok(var value) => $"{value.ToString()}",
+            Failure(var error) => $"{error.ToString()}",
+            _ => base.ToString() ?? "unknown error in Result.ToString()"
+        };
+    }
 }
 
 /// <summary>
@@ -79,7 +89,8 @@ public abstract record Option<T>
 /// <summary>
 /// Represents the absence of a value, used primarily for type inference in generic contexts.
 /// </summary>
-public readonly struct NoneType {
+public readonly struct NoneType
+{
     //public static None Value => default;
 }
 

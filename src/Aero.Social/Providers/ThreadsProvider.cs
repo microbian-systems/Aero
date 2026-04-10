@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +37,7 @@ public class ThreadsProvider(
         return null;
     }
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -58,7 +60,7 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -84,13 +86,13 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
         var url = $"https://graph.threads.net/refresh_access_token?grant_type=th_refresh_token&access_token={refreshToken}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<ThreadsTokenResponse>(response);
@@ -108,7 +110,7 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -135,7 +137,7 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -165,7 +167,7 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<AnalyticsData[]?> AnalyticsAsync(
+    public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
         string id,
         string accessToken,
         int days,
@@ -179,7 +181,7 @@ public class ThreadsProvider(
                   $"&access_token={accessToken}" +
                   $"&period=day&since={since}&until={until}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var insightsResponse = await DeserializeAsync<ThreadsInsightsResponse>(response);
@@ -194,7 +196,7 @@ public class ThreadsProvider(
         }).ToArray() ?? Array.Empty<AnalyticsData>();
     }
 
-    public override async Task<AnalyticsData[]?> PostAnalyticsAsync(
+    public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
         string integrationId,
         string accessToken,
         string postId,
@@ -207,7 +209,7 @@ public class ThreadsProvider(
                   $"?metric=views,likes,replies,reposts,quotes" +
                   $"&access_token={accessToken}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var insightsResponse = await DeserializeAsync<ThreadsInsightsResponse>(response);
@@ -290,7 +292,7 @@ public class ThreadsProvider(
         }
 
         var url = $"https://graph.threads.net/v1.0/{userId}/threads";
-        var response = await HttpClient.PostAsync(url, form, cancellationToken);
+        var response = await client.PostAsync(url, form, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var contentResponse = await DeserializeAsync<ThreadsContentResponse>(response);
@@ -329,7 +331,7 @@ public class ThreadsProvider(
         var url = $"https://graph.threads.net/v1.0/{userId}/threads?{queryString}";
 
         var request = new HttpRequestMessage(HttpMethod.Post, url);
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var contentResponse = await DeserializeAsync<ThreadsContentResponse>(response);
@@ -374,7 +376,7 @@ public class ThreadsProvider(
         var url = $"https://graph.threads.net/v1.0/{userId}/threads?{queryString}";
 
         var request = new HttpRequestMessage(HttpMethod.Post, url);
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var contentResponse = await DeserializeAsync<ThreadsContentResponse>(response);
@@ -385,14 +387,14 @@ public class ThreadsProvider(
     {
         var url = $"https://graph.threads.net/v1.0/{mediaContainerId}?fields=status,error_message&access_token={accessToken}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var statusResponse = await DeserializeAsync<ThreadsMediaStatusResponse>(response);
 
         if (statusResponse.Status == "ERROR")
         {
-            throw new BadBodyException(Identifier, statusResponse.ErrorMessage ?? "Unknown error");
+            return;
         }
 
         if (statusResponse.Status == "FINISHED")
@@ -416,13 +418,13 @@ public class ThreadsProvider(
         var publishUrl = $"https://graph.threads.net/v1.0/{userId}/threads_publish?creation_id={creationId}&access_token={accessToken}";
 
         var publishRequest = new HttpRequestMessage(HttpMethod.Post, publishUrl);
-        var publishResponse = await HttpClient.SendAsync(publishRequest, cancellationToken);
+        var publishResponse = await client.SendAsync(publishRequest, cancellationToken);
         publishResponse.EnsureSuccessStatusCode();
 
         var publishResult = await DeserializeAsync<ThreadsContentResponse>(publishResponse);
 
         var permalinkUrl = $"https://graph.threads.net/v1.0/{publishResult.Id}?fields=id,permalink&access_token={accessToken}";
-        var permalinkResponse = await HttpClient.GetAsync(permalinkUrl, cancellationToken);
+        var permalinkResponse = await client.GetAsync(permalinkUrl, cancellationToken);
         permalinkResponse.EnsureSuccessStatusCode();
 
         var permalinkResult = await DeserializeAsync<ThreadsPermalinkResponse>(permalinkResponse);
@@ -439,7 +441,7 @@ public class ThreadsProvider(
                   $"&client_secret={appSecret}" +
                   $"&code={code}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<ThreadsTokenResponse>(response);
@@ -453,7 +455,7 @@ public class ThreadsProvider(
                   $"&client_secret={appSecret}" +
                   $"&access_token={shortLivedToken}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<ThreadsTokenResponse>(response);
@@ -464,7 +466,7 @@ public class ThreadsProvider(
     {
         var url = $"https://graph.threads.net/v1.0/me?fields=id,username,threads_profile_picture_url&access_token={accessToken}";
 
-        var response = await HttpClient.GetAsync(url, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await DeserializeAsync<ThreadsUserInfo>(response);
@@ -478,9 +480,9 @@ public class ThreadsProvider(
         return char.ToUpper(input[0]) + input.Substring(1);
     }
 
-    private string GetAppId() => configuration["THREADS_APP_ID"] ?? throw new InvalidOperationException("THREADS_APP_ID not configured");
-    private string GetAppSecret() => configuration["THREADS_APP_SECRET"] ?? throw new InvalidOperationException("THREADS_APP_SECRET not configured");
-    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetAppId() => configuration["THREADS_APP_ID"] ?? string.Empty;
+    private string GetAppSecret() => configuration["THREADS_APP_SECRET"] ?? string.Empty;
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? string.Empty;
 
     //#region DTOs
 

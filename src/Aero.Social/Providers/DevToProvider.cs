@@ -68,36 +68,52 @@ public class DevToProvider(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        return await Result.Try(() => Convert.FromBase64String(parameters.Code))
-            .MapError(ex => AeroError.ValidationError([$"Invalid auth code: {ex.Message}"]))
-            .Map(Encoding.UTF8.GetString)
-            .Bind(bodyJson => Result.Try(() => JsonSerializer.Deserialize<DevToAuthBody>(bodyJson))
-                .MapError(ex => AeroError.ValidationError([$"Failed to parse auth body: {ex.Message}"])))
-            .Bind(authBody =>
-            {
-                if (authBody == null || string.IsNullOrEmpty(authBody.ApiKey))
-                {
-                    return (Result<DevToAuthBody, AeroError>)AeroError.ValidationError(["Invalid auth body or missing ApiKey"]);
-                }
-                return authBody;
-            })
-            .BindAsync(async authBody =>
-            {
-                var request = new HttpRequestMessage(HttpMethod.Get, "https://dev.to/api/users/me");
-                request.Headers.TryAddWithoutValidation("api-key", authBody.ApiKey);
+        byte[] bodyBytes;
+        try
+        {
+            bodyBytes = Convert.FromBase64String(parameters.Code);
+        }
+        catch (Exception ex)
+        {
+            return AeroError.ValidationError([$"Invalid auth code: {ex.Message}"]);
+        }
 
-                return await SendRequestAsync<DevToUserInfo>(request, cancellationToken)
-                    .MapAsync<DevToUserInfo, AeroError, AuthTokenDetails>(userInfo => new AuthTokenDetails
-                    {
-                        RefreshToken = "",
-                        ExpiresIn = (int)TimeSpan.FromDays(100).TotalSeconds,
-                        AccessToken = authBody.ApiKey,
-                        Id = userInfo.Id.ToString(),
-                        Name = userInfo.Name ?? "",
-                        Picture = userInfo.ProfileImage ?? string.Empty,
-                        Username = userInfo.Username ?? ""
-                    });
-            });
+        DevToAuthBody? authBody;
+        try
+        {
+            var bodyJson = Encoding.UTF8.GetString(bodyBytes);
+            authBody = JsonSerializer.Deserialize<DevToAuthBody>(bodyJson);
+        }
+        catch (Exception ex)
+        {
+            return AeroError.ValidationError([$"Failed to parse auth body: {ex.Message}"]);
+        }
+
+        if (authBody == null || string.IsNullOrEmpty(authBody.ApiKey))
+        {
+            return AeroError.ValidationError(["Invalid auth body or missing ApiKey"]);
+        }
+
+        var request = new HttpRequestMessage(HttpMethod.Get, "https://dev.to/api/users/me");
+        request.Headers.TryAddWithoutValidation("api-key", authBody.ApiKey);
+
+        var userInfoResult = await SendRequestAsync<DevToUserInfo>(request, cancellationToken);
+        if (userInfoResult is Result<DevToUserInfo, AeroError>.Failure userInfoFailure)
+        {
+            return userInfoFailure.Error;
+        }
+
+        var userInfo = ((Result<DevToUserInfo, AeroError>.Ok)userInfoResult).Value;
+        return new AuthTokenDetails
+        {
+            RefreshToken = "",
+            ExpiresIn = (int)TimeSpan.FromDays(100).TotalSeconds,
+            AccessToken = authBody.ApiKey,
+            Id = userInfo.Id.ToString(),
+            Name = userInfo.Name ?? "",
+            Picture = userInfo.ProfileImage ?? string.Empty,
+            Username = userInfo.Username ?? ""
+        };
     }
 
     /// <inheritdoc/>

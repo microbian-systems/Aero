@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -24,12 +26,12 @@ public class MediumProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 100000;
 
-    public override Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
         var state = MakeId(6);
-        return Task.FromResult(new GenerateAuthUrlResponse
+        return Task.FromResult<Result<GenerateAuthUrlResponse, AeroError>>(new GenerateAuthUrlResponse
         {
             Url = string.Empty,
             CodeVerifier = MakeId(10),
@@ -37,11 +39,11 @@ public class MediumProvider(
         });
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = string.Empty,
             ExpiresIn = 0,
@@ -53,7 +55,7 @@ public class MediumProvider(
         });
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -64,7 +66,7 @@ public class MediumProvider(
 
         if (body?.ApiKey == null)
         {
-            throw new InvalidOperationException("Invalid credentials");
+            return AeroError.BadRequestError("Invalid credentials");
         }
 
         try
@@ -72,7 +74,7 @@ public class MediumProvider(
             var request = new HttpRequestMessage(HttpMethod.Get, "https://api.medium.com/v1/me");
             request.Headers.Add("Authorization", $"Bearer {body.ApiKey}");
 
-            var response = await HttpClient.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             var userResponse = await DeserializeAsync<MediumUserResponse>(response);
@@ -90,11 +92,11 @@ public class MediumProvider(
         }
         catch
         {
-            throw new InvalidOperationException("Invalid credentials");
+            return AeroError.BadRequestError("Invalid credentials");
         }
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -135,7 +137,7 @@ public class MediumProvider(
         var request = CreateRequest(url, HttpMethod.Post, payload);
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var postResponse = await DeserializeAsync<MediumPostResponse>(response);
@@ -157,7 +159,7 @@ public class MediumProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.medium.com/v1/users/{userId}/publications");
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var publicationsResponse = await DeserializeAsync<MediumPublicationsResponse>(response);

@@ -5,6 +5,7 @@ using Aero.Core.Railway;
 using Aero.Social.Models;
 using Aero.Social.Plugs;
 using Microsoft.Extensions.Logging;
+using Aero.Social.Abstractions;
 
 namespace Aero.Social.Abstractions;
 
@@ -54,7 +55,7 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
     /// <param name="log">The logger for this provider.</param>
     protected SocialProviderBase(
         HttpClient httpClient,
-        ILogger log)
+        ILogger<SocialProviderBase> log)
         : base(httpClient, log)
     {
     }
@@ -80,7 +81,7 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
         Integration integration,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult<Result<PostResponse[]?, AeroError>>(null!);
+        return Task.FromResult<Result<PostResponse[]?, AeroError>>(Array.Empty<PostResponse>());
     }
 
     /// <inheritdoc/>
@@ -180,12 +181,12 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
         /// The access token needs to be refreshed.
         /// </summary>
         RefreshToken,
-        
+
         /// <summary>
         /// The request body was invalid or malformed.
         /// </summary>
         BadBody,
-        
+
         /// <summary>
         /// The request should be retried after a delay.
         /// </summary>
@@ -247,7 +248,7 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
 
         var error = (Result<HttpResponseMessage, AeroError>.Failure)result;
         var response = error.Error as AeroError.HttpRequest;
-        
+
         // If it's not an HTTP request error or we've run out of retries, return the error
         if (response == null || maxRetries <= 0)
         {
@@ -446,17 +447,17 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
         /// Gets or sets the method info for the plug.
         /// </summary>
         public MethodInfo Method { get; set; } = null!;
-        
+
         /// <summary>
         /// Gets or sets the plug attribute (for regular plugs).
         /// </summary>
         public PlugAttribute? Attribute { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the post plug attribute (for post-processing plugs).
         /// </summary>
         public PostPlugAttribute? PostPlugAttribute { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether this is a post-processing plug.
         /// </summary>

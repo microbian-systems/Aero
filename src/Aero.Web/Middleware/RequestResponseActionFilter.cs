@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using Aero.Core.Extensions;
 using Aero.Common.Web.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
 

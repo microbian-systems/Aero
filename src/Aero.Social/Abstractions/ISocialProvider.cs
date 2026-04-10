@@ -236,6 +236,11 @@ public enum EditorType
     /// Markdown editor supporting Markdown syntax.
     /// </summary>
     Markdown,
+
+    /// <summary>
+    /// Discord-style rich formatting editor.
+    /// </summary>
+    Discord,
     
     /// <summary>
     /// HTML editor supporting HTML content.

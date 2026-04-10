@@ -52,7 +52,7 @@ public static class AppSettingsExtensions
         else
         {
             log.LogInformation($"AppSettings were successfully loaded");
-            log.LogInformation("{o}", settings.ToJson());
+            log.LogInformation("{o}", Aero.Core.Extensions.ObjectExtensions.ToJson(settings));
         }
 
         services.AddSingleton(settings);

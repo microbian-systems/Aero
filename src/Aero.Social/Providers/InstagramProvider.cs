@@ -9,32 +9,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
-/// <summary>
-/// Provides integration with Instagram (via Facebook Business) for posting and analytics.
-/// </summary>
 public class InstagramProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<InstagramProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    private const string GraphApiBaseUrl = "https://graph.facebook.com/v20.0";
-
-    /// <inheritdoc/>
     public override string Identifier => "instagram";
-
-    /// <inheritdoc/>
     public override string Name => "Instagram (Facebook Business)";
-
-    /// <inheritdoc/>
     public override bool IsBetweenSteps => true;
-
-    /// <inheritdoc/>
     public override string? Tooltip => "Instagram must be business and connected to a Facebook page";
-
-    /// <inheritdoc/>
-    public override string[] Scopes =>
-    [
+    public override string[] Scopes => new[]
+    {
         "instagram_basic",
         "pages_show_list",
         "pages_read_engagement",
@@ -42,16 +28,12 @@ public class InstagramProvider(
         "instagram_content_publish",
         "instagram_manage_comments",
         "instagram_manage_insights"
-    ];
-
-    /// <inheritdoc/>
+    };
     public override int MaxConcurrentJobs => 200;
 
-    /// <inheritdoc/>
     public override int MaxLength(object? additionalSettings = null) => 2200;
 
-    /// <inheritdoc/>
-    protected override ErrorHandlingResult? HandleErrors(string responseBody)
+    public new ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (responseBody.Contains("An unknown error occurred"))
             return new ErrorHandlingResult(ErrorHandlingType.Retry, "An unknown error occurred, please try again later");
@@ -92,70 +74,59 @@ public class InstagramProvider(
         return null;
     }
 
-    /// <inheritdoc/>
-    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        return GetAppId().Bind(appId =>
-            GetFrontendUrl().Map(frontendUrl =>
-            {
-                var state = MakeId(6);
-                var url = $"https://www.facebook.com/v20.0/dialog/oauth" +
-                          $"?client_id={appId}" +
-                          $"&redirect_uri={Uri.EscapeDataString($"{frontendUrl}/integrations/social/instagram")}" +
-                          $"&state={state}" +
-                          $"&scope={Uri.EscapeDataString(string.Join(",", Scopes))}";
+        var state = MakeId(6);
+        var appId = GetAppId();
+        var frontendUrl = GetFrontendUrl();
 
-                return new GenerateAuthUrlResponse
-                {
-                    Url = url,
-                    CodeVerifier = MakeId(10),
-                    State = state
-                };
-            })).AsTask();
+        var url = $"https://www.facebook.com/v20.0/dialog/oauth" +
+                  $"?client_id={appId}" +
+                  $"&redirect_uri={Uri.EscapeDataString($"{frontendUrl}/integrations/social/instagram")}" +
+                  $"&state={state}" +
+                  $"&scope={Uri.EscapeDataString(string.Join(",", Scopes))}";
+
+        return new GenerateAuthUrlResponse
+        {
+            Url = url,
+            CodeVerifier = MakeId(10),
+            State = state
+        };
     }
 
-    /// <inheritdoc/>
     public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
-        return await GetAuthenticationConfig().BindAsync(config =>
+        var appId = GetAppId();
+        var appSecret = GetAppSecret();
+        var frontendUrl = GetFrontendUrl();
+        var redirectUri = $"{frontendUrl}/integrations/social/instagram";
+
+        var shortLivedToken = await ExchangeCodeForTokenAsync(appId, appSecret, redirectUri, parameters.Code, cancellationToken);
+        var longLivedToken = await ExchangeForLongLivedTokenAsync(appId, appSecret, shortLivedToken, cancellationToken);
+
+        var permissions = await GetPermissionsAsync(longLivedToken, cancellationToken);
+        var scopeCheck = CheckScopes(Scopes, permissions);
+        if (scopeCheck.IsFailure) return ((Result<NoneType, AeroError>.Failure)scopeCheck).Error;
+
+        var userInfo = await GetUserInfoAsync(longLivedToken, cancellationToken);
+
+        return new AuthTokenDetails
         {
-            var redirectUri = $"{config.FrontendUrl}/integrations/social/instagram";
-
-            return ExchangeCodeForTokenAsync(config.AppId, config.AppSecret, redirectUri, parameters.Code, cancellationToken)
-                .BindAsync(shortToken => ExchangeForLongLivedTokenAsync(config.AppId, config.AppSecret, shortToken, cancellationToken))
-                .BindAsync(async longLivedToken =>
-                {
-                    return await GetPermissionsAsync(longLivedToken, cancellationToken)
-                        .BindAsync(async permissions =>
-                        {
-                            var scopeCheck = CheckScopes(Scopes, permissions);
-                            if (scopeCheck is Result<NoneType, AeroError>.Failure failure)
-                            {
-                                return failure.Error;
-                            }
-
-                            return await GetUserInfoAsync(longLivedToken, cancellationToken)
-                                .MapAsync(userInfo => new AuthTokenDetails
-                                {
-                                    Id = userInfo.Id,
-                                    Name = userInfo.Name,
-                                    AccessToken = longLivedToken,
-                                    RefreshToken = longLivedToken,
-                                    ExpiresIn = (int)TimeSpan.FromDays(59).TotalSeconds,
-                                    Picture = userInfo.Picture?.Data?.Url ?? string.Empty,
-                                    Username = string.Empty
-                                });
-                        });
-                });
-        });
+            Id = userInfo.Id,
+            Name = userInfo.Name,
+            AccessToken = longLivedToken,
+            RefreshToken = longLivedToken,
+            ExpiresIn = (int)TimeSpan.FromDays(59).TotalSeconds,
+            Picture = userInfo.Picture?.Data?.Url ?? string.Empty,
+            Username = string.Empty
+        };
     }
 
-    /// <inheritdoc/>
     public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
@@ -172,7 +143,6 @@ public class InstagramProvider(
         });
     }
 
-    /// <inheritdoc/>
     public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
@@ -210,18 +180,15 @@ public class InstagramProvider(
                     : $"image_url={media.Path}";
             }
 
-            var url = $"{GraphApiBaseUrl}/{id}/media?{mediaType}{carouselParam}{caption}&access_token={accessToken}";
+            var url = $"https://graph.facebook.com/v20.0/{id}/media?{mediaType}{carouselParam}{caption}&access_token={accessToken}";
 
-            var result = await PostAsync(url, (object)null!, cancellationToken);
-            if (result is Result<HttpResponseMessage, AeroError>.Failure failure) return failure.Error;
+            var response = await client.PostAsync(url, null, cancellationToken);
+            response.EnsureSuccessStatusCode();
 
-            var response = ((Result<HttpResponseMessage, AeroError>.Ok)result).Value;
-            var mediaResponse = await DeserializeAsync<InstagramMediaResponse>(response, cancellationToken);
+            var mediaResponse = await DeserializeAsync<InstagramMediaResponse>(response);
             var photoId = mediaResponse.Id;
 
-            var statusResult = await WaitForMediaProcessingAsync(accessToken, photoId, cancellationToken);
-            if (statusResult is Result<string, AeroError>.Failure statusFailure) return statusFailure.Error;
-
+            var status = await WaitForMediaProcessingAsync(id, photoId, accessToken, cancellationToken);
             mediaIds.Add(photoId);
         }
 
@@ -233,43 +200,37 @@ public class InstagramProvider(
         return await PublishCarouselAsync(id, accessToken, firstPost, mediaIds, cancellationToken);
     }
 
-    public async Task<Result<string, AeroError>> WaitForMediaProcessingAsync(string accessToken, string id, CancellationToken cancellationToken)
+    private async Task<string> WaitForMediaProcessingAsync(string igId, string mediaId, string accessToken, CancellationToken cancellationToken)
     {
-        var url = $"https://graph.facebook.com/v21.0/{id}?fields=status,status_code&access_token={accessToken}";
-        for (int i = 0; i < 30; i++)
+        var status = "IN_PROGRESS";
+
+        while (status == "IN_PROGRESS")
         {
-            var result = await SendRequestAsync<InstagramMediaStatus>(new HttpRequestMessage(HttpMethod.Get, url), cancellationToken);
-            if (result.IsFailure) return result.Map(_ => string.Empty);
+            await Task.Delay(5000, cancellationToken);
 
-            var media = result.GetValueOrThrow();
-
-            if (media.StatusCode == "FINISHED")
-                return id;
-
-            if (media.StatusCode == "ERROR")
-                return AeroError.HttpRequestError(System.Net.HttpStatusCode.BadRequest, $"Media processing failed: {media.Status}");
-
-            await Task.Delay(2000, cancellationToken);
+            var url = $"https://graph.facebook.com/v20.0/{mediaId}?access_token={accessToken}&fields=status_code";
+            var response = await client.GetAsync(url, cancellationToken);
+            var statusResponse = await DeserializeAsync<InstagramStatusResponse>(response);
+            status = statusResponse.StatusCode ?? "ERROR";
         }
 
-        return AeroError.HttpRequestError(System.Net.HttpStatusCode.RequestTimeout, "Media processing timed out");
+        return status;
     }
 
-    private async Task<Result<PostResponse[], AeroError>> PublishSingleMediaAsync(
+    private async Task<PostResponse[]> PublishSingleMediaAsync(
         string igId,
         string accessToken,
         PostDetails post,
         string mediaId,
         CancellationToken cancellationToken)
     {
-        var url = $"{GraphApiBaseUrl}/{igId}/media_publish?creation_id={mediaId}&access_token={accessToken}&field=id";
+        var url = $"https://graph.facebook.com/v20.0/{igId}/media_publish?creation_id={mediaId}&access_token={accessToken}&field=id";
 
-        var result = await PostAsync(url, (object)null!, cancellationToken);
-        if (result is Result<HttpResponseMessage, AeroError>.Failure failure) return failure.Error;
+        var response = await client.PostAsync(url, null, cancellationToken);
+        response.EnsureSuccessStatusCode();
 
-        var response = ((Result<HttpResponseMessage, AeroError>.Ok)result).Value;
-        var publishResponse = await DeserializeAsync<InstagramPublishResponse>(response, cancellationToken);
-        var permalinkResult = await GetMediaPermalinkAsync(igId, publishResponse.Id, accessToken, cancellationToken);
+        var publishResponse = await DeserializeAsync<InstagramPublishResponse>(response);
+        var permalink = await GetMediaPermalinkAsync(igId, publishResponse.Id, accessToken, cancellationToken);
 
         return new[]
         {
@@ -277,13 +238,13 @@ public class InstagramProvider(
             {
                 Id = post.Id,
                 PostId = publishResponse.Id,
-                ReleaseUrl = permalinkResult.IsSuccess ? permalinkResult.Value : $"https://www.instagram.com/p/{publishResponse.Id}",
+                ReleaseUrl = permalink,
                 Status = "success"
             }
         };
     }
 
-    private async Task<Result<PostResponse[], AeroError>> PublishCarouselAsync(
+    private async Task<PostResponse[]> PublishCarouselAsync(
         string igId,
         string accessToken,
         PostDetails post,
@@ -293,50 +254,42 @@ public class InstagramProvider(
         var children = Uri.EscapeDataString(string.Join(",", mediaIds));
         var caption = Uri.EscapeDataString(post.Message);
 
-        var url = $"{GraphApiBaseUrl}/{igId}/media?caption={caption}&media_type=CAROUSEL&children={children}&access_token={accessToken}";
+        var url = $"https://graph.facebook.com/v20.0/{igId}/media?caption={caption}&media_type=CAROUSEL&children={children}&access_token={accessToken}";
 
-        var result = await PostAsync(url, (object)null!, cancellationToken);
-        if (result is Result<HttpResponseMessage, AeroError>.Failure failure) return failure.Error;
+        var response = await client.PostAsync(url, null, cancellationToken);
+        response.EnsureSuccessStatusCode();
 
-        var response = ((Result<HttpResponseMessage, AeroError>.Ok)result).Value;
-        var containerResponse = await DeserializeAsync<InstagramMediaResponse>(response, cancellationToken);
+        var containerResponse = await DeserializeAsync<InstagramMediaResponse>(response);
 
-        var statusResult = await WaitForMediaProcessingAsync(accessToken, containerResponse.Id, cancellationToken);
-        if (statusResult is Result<string, AeroError>.Failure statusFailure) return statusFailure.Error;
+        await WaitForMediaProcessingAsync(igId, containerResponse.Id, accessToken, cancellationToken);
 
-        var publishUrl = $"{GraphApiBaseUrl}/{igId}/media_publish?creation_id={containerResponse.Id}&access_token={accessToken}&field=id";
-        var publishResult = await PostAsync(publishUrl, (object)null!, cancellationToken);
-        if (publishResult is Result<HttpResponseMessage, AeroError>.Failure publishFailure) return publishFailure.Error;
+        var publishUrl = $"https://graph.facebook.com/v20.0/{igId}/media_publish?creation_id={containerResponse.Id}&access_token={accessToken}&field=id";
+        var publishResponse = await client.PostAsync(publishUrl, null, cancellationToken);
+        publishResponse.EnsureSuccessStatusCode();
 
-        var publishResponse = ((Result<HttpResponseMessage, AeroError>.Ok)publishResult).Value;
-        var publishData = await DeserializeAsync<InstagramPublishResponse>(publishResponse, cancellationToken);
-        var permalinkResult = await GetMediaPermalinkAsync(igId, publishData.Id, accessToken, cancellationToken);
+        var publishResult = await DeserializeAsync<InstagramPublishResponse>(publishResponse);
+        var permalink = await GetMediaPermalinkAsync(igId, publishResult.Id, accessToken, cancellationToken);
 
         return new[]
         {
             new PostResponse
             {
                 Id = post.Id,
-                PostId = publishData.Id,
-                ReleaseUrl = permalinkResult.IsSuccess ? permalinkResult.Value : $"https://www.instagram.com/p/{publishData.Id}",
+                PostId = publishResult.Id,
+                ReleaseUrl = permalink,
                 Status = "success"
             }
         };
     }
 
-    private async Task<Result<string, AeroError>> GetMediaPermalinkAsync(string igId, string mediaId, string accessToken, CancellationToken cancellationToken)
+    private async Task<string> GetMediaPermalinkAsync(string igId, string mediaId, string accessToken, CancellationToken cancellationToken)
     {
-        var url = $"{GraphApiBaseUrl}/{mediaId}?fields=permalink&access_token={accessToken}";
-        var result = await GetAsync(url, cancellationToken);
-        
-        return await result.BindAsync(async response => 
-        {
-            var permalinkResponse = await DeserializeAsync<InstagramPermalinkResponse>(response, cancellationToken);
-            return permalinkResponse.Permalink ?? $"https://www.instagram.com/p/{mediaId}";
-        });
+        var url = $"https://graph.facebook.com/v20.0/{mediaId}?fields=permalink&access_token={accessToken}";
+        var response = await client.GetAsync(url, cancellationToken);
+        var permalinkResponse = await DeserializeAsync<InstagramPermalinkResponse>(response);
+        return permalinkResponse.Permalink ?? $"https://www.instagram.com/p/{mediaId}";
     }
 
-    /// <inheritdoc/>
     public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
@@ -349,14 +302,13 @@ public class InstagramProvider(
         var commentPost = posts.First();
         var message = Uri.EscapeDataString(commentPost.Message);
 
-        var url = $"{GraphApiBaseUrl}/{postId}/comments?message={message}&access_token={accessToken}";
+        var url = $"https://graph.facebook.com/v20.0/{postId}/comments?message={message}&access_token={accessToken}";
 
-        var result = await PostAsync(url, (object)null!, cancellationToken);
-        if (result is Result<HttpResponseMessage, AeroError>.Failure failure) return failure.Error;
+        var response = await client.PostAsync(url, null, cancellationToken);
+        response.EnsureSuccessStatusCode();
 
-        var response = ((Result<HttpResponseMessage, AeroError>.Ok)result).Value;
-        var commentResponse = await DeserializeAsync<InstagramCommentResponse>(response, cancellationToken);
-        var permalinkResult = await GetMediaPermalinkAsync(id, postId, accessToken, cancellationToken);
+        var commentResponse = await DeserializeAsync<InstagramCommentResponse>(response);
+        var permalink = await GetMediaPermalinkAsync(id, postId, accessToken, cancellationToken);
 
         return new[]
         {
@@ -364,118 +316,96 @@ public class InstagramProvider(
             {
                 Id = commentPost.Id,
                 PostId = commentResponse.Id,
-                ReleaseUrl = permalinkResult.IsSuccess ? permalinkResult.Value : $"https://www.instagram.com/p/{postId}",
+                ReleaseUrl = permalink,
                 Status = "success"
             }
         };
     }
 
-    /// <summary>
-    /// Retrieves the list of Instagram business accounts connected to the user's Facebook pages.
-    /// </summary>
-    /// <param name="accessToken">The user access token.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>A list of connected Instagram accounts.</returns>
-    public async Task<Result<List<InstagramPage>, AeroError>> GetPagesAsync(string accessToken, CancellationToken cancellationToken = default)
+    public async Task<List<InstagramPage>> GetPagesAsync(string accessToken, CancellationToken cancellationToken = default)
     {
-        var url = $"{GraphApiBaseUrl}/me/accounts?fields=id,instagram_business_account,username,name,picture.type(large)&access_token={accessToken}&limit=500";
+        var url = $"https://graph.facebook.com/v20.0/me/accounts?fields=id,instagram_business_account,username,name,picture.type(large)&access_token={accessToken}&limit=500";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        var result = await SendRequestAsync(request, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
+        response.EnsureSuccessStatusCode();
 
-        return await result.BindAsync(async response =>
+        var pagesResponse = await DeserializeAsync<FacebookPagesDataResponse>(response);
+
+        var connectedAccounts = new List<InstagramPage>();
+        foreach (var page in pagesResponse.Data ?? new List<FacebookPageData>())
         {
-            var pagesResponse = await DeserializeAsync<FacebookPagesDataResponse>(response, cancellationToken);
-            var connectedAccounts = new List<InstagramPage>();
-
-            foreach (var page in pagesResponse.Data ?? new List<FacebookPageData>())
+            if (page.InstagramBusinessAccount != null)
             {
-                if (page.InstagramBusinessAccount != null)
+                var igUrl = $"https://graph.facebook.com/v20.0/{page.InstagramBusinessAccount.Id}?fields=name,profile_picture_url,username&access_token={accessToken}";
+                var igResponse = await client.GetAsync(igUrl, cancellationToken);
+                var igData = await DeserializeAsync<InstagramBusinessData>(igResponse);
+
+                connectedAccounts.Add(new InstagramPage
                 {
-                    var igUrl = $"{GraphApiBaseUrl}/{page.InstagramBusinessAccount.Id}?fields=name,profile_picture_url,username&access_token={accessToken}";
-                    var igRequest = new HttpRequestMessage(HttpMethod.Get, igUrl);
-                    var igResult = await SendRequestAsync(igRequest, cancellationToken);
-
-                    if (igResult is Result<HttpResponseMessage, AeroError>.Failure igFailure)
-                        return igFailure.Error;
-
-                    var igResponse = ((Result<HttpResponseMessage, AeroError>.Ok)igResult).Value;
-                    var igData = await DeserializeAsync<InstagramBusinessData>(igResponse, cancellationToken);
-
-                    connectedAccounts.Add(new InstagramPage
-                    {
-                        PageId = page.Id,
-                        Id = page.InstagramBusinessAccount.Id,
-                        Name = igData.Name ?? page.Name,
-                        Username = igData.Username ?? string.Empty,
-                        Picture = igData.ProfilePictureUrl ?? string.Empty
-                    });
-                }
+                    PageId = page.Id,
+                    Id = page.InstagramBusinessAccount.Id,
+                    Name = igData.Name ?? page.Name,
+                    Username = igData.Username ?? string.Empty,
+                    Picture = igData.ProfilePictureUrl ?? string.Empty
+                });
             }
+        }
 
-            return connectedAccounts;
-        });
+        return connectedAccounts;
     }
 
-    private async Task<Result<string, AeroError>> ExchangeCodeForTokenAsync(string appId, string appSecret, string redirectUri, string code, CancellationToken cancellationToken)
+    private async Task<string> ExchangeCodeForTokenAsync(string appId, string appSecret, string redirectUri, string code, CancellationToken cancellationToken)
     {
-        var url = $"{GraphApiBaseUrl}/oauth/access_token" +
+        var url = $"https://graph.facebook.com/v20.0/oauth/access_token" +
                   $"?client_id={appId}" +
                   $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
                   $"&client_secret={appSecret}" +
                   $"&code={code}";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        var result = await SendRequestAsync(request, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
+        response.EnsureSuccessStatusCode();
 
-        return await result.BindAsync(async response =>
-        {
-            var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response, cancellationToken);
-            return tokenResponse.AccessToken;
-        });
+        var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response);
+        return tokenResponse.AccessToken;
     }
 
-    private async Task<Result<string, AeroError>> ExchangeForLongLivedTokenAsync(string appId, string appSecret, string shortLivedToken, CancellationToken cancellationToken)
+    private async Task<string> ExchangeForLongLivedTokenAsync(string appId, string appSecret, string shortLivedToken, CancellationToken cancellationToken)
     {
-        var url = $"{GraphApiBaseUrl}/oauth/access_token" +
+        var url = $"https://graph.facebook.com/v20.0/oauth/access_token" +
                   $"?grant_type=fb_exchange_token" +
                   $"&client_id={appId}" +
                   $"&client_secret={appSecret}" +
                   $"&fb_exchange_token={shortLivedToken}";
 
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        var result = await SendRequestAsync(request, cancellationToken);
+        var response = await client.GetAsync(url, cancellationToken);
+        response.EnsureSuccessStatusCode();
 
-        return await result.BindAsync(async response =>
-        {
-            var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response, cancellationToken);
-            return tokenResponse.AccessToken;
-        });
+        var tokenResponse = await DeserializeAsync<FacebookAccessTokenResponse>(response);
+        return tokenResponse.AccessToken;
     }
 
-    private async Task<Result<string[], AeroError>> GetPermissionsAsync(string accessToken, CancellationToken cancellationToken)
+    private async Task<string[]> GetPermissionsAsync(string accessToken, CancellationToken cancellationToken)
     {
-        var url = $"{GraphApiBaseUrl}/me/permissions?access_token={accessToken}";
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        var url = $"https://graph.facebook.com/v20.0/me/permissions?access_token={accessToken}";
 
-        return await SendRequestAsync(request, cancellationToken)
-            .MapAsync(async response =>
-            {
-                var permissionsResponse = await DeserializeAsync<FacebookPermissionsResponse>(response, cancellationToken);
-                return permissionsResponse.Data
-                    .Where(p => p.Status == "granted")
-                    .Select(p => p.Permission)
-                    .ToArray();
-            });
+        var response = await client.GetAsync(url, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var permissionsResponse = await DeserializeAsync<FacebookPermissionsResponse>(response);
+        return permissionsResponse.Data
+            .Where(p => p.Status == "granted")
+            .Select(p => p.Permission)
+            .ToArray();
     }
 
-    private async Task<Result<FacebookUserInfo, AeroError>> GetUserInfoAsync(string accessToken, CancellationToken cancellationToken)
+    private async Task<FacebookUserInfo> GetUserInfoAsync(string accessToken, CancellationToken cancellationToken)
     {
-        var url = $"{GraphApiBaseUrl}/me?fields=id,name,picture&access_token={accessToken}";
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        var url = $"https://graph.facebook.com/v20.0/me?fields=id,name,picture&access_token={accessToken}";
 
-        return await SendRequestAsync(request, cancellationToken)
-            .BindAsync(async response => await DeserializeAsync<FacebookUserInfo>(response, cancellationToken));
+        var response = await client.GetAsync(url, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        return await DeserializeAsync<FacebookUserInfo>(response);
     }
 
     private static T? GetSettingValue<T>(Dictionary<string, object> settings, string key)
@@ -489,6 +419,10 @@ public class InstagramProvider(
         var json = JsonSerializer.Serialize(value);
         return JsonSerializer.Deserialize<T>(json);
     }
+
+    private string GetAppId() => configuration["FACEBOOK_APP_ID"] ?? throw new InvalidOperationException("FACEBOOK_APP_ID not configured");
+    private string GetAppSecret() => configuration["FACEBOOK_APP_SECRET"] ?? throw new InvalidOperationException("FACEBOOK_APP_SECRET not configured");
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
 
     //#region DTOs
 
@@ -508,15 +442,6 @@ public class InstagramProvider(
     {
         [JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
-    }
-
-    private class InstagramMediaStatus
-    {
-        [JsonPropertyName("status_code")]
-        public string? StatusCode { get; set; }
-
-        [JsonPropertyName("status")]
-        public string? Status { get; set; }
     }
 
     private class InstagramPermalinkResponse
@@ -567,34 +492,12 @@ public class InstagramProvider(
         public string? ProfilePictureUrl { get; set; }
     }
 
-    /// <summary>
-    /// Represents an Instagram page connected via Facebook.
-    /// </summary>
     public class InstagramPage
     {
-        /// <summary>
-        /// Gets or sets the Facebook page ID.
-        /// </summary>
         public string PageId { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the Instagram business account ID.
-        /// </summary>
         public string Id { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the account name.
-        /// </summary>
         public string Name { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the account username.
-        /// </summary>
         public string Username { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the account profile picture URL.
-        /// </summary>
         public string Picture { get; set; } = string.Empty;
     }
 
@@ -647,14 +550,4 @@ public class InstagramProvider(
     }
 
     //#endregion
-    private Result<string, AeroError> GetAppId() => configuration["FACEBOOK_APP_ID"] ?? AeroError.CreateError("FACEBOOK_APP_ID not configured");
-    private Result<string, AeroError> GetAppSecret() => configuration["FACEBOOK_APP_SECRET"] ?? AeroError.CreateError("FACEBOOK_APP_SECRET not configured");
-    private Result<string, AeroError> GetFrontendUrl() => configuration["FRONTEND_URL"] ?? AeroError.CreateError("FRONTEND_URL not configured");
-
-    private Result<(string AppId, string AppSecret, string FrontendUrl), AeroError> GetAuthenticationConfig()
-    {
-        return GetAppId().Bind(appId =>
-            GetAppSecret().Bind(appSecret =>
-                GetFrontendUrl().Map(frontendUrl => (appId, appSecret, frontendUrl))));
-    }
 }

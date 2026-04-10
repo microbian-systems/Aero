@@ -2,6 +2,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +24,7 @@ public class KickProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 500;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -50,7 +52,7 @@ public class KickProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -70,7 +72,7 @@ public class KickProvider(
             ["code_verifier"] = parameters.CodeVerifier ?? ""
         };
 
-        var response = await HttpClient.PostAsync("https://id.kick.com/oauth/token", new FormUrlEncodedContent(form), cancellationToken);
+        var response = await client.PostAsync("https://id.kick.com/oauth/token", new FormUrlEncodedContent(form), cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<KickTokenResponse>(response);
@@ -88,7 +90,7 @@ public class KickProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -103,7 +105,7 @@ public class KickProvider(
             ["refresh_token"] = refreshToken
         };
 
-        var response = await HttpClient.PostAsync("https://id.kick.com/oauth/token", new FormUrlEncodedContent(form), cancellationToken);
+        var response = await client.PostAsync("https://id.kick.com/oauth/token", new FormUrlEncodedContent(form), cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<KickTokenResponse>(response);
@@ -121,7 +123,7 @@ public class KickProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -142,7 +144,7 @@ public class KickProvider(
 
         var request = CreateJsonRequest("https://api.kick.com/public/v1/chat", HttpMethod.Post, payload, accessToken);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var chatResponse = await DeserializeAsync<KickChatResponse>(response);
@@ -159,7 +161,7 @@ public class KickProvider(
         };
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -183,7 +185,7 @@ public class KickProvider(
 
         var request = CreateJsonRequest("https://api.kick.com/public/v1/chat", HttpMethod.Post, payload, accessToken);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var chatResponse = await DeserializeAsync<KickChatResponse>(response);
@@ -205,11 +207,12 @@ public class KickProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, "https://api.kick.com/public/v1/users");
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var userResponse = await DeserializeAsync<KickUserResponse>(response);
-        var user = userResponse.Data?.FirstOrDefault() ?? throw new BadBodyException(Identifier, "User not found");
+        var user = userResponse.Data?.FirstOrDefault();
+        if (user == null) return new KickUserInfo { Id = string.Empty, Name = string.Empty, Username = string.Empty, Picture = null };
 
         return new KickUserInfo
         {
@@ -251,9 +254,9 @@ public class KickProvider(
         return request;
     }
 
-    private string GetClientId() => configuration["KICK_CLIENT_ID"] ?? throw new InvalidOperationException("KICK_CLIENT_ID not configured");
-    private string GetClientSecret() => configuration["KICK_SECRET"] ?? throw new InvalidOperationException("KICK_SECRET not configured");
-    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["KICK_CLIENT_ID"] ?? string.Empty;
+    private string GetClientSecret() => configuration["KICK_SECRET"] ?? string.Empty;
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? string.Empty;
 
     //#region DTOs
 

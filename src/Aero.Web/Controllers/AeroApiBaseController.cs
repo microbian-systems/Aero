@@ -41,21 +41,21 @@ public abstract class AeroApiBaseController(ILogger<AeroApiBaseController> log)
             : None;
     }
 
-    protected IActionResult HandleResult<TError, TValue>(Result<TError, TValue> result)
+    protected IActionResult HandleResult<T>(Result<T, AeroError> result)
     {
         return result switch
         {
-            Result<TError, TValue>.Ok(var value) => Ok(value),
-            Result<TError, TValue>.Failure(AeroError.NotFound nf) => NotFound(nf.msg),
-            Result<TError, TValue>.Failure(AeroError.Validation v) => BadRequest(v.Errors),
-            Result<TError, TValue>.Failure(AeroError.Unauthorized) => Unauthorized(),
-            Result<TError, TValue>.Failure(AeroError.Conflict c) => Conflict(c.msg),
-            Result<TError, TValue>.Failure(AeroError.BadRequest c) => BadRequest(c.msg),
-            Result<TError, TValue>.Failure(AeroError.NotAllowed c) => Problem(c.msg),
-            Result<TError, TValue>.Failure(AeroError.Forbidden c) => Forbid(c.msg),
-            Result<TError, TValue>.Failure(AeroError.Exists c) => Problem(c.msg),
+            Result<T, AeroError>.Ok(var value) => Ok(value),
+            Result<T, AeroError>.Failure(AeroError.NotFound nf) => NotFound(nf.msg),
+            Result<T, AeroError>.Failure(AeroError.Validation v) => BadRequest(v.Errors),
+            Result<T, AeroError>.Failure(AeroError.Unauthorized) => Unauthorized(),
+            Result<T, AeroError>.Failure(AeroError.Conflict c) => Conflict(c.msg),
+            Result<T, AeroError>.Failure(AeroError.BadRequest c) => BadRequest(c.msg),
+            Result<T, AeroError>.Failure(AeroError.NotAllowed c) => Problem(c.msg),
+            Result<T, AeroError>.Failure(AeroError.Forbidden c) => Forbid(),
+            Result<T, AeroError>.Failure(AeroError.Exists c) => Problem(c.msg),
 
-            _ => Problem($"error: {((TError)result)}")
+            _ => Problem("Unexpected error")
         };
 
     }

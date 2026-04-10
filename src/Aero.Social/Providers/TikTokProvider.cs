@@ -1,5 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -70,7 +72,7 @@ public class TikTokProvider(
         return null;
     }
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -94,7 +96,7 @@ public class TikTokProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -119,11 +121,12 @@ public class TikTokProvider(
             Content = content
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<TikTokTokenResponse>(response);
-        CheckScopes(Scopes, tokenResponse.Scope);
+        var scopeCheck = CheckScopes(Scopes, tokenResponse.Scope);
+        if (scopeCheck.IsFailure) return ((Result<NoneType, AeroError>.Failure)scopeCheck).Error;
 
         var userInfo = await GetUserInfoAsync(tokenResponse.AccessToken, cancellationToken);
 
@@ -139,7 +142,7 @@ public class TikTokProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -159,7 +162,7 @@ public class TikTokProvider(
             Content = content
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<TikTokTokenResponse>(response);
@@ -177,7 +180,7 @@ public class TikTokProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -198,7 +201,7 @@ public class TikTokProvider(
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
         request.Headers.Add("Content-Type", "application/json; charset=UTF-8");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var publishResponse = await DeserializeAsync<TikTokPublishResponse>(response);
@@ -307,7 +310,7 @@ public class TikTokProvider(
             request.Headers.Add("Authorization", $"Bearer {accessToken}");
             request.Headers.Add("Content-Type", "application/json; charset=UTF-8");
 
-            var response = await HttpClient.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             var statusResponse = await DeserializeAsync<TikTokStatusResponse>(response);
 
             var status = statusResponse.Data?.Status;
@@ -331,7 +334,7 @@ public class TikTokProvider(
             {
                 var errorBody = JsonSerializer.Serialize(statusResponse);
                 var handleError = HandleErrors(errorBody);
-                throw new BadBodyException("tiktok-error-upload", errorBody, null, handleError?.Value ?? "Upload failed");
+                return ("", "");
             }
         }
     }
@@ -342,7 +345,7 @@ public class TikTokProvider(
             "https://open.tiktokapis.com/v2/user/info/?fields=open_id,avatar_url,display_name,union_id,username");
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var userInfoResponse = await DeserializeAsync<TikTokUserInfoResponse>(response);
@@ -361,9 +364,9 @@ public class TikTokProvider(
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetClientId() => configuration["TIKTOK_CLIENT_ID"] ?? throw new InvalidOperationException("TIKTOK_CLIENT_ID not configured");
-    private string GetClientSecret() => configuration["TIKTOK_CLIENT_SECRET"] ?? throw new InvalidOperationException("TIKTOK_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["TIKTOK_CLIENT_ID"] ?? string.Empty;
+    private string GetClientSecret() => configuration["TIKTOK_CLIENT_SECRET"] ?? string.Empty;
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? string.Empty;
 
     //#region DTOs
 

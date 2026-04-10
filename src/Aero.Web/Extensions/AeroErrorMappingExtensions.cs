@@ -17,39 +17,39 @@ public static class MinimalApiResultMappingExtensions
     /// <param name="result">The result object to convert to an HTTP response. Represents either a successful value or a specific error.</param>
     /// <returns>A minimal API HTTP response result corresponding to the outcome of the provided result. Returns a success response if the
     /// result is successful, or an error response mapped to the specific error type.</returns>
-    public static IResult ToResult<TError, TValue>(
-        Result<TError, TValue> result)
-        where TError : IAeroError
+    public static IResult ToResult<TValue>(
+        Result<TValue, AeroError> result)
     {
         return result switch
         {
-            Result<TError, TValue>.Ok(var value)
+            Result<TValue, AeroError>.Ok(var value)
                 => Results.Ok(value),
 
-            Result<TError, TValue>.Failure(AeroError.NotFound nf)
+            Result<TValue, AeroError>.Failure(AeroError.NotFound nf)
                 => Results.NotFound(nf.msg),
 
-            Result<TError, TValue>.Failure(AeroError.Validation v)
+            Result<TValue, AeroError>.Failure(AeroError.Validation v)
                 => Results.BadRequest(v.Errors),
 
-            Result<TError, TValue>.Failure(AeroError.Unauthorized)
+            Result<TValue, AeroError>.Failure(AeroError.Unauthorized)
                 => Results.Unauthorized(),
 
-            Result<TError, TValue>.Failure(AeroError.Forbidden c)
+            Result<TValue, AeroError>.Failure(AeroError.Forbidden c)
                 => Results.Forbid(),
 
-            Result<TError, TValue>.Failure(AeroError.Conflict c)
+            Result<TValue, AeroError>.Failure(AeroError.Conflict c)
                 => Results.Conflict(c.msg),
 
-            Result<TError, TValue>.Failure(AeroError.BadRequest c) 
+            Result<TValue, AeroError>.Failure(AeroError.BadRequest c) 
                 => Results.BadRequest(c.msg),
 
-            Result<TError, TValue>.Failure(AeroError.NotAllowed c) 
+            Result<TValue, AeroError>.Failure(AeroError.NotAllowed c) 
                 => Results.Problem(c.msg),
 
-            Result<TError, TValue>.Failure(AeroError.Exists c) 
+            Result<TValue, AeroError>.Failure(AeroError.Exists c) 
                 => Results.Problem(c.msg),
 
+            // todo - in the AeroErrorMappingExtensions, return the message in the AeroError for the Problem() responses
             _ => Results.Problem("Unexpected error")
         };
     }

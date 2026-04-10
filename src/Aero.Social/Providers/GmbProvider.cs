@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -50,7 +52,7 @@ public class GmbProvider(
         return null;
     }
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -76,7 +78,7 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -95,7 +97,7 @@ public class GmbProvider(
             ["redirect_uri"] = redirectUri
         };
 
-        var response = await HttpClient.PostAsync("https://oauth2.googleapis.com/token", new FormUrlEncodedContent(form), cancellationToken);
+        var response = await client.PostAsync("https://oauth2.googleapis.com/token", new FormUrlEncodedContent(form), cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<GoogleTokenResponse>(response);
@@ -113,7 +115,7 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -128,7 +130,7 @@ public class GmbProvider(
             ["client_secret"] = clientSecret
         };
 
-        var response = await HttpClient.PostAsync("https://oauth2.googleapis.com/token", new FormUrlEncodedContent(form), cancellationToken);
+        var response = await client.PostAsync("https://oauth2.googleapis.com/token", new FormUrlEncodedContent(form), cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<GoogleTokenResponse>(response);
@@ -146,7 +148,7 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -198,7 +200,7 @@ public class GmbProvider(
         var request = new HttpRequestMessage(HttpMethod.Post, $"https://mybusiness.googleapis.com/v4/{id}/localPosts") { Content = content };
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var postResponse = await DeserializeAsync<GmbPostResponse>(response);
@@ -216,7 +218,7 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails?> ReConnectAsync(
+    public override async Task<Result<AuthTokenDetails?, AeroError>> ReConnectAsync(
         string id,
         string requiredId,
         string accessToken,
@@ -226,7 +228,7 @@ public class GmbProvider(
         var page = pages.FirstOrDefault(p => p.Id == requiredId);
 
         if (page == null)
-            throw new BadBodyException(Identifier, "Location not found");
+            return AeroError.BadRequestError("Location not found");
 
         var info = await FetchPageInformationAsync(accessToken, page, cancellationToken);
 
@@ -240,7 +242,7 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<FetchPageInformationResult?> FetchPageInformationAsync(
+    public override async Task<Result<FetchPageInformationResult?, AeroError>> FetchPageInformationAsync(
         string accessToken,
         object data,
         CancellationToken cancellationToken = default)
@@ -251,7 +253,7 @@ public class GmbProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, $"https://mybusinessbusinessinformation.googleapis.com/v1/{locationName}?readMask=name,title,storefrontAddress,metadata");
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var locationData = await DeserializeAsync<GmbLocationResponse>(response);
@@ -271,7 +273,7 @@ public class GmbProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, "https://mybusinessaccountmanagement.googleapis.com/v1/accounts");
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var accountsData = await DeserializeAsync<GmbAccountsResponse>(response);
@@ -287,7 +289,7 @@ public class GmbProvider(
                 var locationsRequest = new HttpRequestMessage(HttpMethod.Get, $"https://mybusinessbusinessinformation.googleapis.com/v1/{account.Name}/locations?readMask=name,title,storefrontAddress,metadata");
                 locationsRequest.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-                var locationsResponse = await HttpClient.SendAsync(locationsRequest, cancellationToken);
+                var locationsResponse = await client.SendAsync(locationsRequest, cancellationToken);
                 if (!locationsResponse.IsSuccessStatusCode) continue;
 
                 var locationsData = await DeserializeAsync<GmbLocationsResponse>(locationsResponse);
@@ -321,7 +323,7 @@ public class GmbProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, "https://www.googleapis.com/oauth2/v3/userinfo");
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await DeserializeAsync<GmbUserInfo>(response);
@@ -332,7 +334,7 @@ public class GmbProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, $"https://mybusinessbusinessinformation.googleapis.com/v1/{page.LocationName}?readMask=name,title");
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var locationData = await DeserializeAsync<GmbLocationResponse>(response);

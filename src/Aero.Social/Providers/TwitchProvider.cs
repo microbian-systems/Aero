@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +23,7 @@ public class TwitchProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 500;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -45,7 +47,7 @@ public class TwitchProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -64,7 +66,7 @@ public class TwitchProvider(
             ["code"] = parameters.Code
         };
 
-        var response = await HttpClient.PostAsync("https://id.twitch.tv/oauth2/token", new FormUrlEncodedContent(form), cancellationToken);
+        var response = await client.PostAsync("https://id.twitch.tv/oauth2/token", new FormUrlEncodedContent(form), cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<TwitchTokenResponse>(response);
@@ -82,7 +84,7 @@ public class TwitchProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -97,7 +99,7 @@ public class TwitchProvider(
             ["refresh_token"] = refreshToken
         };
 
-        var response = await HttpClient.PostAsync("https://id.twitch.tv/oauth2/token", new FormUrlEncodedContent(form), cancellationToken);
+        var response = await client.PostAsync("https://id.twitch.tv/oauth2/token", new FormUrlEncodedContent(form), cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenInfo = await DeserializeAsync<TwitchTokenResponse>(response);
@@ -115,7 +117,7 @@ public class TwitchProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -163,7 +165,7 @@ public class TwitchProvider(
         };
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -221,11 +223,12 @@ public class TwitchProvider(
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
         request.Headers.TryAddWithoutValidation("Client-Id", clientId);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var userResponse = await DeserializeAsync<TwitchUserResponse>(response);
-        var user = userResponse.Data?.FirstOrDefault() ?? throw new BadBodyException(Identifier, "User not found");
+        var user = userResponse.Data?.FirstOrDefault();
+        if (user == null) return new TwitchUserInfo { Id = string.Empty, Name = string.Empty, Username = string.Empty, Picture = null };
 
         return new TwitchUserInfo
         {
@@ -256,7 +259,7 @@ public class TwitchProvider(
         var request = CreateJsonRequest(url, HttpMethod.Post, payload, accessToken);
         request.Headers.TryAddWithoutValidation("Client-Id", clientId);
 
-        await HttpClient.SendAsync(request, cancellationToken);
+        await client.SendAsync(request, cancellationToken);
     }
 
     private async Task<TwitchChatResult> SendChatMessageAsync(
@@ -283,7 +286,7 @@ public class TwitchProvider(
         var request = CreateJsonRequest("https://api.twitch.tv/helix/chat/messages", HttpMethod.Post, payload, accessToken);
         request.Headers.TryAddWithoutValidation("Client-Id", clientId);
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var chatResponse = await DeserializeAsync<TwitchChatResponse>(response);
@@ -322,9 +325,9 @@ public class TwitchProvider(
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetClientId() => configuration["TWITCH_CLIENT_ID"] ?? throw new InvalidOperationException("TWITCH_CLIENT_ID not configured");
-    private string GetClientSecret() => configuration["TWITCH_CLIENT_SECRET"] ?? throw new InvalidOperationException("TWITCH_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["TWITCH_CLIENT_ID"] ?? string.Empty;
+    private string GetClientSecret() => configuration["TWITCH_CLIENT_SECRET"] ?? string.Empty;
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? string.Empty;
 
     //#region DTOs
 

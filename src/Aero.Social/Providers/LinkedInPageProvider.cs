@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Plugs;
@@ -31,7 +33,7 @@ public class LinkedInPageProvider(
         "r_organization_social"
     };
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -56,7 +58,7 @@ public class LinkedInPageProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -80,14 +82,20 @@ public class LinkedInPageProvider(
             Content = content
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<LinkedInTokenResponse>(response);
-        CheckScopes(Scopes, tokenResponse.Scope);
+        var scopeCheck = CheckScopes(Scopes, tokenResponse.Scope);
+        if (scopeCheck.IsFailure) return ((Result<NoneType, AeroError>.Failure)scopeCheck).Error;
 
-        var userInfo = await GetUserInfoAsync(tokenResponse.AccessToken, cancellationToken);
-        var vanityName = await GetVanityNameAsync(tokenResponse.AccessToken, cancellationToken);
+        var userInfoResult = await GetUserInfoAsync(tokenResponse.AccessToken, cancellationToken);
+        if (userInfoResult is not Result<LinkedInUserInfo, AeroError>.Ok { Value: var userInfo })
+            return ((Result<LinkedInUserInfo, AeroError>.Failure)userInfoResult).Error;
+
+        var vanityNameResult = await GetVanityNameAsync(tokenResponse.AccessToken, cancellationToken);
+        if (vanityNameResult is not Result<string, AeroError>.Ok { Value: var vanityName })
+            return ((Result<string, AeroError>.Failure)vanityNameResult).Error;
 
         return new AuthTokenDetails
         {
@@ -101,7 +109,7 @@ public class LinkedInPageProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -121,12 +129,14 @@ public class LinkedInPageProvider(
             Content = content
         };
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<LinkedInTokenResponse>(response);
-        var vanityName = await GetVanityNameAsync(tokenResponse.AccessToken, cancellationToken);
-        var userInfo = await GetUserInfoAsync(tokenResponse.AccessToken, cancellationToken);
+        var vanityNameResult = await GetVanityNameAsync(tokenResponse.AccessToken, cancellationToken);
+        if (vanityNameResult is not Result<string, AeroError>.Ok { Value: var vanityName }) return ((Result<string, AeroError>.Failure)vanityNameResult).Error;
+        var userInfoResult = await GetUserInfoAsync(tokenResponse.AccessToken, cancellationToken);
+        if (userInfoResult is not Result<LinkedInUserInfo, AeroError>.Ok { Value: var userInfo }) return ((Result<LinkedInUserInfo, AeroError>.Failure)userInfoResult).Error;
 
         return new AuthTokenDetails
         {
@@ -140,7 +150,7 @@ public class LinkedInPageProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -150,7 +160,7 @@ public class LinkedInPageProvider(
         return await PostAsCompanyAsync(id, accessToken, posts, integration, cancellationToken);
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -171,7 +181,7 @@ public class LinkedInPageProvider(
         request.Headers.Add("X-Restli-Protocol-Version", "2.0.0");
         request.Headers.Add("LinkedIn-Version", "202501");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var companiesResponse = await DeserializeAsync<LinkedInCompaniesResponse>(response);
@@ -188,26 +198,27 @@ public class LinkedInPageProvider(
             .ToList();
     }
 
-    public override async Task<AuthTokenDetails?> ReConnectAsync(
+    public override async Task<Result<AuthTokenDetails?, AeroError>> ReConnectAsync(
         string id,
         string requiredId,
         string accessToken,
         CancellationToken cancellationToken = default)
     {
-        var pageInformation = await FetchPageInformationAsync(accessToken, new { page = requiredId }, cancellationToken);
-        if (pageInformation == null) return null;
+        var pageInformationResult = await FetchPageInformationAsync(accessToken, new { page = requiredId }, cancellationToken);
+        if (pageInformationResult is not Result<FetchPageInformationResult?, AeroError>.Ok { Value: not null } pageInformation)
+            return ((Result<FetchPageInformationResult?, AeroError>.Failure)pageInformationResult).Error;
 
         return new AuthTokenDetails
         {
-            Id = pageInformation.Id,
-            Name = pageInformation.Name,
-            AccessToken = pageInformation.AccessToken,
-            Picture = pageInformation.Picture,
-            Username = pageInformation.Username
+            Id = pageInformation.Value.Id,
+            Name = pageInformation.Value.Name,
+            AccessToken = pageInformation.Value.AccessToken,
+            Picture = pageInformation.Value.Picture,
+            Username = pageInformation.Value.Username
         };
     }
 
-    public override async Task<FetchPageInformationResult?> FetchPageInformationAsync(
+    public override async Task<Result<FetchPageInformationResult?, AeroError>> FetchPageInformationAsync(
         string accessToken,
         object data,
         CancellationToken cancellationToken = default)
@@ -220,7 +231,7 @@ public class LinkedInPageProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var orgResponse = await DeserializeAsync<LinkedInOrganizationResponse>(response);
@@ -235,7 +246,7 @@ public class LinkedInPageProvider(
         };
     }
 
-    public override async Task<AnalyticsData[]?> AnalyticsAsync(
+    public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
         string id,
         string accessToken,
         int days,
@@ -275,7 +286,7 @@ public class LinkedInPageProvider(
             .ToArray();
     }
 
-    public override async Task<AnalyticsData[]?> PostAnalyticsAsync(
+    public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
         string integrationId,
         string accessToken,
         string postId,
@@ -292,7 +303,7 @@ public class LinkedInPageProvider(
         request.Headers.Add("LinkedIn-Version", "202511");
         request.Headers.Add("X-Restli-Protocol-Version", "2.0.0");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var shareStatsResponse = await DeserializeAsync<LinkedInShareStatsResponse>(response);
@@ -334,7 +345,7 @@ public class LinkedInPageProvider(
                 socialRequest.Headers.Add("LinkedIn-Version", "202511");
                 socialRequest.Headers.Add("X-Restli-Protocol-Version", "2.0.0");
 
-                var socialResponse = await HttpClient.SendAsync(socialRequest, cancellationToken);
+                var socialResponse = await client.SendAsync(socialRequest, cancellationToken);
                 if (socialResponse.IsSuccessStatusCode)
                 {
                     var socialActions = await DeserializeAsync<LinkedInSocialActionsResponse>(socialResponse);
@@ -373,7 +384,7 @@ public class LinkedInPageProvider(
         request.Headers.Add("LinkedIn-Version", "202511");
         request.Headers.Add("X-Restli-Protocol-Version", "2.0.0");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var statsResponse = await DeserializeAsync<LinkedInAnalyticsResponse>(response);
@@ -477,12 +488,12 @@ public class LinkedInPageProvider(
         request.Headers.Add("LinkedIn-Version", "202511");
         request.Headers.Add("X-Restli-Protocol-Version", "2.0.0");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadAsStringAsync(cancellationToken);
-            throw new BadBodyException(Identifier, error);
+            return Array.Empty<PostResponse>();
         }
 
         var postId = response.Headers.GetValues("x-restli-id").FirstOrDefault() ?? string.Empty;
@@ -520,7 +531,7 @@ public class LinkedInPageProvider(
         var request = CreateRequest($"https://api.linkedin.com/v2/socialActions/{Uri.EscapeDataString(postId)}/comments", HttpMethod.Post, payload);
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var commentResponse = await DeserializeAsync<LinkedInCommentResponse>(response);
@@ -542,14 +553,16 @@ public class LinkedInPageProvider(
         var isVideo = media.Path.Contains(".mp4", StringComparison.OrdinalIgnoreCase);
         var endpoint = isVideo ? "videos" : "images";
 
-        var mediaBytes = await ReadOrFetchAsync(media.Path, cancellationToken);
+        var mediaBytesResult = await ReadOrFetchAsync(media.Path, cancellationToken);
+        if (mediaBytesResult is Result<byte[], AeroError>.Failure mediaBytesError) return mediaBytesError.Error.ToString();
+        var mediaBytesValue = ((Result<byte[], AeroError>.Ok)mediaBytesResult).Value;
 
         var initializePayload = new
         {
             initializeUploadRequest = new
             {
                 owner = $"urn:li:organization:{companyId}",
-                fileSizeBytes = isVideo ? mediaBytes.Length : (int?)null
+                fileSizeBytes = isVideo ? mediaBytesValue.Length : (int?)null
             }
         };
 
@@ -558,17 +571,17 @@ public class LinkedInPageProvider(
         request.Headers.Add("LinkedIn-Version", "202511");
         request.Headers.Add("X-Restli-Protocol-Version", "2.0.0");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var uploadResponse = await DeserializeAsync<LinkedInUploadResponse>(response);
-
-        var uploadUrl = uploadResponse.Value.UploadUrl;
-        var imageId = uploadResponse.Value.Image;
+        var uploadValue = uploadResponse.Value;
+        var uploadUrl = uploadValue.UploadUrl;
+        var imageId = uploadValue.Image;
 
         var uploadRequest = new HttpRequestMessage(HttpMethod.Put, uploadUrl)
         {
-            Content = new ByteArrayContent(mediaBytes)
+            Content = new ByteArrayContent(mediaBytesValue)
         };
         uploadRequest.Headers.Add("Authorization", $"Bearer {accessToken}");
         uploadRequest.Headers.Add("X-Restli-Protocol-Version", "2.0.0");
@@ -579,7 +592,7 @@ public class LinkedInPageProvider(
             uploadRequest.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
         }
 
-        await HttpClient.SendAsync(uploadRequest, cancellationToken);
+        await client.SendAsync(uploadRequest, cancellationToken);
 
         return imageId;
     }
@@ -837,13 +850,14 @@ public class LinkedInPageProvider(
         CancellationToken cancellationToken = default)
     {
         // Get current post analytics
-        var analytics = await PostAnalyticsAsync(postId, accessToken, postId, 1, cancellationToken);
+        var analyticsResult = await PostAnalyticsAsync(postId, accessToken, postId, 1, cancellationToken);
+        var analytics = analyticsResult is Result<AnalyticsData[]?, AeroError>.Ok { Value: var value } ? value : null;
         var likesMetric = analytics?.FirstOrDefault(a => a.Label == "Likes");
         var currentLikes = likesMetric?.Data.Sum(d => int.Parse(d.Total)) ?? 0;
 
         if (currentLikes >= minLikes)
         {
-            Logger.LogInformation("Post {PostId} has reached {Likes} likes. Reposting...", postId, currentLikes);
+            log.LogInformation("Post {PostId} has reached {Likes} likes. Reposting...", postId, currentLikes);
 
             // Get original post content
             var url = $"https://api.linkedin.com/v2/posts/{postId}?projection=(id,author,commentary,content)";
@@ -852,7 +866,7 @@ public class LinkedInPageProvider(
             request.Headers.Add("LinkedIn-Version", "202511");
             request.Headers.Add("X-Restli-Protocol-Version", "2.0.0");
 
-            var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
             if (response.IsSuccessStatusCode)
             {
                 var postContent = await DeserializeAsync<LinkedInPostContent>(response);
@@ -879,15 +893,15 @@ public class LinkedInPageProvider(
                 repostRequest.Headers.Add("LinkedIn-Version", "202511");
                 repostRequest.Headers.Add("X-Restli-Protocol-Version", "2.0.0");
 
-                var repostResponse = await HttpClient.SendAsync(repostRequest, cancellationToken);
+                var repostResponse = await client.SendAsync(repostRequest, cancellationToken);
                 repostResponse.EnsureSuccessStatusCode();
 
-                Logger.LogInformation("Successfully reposted post {PostId}", postId);
+                log.LogInformation("Successfully reposted post {PostId}", postId);
             }
         }
         else
         {
-            Logger.LogDebug("Post {PostId} has {Likes} likes, waiting for {MinLikes} to repost",
+            log.LogDebug("Post {PostId} has {Likes} likes, waiting for {MinLikes} to repost",
                 postId, currentLikes, minLikes);
         }
     }
@@ -911,13 +925,14 @@ public class LinkedInPageProvider(
         CancellationToken cancellationToken = default)
     {
         // Get current post analytics
-        var analytics = await PostAnalyticsAsync(postId, accessToken, postId, 1, cancellationToken);
-        var likesMetric = analytics?.FirstOrDefault(a => a.Label == "Likes");
+        var analyticsResult2 = await PostAnalyticsAsync(postId, accessToken, postId, 1, cancellationToken);
+        var analytics2 = analyticsResult2 is Result<AnalyticsData[]?, AeroError>.Ok { Value: var value2 } ? value2 : null;
+        var likesMetric = analytics2?.FirstOrDefault(a => a.Label == "Likes");
         var currentLikes = likesMetric?.Data.Sum(d => int.Parse(d.Total)) ?? 0;
 
         if (currentLikes >= minLikes)
         {
-            Logger.LogInformation("Post {PostId} has reached {Likes} likes. Adding comment...", postId, currentLikes);
+            log.LogInformation("Post {PostId} has reached {Likes} likes. Adding comment...", postId, currentLikes);
 
             // Add comment using the existing CommentAsync method
             var commentPosts = new List<PostDetails>
@@ -929,11 +944,11 @@ public class LinkedInPageProvider(
 
             await CommentAsync(postId, postId, null, accessToken, commentPosts, integration, cancellationToken);
 
-            Logger.LogInformation("Successfully added comment to post {PostId}", postId);
+            log.LogInformation("Successfully added comment to post {PostId}", postId);
         }
         else
         {
-            Logger.LogDebug("Post {PostId} has {Likes} likes, waiting for {MinLikes} to add comment",
+            log.LogDebug("Post {PostId} has {Likes} likes, waiting for {MinLikes} to add comment",
                 postId, currentLikes, minLikes);
         }
     }

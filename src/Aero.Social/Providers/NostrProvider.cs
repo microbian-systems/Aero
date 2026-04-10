@@ -2,6 +2,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +36,7 @@ public class NostrProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 100000;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -47,15 +49,15 @@ public class NostrProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
         var bodyBytes = Convert.FromBase64String(parameters.Code);
         var bodyJson = Encoding.UTF8.GetString(bodyBytes);
-        var authBody = JsonSerializer.Deserialize<NostrAuthBody>(bodyJson)
-            ?? throw new BadBodyException(Identifier, "Invalid auth body");
+        var authBody = JsonSerializer.Deserialize<NostrAuthBody>(bodyJson);
+        if (authBody is null) return AeroError.BadRequestError("Invalid auth body");
 
         try
         {
@@ -79,15 +81,15 @@ public class NostrProvider(
         }
         catch (Exception)
         {
-            throw new BadBodyException(Identifier, "Invalid credentials");
+            return AeroError.BadRequestError("Invalid credentials");
         }
     }
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(new AuthTokenDetails
+        return Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails
         {
             RefreshToken = string.Empty,
             ExpiresIn = 0,
@@ -99,7 +101,7 @@ public class NostrProvider(
         });
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -138,7 +140,7 @@ public class NostrProvider(
         };
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,

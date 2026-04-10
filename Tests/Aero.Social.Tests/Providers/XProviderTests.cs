@@ -1,4 +1,6 @@
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -56,8 +58,10 @@ public class XProviderTests : ProviderTestBase
 
         var provider = CreateProvider();
         
-        var result = await provider.GenerateAuthUrlAsync();
-        
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
+
         result.Url.ShouldContain("api.twitter.com/oauth/authenticate");
         result.Url.ShouldContain("oauth_token=request_token_value");
         result.CodeVerifier.ShouldContain("request_token_value");
@@ -77,10 +81,11 @@ public class XProviderTests : ProviderTestBase
         var parameters = new AuthenticateParams("oauth_verifier", "request_token:request_token_secret");
         
         var result = await provider.AuthenticateAsync(parameters);
-        
-        result.AccessToken.ShouldBe("access_token_value:access_token_secret");
-        result.Id.ShouldBe("123456");
-        result.Name.ShouldBe("Test User");
+
+        var value = ((Result<AuthTokenDetails, AeroError>.Ok)result).Value;
+        value.AccessToken.ShouldBe("access_token_value:access_token_secret");
+        value.Id.ShouldBe("123456");
+        value.Name.ShouldBe("Test User");
     }
 
     [Fact]
@@ -89,8 +94,9 @@ public class XProviderTests : ProviderTestBase
         var provider = CreateProvider();
         
         var result = await provider.RefreshTokenAsync("any_refresh_token");
-        
-        result.AccessToken.ShouldBeEmpty();
-        result.RefreshToken.ShouldBeEmpty();
+
+        var value = ((Result<AuthTokenDetails, AeroError>.Ok)result).Value;
+        value.AccessToken.ShouldBeEmpty();
+        value.RefreshToken.ShouldBeEmpty();
     }
 }

@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +23,7 @@ public class RedditProvider(
 
     public override int MaxLength(object? additionalSettings = null) => 10000;
 
-    public override async Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -46,7 +48,7 @@ public class RedditProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -71,11 +73,12 @@ public class RedditProvider(
         };
         request.Headers.Add("Authorization", $"Basic {credentials}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<RedditTokenResponse>(response);
-        CheckScopes(Scopes, tokenResponse.Scope);
+        var scopeCheck = CheckScopes(Scopes, tokenResponse.Scope);
+        if (scopeCheck.IsFailure) return ((Result<NoneType, AeroError>.Failure)scopeCheck).Error;
 
         var userInfo = await GetUserInfoAsync(tokenResponse.AccessToken, cancellationToken);
 
@@ -91,7 +94,7 @@ public class RedditProvider(
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -111,7 +114,7 @@ public class RedditProvider(
         };
         request.Headers.Add("Authorization", $"Basic {credentials}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var tokenResponse = await DeserializeAsync<RedditTokenResponse>(response);
@@ -129,7 +132,7 @@ public class RedditProvider(
         };
     }
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -198,7 +201,7 @@ public class RedditProvider(
             };
             request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-            var response = await HttpClient.SendAsync(request, cancellationToken);
+            var response = await client.SendAsync(request, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             var submitResponse = await DeserializeAsync<RedditSubmitResponse>(response);
@@ -217,7 +220,7 @@ public class RedditProvider(
             }
             else
             {
-                throw new InvalidOperationException("Failed to submit Reddit post");
+                return AeroError.CreateError("Failed to submit Reddit post");
             }
 
             results.Add(new PostResponse
@@ -245,7 +248,7 @@ public class RedditProvider(
             .ToArray();
     }
 
-    public override async Task<PostResponse[]?> CommentAsync(
+    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -270,7 +273,7 @@ public class RedditProvider(
         };
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var commentResponse = await DeserializeAsync<RedditCommentResponse>(response);
@@ -297,7 +300,7 @@ public class RedditProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var searchResponse = await DeserializeAsync<RedditSubredditSearchResponse>(response);
@@ -330,12 +333,17 @@ public class RedditProvider(
         };
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var assetResponse = await DeserializeAsync<RedditAssetResponse>(response);
 
-        var mediaBytes = await ReadOrFetchAsync(filePath, cancellationToken);
+        var mediaBytesResult = await ReadOrFetchAsync(filePath, cancellationToken);
+        if (mediaBytesResult is Result<byte[], AeroError>.Failure)
+        {
+            return string.Empty;
+        }
+        var mediaBytes = ((Result<byte[], AeroError>.Ok)mediaBytesResult).Value;
 
         var uploadForm = new MultipartFormDataContent();
         foreach (var field in assetResponse.Args.Fields)
@@ -344,7 +352,7 @@ public class RedditProvider(
         }
         uploadForm.Add(new ByteArrayContent(mediaBytes), "file", fileName);
 
-        var uploadResponse = await HttpClient.PostAsync("https:" + assetResponse.Args.Action, uploadForm, cancellationToken);
+        var uploadResponse = await client.PostAsync("https:" + assetResponse.Args.Action, uploadForm, cancellationToken);
         var uploadResult = await uploadResponse.Content.ReadAsStringAsync(cancellationToken);
 
         var locationMatch = System.Text.RegularExpressions.Regex.Match(uploadResult, @"<Location>(.*?)</Location>");
@@ -362,7 +370,7 @@ public class RedditProvider(
         var request = new HttpRequestMessage(HttpMethod.Get, "https://oauth.reddit.com/api/v1/me");
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
 
-        var response = await HttpClient.SendAsync(request, cancellationToken);
+        var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         return await DeserializeAsync<RedditUserInfo>(response);
@@ -403,9 +411,9 @@ public class RedditProvider(
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private string GetClientId() => configuration["REDDIT_CLIENT_ID"] ?? throw new InvalidOperationException("REDDIT_CLIENT_ID not configured");
-    private string GetClientSecret() => configuration["REDDIT_CLIENT_SECRET"] ?? throw new InvalidOperationException("REDDIT_CLIENT_SECRET not configured");
-    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? throw new InvalidOperationException("FRONTEND_URL not configured");
+    private string GetClientId() => configuration["REDDIT_CLIENT_ID"] ?? string.Empty;
+    private string GetClientSecret() => configuration["REDDIT_CLIENT_SECRET"] ?? string.Empty;
+    private string GetFrontendUrl() => configuration["FRONTEND_URL"] ?? string.Empty;
 
     //#region DTOs
 

@@ -1,4 +1,6 @@
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -48,8 +50,10 @@ public class MastodonProviderTests : ProviderTestBase
         var provider = CreateProvider();
         var clientInfo = new ClientInformation { InstanceUrl = "https://mastodon.social" };
         
-        var result = await provider.GenerateAuthUrlAsync(clientInfo);
-        
+        var authResult = await provider.GenerateAuthUrlAsync(clientInfo);
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
+
         result.Url.ShouldContain("mastodon.social/oauth/authorize");
         result.Url.ShouldContain("client_id=");
         result.Url.ShouldContain("redirect_uri=");
