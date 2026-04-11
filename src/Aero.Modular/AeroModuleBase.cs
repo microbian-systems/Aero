@@ -87,8 +87,8 @@ public abstract class AeroModuleBase : IAeroModule, IConfigureMarten, IDisposabl
     public virtual void Configure<T>(IServiceProvider services, StoreOptions opts, bool index = true)
         where T : Entity
     {
-        if (index == false) return;
         opts.Schema.For<T>().Identity(x => x.Id);
+        if (index == false) return;
         opts.Schema.For<T>().Index(x => x.CreatedBy);
         opts.Schema.For<T>().Index(x => x.ModifiedBy);
         opts.Schema.For<T>().Index(x => x.CreatedOn);
