@@ -15,6 +15,7 @@
     <PackageVersion Include="FluentEmail.SendGrid" Version="3.0.2" />
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageVersion Include="Infisical.Sdk" Version="3.0.4" />
     <PackageVersion Include="LlmTornado" Version="3.8.54" />
     <PackageVersion Include="LlmTornado.Agents" Version="1.0.50" />
     <PackageVersion Include="LlmTornado.Contrib" Version="1.1.10" />

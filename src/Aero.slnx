@@ -42,6 +42,7 @@
   <Project Path="Aero.EfCore/Aero.EfCore.csproj" />
   <Project Path="Aero.Marten/Aero.Marten.csproj" />
   <Project Path="Aero.Modular/Aero.Modular.csproj" Id="5749f953-266f-4031-a6bc-30a8e158528d" />
+  <Project Path="Aero.Secrets/Aero.Secrets.csproj" Id="afaccf41-5e06-4191-a726-dc939f33218e" />
   <Project Path="Aero.Services/Aero.Services.csproj" />
   <Project Path="Aero.SignalR/Aero.SignalR.csproj" />
   <Project Path="Aero.Social/Aero.Social.csproj" />
