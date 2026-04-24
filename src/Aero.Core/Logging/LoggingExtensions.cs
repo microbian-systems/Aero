@@ -8,18 +8,24 @@ namespace Aero.Core.Logging;
 
 public static class LoggingExtensions
 {
-    public static IHostApplicationBuilder AddAeroLogging(this IHostApplicationBuilder builder)
+    public static string LogOutputTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
+    public static IHostApplicationBuilder AddAeroLogging(this IHostApplicationBuilder builder, string logPrefix = "aero")
     {
-        // 1. Setup the Bootstrap logger (same as before)
+        // todo - enable the ability to toggle on/off file logging via param via appsettings.json
+        // 1. Setup the Serilog Bootstrap logger (same as before)
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
+            .WriteTo.File(
+                $"logs/{logPrefix}-.log",
+                outputTemplate: LogOutputTemplate,
+                rollingInterval: RollingInterval.Day)
             .CreateBootstrapLogger();
 
         // 2. Clear default providers and add Console if desired
         // In the new builder, you access Logging directly via builder.Logging
         builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
-        if(builder.Environment.IsDevelopment())
+        if (builder.Environment.IsDevelopment())
             builder.Logging.AddDebug();
 
         // 3. Use Serilog
@@ -28,7 +34,11 @@ public static class LoggingExtensions
             .ReadFrom.Configuration(builder.Configuration)
             .ReadFrom.Services(services)
             .Enrich.FromLogContext()
-            .WriteTo.Console());
+            .WriteTo.Console()
+            .WriteTo.File(
+                $"logs/{logPrefix}-.log",
+                outputTemplate: LogOutputTemplate,
+                rollingInterval: RollingInterval.Day));
 
         return builder;
     }
