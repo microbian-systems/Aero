@@ -13,8 +13,28 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
     protected readonly HttpClient client = client;
     protected readonly string jsonMediaType = MediaTypeNames.Application.Json;
 
+    protected virtual Uri CreateUri(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+            throw new ArgumentException("Url cannot be null or empty", nameof(url));
+
+        if (Uri.TryCreate(url, UriKind.Absolute, out var absoluteUri))
+            return absoluteUri;
+
+        if (client.BaseAddress is not null)
+            return new Uri(client.BaseAddress, url);
+
+        if (Uri.TryCreate(url, UriKind.Relative, out var relativeUri))
+            return relativeUri;
+
+        throw new UriFormatException($"Invalid URI: '{url}'");
+    }
+
+    protected static string FormatUriForLog(Uri uri)
+        => uri.IsAbsoluteUri ? uri.AbsoluteUri : uri.ToString();
+
     public virtual async Task<Result<HttpResponseMessage, AeroError>> GetAsync(string url, CancellationToken ct = default)
-        => await GetAsync(new Uri(url), ct);
+        => await GetAsync(CreateUri(url), ct);
 
     public virtual async Task<Result<HttpResponseMessage, AeroError>> GetAsync(Uri uri, CancellationToken ct = default)
     {
@@ -33,13 +53,13 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
 
     public virtual Task<Result<HttpResponseMessage, AeroError>> PostAsync<T>(string url, T data, CancellationToken ct = default)
         where T : class
-        => PostAsync(new Uri(url), data, ct);
+        => PostAsync(CreateUri(url), data, ct);
 
     public virtual Task<Result<HttpResponseMessage, AeroError>> PutAsync<T>(Uri uri, T data, CancellationToken ct = default)
         => SendRequestAsync(() => client.PutAsJsonAsync(uri, data, ct), uri, ct);
 
     public virtual Task<Result<HttpResponseMessage, AeroError>> DeleteAsync(string url, CancellationToken ct = default)
-        => DeleteAsync(new Uri(url), ct);
+        => DeleteAsync(CreateUri(url), ct);
 
     public virtual async Task<Result<HttpResponseMessage, AeroError>> DeleteAsync(Uri uri, CancellationToken ct = default)
     {
@@ -51,7 +71,7 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
 
     public virtual Task<Result<HttpResponseMessage, AeroError>> PatchAsync<T>(string url, T data, CancellationToken ct = default)
         where T : class 
-        => PatchAsync(new Uri(url), data, ct);
+        => PatchAsync(CreateUri(url), data, ct);
 
     public virtual async Task<Result<HttpResponseMessage, AeroError>> PatchAsync<T>(Uri uri, T data, CancellationToken ct = default) where T : class
     {
@@ -61,7 +81,7 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
     }
 
     public virtual async Task<Result<HttpResponseMessage, AeroError>> OptionAsync(string url, CancellationToken ct = default)
-        => await OptionAsync(new Uri(url), ct);
+        => await OptionAsync(CreateUri(url), ct);
 
     public virtual async Task<Result<HttpResponseMessage, AeroError>> OptionAsync(Uri url, CancellationToken ct = default)
     {
@@ -159,7 +179,7 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         }
         catch (Exception ex)
         {
-            var url = uri.AbsoluteUri;
+            var url = FormatUriForLog(uri);
             log.LogError(ex, "Exception during GET {Uri}", url);
             return AeroError.CreateError($"Exception during GET {url}: {ex.Message}");
         }
@@ -167,7 +187,7 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
 
 
     protected virtual Result<byte[], AeroError> GetBytes(string url, CancellationToken ct = default)
-        => GetBytes(new Uri(url), ct);
+        => GetBytes(CreateUri(url), ct);
 
     protected virtual Result<byte[], AeroError> GetBytes(Uri uri, CancellationToken ct = default)
         => GetBytesAsync(uri, ct).GetAwaiter().GetResult();
@@ -194,7 +214,7 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
     }
 
     protected virtual Result<Stream, AeroError> GetStream(string url, CancellationToken ct = default)
-        => GetStream(new Uri(url), ct);
+        => GetStream(CreateUri(url), ct);
 
     protected virtual Result<Stream, AeroError> GetStream(Uri uri, CancellationToken ct = default)
         => GetStreamAsync(uri, ct).GetAwaiter().GetResult();
@@ -257,12 +277,12 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         => CreateRequest<object>(uri, method, null);
 
     protected virtual HttpRequestMessage CreateRequest<T>(string url, HttpMethod method, T? data, CancellationToken ct = default)
-        where T : class => CreateRequest(new Uri(url), method, data);
+        where T : class => CreateRequest(CreateUri(url), method, data);
 
     protected virtual HttpRequestMessage CreateRequest<T>(Uri uri, HttpMethod method, T? data)
         where T : class
     {
-        if (string.IsNullOrEmpty(uri.AbsoluteUri))
+        if (uri is null)
             throw new ArgumentNullException(nameof(uri), "Url cannot be null or empty");
 
         if (method is null)
