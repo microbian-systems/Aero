@@ -3,7 +3,7 @@ using Aero.Core.Entities;
 
 namespace Aero.Models.Entities;
 
-public class CountryModel : Entity<int>
+public class CountryModel : Entity
 {
     [JsonPropertyName("fips")]
     [MaxLength(128)]

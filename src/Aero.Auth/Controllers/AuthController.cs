@@ -12,6 +12,7 @@ namespace Aero.Auth.Controllers;
 /// - Socials & Passkeys: External identity providers
 /// </summary>
 [Route("api/[controller]")]
+[Obsolete("this class is being replaced by the aero cms auth module", true)]
 public partial class AuthController(
     UserManager<AeroUser> userManager,
     SignInManager<AeroUser> signInManager,
