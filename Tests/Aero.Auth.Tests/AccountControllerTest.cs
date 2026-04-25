@@ -1,6 +1,7 @@
 // Basic Account Controller tests - main tests are in ElectraAuthIntegrationTests.cs
 using System.Net;
 using Shouldly;
+using Xunit;
 
 namespace Aero.Auth.Tests;
 

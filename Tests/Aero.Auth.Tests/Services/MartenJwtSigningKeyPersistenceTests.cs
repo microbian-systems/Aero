@@ -1,3 +1,4 @@
+using Xunit;
 using Shouldly;
 using Microsoft.Extensions.Logging;
 using NSubstitute;

@@ -1,3 +1,4 @@
+using Xunit;
 using Shouldly;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
