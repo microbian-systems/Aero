@@ -1,9 +1,9 @@
 using Aero.Caching.Decorators;
 
-namespace Aero.Services;
+namespace Aero.Services.Features;
 
 public class CachedRepositoryFeatureStore(
-    ICachingRepositoryDecorator<Features.Features> db,
+    ICachingRepositoryDecorator<Features> db,
     AppSettings settings,
     ILogger<RepositoryFeaturesStore> log)
     : RepositoryFeaturesStore(db, settings, log);

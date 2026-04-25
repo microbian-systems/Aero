@@ -1,6 +1,7 @@
-﻿using System.Security.Cryptography;
+﻿using Aero.Common.Web.Infrastructure;
+using System.Security.Cryptography;
 
-namespace Aero.Common.Web.Infrastructure;
+namespace Aero.Auth.Services;
 
 /// <summary>
 /// Factory for creating API Keys.

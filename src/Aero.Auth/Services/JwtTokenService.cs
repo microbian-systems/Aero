@@ -1,3 +1,7 @@
+using Aero.Core;
+using Microsoft.IdentityModel.JsonWebTokens;
+using System.IdentityModel.Tokens.Jwt;
+
 namespace Aero.Auth.Services;
 
 /// <summary>
@@ -49,9 +53,9 @@ public class JwtTokenService : IJwtTokenService
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new(JwtRegisteredClaimNames.Email, email),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Email, email),
+            new(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Snowflake.NewId().ToString()),
         };
 
         var token = new JwtSecurityToken(
@@ -103,7 +107,8 @@ public class JwtTokenService : IJwtTokenService
 
             if (validatedToken is JwtSecurityToken jwtToken)
             {
-                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == 
+                  Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Sub)?.Value;
                 _logger.LogDebug("Validated access token for user {UserId}", userId);
             }
 

@@ -1,9 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Aero.Auth.Jwt;
 using Aero.Core.Extensions;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Aero.Common.Web.Jwt;
+namespace Aero.Auth.Jwt;
 
 public class JwtFactory(IOptions<JwtOptions> options, ILogger<JwtFactory> log) : JwtFactoryBase(log), IJwtFactory
 {

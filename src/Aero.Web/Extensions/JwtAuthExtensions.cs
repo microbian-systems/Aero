@@ -1,4 +1,5 @@
-﻿using Aero.Common.Web.Jwt;
+﻿
+using Aero.Auth.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 

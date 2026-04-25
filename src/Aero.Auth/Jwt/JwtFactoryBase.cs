@@ -1,7 +1,8 @@
-﻿using System.Security.Claims;
+﻿using Aero.Auth.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 
-namespace Aero.Common.Web.Jwt;
+namespace Aero.Auth.Jwt;
 
 public abstract class JwtFactoryBase(ILogger<JwtFactoryBase> log) : IJwtFactory
 {

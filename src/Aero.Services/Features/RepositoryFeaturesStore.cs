@@ -3,21 +3,21 @@ using Aero.Core.Extensions;
 
 
 
-namespace Aero.Services;
+namespace Aero.Services.Features;
 
 
 // todo - finish implementing feature store
 public class RepositoryFeaturesStore(
-    IGenericRepository<Features.Features> repo,
+    IGenericRepository<Features> repo,
     AppSettings settings,
     ILogger<RepositoryFeaturesStore> log)
     : FeatureStoreBase(log)
 {
     private readonly string appName;
-    private readonly IGenericRepository<Features.Features> repo = repo;
+    private readonly IGenericRepository<Features> repo = repo;
     private readonly AppSettings settings = settings;
 
-    public override async Task<Features.Features> GetFeatureAsync(string value)
+    public override async Task<Features> GetFeatureAsync(string value)
     {
         log.LogInformation($"getting feature: {value}");
         var result = await GetAllFeaturesAsync();
@@ -27,7 +27,7 @@ public class RepositoryFeaturesStore(
         return feature;
     }
 
-    public override async Task<List<Features.Features>> GetAllFeaturesAsync()
+    public override async Task<List<Features>> GetAllFeaturesAsync()
     {
         await Task.CompletedTask;
         throw new NotImplementedException();
@@ -35,13 +35,13 @@ public class RepositoryFeaturesStore(
         // return await repo.GetAllAsync();
     }
 
-    public override async Task SetFeaturesAsync(Features.Features value)
+    public override async Task SetFeaturesAsync(Features value)
     {
         await Task.CompletedTask;
         throw new NotImplementedException();
     }
 
-    public override async Task SetFeatureAsync(Features.Features value)
+    public override async Task SetFeatureAsync(Features value)
     {
         await Task.CompletedTask;
         log.LogInformation($"setting feature for: {value.ToJson()}");

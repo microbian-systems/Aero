@@ -15,6 +15,13 @@ public interface IJwtTokenBuilder
     JwtToken Build();
 }
 
+public sealed class JwtToken(JwtSecurityToken token)
+{
+    public DateTime ValidTo => token.ValidTo;
+    public string Value => new JwtSecurityTokenHandler().WriteToken(token);
+}
+
+
 public sealed class JwtTokenBuilder(IOptions<AppSettings> settings) : IJwtTokenBuilder
 {
     private SecurityKey securityKey = default;

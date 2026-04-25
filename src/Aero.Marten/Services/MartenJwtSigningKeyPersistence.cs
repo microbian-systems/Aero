@@ -1,4 +1,5 @@
 using Aero.MartenDB;
+using Aero.Models.Entities;
 using Marten;
 using Marten.Patching;
 
