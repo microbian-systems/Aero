@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class GmbProviderTests : ProviderTestBase
         return new GmbProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -34,7 +35,7 @@ public class GmbProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn1500()
     {
         var provider = CreateProvider();
@@ -42,7 +43,7 @@ public class GmbProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(1500);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -55,5 +56,5 @@ public class GmbProviderTests : ProviderTestBase
         result.Url.ShouldContain("client_id=test_client_id");
         result.Url.ShouldContain("redirect_uri=");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

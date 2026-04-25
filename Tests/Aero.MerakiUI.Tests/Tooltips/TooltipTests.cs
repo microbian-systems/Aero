@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Tooltips;
 using Bunit;
 using Aero.MerakiUI.Tooltips;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Tooltips;
 
 public class TooltipTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void Tooltip_ShouldRenderText()
     {
         var cut = Render<Tooltip>(parameters => parameters
@@ -14,5 +15,5 @@ public class TooltipTests : BunitContext
         );
 
         Assert.Contains("Hint info", cut.Markup);
-    }
+}
 }

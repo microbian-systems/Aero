@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Testimonials;
 using Bunit;
 using Aero.MerakiUI.Testimonials;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Testimonials;
 
 public class TestimonialTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void TestimonialCard_ShouldRenderContent()
     {
         var cut = Render<TestimonialCard>(parameters => parameters
@@ -14,5 +15,5 @@ public class TestimonialTests : BunitContext
         );
 
         Assert.Contains("Amazing service!", cut.Markup);
-    }
+}
 }

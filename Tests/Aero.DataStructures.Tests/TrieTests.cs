@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,7 @@ namespace Aero.DataStructures.Tests;
 
 public class TrieTests
 {
-    [Fact]
+    [Test]
     public void Insert_And_Search_Success()
     {
         // Arrange
@@ -19,7 +20,7 @@ public class TrieTests
         trie.Search("appl").ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void StartsWith_Success()
     {
         // Arrange
@@ -34,7 +35,7 @@ public class TrieTests
         trie.StartsWith("can").ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void Delete_And_Search_Fails()
     {
         // Arrange
@@ -48,5 +49,5 @@ public class TrieTests
         // Assert
         trie.Search("apple").ShouldBeFalse();
         trie.Search("app").ShouldBeTrue();
-    }
+}
 }

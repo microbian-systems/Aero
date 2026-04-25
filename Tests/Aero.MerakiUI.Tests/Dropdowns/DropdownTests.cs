@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Dropdowns;
 using Bunit;
 using Aero.MerakiUI.Dropdowns;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Dropdowns;
 
 public class DropdownTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void SimpleDropdown_ShouldRenderCorrectStructure()
     {
         var cut = Render<SimpleDropdown>(parameters => parameters
@@ -26,7 +27,7 @@ public class DropdownTests : BunitContext
         Assert.Contains("Item 1", menu.InnerHtml);
     }
 
-    [Fact]
+    [Test]
     public void DropdownWithIcons_ShouldRenderCorrectStructure()
     {
         var cut = Render<DropdownWithIcons>(parameters => parameters
@@ -44,5 +45,5 @@ public class DropdownTests : BunitContext
         // Should have the dropdown menu container
         var menu = cut.Find("div[x-show]");
         Assert.Contains("Settings", menu.InnerHtml);
-    }
+}
 }

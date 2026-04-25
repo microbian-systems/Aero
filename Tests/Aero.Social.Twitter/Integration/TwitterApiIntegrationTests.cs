@@ -1,18 +1,19 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Exceptions;
 using Aero.Social.Twitter.Client.Models;
 using Aero.Social.Twitter.Integration.Builders;
 using AutoFixture;
-using AutoFixture.Xunit2;
 using Bogus;
 using Shouldly;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Integration;
 
-[Trait("Category", "Integration")]
-[Collection("Integration")]
+[Property("Category", "Integration")]
+[ClassDataSource<WireMockFixture>(Shared = SharedType.Keyed, Key = "Integration")]
 public class TwitterApiIntegrationTests : IDisposable
 {
     private readonly WireMockFixture _fixture;
@@ -30,7 +31,7 @@ public class TwitterApiIntegrationTests : IDisposable
 
     //#region Happy Path Tests
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_WithValidId_ReturnsTweet()
     {
         // Arrange - Using Bogus for realistic data
@@ -63,11 +64,13 @@ public class TwitterApiIntegrationTests : IDisposable
         result.Text.ShouldBe("Test tweet content");
     }
 
-    [Theory]
-    [AutoData]
-    public async Task GetTweetAsync_WithAutoFixtureData_ReturnsTweet(string tweetId, string tweetText)
+    [Test]
+    public async Task GetTweetAsync_WithAutoFixtureData_ReturnsTweet()
     {
         // Arrange - Using AutoFixture
+        var tweetId = _autoFixture.Create<string>();
+        var tweetText = _autoFixture.Create<string>();
+
         _fixture.Server
             .Given(
                 Request.Create()
@@ -95,7 +98,7 @@ public class TwitterApiIntegrationTests : IDisposable
         result.Text.ShouldBe(tweetText);
     }
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_WithOAuth2_SendsBearerToken()
     {
         // Arrange
@@ -127,7 +130,7 @@ public class TwitterApiIntegrationTests : IDisposable
         result.Id.ShouldBe(tweetId);
     }
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_DeserializesPublicMetrics()
     {
         // Arrange
@@ -172,7 +175,7 @@ public class TwitterApiIntegrationTests : IDisposable
 
     //#region Error Handling Tests
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_WithInvalidOAuth1_ThrowsAuthenticationException()
     {
         // Arrange
@@ -199,7 +202,7 @@ public class TwitterApiIntegrationTests : IDisposable
         exception.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_WithInvalidId_ThrowsNotFoundException()
     {
         // Arrange
@@ -226,9 +229,9 @@ public class TwitterApiIntegrationTests : IDisposable
         exception.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 
-    [Theory]
-    [InlineData(900)]  // 15 minutes
-    [InlineData(60)]   // 1 minute
+    [Test]
+    [Arguments(900)]  // 15 minutes
+    [Arguments(60)]   // 1 minute
     public async Task GetTweetAsync_WhenRateLimited_ThrowsRateLimitExceptionWithRetryAfter(int retryAfterSeconds)
     {
         // Arrange
@@ -258,7 +261,7 @@ public class TwitterApiIntegrationTests : IDisposable
         exception.RetryAfter.Value.TotalSeconds.ShouldBe(retryAfterSeconds);
     }
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_WithServerError_ThrowsApiException()
     {
         // Arrange
@@ -289,7 +292,7 @@ public class TwitterApiIntegrationTests : IDisposable
 
     //#region Request Validation Tests
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_MakesRequestToCorrectEndpoint()
     {
         // Arrange
@@ -319,7 +322,7 @@ public class TwitterApiIntegrationTests : IDisposable
             entry.RequestMessage.Path == $"/2/tweets/{tweetId}");
     }
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_UsesGetMethod()
     {
         // Arrange
@@ -352,7 +355,7 @@ public class TwitterApiIntegrationTests : IDisposable
 
     //#region Retry Behavior Tests
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_WithTransientFailure_RetriesAndSucceeds()
     {
         // Arrange - Test retry behavior with transient failure
@@ -389,6 +392,6 @@ public class TwitterApiIntegrationTests : IDisposable
         {
             _fixture.Reset();
             _disposed = true;
-        }
+}
     }
 }

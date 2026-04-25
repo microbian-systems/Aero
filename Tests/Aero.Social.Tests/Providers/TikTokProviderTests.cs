@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class TikTokProviderTests : ProviderTestBase
         return new TikTokProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -34,7 +35,7 @@ public class TikTokProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn2000()
     {
         var provider = CreateProvider();
@@ -42,7 +43,7 @@ public class TikTokProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(2000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -56,5 +57,5 @@ public class TikTokProviderTests : ProviderTestBase
         result.Url.ShouldContain("redirect_uri=");
         result.Url.ShouldContain("response_type=code");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

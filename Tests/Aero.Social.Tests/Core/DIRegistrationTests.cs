@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.Social;
 using Aero.Social.Abstractions;
 using Aero.Social.Providers;
@@ -61,7 +62,7 @@ public class DIRegistrationTests
         _serviceProvider = services.BuildServiceProvider();
     }
 
-    [Fact]
+    [Test]
     public void AllProviders_ShouldBeRegistered()
     {
         var providers = _serviceProvider.GetServices<ISocialProvider>().ToList();
@@ -69,7 +70,7 @@ public class DIRegistrationTests
         providers.Count.ShouldBe(29);
     }
 
-    [Fact]
+    [Test]
     public void IntegrationManager_ShouldResolveAllProviders()
     {
         var manager = _serviceProvider.GetRequiredService<IntegrationManager>();
@@ -79,36 +80,36 @@ public class DIRegistrationTests
         identifiers.Count.ShouldBe(29);
     }
 
-    [Theory]
-    [InlineData("discord")]
-    [InlineData("slack")]
-    [InlineData("telegram")]
-    [InlineData("medium")]
-    [InlineData("linkedin")]
-    [InlineData("facebook")]
-    [InlineData("x")]
-    [InlineData("reddit")]
-    [InlineData("instagram")]
-    [InlineData("tiktok")]
-    [InlineData("youtube")]
-    [InlineData("threads")]
-    [InlineData("bluesky")]
-    [InlineData("mastodon")]
-    [InlineData("pinterest")]
-    [InlineData("lemmy")]
-    [InlineData("nostr")]
-    [InlineData("devto")]
-    [InlineData("hashnode")]
-    [InlineData("wordpress")]
-    [InlineData("twitch")]
-    [InlineData("dribbble")]
-    [InlineData("kick")]
-    [InlineData("wrapcast")]
-    [InlineData("gmb")]
-    [InlineData("linkedin-page")]
-    [InlineData("instagram-standalone")]
-    [InlineData("listmonk")]
-    [InlineData("vk")]
+    [Test]
+    [Arguments("discord")]
+    [Arguments("slack")]
+    [Arguments("telegram")]
+    [Arguments("medium")]
+    [Arguments("linkedin")]
+    [Arguments("facebook")]
+    [Arguments("x")]
+    [Arguments("reddit")]
+    [Arguments("instagram")]
+    [Arguments("tiktok")]
+    [Arguments("youtube")]
+    [Arguments("threads")]
+    [Arguments("bluesky")]
+    [Arguments("mastodon")]
+    [Arguments("pinterest")]
+    [Arguments("lemmy")]
+    [Arguments("nostr")]
+    [Arguments("devto")]
+    [Arguments("hashnode")]
+    [Arguments("wordpress")]
+    [Arguments("twitch")]
+    [Arguments("dribbble")]
+    [Arguments("kick")]
+    [Arguments("wrapcast")]
+    [Arguments("gmb")]
+    [Arguments("linkedin-page")]
+    [Arguments("instagram-standalone")]
+    [Arguments("listmonk")]
+    [Arguments("vk")]
     public void IntegrationManager_ShouldResolveProvider(string identifier)
     {
         var manager = _serviceProvider.GetRequiredService<IntegrationManager>();
@@ -119,7 +120,7 @@ public class DIRegistrationTests
         provider.Identifier.ShouldBe(identifier);
     }
 
-    [Fact]
+    [Test]
     public void IntegrationManager_GetAllIntegrationsAsync_ShouldReturnAllProviders()
     {
         var manager = _serviceProvider.GetRequiredService<IntegrationManager>();
@@ -128,5 +129,5 @@ public class DIRegistrationTests
 
         integrations.Count.ShouldBe(29);
         integrations.Select(i => i.Identifier).Distinct().Count().ShouldBe(29);
-    }
+}
 }

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -12,7 +13,7 @@ public class WeightedGraphTests
 
     //#region Constructor Tests
 
-    [Fact]
+    [Test]
     public void Constructor_ShouldCreateDirectedGraph_WhenSpecified()
     {
         var graph = new WeightedGraph<string, int>(directed: true);
@@ -20,7 +21,7 @@ public class WeightedGraphTests
         graph.IsDirected.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void Constructor_ShouldCreateUndirectedGraph_ByDefault()
     {
         var graph = new WeightedGraph<string, int>(directed: false);
@@ -32,7 +33,7 @@ public class WeightedGraphTests
 
     //#region Edge Tests
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldStoreWeight()
     {
         var graph = new WeightedGraph<string, int>();
@@ -44,7 +45,7 @@ public class WeightedGraphTests
         storedWeight.ShouldBe(weight);
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldAutoAddVertices()
     {
         var graph = new WeightedGraph<int, double>();
@@ -56,7 +57,7 @@ public class WeightedGraphTests
         graph.VertexCount.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_Undirected_ShouldStoreBidirectional()
     {
         var graph = new WeightedGraph<string, int>(directed: false);
@@ -66,7 +67,7 @@ public class WeightedGraphTests
         graph.ContainsEdge("Y", "X").ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_Directed_ShouldStoreOneDirection()
     {
         var graph = new WeightedGraph<string, int>(directed: true);
@@ -76,7 +77,7 @@ public class WeightedGraphTests
         graph.ContainsEdge("Y", "X").ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldIncreaseEdgeCount()
     {
         var graph = new WeightedGraph<string, int>();
@@ -86,10 +87,10 @@ public class WeightedGraphTests
         graph.EdgeCount.ShouldBe(1);
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-5)]
-    [InlineData(100)]
+    [Test]
+    [Arguments(0)]
+    [Arguments(-5)]
+    [Arguments(100)]
     public void AddEdge_ShouldAcceptVariousWeights(int weight)
     {
         var graph = new WeightedGraph<string, int>();
@@ -104,7 +105,7 @@ public class WeightedGraphTests
 
     //#region Weight Retrieval Tests
 
-    [Fact]
+    [Test]
     public void TryGetWeight_ShouldReturnFalse_WhenEdgeDoesNotExist()
     {
         var graph = new WeightedGraph<string, int>();
@@ -112,7 +113,7 @@ public class WeightedGraphTests
         graph.TryGetWeight("nonexistent", "edge", out _).ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void TryGetWeight_ShouldReturnCorrectWeight()
     {
         var graph = new WeightedGraph<string, double>();
@@ -127,7 +128,7 @@ public class WeightedGraphTests
 
     //#region GetEdges Tests
 
-    [Fact]
+    [Test]
     public void GetEdges_ShouldReturnAllEdgesWithWeights()
     {
         var graph = new WeightedGraph<string, int>();
@@ -145,7 +146,7 @@ public class WeightedGraphTests
 
     //#region Neighbors Tests
 
-    [Fact]
+    [Test]
     public void GetNeighborsWithWeights_ShouldReturnCorrectData()
     {
         var graph = new WeightedGraph<string, int>();
@@ -164,7 +165,7 @@ public class WeightedGraphTests
 
     //#region Dijkstra Tests
 
-    [Fact]
+    [Test]
     public void Dijkstra_ShouldFindShortestPaths()
     {
         var graph = new WeightedGraph<string, int>();
@@ -179,7 +180,7 @@ public class WeightedGraphTests
         distances["C"].ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public void Dijkstra_ShouldThrow_WhenStartVertexNotFound()
     {
         var graph = new WeightedGraph<string, int>();
@@ -189,7 +190,7 @@ public class WeightedGraphTests
         act.ShouldThrow<ArgumentException>();
     }
 
-    [Fact]
+    [Test]
     public void Dijkstra_ShouldHandleDisconnectedVertices()
     {
         var graph = new WeightedGraph<string, int>();
@@ -205,7 +206,7 @@ public class WeightedGraphTests
 
     //#region Shortest Path Tests
 
-    [Fact]
+    [Test]
     public void GetShortestPath_ShouldReturnCorrectPath()
     {
         var graph = new WeightedGraph<string, int>();
@@ -219,7 +220,7 @@ public class WeightedGraphTests
         weight.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void GetShortestPath_ShouldReturnEmpty_WhenNoPath()
     {
         var graph = new WeightedGraph<string, int>();
@@ -235,7 +236,7 @@ public class WeightedGraphTests
 
     //#region MST Tests
 
-    [Fact]
+    [Test]
     public void GetMinimumSpanningTree_ShouldReturnCorrectEdges()
     {
         var graph = new WeightedGraph<string, int>(directed: false);
@@ -250,7 +251,7 @@ public class WeightedGraphTests
         mst.ContainsEdge("B", "C").ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void GetMinimumSpanningTree_ShouldThrow_ForDirectedGraph()
     {
         var graph = new WeightedGraph<string, int>(directed: true);
@@ -264,7 +265,7 @@ public class WeightedGraphTests
 
     //#region Remove Tests
 
-    [Fact]
+    [Test]
     public void RemoveEdge_ShouldRemoveWeight()
     {
         var graph = new WeightedGraph<string, int>();
@@ -275,7 +276,7 @@ public class WeightedGraphTests
         graph.TryGetWeight("A", "B", out _).ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void RemoveVertex_ShouldRemoveAllIncidentEdges()
     {
         var graph = new WeightedGraph<string, int>();
@@ -292,7 +293,7 @@ public class WeightedGraphTests
 
     //#region Generic Weight Type Tests
 
-    [Fact]
+    [Test]
     public void WeightedGraph_ShouldWorkWithDoubleWeights()
     {
         var graph = new WeightedGraph<string, double>();
@@ -304,7 +305,7 @@ public class WeightedGraphTests
         distances["C"].ShouldBe(4.2, 0.0001);
     }
 
-    [Fact]
+    [Test]
     public void WeightedGraph_ShouldWorkWithLongWeights()
     {
         var graph = new WeightedGraph<int, long>();
@@ -316,7 +317,7 @@ public class WeightedGraphTests
 
         graph.TryGetWeight(1, 2, out var stored).ShouldBeTrue();
         stored.ShouldBe(w1);
-    }
+}
 
     //#endregion
 }

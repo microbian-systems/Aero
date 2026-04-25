@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class InstagramStandaloneProviderTests : ProviderTestBase
         return new InstagramStandaloneProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -34,7 +35,7 @@ public class InstagramStandaloneProviderTests : ProviderTestBase
         provider.IsBetweenSteps.ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn2200()
     {
         var provider = CreateProvider();
@@ -42,7 +43,7 @@ public class InstagramStandaloneProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(2200);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -54,5 +55,5 @@ public class InstagramStandaloneProviderTests : ProviderTestBase
         result.Url.ShouldContain("instagram.com");
         result.Url.ShouldContain("client_id=test_client_id");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class VkProviderTests : ProviderTestBase
         return new VkProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -33,7 +34,7 @@ public class VkProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn2048()
     {
         var provider = CreateProvider();
@@ -41,7 +42,7 @@ public class VkProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(2048);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -54,5 +55,5 @@ public class VkProviderTests : ProviderTestBase
         result.Url.ShouldContain("client_id=test_client_id");
         result.Url.ShouldContain("redirect_uri=");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

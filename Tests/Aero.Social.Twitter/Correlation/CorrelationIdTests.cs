@@ -1,12 +1,14 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Correlation;
 using Aero.Social.Twitter.Client.Logging;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Correlation;
 
 public class CorrelationIdProviderTests
 {
-    [Fact]
-    public void GuidCorrelationIdProvider_ShouldGenerateUniqueIds()
+    [Test]
+    public async Task GuidCorrelationIdProvider_ShouldGenerateUniqueIds()
     {
         // Arrange
         var provider = new GuidCorrelationIdProvider();
@@ -16,12 +18,12 @@ public class CorrelationIdProviderTests
         var id2 = provider.GenerateCorrelationId();
 
         // Assert
-        Assert.NotEqual(id1, id2);
-        Assert.Equal(16, id1.Length); // Should be 16 chars
+        await Assert.That(id2).IsNotEqualTo(id1);
+        await Assert.That(id1.Length).IsEqualTo(16); // Should be 16 chars
     }
 
-    [Fact]
-    public void GuidCorrelationIdProvider_ShouldGenerateValidIds()
+    [Test]
+    public async Task GuidCorrelationIdProvider_ShouldGenerateValidIds()
     {
         // Arrange
         var provider = new GuidCorrelationIdProvider();
@@ -31,14 +33,14 @@ public class CorrelationIdProviderTests
 
         // Assert
         Assert.NotNull(id);
-        Assert.NotEmpty(id);
-        Assert.DoesNotContain("-", id); // Should not contain hyphens
+        await Assert.That(id).IsNotEmpty();
+        await Assert.That(id).DoesNotContain("-"); // Should not contain hyphens
     }
 }
 
 public class CorrelationIdHandlerTests
 {
-    [Fact]
+    [Test]
     public async Task SendAsync_ShouldAddCorrelationIdHeader()
     {
         // Arrange
@@ -55,13 +57,13 @@ public class CorrelationIdHandlerTests
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.True(request.Headers.Contains("X-Correlation-Id"));
+        await Assert.That(request.Headers.Contains("X-Correlation-Id")).IsTrue();
         var correlationId = request.Headers.GetValues("X-Correlation-Id").FirstOrDefault();
         Assert.NotNull(correlationId);
-        Assert.NotEmpty(correlationId);
+        await Assert.That(correlationId).IsNotEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task SendAsync_ShouldNotOverwriteExistingCorrelationId()
     {
         // Arrange
@@ -80,7 +82,7 @@ public class CorrelationIdHandlerTests
 
         // Assert
         var correlationId = request.Headers.GetValues("X-Correlation-Id").FirstOrDefault();
-        Assert.Equal("existing-id-123", correlationId);
+        await Assert.That(correlationId).IsEqualTo("existing-id-123");
     }
 
     private class TestHandler : HttpMessageHandler
@@ -88,6 +90,6 @@ public class CorrelationIdHandlerTests
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
-        }
+}
     }
 }

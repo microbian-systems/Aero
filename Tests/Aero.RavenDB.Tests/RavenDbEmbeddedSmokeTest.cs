@@ -1,8 +1,9 @@
+﻿using TUnit.Core;
 namespace Aero.RavenDB.Tests;
 
 public class RavenDbEmbeddedSmokeTest : RavenDbTestBase
 {
-    [Fact]
+    [Test]
     public async Task Should_Start_Embedded_RavenDB_And_Store_Document()
     {
         // Arrange
@@ -17,5 +18,5 @@ public class RavenDbEmbeddedSmokeTest : RavenDbTestBase
         using var loadSession = DocumentStore.LightweightSession();
         var loadedDoc = await loadSession.LoadAsync<object>("tests/1");
         loadedDoc.ShouldNotBeNull();
-    }
+}
 }

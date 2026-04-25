@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -19,7 +20,7 @@ public class NostrProviderTests : ProviderTestBase
         return new NostrProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -30,7 +31,7 @@ public class NostrProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(5);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn100000()
     {
         var provider = CreateProvider();
@@ -38,7 +39,7 @@ public class NostrProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(100000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnEmptyUrl()
     {
         var provider = CreateProvider();
@@ -49,5 +50,5 @@ public class NostrProviderTests : ProviderTestBase
 
         result.Url.ShouldBeEmpty();
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

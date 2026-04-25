@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -6,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Aero.Cms.AspNetCore.Identity.Data;
 using Aero.Identity.Extensions;
 using Marten;
-using Xunit;
 
 namespace Aero.Identity.Tests;
 
@@ -32,7 +32,7 @@ public class IdentityManagementTests : AeroDbTestDriver
         return (userManager, roleManager, session, serviceProvider);
     }
 
-    [Fact]
+    [Test]
     public async Task UserLifecycle_Create_Read_Update_Delete()
     {
         // Arrange
@@ -68,7 +68,7 @@ public class IdentityManagementTests : AeroDbTestDriver
         Assert.Null(deletedUser);
     }
 
-    [Fact]
+    [Test]
     public async Task RoleAndClaimManagement_Lifecycle()
     {
         // Arrange
@@ -109,7 +109,7 @@ public class IdentityManagementTests : AeroDbTestDriver
         Assert.Contains(dbUser.Claims, c => c.ClaimType == "Permission" && c.ClaimValue == "ViewDashboard");
     }
 
-    [Fact]
+    [Test]
     public async Task UserClaims_CanBeAddedAndRemovedDirectly()
     {
         // Arrange
@@ -136,5 +136,5 @@ public class IdentityManagementTests : AeroDbTestDriver
         var finalUser = await userManager.FindByNameAsync("directclaimuser");
         var finalClaims = await userManager.GetClaimsAsync(finalUser!);
         Assert.DoesNotContain(finalClaims, c => c.Type == "Personal");
-    }
+}
 }

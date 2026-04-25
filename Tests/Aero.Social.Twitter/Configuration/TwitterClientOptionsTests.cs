@@ -1,31 +1,33 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Configuration;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Configuration;
 
 public class TwitterClientOptionsTests
 {
-    [Fact]
-    public void TwitterClientOptions_ShouldHaveDefaultTimeout()
+    [Test]
+    public async Task TwitterClientOptions_ShouldHaveDefaultTimeout()
     {
         // Arrange & Act
         var options = new TwitterClientOptions();
 
         // Assert
-        Assert.Equal(TimeSpan.FromSeconds(30), options.Timeout);
+        await Assert.That(options.Timeout).IsEqualTo(TimeSpan.FromSeconds(30));
     }
 
-    [Fact]
-    public void TwitterClientOptions_ShouldHaveDefaultMaxRetries()
+    [Test]
+    public async Task TwitterClientOptions_ShouldHaveDefaultMaxRetries()
     {
         // Arrange & Act
         var options = new TwitterClientOptions();
 
         // Assert
-        Assert.Equal(3, options.MaxRetries);
+        await Assert.That(options.MaxRetries).IsEqualTo(3);
     }
 
-    [Fact]
-    public void TwitterClientOptions_ShouldAllowSettingCredentials()
+    [Test]
+    public async Task TwitterClientOptions_ShouldAllowSettingCredentials()
     {
         // Arrange
         var options = new TwitterClientOptions
@@ -38,15 +40,15 @@ public class TwitterClientOptionsTests
         };
 
         // Assert
-        Assert.Equal("test-consumer-key", options.ConsumerKey);
-        Assert.Equal("test-consumer-secret", options.ConsumerSecret);
-        Assert.Equal("test-access-token", options.AccessToken);
-        Assert.Equal("test-access-token-secret", options.AccessTokenSecret);
-        Assert.Equal("test-bearer-token", options.BearerToken);
+        await Assert.That(options.ConsumerKey).IsEqualTo("test-consumer-key");
+        await Assert.That(options.ConsumerSecret).IsEqualTo("test-consumer-secret");
+        await Assert.That(options.AccessToken).IsEqualTo("test-access-token");
+        await Assert.That(options.AccessTokenSecret).IsEqualTo("test-access-token-secret");
+        await Assert.That(options.BearerToken).IsEqualTo("test-bearer-token");
     }
 
-    [Fact]
-    public void TwitterClientOptions_ShouldAllowCustomizingTimeout()
+    [Test]
+    public async Task TwitterClientOptions_ShouldAllowCustomizingTimeout()
     {
         // Arrange
         var customTimeout = TimeSpan.FromSeconds(60);
@@ -58,11 +60,11 @@ public class TwitterClientOptionsTests
         };
 
         // Assert
-        Assert.Equal(customTimeout, options.Timeout);
+        await Assert.That(options.Timeout).IsEqualTo(customTimeout);
     }
 
-    [Fact]
-    public void TwitterClientOptions_ShouldAllowCustomizingMaxRetries()
+    [Test]
+    public async Task TwitterClientOptions_ShouldAllowCustomizingMaxRetries()
     {
         // Arrange
         var customRetries = 5;
@@ -74,6 +76,6 @@ public class TwitterClientOptionsTests
         };
 
         // Assert
-        Assert.Equal(customRetries, options.MaxRetries);
-    }
+        await Assert.That(options.MaxRetries).IsEqualTo(customRetries);
+}
 }

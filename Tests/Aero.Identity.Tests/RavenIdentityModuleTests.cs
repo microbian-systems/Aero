@@ -1,12 +1,12 @@
+﻿using TUnit.Core;
 using Aero.Cms;
 using Aero.Cms.Manager;
-using Xunit;
 
 namespace Aero.Identity.Tests;
 
 public class AeroIdentityModuleTests
 {
-    [Fact]
+    [Test]
     public void Init_RegistersPermissions()
     {
         // Arrange
@@ -20,7 +20,7 @@ public class AeroIdentityModuleTests
         Assert.Contains(App.Permissions["Manager"], p => p.Name == Permissions.Roles);
     }
 
-    [Fact]
+    [Test]
     public void Init_AddsMenuItems()
     {
         // Arrange
@@ -33,5 +33,5 @@ public class AeroIdentityModuleTests
         var systemMenu = Menu.Items["System"];
         Assert.Contains(systemMenu.Items, i => i.InternalId == "Users");
         Assert.Contains(systemMenu.Items, i => i.InternalId == "Roles");
-    }
+}
 }

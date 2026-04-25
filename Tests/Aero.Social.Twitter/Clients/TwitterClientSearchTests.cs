@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
@@ -6,6 +7,7 @@ using Aero.Social.Twitter.Client.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
@@ -23,7 +25,7 @@ public class TwitterClientSearchTests
         _logger = Substitute.For<ILogger<TwitterClient>>();
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_WithValidQuery_ReturnsTweets()
     {
         // Arrange
@@ -69,14 +71,14 @@ public class TwitterClientSearchTests
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(result.Data);
-        Assert.Equal(2, result.Data.Count);
-        Assert.Equal("1234567890", result.Data[0].Id);
-        Assert.Equal("1234567891", result.Data[1].Id);
+        await Assert.That(result.Data.Count).IsEqualTo(2);
+        await Assert.That(result.Data[0].Id).IsEqualTo("1234567890");
+        await Assert.That(result.Data[1].Id).IsEqualTo("1234567891");
         Assert.NotNull(result.Meta);
-        Assert.Equal(2, result.Meta.ResultCount);
+        await Assert.That(result.Meta.ResultCount).IsEqualTo(2);
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_WithOptions_IncludesAllParameters()
     {
         // Arrange
@@ -120,17 +122,17 @@ public class TwitterClientSearchTests
         // Assert
         Assert.NotNull(capturedRequest);
         var query = capturedRequest.RequestUri?.Query;
-        Assert.Contains("query=test%20query", query);
-        Assert.Contains("max_results=50", query);
-        Assert.Contains("since_id=1000000000", query);
-        Assert.Contains("until_id=9999999999", query);
-        Assert.Contains("start_time=", query);
-        Assert.Contains("end_time=", query);
-        Assert.Contains("tweet.fields=", query);
-        Assert.Contains("expansions=author_id", query);
+        await Assert.That(query).Contains("query=test%20query");
+        await Assert.That(query).Contains("max_results=50");
+        await Assert.That(query).Contains("since_id=1000000000");
+        await Assert.That(query).Contains("until_id=9999999999");
+        await Assert.That(query).Contains("start_time=");
+        await Assert.That(query).Contains("end_time=");
+        await Assert.That(query).Contains("tweet.fields=");
+        await Assert.That(query).Contains("expansions=author_id");
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_WithNextToken_IncludesPaginationToken()
     {
         // Arrange
@@ -167,10 +169,10 @@ public class TwitterClientSearchTests
 
         // Assert
         Assert.NotNull(capturedRequest);
-        Assert.Contains("next_token=b26v89c19zqg8o3f", capturedRequest.RequestUri?.Query);
+        await Assert.That(capturedRequest.RequestUri?.Query).Contains("next_token=b26v89c19zqg8o3f");
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_WithNullQuery_ThrowsArgumentException()
     {
         // Arrange
@@ -180,10 +182,10 @@ public class TwitterClientSearchTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
             twitterClient.SearchTweetsAsync(null!));
-        Assert.Contains("Search query cannot be null or empty", exception.Message);
+        await Assert.That(exception.Message).Contains("Search query cannot be null or empty");
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_WithEmptyQuery_ThrowsArgumentException()
     {
         // Arrange
@@ -193,10 +195,10 @@ public class TwitterClientSearchTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
             twitterClient.SearchTweetsAsync(""));
-        Assert.Contains("Search query cannot be null or empty", exception.Message);
+        await Assert.That(exception.Message).Contains("Search query cannot be null or empty");
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_WithWhitespaceQuery_ThrowsArgumentException()
     {
         // Arrange
@@ -206,10 +208,10 @@ public class TwitterClientSearchTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
             twitterClient.SearchTweetsAsync("   "));
-        Assert.Contains("Search query cannot be null or empty", exception.Message);
+        await Assert.That(exception.Message).Contains("Search query cannot be null or empty");
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_WithInvalidMaxResults_ThrowsArgumentException()
     {
         // Arrange
@@ -224,10 +226,10 @@ public class TwitterClientSearchTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
             twitterClient.SearchTweetsAsync("test", options));
-        Assert.Contains("MaxResults must be between 10 and 100", exception.Message);
+        await Assert.That(exception.Message).Contains("MaxResults must be between 10 and 100");
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_WithInvalidTimeRange_ThrowsArgumentException()
     {
         // Arrange
@@ -243,10 +245,10 @@ public class TwitterClientSearchTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
             twitterClient.SearchTweetsAsync("test", options));
-        Assert.Contains("StartTime cannot be greater than EndTime", exception.Message);
+        await Assert.That(exception.Message).Contains("StartTime cannot be greater than EndTime");
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_WithRateLimit_ThrowsTwitterRateLimitException()
     {
         // Arrange
@@ -276,10 +278,10 @@ public class TwitterClientSearchTests
         var exception = await Assert.ThrowsAsync<TwitterRateLimitException>(() =>
             twitterClient.SearchTweetsAsync("test"));
         Assert.NotNull(exception.RetryAfter);
-        Assert.Equal(TimeSpan.FromSeconds(900), exception.RetryAfter);
+        await Assert.That(exception.RetryAfter).IsEqualTo(TimeSpan.FromSeconds(900));
     }
 
-    [Fact]
+    [Test]
     public async Task SearchTweetsAsync_QueryEncoding_EncodesSpecialCharacters()
     {
         // Arrange
@@ -312,7 +314,7 @@ public class TwitterClientSearchTests
         // Assert
         Assert.NotNull(capturedRequest);
         var query = capturedRequest.RequestUri?.Query;
-        Assert.Contains("query=test%20%23hashtag%20%40user", query);
+        await Assert.That(query).Contains("query=test%20%23hashtag%20%40user");
     }
 
     private class TestHttpMessageHandler : HttpMessageHandler
@@ -327,6 +329,6 @@ public class TwitterClientSearchTests
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return await _handler(request);
-        }
+}
     }
 }

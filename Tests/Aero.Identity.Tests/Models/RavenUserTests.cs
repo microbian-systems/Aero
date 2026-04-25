@@ -1,11 +1,11 @@
+﻿using TUnit.Core;
 using Aero.Identity.Models;
-using Xunit;
 
 namespace Aero.Identity.Tests.Models;
 
 public class AeroUserTests
 {
-    [Fact]
+    [Test]
     public void CanInitializeAeroUser()
     {
         // Arrange & Act
@@ -17,7 +17,7 @@ public class AeroUserTests
         Assert.Empty(user.Passkeys);
     }
 
-    [Fact]
+    [Test]
     public void CanAddPasskeyToAeroUser()
     {
         // Arrange
@@ -40,5 +40,5 @@ public class AeroUserTests
         Assert.Equal(new byte[] { 4, 5, 6 }, user.Passkeys[0].PublicKey);
         Assert.Equal(1u, user.Passkeys[0].SignCount);
         Assert.Equal("pk1", user.Passkeys[0].Name);
-    }
+}
 }

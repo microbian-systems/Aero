@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Electra.Auth;
 
 namespace Electra.Core.Tests;
@@ -12,7 +13,7 @@ public class JwtExtensionsTests
         validSecret = GenerateRandomSecretKey();
     }
 
-    [Fact]
+    [Test]
     public void DecodeHttpRequest_ValidToken_ReturnsJwtPayload()
     {
         // Arrange
@@ -33,7 +34,7 @@ public class JwtExtensionsTests
         Assert.NotEmpty(payload.Claims);
     }
 
-    [Fact]
+    [Test]
     public void DecodeStringToken_ValidToken_ReturnsJwtPayload()
     {
         // Arrange
@@ -51,7 +52,7 @@ public class JwtExtensionsTests
         Assert.NotEmpty(payload.Claims);
     }
 
-    [Fact]
+    [Test]
     public void DecodeHttpRequest_InvalidToken_ReturnsNull()
     {
         // Arrange
@@ -68,7 +69,7 @@ public class JwtExtensionsTests
         //payload.Value.GetType().Should().Be<Exception>();
     }
 
-    [Fact]
+    [Test]
     public void DecodeStringToken_InvalidToken_ReturnsNull()
     {
         // Arrange
@@ -111,5 +112,5 @@ public class JwtExtensionsTests
     {
         // Generate a random string with at least 32 characters
         return faker.Random.AlphaNumeric(32);
-    }
+}
 }

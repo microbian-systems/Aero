@@ -1,18 +1,20 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Authentication;
 using Aero.Social.Twitter.Client.Configuration;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Authentication;
 
 public class OAuth1AuthenticationProviderTests
 {
-    [Fact]
+    [Test]
     public void Constructor_ShouldThrowOnNullOptions()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => new OAuth1AuthenticationProvider(null!));
     }
 
-    [Fact]
+    [Test]
     public void Constructor_ShouldThrowOnMissingConsumerKey()
     {
         // Arrange
@@ -27,7 +29,7 @@ public class OAuth1AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth1AuthenticationProvider(options));
     }
 
-    [Fact]
+    [Test]
     public void Constructor_ShouldThrowOnMissingConsumerSecret()
     {
         // Arrange
@@ -42,7 +44,7 @@ public class OAuth1AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth1AuthenticationProvider(options));
     }
 
-    [Fact]
+    [Test]
     public void Constructor_ShouldThrowOnMissingAccessToken()
     {
         // Arrange
@@ -57,7 +59,7 @@ public class OAuth1AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth1AuthenticationProvider(options));
     }
 
-    [Fact]
+    [Test]
     public void Constructor_ShouldThrowOnMissingAccessTokenSecret()
     {
         // Arrange
@@ -72,7 +74,7 @@ public class OAuth1AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth1AuthenticationProvider(options));
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateRequestAsync_ShouldAddAuthorizationHeader()
     {
         // Arrange
@@ -91,15 +93,15 @@ public class OAuth1AuthenticationProviderTests
 
         // Assert
         Assert.NotNull(request.Headers.Authorization);
-        Assert.Equal("OAuth", request.Headers.Authorization.Scheme);
+        await Assert.That(request.Headers.Authorization.Scheme).IsEqualTo("OAuth");
         Assert.NotNull(request.Headers.Authorization.Parameter);
-        Assert.Contains("oauth_consumer_key=\"test_consumer_key\"", request.Headers.Authorization.Parameter);
-        Assert.Contains("oauth_token=\"test_access_token\"", request.Headers.Authorization.Parameter);
-        Assert.Contains("oauth_signature_method=\"HMAC-SHA1\"", request.Headers.Authorization.Parameter);
-        Assert.Contains("oauth_version=\"1.0\"", request.Headers.Authorization.Parameter);
+        await Assert.That(request.Headers.Authorization.Parameter).Contains("oauth_consumer_key=\"test_consumer_key\"");
+        await Assert.That(request.Headers.Authorization.Parameter).Contains("oauth_token=\"test_access_token\"");
+        await Assert.That(request.Headers.Authorization.Parameter).Contains("oauth_signature_method=\"HMAC-SHA1\"");
+        await Assert.That(request.Headers.Authorization.Parameter).Contains("oauth_version=\"1.0\"");
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateRequestAsync_ShouldThrowOnNullRequest()
     {
         // Arrange
@@ -114,5 +116,5 @@ public class OAuth1AuthenticationProviderTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => provider.AuthenticateRequestAsync(null!, CancellationToken.None));
-    }
+}
 }

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -19,7 +20,7 @@ public class HashnodeProviderTests : ProviderTestBase
         return new HashnodeProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -30,7 +31,7 @@ public class HashnodeProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn10000()
     {
         var provider = CreateProvider();
@@ -38,7 +39,7 @@ public class HashnodeProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(10000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnEmptyUrl()
     {
         var provider = CreateProvider();
@@ -49,5 +50,5 @@ public class HashnodeProviderTests : ProviderTestBase
 
         result.Url.ShouldBeEmpty();
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

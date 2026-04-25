@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.Core;
 using Aero.Core.Railway;
 using System.Net;
@@ -13,7 +14,7 @@ public class AuthenticationTests : ProviderTestBase
 {
     private readonly Mock<ILogger<SocialProviderBase>> _loggerMock = new();
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
@@ -30,7 +31,7 @@ public class AuthenticationTests : ProviderTestBase
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_ShouldExchangeCodeForToken()
     {
         HttpHandler.WhenPost("*token*")
@@ -52,7 +53,7 @@ public class AuthenticationTests : ProviderTestBase
         value.Name.ShouldBe("Test User");
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_OnError_ShouldThrowException()
     {
         HttpHandler.WhenPost("*token*")
@@ -67,7 +68,7 @@ public class AuthenticationTests : ProviderTestBase
         result.IsFailure.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task RefreshTokenAsync_ShouldReturnNewToken()
     {
         HttpHandler.WhenPost("*token*")
@@ -83,7 +84,7 @@ public class AuthenticationTests : ProviderTestBase
         value.RefreshToken.ShouldBe("new_refresh_token");
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_WithPKCE_ShouldIncludeCodeVerifier()
     {
         var receivedContent = "";
@@ -115,7 +116,7 @@ public class AuthenticationTests : ProviderTestBase
         receivedContent.ShouldContain("code_verifier=my_code_verifier");
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_WithClientInformation_ShouldUseCustomSettings()
     {
         var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
@@ -269,6 +270,7 @@ public class TestOAuth2Provider : SocialProviderBase
     private class UserResponse
     {
         public string id { get; set; } = "";
-        public string? name { get; set; }
+        public string? name { get; set;
+}
     }
 }

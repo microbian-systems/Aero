@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -23,7 +24,7 @@ public class BlueskyProviderTests : ProviderTestBase
         return new BlueskyProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -34,7 +35,7 @@ public class BlueskyProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn300()
     {
         var provider = CreateProvider();
@@ -42,7 +43,7 @@ public class BlueskyProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(300);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnEmptyUrl()
     {
         var provider = CreateProvider();
@@ -55,7 +56,7 @@ public class BlueskyProviderTests : ProviderTestBase
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_ShouldReturnTokenDetails()
     {
         var authBody = new
@@ -89,7 +90,7 @@ public class BlueskyProviderTests : ProviderTestBase
         value.Username.ShouldBe("testuser.bsky.social");
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_WithInvalidCredentials_ShouldReturnFailure()
     {
         var authBody = new
@@ -110,5 +111,5 @@ public class BlueskyProviderTests : ProviderTestBase
         var result = await provider.AuthenticateAsync(parameters);
 
         result.IsFailure.ShouldBeTrue();
-    }
+}
 }

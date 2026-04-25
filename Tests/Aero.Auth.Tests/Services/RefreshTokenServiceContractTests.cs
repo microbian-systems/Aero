@@ -1,10 +1,11 @@
-using Xunit;
+﻿using TUnit.Core;
 using Shouldly;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Aero.Auth.Services;
 using Marten;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests.Services;
 
@@ -31,7 +32,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
 
     // Interface Contract Tests
 
-    [Fact]
+    [Test]
     public void RefreshTokenService_ImplementsInterface()
     {
         // Arrange
@@ -45,7 +46,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
         service.ShouldBeAssignableTo<IRefreshTokenService>();
     }
 
-    [Fact]
+    [Test]
     public void IRefreshTokenService_HasRequiredMethods()
     {
         // Arrange
@@ -65,7 +66,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
 
     // Dependency Injection Tests
 
-    [Fact]
+    [Test]
     public void Constructor_WithValidDependencies_ShouldNotThrow()
     {
         // Arrange
@@ -80,7 +81,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
 
     // Configuration Tests
 
-    [Fact]
+    [Test]
     public void RefreshTokenLifetime_ShouldUseConfiguredValue()
     {
         // Arrange
@@ -95,7 +96,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
 
     // Token Generation Tests
 
-    [Fact]
+    [Test]
     public async Task GenerateRefreshToken_WithValidParameters_ShouldReturnNonEmptyToken()
     {
         // Arrange
@@ -104,7 +105,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
         var service = new RefreshTokenService(session, _mockLogger, _config);
 
         // Act
-        var token = await service.GenerateRefreshTokenAsync("user-123", "mobile");
+        var token = await service.GenerateRefreshTokenAsync(12345, "mobile");
 
         // Assert
         token.ShouldNotBeNullOrEmpty();
@@ -112,7 +113,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
 
     // Token Validation Tests
 
-    [Fact]
+    [Test]
     public async Task ValidateRefreshToken_WithNullToken_ShouldReturnNull()
     {
         // Arrange
@@ -126,7 +127,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
         result.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public async Task ValidateRefreshToken_WithEmptyToken_ShouldReturnNull()
     {
         // Arrange
@@ -142,7 +143,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
 
     // Token Rotation Tests
 
-    [Fact]
+    [Test]
     public async Task RotateRefreshToken_WithInvalidToken_ShouldThrowInvalidOperationException()
     {
         // Arrange
@@ -159,7 +160,7 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
 
     // Token Revocation Tests
 
-    [Fact]
+    [Test]
     public async Task RevokeRefreshToken_WithNullToken_ShouldThrowArgumentNullException()
     {
         // Arrange
@@ -171,5 +172,5 @@ public class RefreshTokenServiceContractTests : AeroDbTestDriver
 
         // Assert
         await act.ShouldThrowAsync<ArgumentNullException>();
-    }
+}
 }

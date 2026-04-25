@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Breadcrumbs;
 using Bunit;
 using Aero.MerakiUI.Breadcrumbs;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Breadcrumbs;
 
 public class BreadcrumbTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void Breadcrumb_ShouldRenderItems()
     {
         var cut = Render<Breadcrumb>(parameters => parameters
@@ -16,5 +17,5 @@ public class BreadcrumbTests : BunitContext
 
         Assert.Contains("Home", cut.Markup);
         Assert.Contains("Profile", cut.Markup);
-    }
+}
 }

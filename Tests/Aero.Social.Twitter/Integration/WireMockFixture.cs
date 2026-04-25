@@ -118,8 +118,8 @@ public class WireMockFixture : IDisposable
 /// <summary>
 /// Collection definition for integration tests that use the WireMockFixture.
 /// </summary>
-[CollectionDefinition("Integration")]
-public class IntegrationCollection : ICollectionFixture<WireMockFixture>
+[System.Obsolete]
+public class IntegrationCollection
 {
     // This class has no code, and is never created. Its purpose is simply
     // to be the place to apply [CollectionDefinition] and all the

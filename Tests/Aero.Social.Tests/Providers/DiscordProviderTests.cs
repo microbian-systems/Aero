@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class DiscordProviderTests : ProviderTestBase
         return new DiscordProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -35,7 +36,7 @@ public class DiscordProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(5);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn2000()
     {
         var provider = CreateProvider();
@@ -43,7 +44,7 @@ public class DiscordProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(2000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -57,5 +58,5 @@ public class DiscordProviderTests : ProviderTestBase
         result.Url.ShouldContain("redirect_uri=");
         result.Url.ShouldContain("scope=bot+identify+guilds");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

@@ -206,6 +206,8 @@ public static class SocialLoginExtensions
 
         services.AddScoped<IJwtSigningKeyStore, JwtSigningKeyStore>();
         services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IApiKeyFactory, DefaultApiKeyFactory>();
+        services.AddScoped<IApiKeyGenerator, HashedApiKeyGenerator>();
 
         if (useAeroDb)
         {

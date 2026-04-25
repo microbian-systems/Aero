@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Modals;
 using Bunit;
 using Aero.MerakiUI.Modals;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Modals;
 
 public class ModalTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void SimpleModal_ShouldRenderCorrectStructure()
     {
         var cut = Render<SimpleModal>(parameters => parameters
@@ -26,7 +27,7 @@ public class ModalTests : BunitContext
         Assert.Contains("Modal Content", modal.InnerHtml);
     }
 
-    [Fact]
+    [Test]
     public void ModalWithAction_ShouldRenderCorrectStructure()
     {
         var cut = Render<ModalWithAction>(parameters => parameters
@@ -44,5 +45,5 @@ public class ModalTests : BunitContext
         // Verify modal overlay/container exists (hidden by default via Alpine)
         var modal = cut.Find("div[x-show]");
         Assert.Contains("Are you sure?", modal.InnerHtml);
-    }
+}
 }

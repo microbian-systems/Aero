@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,7 @@ namespace Aero.DataStructures.Tests;
 
 public class KdTreeTests
 {
-    [Fact]
+    [Test]
     public void RangeSearch_Returns_Points_In_Range()
     {
         // Arrange
@@ -26,7 +27,7 @@ public class KdTreeTests
         inRange.ShouldContain(p => p.X == 6 && p.Y == 12);
     }
         
-    [Fact]
+    [Test]
     public void NearestNeighbor_Returns_Closest_Point()
     {
         // Arrange
@@ -42,5 +43,5 @@ public class KdTreeTests
         // Assert
         nearest.X.ShouldBe(6);
         nearest.Y.ShouldBe(12);
-    }
+}
 }

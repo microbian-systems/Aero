@@ -1,4 +1,5 @@
-﻿using Electra.Core.Algorithms;
+﻿using TUnit.Core;
+using Electra.Core.Algorithms;
 
 namespace Electra.Core.Tests;
 
@@ -12,7 +13,7 @@ public class Shamirs_Tests
         return manager;
     }
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithStringInput_ReturnsFragments()
     {
         // Arrange
@@ -26,7 +27,7 @@ public class Shamirs_Tests
         Assert.Equal(3, fragments.Length);
     }
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithByteArrayInput_ReturnsFragments()
     {
         // Arrange
@@ -41,7 +42,7 @@ public class Shamirs_Tests
         Assert.Equal(3, fragments.Length);
     }
 
-    [Fact]
+    [Test]
     public void ComputeFragments_WithTwoValidFragments_ReturnsOriginalSecret()
     {
         // Arrange
@@ -60,7 +61,7 @@ public class Shamirs_Tests
         Assert.Equal(originalSecret, reconstructedSecret);
     }
 
-    [Fact]
+    [Test]
     public void Deconstruct_WithByteArray_ReturnsString()
     {
         // Arrange
@@ -74,7 +75,7 @@ public class Shamirs_Tests
         Assert.Equal(secret, result);
     }
 
-    [Fact]
+    [Test]
     public void Deconstruct_Generic_WithByteArray_ReturnsString()
     {
         // Arrange
@@ -88,7 +89,7 @@ public class Shamirs_Tests
         Assert.Equal(secret, result);
     }
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithNullSecret_ThrowsArgumentNullException()
     {
         // Arrange
@@ -99,7 +100,7 @@ public class Shamirs_Tests
         Assert.Throws<ArgumentNullException>(() => manager.CreateFragments((byte[])null, 3));
     }
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithZeroLengthSecret_ReturnsNull()
     {
         // Arrange
@@ -113,7 +114,7 @@ public class Shamirs_Tests
         Assert.Null(fragments);
     }
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithLessThanThreeFragments_ThrowsArgumentException()
     {
         // Arrange
@@ -125,7 +126,7 @@ public class Shamirs_Tests
         Assert.Throws<ArgumentException>(() => manager.CreateFragments(Encoding.UTF8.GetBytes(secret), 2));
     }
 
-    [Fact]
+    [Test]
     public void Deconstruct_WithByteArray_Extension_ReturnsString()
     {
         // Arrange
@@ -139,7 +140,7 @@ public class Shamirs_Tests
         Assert.Equal(secret, result);
     }
 
-    [Fact]
+    [Test]
     public void Deconstruct_Generic_WithByteArray_Extension_ReturnsString()
     {
         // Arrange
@@ -151,5 +152,5 @@ public class Shamirs_Tests
 
         // Assert
         Assert.Equal(secret, result);
-    }
+}
 }

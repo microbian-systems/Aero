@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Areas.Demo.Pages;
 using Bunit;
 using Aero.MerakiUI.Areas.Demo.Pages;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Areas.Demo.Pages;
 
 public class MerakiShowcaseTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void MerakiShowcase_ShouldRenderMainSections()
     {
         var cut = Render<MerakiShowcase>();
@@ -32,5 +33,5 @@ public class MerakiShowcaseTests : BunitContext
         Assert.Contains("Auth & Forms", cut.Markup);
         Assert.Contains("Specialized Layouts", cut.Markup);
         Assert.Contains("Email Templates", cut.Markup);
-    }
+}
 }

@@ -1,12 +1,14 @@
+﻿using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class UserTests
 {
-    [Fact]
-    public void User_DefaultValues_AreSetCorrectly()
+    [Test]
+    public async Task User_DefaultValues_AreSetCorrectly()
     {
         // Arrange & Act
         var user = new User
@@ -16,12 +18,12 @@ public class UserTests
 
         // Assert
         Assert.NotNull(user.Id);
-        Assert.Equal(default(DateTimeOffset), user.CreatedAt);
-        Assert.False(user.Verified);
+        await Assert.That(user.CreatedAt).IsEqualTo(default(DateTimeOffset));
+        await Assert.That(user.Verified).IsFalse();
     }
 
-    [Fact]
-    public void User_Serialization_WithAllProperties_ReturnsCorrectJson()
+    [Test]
+    public async Task User_Serialization_WithAllProperties_ReturnsCorrectJson()
     {
         // Arrange
         var user = new User
@@ -49,21 +51,21 @@ public class UserTests
         var json = JsonSerializer.Serialize(user);
 
         // Assert
-        Assert.Contains("\"id\":\"1234567890\"", json);
-        Assert.Contains("\"name\":\"Test User\"", json);
-        Assert.Contains("\"username\":\"testuser\"", json);
-        Assert.Contains("\"created_at\":\"2020-01-01T00:00:00+00:00\"", json);
-        Assert.Contains("\"description\":\"This is a test user\"", json);
-        Assert.Contains("\"location\":\"Test Location\"", json);
-        Assert.Contains("\"profile_image_url\":\"https://example.com/image.jpg\"", json);
-        Assert.Contains("\"verified\":true", json);
-        Assert.Contains("\"url\":\"https://example.com\"", json);
-        Assert.Contains("\"verified_type\":\"blue\"", json);
-        Assert.Contains("\"public_metrics\"", json);
+        await Assert.That(json).Contains("\"id\":\"1234567890\"");
+        await Assert.That(json).Contains("\"name\":\"Test User\"");
+        await Assert.That(json).Contains("\"username\":\"testuser\"");
+        await Assert.That(json).Contains("\"created_at\":\"2020-01-01T00:00:00+00:00\"");
+        await Assert.That(json).Contains("\"description\":\"This is a test user\"");
+        await Assert.That(json).Contains("\"location\":\"Test Location\"");
+        await Assert.That(json).Contains("\"profile_image_url\":\"https://example.com/image.jpg\"");
+        await Assert.That(json).Contains("\"verified\":true");
+        await Assert.That(json).Contains("\"url\":\"https://example.com\"");
+        await Assert.That(json).Contains("\"verified_type\":\"blue\"");
+        await Assert.That(json).Contains("\"public_metrics\"");
     }
 
-    [Fact]
-    public void User_Serialization_WithMinimalProperties_ReturnsCorrectJson()
+    [Test]
+    public async Task User_Serialization_WithMinimalProperties_ReturnsCorrectJson()
     {
         // Arrange
         var user = new User
@@ -78,14 +80,14 @@ public class UserTests
         var json = JsonSerializer.Serialize(user);
 
         // Assert
-        Assert.Contains("\"id\":\"1234567890\"", json);
-        Assert.Contains("\"name\":\"Test User\"", json);
-        Assert.Contains("\"username\":\"testuser\"", json);
-        Assert.Contains("\"verified\":false", json);
+        await Assert.That(json).Contains("\"id\":\"1234567890\"");
+        await Assert.That(json).Contains("\"name\":\"Test User\"");
+        await Assert.That(json).Contains("\"username\":\"testuser\"");
+        await Assert.That(json).Contains("\"verified\":false");
     }
 
-    [Fact]
-    public void User_Deserialization_WithAllProperties_PopulatesCorrectly()
+    [Test]
+    public async Task User_Deserialization_WithAllProperties_PopulatesCorrectly()
     {
         // Arrange
         var json = @"{
@@ -112,22 +114,22 @@ public class UserTests
 
         // Assert
         Assert.NotNull(user);
-        Assert.Equal("1234567890", user.Id);
-        Assert.Equal("Test User", user.Name);
-        Assert.Equal("testuser", user.Username);
-        Assert.Equal(new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero), user.CreatedAt);
-        Assert.Equal("This is a test user", user.Description);
-        Assert.Equal("Test Location", user.Location);
-        Assert.Equal("https://example.com/image.jpg", user.ProfileImageUrl);
-        Assert.True(user.Verified);
-        Assert.Equal("https://example.com", user.Url);
-        Assert.Equal("blue", user.VerifiedType);
+        await Assert.That(user.Id).IsEqualTo("1234567890");
+        await Assert.That(user.Name).IsEqualTo("Test User");
+        await Assert.That(user.Username).IsEqualTo("testuser");
+        await Assert.That(user.CreatedAt).IsEqualTo(new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero));
+        await Assert.That(user.Description).IsEqualTo("This is a test user");
+        await Assert.That(user.Location).IsEqualTo("Test Location");
+        await Assert.That(user.ProfileImageUrl).IsEqualTo("https://example.com/image.jpg");
+        await Assert.That(user.Verified).IsTrue();
+        await Assert.That(user.Url).IsEqualTo("https://example.com");
+        await Assert.That(user.VerifiedType).IsEqualTo("blue");
         Assert.NotNull(user.PublicMetrics);
-        Assert.Equal(100, user.PublicMetrics.FollowersCount);
+        await Assert.That(user.PublicMetrics.FollowersCount).IsEqualTo(100);
     }
 
-    [Fact]
-    public void User_Deserialization_WithMinimalProperties_PopulatesCorrectly()
+    [Test]
+    public async Task User_Deserialization_WithMinimalProperties_PopulatesCorrectly()
     {
         // Arrange
         var json = @"{
@@ -142,21 +144,21 @@ public class UserTests
 
         // Assert
         Assert.NotNull(user);
-        Assert.Equal("1234567890", user.Id);
-        Assert.Equal("Test User", user.Name);
-        Assert.Equal("testuser", user.Username);
-        Assert.Equal(new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero), user.CreatedAt);
+        await Assert.That(user.Id).IsEqualTo("1234567890");
+        await Assert.That(user.Name).IsEqualTo("Test User");
+        await Assert.That(user.Username).IsEqualTo("testuser");
+        await Assert.That(user.CreatedAt).IsEqualTo(new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero));
         Assert.Null(user.Description);
         Assert.Null(user.Location);
         Assert.Null(user.ProfileImageUrl);
-        Assert.False(user.Verified);
+        await Assert.That(user.Verified).IsFalse();
         Assert.Null(user.Url);
         Assert.Null(user.VerifiedType);
         Assert.Null(user.PublicMetrics);
     }
 
-    [Fact]
-    public void User_Deserialization_WithNullFields_HandlesCorrectly()
+    [Test]
+    public async Task User_Deserialization_WithNullFields_HandlesCorrectly()
     {
         // Arrange
         var json = @"{
@@ -173,10 +175,10 @@ public class UserTests
 
         // Assert
         Assert.NotNull(user);
-        Assert.Equal("1234567890", user.Id);
+        await Assert.That(user.Id).IsEqualTo("1234567890");
         Assert.Null(user.Name);
         Assert.Null(user.Username);
         Assert.Null(user.Description);
         Assert.Null(user.PublicMetrics);
-    }
+}
 }

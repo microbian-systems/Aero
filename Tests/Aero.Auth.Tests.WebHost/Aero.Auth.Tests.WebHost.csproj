@@ -7,13 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MimeKit" Version="4.14.0" />
-      <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
+      <PackageReference Include="MimeKit" />
+      <PackageReference Include="System.Data.SqlClient" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Aero.Auth\Aero.Auth.csproj" />
       <ProjectReference Include="..\..\src\Aero.Models\Aero.Models.csproj" />
+      <ProjectReference Include="..\..\src\Aero.Web\Aero.Web.csproj" />
     </ItemGroup>
 
 </Project>

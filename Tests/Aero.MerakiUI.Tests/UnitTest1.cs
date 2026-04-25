@@ -1,8 +1,9 @@
-﻿namespace Aero.MerakiUI.Tests;
+﻿using TUnit.Core;
+namespace Aero.MerakiUI.Tests;
 
 public class UnitTest1
 {
-    [Fact]
+    [Test]
     public void Test1()
     {
 

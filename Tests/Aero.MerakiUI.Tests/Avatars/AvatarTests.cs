@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Avatars;
 using Bunit;
 
@@ -5,7 +6,7 @@ namespace Aero.MerakiUI.Tests.Avatars;
 
 public class AvatarTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void Avatar_ShouldRenderCorrectSize()
     {
         var cut = Render<Avatar>(parameters => parameters
@@ -15,7 +16,7 @@ public class AvatarTests : BunitContext
         cut.Find(".w-12.h-12");
     }
 
-    [Fact]
+    [Test]
     public void Avatar_ShouldRenderStatus()
     {
         var cut = Render<Avatar>(parameters => parameters
@@ -26,7 +27,7 @@ public class AvatarTests : BunitContext
         cut.Find(".bg-red-500");
     }
 
-    [Fact]
+    [Test]
     public void ProfileAvatar_ShouldRenderNameAndEmail()
     {
         var cut = Render<ProfileAvatar>(parameters => parameters
@@ -36,5 +37,5 @@ public class AvatarTests : BunitContext
 
         Assert.Contains("Jane Doe", cut.Markup);
         Assert.Contains("jane@example.com", cut.Markup);
-    }
+}
 }

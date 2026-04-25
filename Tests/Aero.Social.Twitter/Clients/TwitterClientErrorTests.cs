@@ -1,13 +1,15 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
 public class TwitterClientErrorTests
 {
-    [Fact]
-    public void Constructor_ShouldThrow_WhenNoCredentialsProvided()
+    [Test]
+    public async Task Constructor_ShouldThrow_WhenNoCredentialsProvided()
     {
         // Arrange
         var httpClient = new HttpClient();
@@ -15,10 +17,10 @@ public class TwitterClientErrorTests
 
         // Act & Assert
         var exception = Assert.Throws<InvalidOperationException>(() => new TwitterClient(httpClient, options));
-        Assert.Contains("No authentication credentials configured", exception.Message);
+        await Assert.That(exception.Message).Contains("No authentication credentials configured");
     }
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_ShouldThrowArgumentException_WhenTweetIdIsNull()
     {
         // Arrange
@@ -30,7 +32,7 @@ public class TwitterClientErrorTests
         await Assert.ThrowsAsync<ArgumentException>(() => client.GetTweetAsync(null!));
     }
 
-    [Fact]
+    [Test]
     public async Task GetTweetAsync_ShouldThrowArgumentException_WhenTweetIdIsEmpty()
     {
         // Arrange
@@ -40,5 +42,5 @@ public class TwitterClientErrorTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(() => client.GetTweetAsync(""));
-    }
+}
 }

@@ -1,8 +1,9 @@
-using Xunit;
+﻿using TUnit.Core;
 using Shouldly;
 using NSubstitute;
 using Aero.Auth.Services;
 using Aero.Models.Entities;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests.Services;
 
@@ -13,8 +14,7 @@ namespace Aero.Auth.Tests.Services;
 public class JwtSigningKeyPersistenceContractTests
 {
     //#region Interface Contract Tests
-
-    [Fact]
+    [Test]
     public void IJwtSigningKeyPersistence_HasRequiredMethods()
     {
         // Arrange
@@ -41,7 +41,7 @@ public class JwtSigningKeyPersistenceContractTests
 
     //#region Mock Verification Tests
 
-    [Fact]
+    [Test]
     public void Mock_CanBeCreatedForInterface()
     {
         // Act
@@ -52,7 +52,7 @@ public class JwtSigningKeyPersistenceContractTests
         mock.ShouldBeAssignableTo<IJwtSigningKeyPersistence>();
     }
 
-    [Fact]
+    [Test]
     public async Task Mock_GetCurrentSigningKeyAsync_CanBeConfigured()
     {
         // Arrange
@@ -76,7 +76,7 @@ public class JwtSigningKeyPersistenceContractTests
         result?.KeyId.ShouldBe("key-1");
     }
 
-    [Fact]
+    [Test]
     public async Task Mock_GetValidSigningKeysAsync_CanBeConfigured()
     {
         // Arrange
@@ -103,7 +103,7 @@ public class JwtSigningKeyPersistenceContractTests
         result.Count().ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public async Task Mock_AddKeyAsync_CanBeConfigured()
     {
         // Arrange
@@ -124,7 +124,7 @@ public class JwtSigningKeyPersistenceContractTests
         result.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task Mock_RevokeKeyAsync_CanBeConfigured()
     {
         // Arrange
@@ -143,7 +143,7 @@ public class JwtSigningKeyPersistenceContractTests
 
     //#region Return Type Tests
 
-    [Fact]
+    [Test]
     public void GetCurrentSigningKeyAsync_ReturnsNullableJwtSigningKey()
     {
         // Arrange
@@ -158,7 +158,7 @@ public class JwtSigningKeyPersistenceContractTests
         returnType.Name.ShouldContain("Task");
     }
 
-    [Fact]
+    [Test]
     public void GetValidSigningKeysAsync_ReturnsEnumerableOfKeys()
     {
         // Arrange
@@ -173,7 +173,7 @@ public class JwtSigningKeyPersistenceContractTests
         returnType.Name.ShouldContain("Task");
     }
 
-    [Fact]
+    [Test]
     public void AddKeyAsync_ReturnsBoolean()
     {
         // Arrange
@@ -192,7 +192,7 @@ public class JwtSigningKeyPersistenceContractTests
 
     //#region Parameter Validation Tests
 
-    [Fact]
+    [Test]
     public void GetKeyByIdAsync_HasKeyIdParameter()
     {
         // Arrange
@@ -207,7 +207,7 @@ public class JwtSigningKeyPersistenceContractTests
         parameters.ShouldContain(p => p.Name == "keyId");
     }
 
-    [Fact]
+    [Test]
     public void AddKeyAsync_HasKeyParameter()
     {
         // Arrange
@@ -222,7 +222,7 @@ public class JwtSigningKeyPersistenceContractTests
         parameters.ShouldContain(p => p.Name == "key");
     }
 
-    [Fact]
+    [Test]
     public void RevokeKeyAsync_HasKeyIdParameter()
     {
         // Arrange
@@ -241,7 +241,7 @@ public class JwtSigningKeyPersistenceContractTests
 
     //#region Substitutability Tests
 
-    [Fact]
+    [Test]
     public void Implementations_ShouldBeSubstitutable()
     {
         // Arrange
@@ -251,7 +251,7 @@ public class JwtSigningKeyPersistenceContractTests
         // Act & Assert
         implementation1.ShouldBeAssignableTo<IJwtSigningKeyPersistence>();
         implementation2.ShouldBeAssignableTo<IJwtSigningKeyPersistence>();
-    }
+}
 
     //#endregion
 }

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.Core;
 using Aero.Core.Railway;
 using System.Net;
@@ -12,7 +13,7 @@ public class ErrorHandlingTests : ProviderTestBase
 {
     private readonly Mock<ILogger<SocialProviderBase>> _loggerMock = new();
 
-    [Fact]
+    [Test]
     public async Task FetchWithRetryAsync_OnSuccess_ShouldReturnResponse()
     {
         HttpHandler.WhenPost("*")
@@ -27,7 +28,7 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Ok)response).Value.IsSuccessStatusCode.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task FetchWithRetryAsync_OnTooManyRequests_ShouldRetry()
     {
         var callCount = 0;
@@ -50,7 +51,7 @@ public class ErrorHandlingTests : ProviderTestBase
         callCount.ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public async Task FetchWithRetryAsync_OnInternalServerError_ShouldRetry()
     {
         var callCount = 0;
@@ -72,7 +73,7 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Ok)response).Value.IsSuccessStatusCode.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task FetchWithRetryAsync_OnRateLimitExceeded_ShouldRetry()
     {
         var callCount = 0;
@@ -100,7 +101,7 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Ok)response).Value.IsSuccessStatusCode.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task FetchWithRetryAsync_OnUnauthorized_ShouldThrowRefreshTokenException()
     {
         HttpHandler.WhenPost("*")
@@ -115,7 +116,7 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Failure)response).Error.ShouldBeOfType<AeroError.HttpRequest>();
     }
 
-    [Fact]
+    [Test]
     public async Task FetchWithRetryAsync_OnMaxRetriesExceeded_ShouldThrowBadBodyException()
     {
         HttpHandler.WhenPost("*")
@@ -130,7 +131,7 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Failure)response).Error.ShouldBeOfType<AeroError.HttpRequest>();
     }
 
-    [Fact]
+    [Test]
     public async Task FetchWithRetryAsync_WithCustomErrorHandler_ShouldReturnCorrectErrorType()
     {
         HttpHandler.WhenPost("*")

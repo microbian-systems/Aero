@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures;
 using Aero.DataStructures.Graphs;
@@ -13,7 +14,7 @@ public class DirectedAcyclicGraphTests
 
     //#region Vertex Tests
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldIncreaseCount()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -24,7 +25,7 @@ public class DirectedAcyclicGraphTests
         dag.VertexCount.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldReturnTrue_WhenNew()
     {
         var dag = new DirectedAcyclicGraph<int>();
@@ -35,7 +36,7 @@ public class DirectedAcyclicGraphTests
         result.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldReturnFalse_WhenExists()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -50,7 +51,7 @@ public class DirectedAcyclicGraphTests
 
     //#region Edge Tests
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldAddSuccessfully_WhenNoCycle()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -63,7 +64,7 @@ public class DirectedAcyclicGraphTests
         dag.EdgeCount.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldThrow_WhenWouldCreateCycle()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -75,7 +76,7 @@ public class DirectedAcyclicGraphTests
         act.ShouldThrow<InvalidOperationException>("*cycle*");
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldAutoAddVertices()
     {
         var dag = new DirectedAcyclicGraph<int>();
@@ -88,7 +89,7 @@ public class DirectedAcyclicGraphTests
         dag.ContainsVertex(v2).ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void TryAddEdge_ShouldReturnTrue_WhenNoCycle()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -98,7 +99,7 @@ public class DirectedAcyclicGraphTests
         result.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void TryAddEdge_ShouldReturnFalse_WhenWouldCreateCycle()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -114,7 +115,7 @@ public class DirectedAcyclicGraphTests
 
     //#region WouldCreateCycle Tests
 
-    [Fact]
+    [Test]
     public void WouldCreateCycle_ShouldReturnTrue_WhenPathExists()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -124,7 +125,7 @@ public class DirectedAcyclicGraphTests
         dag.WouldCreateCycle("C", "A").ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void WouldCreateCycle_ShouldReturnFalse_WhenNoPath()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -138,7 +139,7 @@ public class DirectedAcyclicGraphTests
 
     //#region Reachability Tests
 
-    [Fact]
+    [Test]
     public void CanReach_ShouldReturnTrue_WhenPathExists()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -148,7 +149,7 @@ public class DirectedAcyclicGraphTests
         dag.CanReach("A", "C").ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void CanReach_ShouldReturnFalse_WhenNoPath()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -158,7 +159,7 @@ public class DirectedAcyclicGraphTests
         dag.CanReach("A", "B").ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void CanReach_ShouldReturnTrue_ForSameVertex()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -171,7 +172,7 @@ public class DirectedAcyclicGraphTests
 
     //#region Topological Sort Tests
 
-    [Fact]
+    [Test]
     public void TopologicalSort_ShouldReturnAllVertices()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -184,7 +185,7 @@ public class DirectedAcyclicGraphTests
         result.ShouldBe(new[] { "A", "B", "C" });
     }
 
-    [Fact]
+    [Test]
     public void TopologicalSort_ShouldRespectDependencies()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -197,7 +198,7 @@ public class DirectedAcyclicGraphTests
         result.IndexOf("test").ShouldBeLessThan(result.IndexOf("deploy"));
     }
 
-    [Fact]
+    [Test]
     public void TopologicalSort_ShouldHandleMultipleSources()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -214,7 +215,7 @@ public class DirectedAcyclicGraphTests
 
     //#region All Topological Sorts Tests
 
-    [Fact]
+    [Test]
     public void GetAllTopologicalSorts_ShouldReturnMultipleOrders()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -231,7 +232,7 @@ public class DirectedAcyclicGraphTests
 
     //#region Sources and Sinks Tests
 
-    [Fact]
+    [Test]
     public void GetSources_ShouldReturnVerticesWithNoIncoming()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -243,7 +244,7 @@ public class DirectedAcyclicGraphTests
         sources.ShouldHaveSingleItem().ShouldBe("root");
     }
 
-    [Fact]
+    [Test]
     public void GetSinks_ShouldReturnVerticesWithNoOutgoing()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -259,7 +260,7 @@ public class DirectedAcyclicGraphTests
 
     //#region Longest Path Tests
 
-    [Fact]
+    [Test]
     public void GetLongestPathLengths_ShouldComputeCorrectly()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -276,7 +277,7 @@ public class DirectedAcyclicGraphTests
         lengths["C"].ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void GetLongestPath_ShouldReturnCorrectPath()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -293,7 +294,7 @@ public class DirectedAcyclicGraphTests
 
     //#region Ancestor/Descendant Tests
 
-    [Fact]
+    [Test]
     public void GetAncestors_ShouldReturnAllPredecessors()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -306,7 +307,7 @@ public class DirectedAcyclicGraphTests
         ancestors.OrderBy(x => x).ShouldBe(new[] { "A", "B", "X" }.OrderBy(x => x));
     }
 
-    [Fact]
+    [Test]
     public void GetDescendants_ShouldReturnAllSuccessors()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -323,7 +324,7 @@ public class DirectedAcyclicGraphTests
 
     //#region LCA Tests
 
-    [Fact]
+    [Test]
     public void GetLowestCommonAncestors_ShouldFindCorrectLca()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -341,7 +342,7 @@ public class DirectedAcyclicGraphTests
 
     //#region Transitive Closure Tests
 
-    [Fact]
+    [Test]
     public void GetTransitiveClosure_ShouldAddIndirectEdges()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -357,7 +358,7 @@ public class DirectedAcyclicGraphTests
 
     //#region Remove Tests
 
-    [Fact]
+    [Test]
     public void RemoveVertex_ShouldRemoveFromDag()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -370,7 +371,7 @@ public class DirectedAcyclicGraphTests
         dag.VertexCount.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void RemoveEdge_ShouldAllowPreviousCycle()
     {
         var dag = new DirectedAcyclicGraph<string>();
@@ -381,7 +382,7 @@ public class DirectedAcyclicGraphTests
         
         var act = () => dag.AddEdge("C", "A");
         act.ShouldNotThrow();
-    }
+}
 
     //#endregion
 }

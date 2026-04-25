@@ -1,10 +1,12 @@
-using Xunit;
+﻿using TUnit.Core;
 using System.Net;
 using Shouldly;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
-public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppFactory>
+[ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
+public class ExternalLoginControllerIntegrationTests
 {
     private readonly HttpClient _client;
     private readonly TestWebAppFactory _factory;
@@ -15,7 +17,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         _client = factory.CreateClient();
     }
 
-    [Fact]
+    [Test]
     public async Task GetExternalLogin_ShouldReturnSuccessStatusCode()
     {
         // Act
@@ -25,11 +27,11 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Theory]
-    [InlineData("/ExternalLogin/google")]
-    [InlineData("/ExternalLogin/microsoft")]
-    [InlineData("/ExternalLogin/facebook")]
-    [InlineData("/ExternalLogin/twitter")]
+    [Test]
+    [Arguments("/ExternalLogin/google")]
+    [Arguments("/ExternalLogin/microsoft")]
+    [Arguments("/ExternalLogin/facebook")]
+    [Arguments("/ExternalLogin/twitter")]
     public async Task ExternalLoginProviders_ShouldReturnValidResponse(string endpoint)
     {
         // Act
@@ -46,7 +48,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         );
     }
 
-    [Fact]
+    [Test]
     public async Task PostExternalLoginCallback_ShouldReturnValidResponse()
     {
         // Arrange
@@ -64,10 +66,10 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         );
     }
 
-    [Theory]
-    [InlineData("PUT")]
-    [InlineData("PATCH")]
-    [InlineData("DELETE")]
+    [Test]
+    [Arguments("PUT")]
+    [Arguments("PATCH")]
+    [Arguments("DELETE")]
     public async Task ExternalLogin_ShouldNotAllowInvalidMethods(string httpMethod)
     {
         // Arrange
@@ -80,7 +82,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
     }
 
-    [Fact]
+    [Test]
     public async Task ExternalLoginChallenge_ShouldReturnValidResponse()
     {
         // Arrange
@@ -99,10 +101,10 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         );
     }
 
-    [Theory]
-    [InlineData("invalid-provider")]
-    [InlineData("\"<script>alert('xss')</script>\"")]
-    [InlineData("../../../etc/passwd")]
+    [Test]
+    [Arguments("invalid-provider")]
+    [Arguments("\"<script>alert('xss')</script>\"")]
+    [Arguments("../../../etc/passwd")]
     public async Task ExternalLoginChallenge_ShouldHandleInvalidProviders(string provider)
     {
         // Arrange
@@ -119,7 +121,7 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
         );
     }
 
-    [Fact]
+    [Test]
     public async Task ExternalLoginCallback_ShouldValidateState_Parameter()
     {
         // Arrange
@@ -135,5 +137,5 @@ public class ExternalLoginControllerIntegrationTests : IClassFixture<TestWebAppF
             HttpStatusCode.Unauthorized,
             HttpStatusCode.Redirect
         );
-    }
+}
 }

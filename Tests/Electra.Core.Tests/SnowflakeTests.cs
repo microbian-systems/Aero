@@ -1,12 +1,12 @@
+﻿using TUnit.Core;
 using System.Collections.Generic;
 using FluentAssertions;
-using Xunit;
 
 namespace Electra.Core.Tests;
 
 public class SnowflakeTests
 {
-    [Fact]
+    [Test]
     public void NewId_ShouldGenerateUniqueIds()
     {
         // Arrange
@@ -24,5 +24,5 @@ public class SnowflakeTests
 
         // Assert
         numberOfIdsToGenerate.Should().Be(ids.Count);
-    }
+}
 }

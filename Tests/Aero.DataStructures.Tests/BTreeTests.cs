@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,7 @@ namespace Aero.DataStructures.Tests;
 
 public class BTreeTests
 {
-    [Fact]
+    [Test]
     public void Insert_And_Find_Success()
     {
         // Arrange
@@ -24,7 +25,7 @@ public class BTreeTests
         found.Value.ShouldBe(6);
     }
 
-    [Fact]
+    [Test]
     public void Delete_And_Find_Fails()
     {
         // Arrange
@@ -41,5 +42,5 @@ public class BTreeTests
 
         // Assert
         found.ShouldBeNull();
-    }
+}
 }

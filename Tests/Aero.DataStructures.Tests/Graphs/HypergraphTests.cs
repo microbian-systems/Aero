@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -13,7 +14,7 @@ public class HypergraphTests
 
     //#region Vertex Tests
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldIncreaseCount()
     {
         var graph = new Hypergraph<string, int>();
@@ -24,7 +25,7 @@ public class HypergraphTests
         graph.VertexCount.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldReturnTrue_WhenNew()
     {
         var graph = new Hypergraph<int, int>();
@@ -35,7 +36,7 @@ public class HypergraphTests
         result.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldReturnFalse_WhenExists()
     {
         var graph = new Hypergraph<string, int>();
@@ -46,7 +47,7 @@ public class HypergraphTests
         result.ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void AddVertices_ShouldAddMultiple()
     {
         var graph = new Hypergraph<string, int>();
@@ -57,7 +58,7 @@ public class HypergraphTests
         graph.VertexCount.ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public void Vertices_ShouldReturnAllVertices()
     {
         var graph = new Hypergraph<string, int>();
@@ -71,7 +72,7 @@ public class HypergraphTests
 
     //#region Hyperedge Tests
 
-    [Fact]
+    [Test]
     public void AddHyperedge_ShouldConnectMultipleVertices()
     {
         var graph = new Hypergraph<string, int>();
@@ -84,7 +85,7 @@ public class HypergraphTests
         edge.Cardinality.ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public void AddHyperedge_ShouldAutoAddVertices()
     {
         var graph = new Hypergraph<string, int>();
@@ -94,7 +95,7 @@ public class HypergraphTests
         graph.VertexCount.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void AddHyperedge_ShouldStoreData()
     {
         var graph = new Hypergraph<string, int>();
@@ -105,7 +106,7 @@ public class HypergraphTests
         edge!.Data.ShouldBe(data);
     }
 
-    [Fact]
+    [Test]
     public void AddHyperedge_ShouldReturnNull_WhenDuplicate()
     {
         var graph = new Hypergraph<string, int>();
@@ -116,7 +117,7 @@ public class HypergraphTests
         result.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public void AddHyperedge_ShouldThrow_WhenEmpty()
     {
         var graph = new Hypergraph<string, int>();
@@ -126,7 +127,7 @@ public class HypergraphTests
         act.ShouldThrow<ArgumentException>();
     }
 
-    [Fact]
+    [Test]
     public void AddHyperedge_ShouldSupportWeight()
     {
         var graph = new Hypergraph<string, int>();
@@ -140,7 +141,7 @@ public class HypergraphTests
 
     //#region Incidence Tests
 
-    [Fact]
+    [Test]
     public void GetIncidentHyperedges_ShouldReturnEdgesContainingVertex()
     {
         var graph = new Hypergraph<string, int>();
@@ -154,7 +155,7 @@ public class HypergraphTests
         aliceEdges.Select(e => e.Id).ShouldNotContain(3);
     }
 
-    [Fact]
+    [Test]
     public void GetDegree_ShouldReturnIncidentEdgeCount()
     {
         var graph = new Hypergraph<string, int>();
@@ -169,7 +170,7 @@ public class HypergraphTests
 
     //#region Neighbor Tests
 
-    [Fact]
+    [Test]
     public void GetNeighbors_ShouldReturnVerticesInSameHyperedges()
     {
         var graph = new Hypergraph<string, int>();
@@ -186,7 +187,7 @@ public class HypergraphTests
 
     //#region Cardinality Tests
 
-    [Fact]
+    [Test]
     public void GetHyperedgesByCardinality_ShouldFilter()
     {
         var graph = new Hypergraph<string, int>();
@@ -200,7 +201,7 @@ public class HypergraphTests
         size2.Select(e => e.Id).ShouldNotContain(2);
     }
 
-    [Fact]
+    [Test]
     public void Rank_ShouldReturnMaxCardinality()
     {
         var graph = new Hypergraph<string, int>();
@@ -215,7 +216,7 @@ public class HypergraphTests
 
     //#region Lookup Tests
 
-    [Fact]
+    [Test]
     public void HasHyperedge_ShouldCheckExactMatch()
     {
         var graph = new Hypergraph<string, int>();
@@ -225,7 +226,7 @@ public class HypergraphTests
         graph.HasHyperedge(new[] { "a", "b" }).ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void HasHyperedgeContaining_ShouldCheckSubset()
     {
         var graph = new Hypergraph<string, int>();
@@ -239,7 +240,7 @@ public class HypergraphTests
 
     //#region Conversion Tests
 
-    [Fact]
+    [Test]
     public void ToCliqueGraph_ShouldConvertToRegularGraph()
     {
         var graph = new Hypergraph<string, int>();
@@ -252,7 +253,7 @@ public class HypergraphTests
         cliqueGraph.ContainsEdge("a", "c").ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void GetDual_ShouldSwapVerticesAndEdges()
     {
         var graph = new Hypergraph<string, int>();
@@ -269,7 +270,7 @@ public class HypergraphTests
 
     //#region Traversal Tests
 
-    [Fact]
+    [Test]
     public void BreadthFirstTraversal_ShouldVisitConnectedVertices()
     {
         var graph = new Hypergraph<string, int>();
@@ -285,7 +286,7 @@ public class HypergraphTests
 
     //#region Connected Components Tests
 
-    [Fact]
+    [Test]
     public void GetConnectedComponents_ShouldGroupCorrectly()
     {
         var graph = new Hypergraph<string, int>();
@@ -301,7 +302,7 @@ public class HypergraphTests
 
     //#region Remove Tests
 
-    [Fact]
+    [Test]
     public void RemoveVertex_ShouldRemoveIncidentHyperedges()
     {
         var graph = new Hypergraph<string, int>();
@@ -312,7 +313,7 @@ public class HypergraphTests
         graph.HyperedgeCount.ShouldBe(0);
     }
 
-    [Fact]
+    [Test]
     public void RemoveHyperedge_ShouldNotRemoveVertices()
     {
         var graph = new Hypergraph<string, int>();
@@ -328,7 +329,7 @@ public class HypergraphTests
 
     //#region Clear Tests
 
-    [Fact]
+    [Test]
     public void Clear_ShouldResetGraph()
     {
         var graph = new Hypergraph<string, int>();
@@ -345,7 +346,7 @@ public class HypergraphTests
 
     //#region Real-World Scenario Tests
 
-    [Fact]
+    [Test]
     public void CoAuthorshipScenario_ShouldWorkCorrectly()
     {
         var graph = new Hypergraph<string, int>();
@@ -367,7 +368,7 @@ public class HypergraphTests
         aliceCoauthors.ShouldBe(new[] { "Bob", "Charlie" }, ignoreOrder: true);
     }
 
-    [Fact]
+    [Test]
     public void GroupMembershipScenario_ShouldWorkCorrectly()
     {
         var graph = new Hypergraph<string, string>();
@@ -378,7 +379,7 @@ public class HypergraphTests
 
         var emp1Groups = graph.GetIncidentHyperedges("emp1");
         emp1Groups.Select(e => e.Id).ShouldBe(new[] { "team-a", "committee" }, ignoreOrder: true);
-    }
+}
 
     //#endregion
 }

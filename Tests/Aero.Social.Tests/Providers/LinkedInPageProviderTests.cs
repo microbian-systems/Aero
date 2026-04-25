@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class LinkedInPageProviderTests : ProviderTestBase
         return new LinkedInPageProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -35,7 +36,7 @@ public class LinkedInPageProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn3000()
     {
         var provider = CreateProvider();
@@ -43,7 +44,7 @@ public class LinkedInPageProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(3000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -56,5 +57,5 @@ public class LinkedInPageProviderTests : ProviderTestBase
         result.Url.ShouldContain("client_id=test_client_id");
         result.Url.ShouldContain("redirect_uri=");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class RedditProviderTests : ProviderTestBase
         return new RedditProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -34,7 +35,7 @@ public class RedditProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn10000()
     {
         var provider = CreateProvider();
@@ -42,7 +43,7 @@ public class RedditProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(10000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -56,5 +57,5 @@ public class RedditProviderTests : ProviderTestBase
         result.Url.ShouldContain("redirect_uri=");
         result.Url.ShouldContain("duration=permanent");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

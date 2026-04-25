@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 using Bogus;
@@ -8,7 +9,7 @@ public class BinaryTreeTests
 {
     private readonly Faker _faker = new();
 
-    [Fact]
+    [Test]
     public void Insert_SingleValue_RootIsCorrect()
     {
         // Arrange
@@ -21,5 +22,5 @@ public class BinaryTreeTests
         // Assert
         tree.Root.ShouldNotBeNull();
         tree.Root.Value.ShouldBe(value);
-    }
+}
 }

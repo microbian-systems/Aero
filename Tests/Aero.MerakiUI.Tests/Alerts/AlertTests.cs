@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Alerts;
 using Bunit;
 using Aero.MerakiUI.Alerts;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Alerts;
 
 public class AlertTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void SuccessAlert_ShouldRenderCorrectClasses()
     {
         var cut = Render<Alert>(parameters => parameters
@@ -20,7 +21,7 @@ public class AlertTests : BunitContext
         Assert.Contains("Your account was registered!", cut.Markup);
     }
 
-    [Fact]
+    [Test]
     public void InfoAlert_ShouldRenderCorrectClasses()
     {
         var cut = Render<Alert>(parameters => parameters
@@ -34,7 +35,7 @@ public class AlertTests : BunitContext
         Assert.Contains("This is info message", cut.Markup);
     }
 
-    [Fact]
+    [Test]
     public void WarningAlert_ShouldRenderCorrectClasses()
     {
         var cut = Render<Alert>(parameters => parameters
@@ -46,5 +47,5 @@ public class AlertTests : BunitContext
         cut.Find(".bg-yellow-500");
         Assert.Contains("Warning", cut.Markup);
         Assert.Contains("This is warning message", cut.Markup);
-    }
+}
 }

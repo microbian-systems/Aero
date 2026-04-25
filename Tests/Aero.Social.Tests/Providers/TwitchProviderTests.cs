@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class TwitchProviderTests : ProviderTestBase
         return new TwitchProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -33,7 +34,7 @@ public class TwitchProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn500()
     {
         var provider = CreateProvider();
@@ -41,7 +42,7 @@ public class TwitchProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(500);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -55,5 +56,5 @@ public class TwitchProviderTests : ProviderTestBase
         result.Url.ShouldContain("redirect_uri=");
         result.Url.ShouldContain("response_type=code");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

@@ -1,4 +1,4 @@
-using Xunit;
+﻿using TUnit.Core;
 using Shouldly;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -6,6 +6,7 @@ using Aero.Auth.Services;
 using Aero.Models.Entities;
 using Marten;
 using Aero.MartenDB;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests.Services;
 
@@ -14,18 +15,18 @@ namespace Aero.Auth.Tests.Services;
 /// </summary>
 public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 {
-    private readonly IAeroDbUnitOfWork _mockUow;
+    private readonly IAeroDb _mockUow;
     private readonly ILogger<MartenJwtSigningKeyPersistence> _mockLogger;
 
     public MartenJwtSigningKeyPersistenceTests()
     {
-        _mockUow = Substitute.For<IAeroDbUnitOfWork>();
+        _mockUow = Substitute.For<IAeroDb>();
         _mockLogger = Substitute.For<ILogger<MartenJwtSigningKeyPersistence>>();
     }
 
     //#region Constructor Tests
 
-    [Fact]
+    [Test]
     public void Constructor_WithValidDependencies_ShouldNotThrow()
     {
         // Act
@@ -35,7 +36,7 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
         act.ShouldNotThrow();
     }
 
-    [Fact]
+    [Test]
     public void Constructor_WithNullUow_ShouldThrowArgumentNullException()
     {
         // Act
@@ -46,7 +47,7 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
         ex.ParamName.ShouldBe("uow");
     }
 
-    [Fact]
+    [Test]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
     {
         // Act
@@ -61,7 +62,7 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region Interface Implementation Tests
 
-    [Fact]
+    [Test]
     public void MartenJwtSigningKeyPersistence_ImplementsInterface()
     {
         // Arrange & Act
@@ -75,12 +76,12 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region AddKey Tests
 
-    [Fact]
+    [Test]
     public async Task AddKeyAsync_WithValidKey_ShouldReturnTrue()
     {
         // Arrange
         using var session = store.LightweightSession();
-        var uow = new AeroUnitOfWork(session, Substitute.For<ILogger<AeroUnitOfWork>>(), Substitute.For<ILoggerFactory>());
+        var uow = new AeroDb(session, Substitute.For<ILogger<AeroDb>>());
         var persistence = new MartenJwtSigningKeyPersistence(uow, _mockLogger);
         
         var keyToAdd = new JwtSigningKey
@@ -105,7 +106,7 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
         savedKey!.IsCurrentSigningKey.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task AddKeyAsync_WithNullKey_ShouldThrowArgumentNullException()
     {
         // Arrange
@@ -122,12 +123,12 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region UpdateKey Tests
 
-    [Fact]
+    [Test]
     public async Task UpdateKeyAsync_WithValidKey_ShouldReturnTrue()
     {
         // Arrange
         using var session = store.LightweightSession();
-        var uow = new AeroUnitOfWork(session, Substitute.For<ILogger<AeroUnitOfWork>>(), Substitute.For<ILoggerFactory>());
+        var uow = new AeroDb(session, Substitute.For<ILogger<AeroDb>>());
         var persistence = new MartenJwtSigningKeyPersistence(uow, _mockLogger);
 
         var existingKey = new JwtSigningKey
@@ -166,12 +167,12 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region RevokeKey Tests
 
-    [Fact]
+    [Test]
     public async Task RevokeKeyAsync_WithValidKeyId_ShouldReturnTrue()
     {
         // Arrange
         using var session = store.LightweightSession();
-        var uow = new AeroUnitOfWork(session, Substitute.For<ILogger<AeroUnitOfWork>>(), Substitute.For<ILoggerFactory>());
+        var uow = new AeroDb(session, Substitute.For<ILogger<AeroDb>>());
         var persistence = new MartenJwtSigningKeyPersistence(uow, _mockLogger);
 
         var existingKey = new JwtSigningKey
@@ -201,7 +202,7 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region GetKeyById Tests
 
-    [Fact]
+    [Test]
     public async Task GetKeyByIdAsync_WithNullKeyId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -218,7 +219,7 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region SaveChanges Tests
 
-    [Fact]
+    [Test]
     public async Task SaveChangesAsync_ShouldCallUowSaveChanges()
     {
         // Arrange
@@ -239,11 +240,11 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region Error Handling Tests
 
-    [Fact]
+    [Test]
     public async Task AddKeyAsync_ShouldReturnFalseOnException()
     {
         // Arrange
-        var mockUow = Substitute.For<IAeroDbUnitOfWork>();
+        var mockUow = Substitute.For<IAeroDb>();
         var mockSession = Substitute.For<IDocumentSession>();
         mockUow.Session.Returns(mockSession);
         mockSession.When(x => x.Store(Arg.Any<JwtSigningKey>()))
@@ -262,7 +263,7 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
         // Assert
         result.ShouldBeFalse();
-    }
+}
 
     //#endregion
 }

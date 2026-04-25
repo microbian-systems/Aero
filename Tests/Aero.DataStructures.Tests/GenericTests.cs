@@ -1,11 +1,13 @@
+﻿using TUnit.Core;
 using Aero.DataStructures.Graphs;
 using Shouldly;
+using System.Threading.Tasks;
 
 namespace Aero.DataStructures.Tests;
 
 public class GenericTests
 {
-    [Fact]
+    [Test]
     public void Graph_BFS_Test()
     {
         var graph = new Graph<string>();
@@ -24,7 +26,7 @@ public class GenericTests
         bfs.OrderBy(x => x).ShouldBe(new[] { "A", "B", "C", "D", "E" }.OrderBy(x => x));
     }
 
-            [Fact]
+            [Test]
         public void AddEdge_ShouldAddVertices_WhenTheyDoNotExist()
         {
             // Arrange
@@ -40,7 +42,7 @@ public class GenericTests
             matrix.GetLength(1).ShouldBe(2);
         }
 
-        [Fact]
+        [Test]
         public void Bfs_ShouldTraverseInLevelOrder_SortedAlphabetically()
         {
             // Arrange
@@ -69,7 +71,7 @@ public class GenericTests
             result.ShouldBe(new[] { "A", "B", "C", "D", "E" }, ignoreOrder: true);
         }
 
-        [Fact]
+        [Test]
         public void Bfs_ShouldHandleDisconnectedGraph_ByIgnoringUnreachableNodes()
         {
             // Arrange
@@ -87,7 +89,7 @@ public class GenericTests
             result.ShouldNotContain("Y");
         }
 
-        [Fact]
+        [Test]
         public void Dfs_ShouldTraverseDeep_AndRespectAlphabeticalOrder()
         {
             // Arrange
@@ -120,7 +122,7 @@ public class GenericTests
             result.OrderBy(x => x).ShouldBe(valid.OrderBy(x => x));
 }
 
-        [Fact]
+        [Test]
         public void Dijkstra_ShouldFindCheapestPath_NotFewestEdges()
         {
             // Arrange
@@ -144,7 +146,7 @@ public class GenericTests
             distances["End"].ShouldBe(30);
         }
 
-        [Fact]
+        [Test]
         public void Dijkstra_ShouldReturnIntMax_ForUnreachableNodes()
         {
             // Arrange
@@ -160,7 +162,7 @@ public class GenericTests
             distances["C"].ShouldBe(int.MaxValue);
         }
 
-        [Fact]
+        [Test]
         public void GetAdjacencyMatrix_ShouldCorrectlyMapWeights()
         {
             // Arrange
@@ -191,7 +193,7 @@ public class GenericTests
             matrix[0, 2].ShouldBeNull();
         }
         
-        [Fact]
+        [Test]
         public void Graph_ShouldHandleIntegerVertices()
         {
             // Arrange
@@ -206,7 +208,7 @@ public class GenericTests
             result.ShouldBe(new[] { 1, 2, 3 });
         }
         
-    // [Fact]
+    // [Test]
     // public void Graph_DFS_Test()
     // {
     //     var graph = new Graph<string>();
@@ -225,8 +227,8 @@ public class GenericTests
     //     Assert.Equal(new[] { "A", "C", "E", "D", "B" }, dfs);
     // }
 
-    [Fact]
-    public void Graph_Dijkstra_Test()
+    [Test]
+    public async Task Graph_Dijkstra_Test()
     {
         var graph = new Graph<string>();
         graph.AddVertex("A");
@@ -241,15 +243,15 @@ public class GenericTests
         graph.AddEdge("D", "E", 1);
 
         var dijkstra = graph.Dijkstra("A");
-        Assert.Equal(0, dijkstra["A"]);
-        Assert.Equal(1, dijkstra["B"]);
-        Assert.Equal(1, dijkstra["C"]);
-        Assert.Equal(2, dijkstra["D"]);
-        Assert.Equal(2, dijkstra["E"]);
+        await Assert.That(dijkstra["A"]).IsEqualTo(0);
+        await Assert.That(dijkstra["B"]).IsEqualTo(1);
+        await Assert.That(dijkstra["C"]).IsEqualTo(1);
+        await Assert.That(dijkstra["D"]).IsEqualTo(2);
+        await Assert.That(dijkstra["E"]).IsEqualTo(2);
     }
 
-    [Fact]
-    public void Graph_GetAdjacencyMatrix_Test()
+    [Test]
+    public async Task Graph_GetAdjacencyMatrix_Test()
     {
         var graph = new Graph<string>();
         graph.AddVertex("A");
@@ -260,16 +262,16 @@ public class GenericTests
 
         var matrix = graph.GetAdjacencyMatrix();
 
-        Assert.Equal(3, matrix.GetLength(0));
-        Assert.Equal(3, matrix.GetLength(1));
+        await Assert.That(matrix.GetLength(0)).IsEqualTo(3);
+        await Assert.That(matrix.GetLength(1)).IsEqualTo(3);
         Assert.Null(matrix[0, 0]);
-        Assert.Equal(1, matrix[0, 1]);
+        await Assert.That(matrix[0, 1]).IsEqualTo(1);
         Assert.Null(matrix[0, 2]);
         Assert.Null(matrix[1, 0]);
         Assert.Null(matrix[1, 1]);
-        Assert.Equal(2, matrix[1, 2]);
+        await Assert.That(matrix[1, 2]).IsEqualTo(2);
         Assert.Null(matrix[2, 0]);
         Assert.Null(matrix[2, 1]);
         Assert.Null(matrix[2, 2]);
-    }
+}
 }

@@ -1,13 +1,15 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
 public class TwitterClientTests
 {
-    [Fact]
-    public void TwitterClient_ShouldImplementITwitterClient()
+    [Test]
+    public async Task TwitterClient_ShouldImplementITwitterClient()
     {
         // Arrange
         var httpClient = new HttpClient();
@@ -20,10 +22,10 @@ public class TwitterClientTests
         var client = new TwitterClient(httpClient, options);
 
         // Assert
-        Assert.IsAssignableFrom<ITwitterClient>(client);
+        await Assert.That(client).IsAssignableTo<ITwitterClient>();
     }
 
-    [Fact]
+    [Test]
     public void TwitterClient_Constructor_ShouldThrowOnNullHttpClient()
     {
         // Arrange
@@ -33,7 +35,7 @@ public class TwitterClientTests
         Assert.Throws<ArgumentNullException>(() => new TwitterClient(null!, options));
     }
 
-    [Fact]
+    [Test]
     public void TwitterClient_Constructor_ShouldThrowOnNullOptions()
     {
         // Arrange
@@ -46,14 +48,14 @@ public class TwitterClientTests
 
 public class ITwitterClientTests
 {
-    [Fact]
-    public void ITwitterClient_ShouldHaveGetTweetAsyncMethod()
+    [Test]
+    public async Task ITwitterClient_ShouldHaveGetTweetAsyncMethod()
     {
         // This test verifies the interface contract
         var type = typeof(ITwitterClient);
         var method = type.GetMethod("GetTweetAsync");
 
         Assert.NotNull(method);
-        Assert.Equal(typeof(Task<>).MakeGenericType(typeof(Aero.Social.Twitter.Client.Models.Tweet)), method.ReturnType);
-    }
+        await Assert.That(method.ReturnType).IsEqualTo(typeof(Task<>).MakeGenericType(typeof(Aero.Social.Twitter.Client.Models.Tweet)));
+}
 }

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using FluentAssertions;
 using LanguageExt;
 using Solnet.Extensions;
@@ -6,7 +7,6 @@ using Solnet.Rpc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
 using System.Threading;
 
 namespace Electra.Crypto.Solana.Tests;
@@ -56,7 +56,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    [Fact]
+    [Test]
     public async Task GetSwapQuote_SolToUsdc_ShouldReturnValidQuote()
     {
         // Arrange
@@ -81,7 +81,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task GetSwapQuote_UsdcToSol_ShouldReturnValidQuote()
     {
         // Arrange
@@ -106,7 +106,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task GetSwapQuote_SolToBonk_ShouldReturnValidQuote()
     {
         // Arrange
@@ -130,7 +130,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task GetSwapRoutes_SolToUsdc_ShouldReturnAvailableRoutes()
     {
         // Arrange
@@ -157,7 +157,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task CreateSwapWallet_ShouldPrepareForSwapOperations()
     {
         // Arrange & Act
@@ -186,7 +186,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task SimulateSwapExecution_SolToUsdc_ShouldPrepareTransaction()
     {
         // Arrange
@@ -224,7 +224,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         Assert.True(true, "Swap simulation completed - transaction preparation tested");
     }
 
-    [Fact]
+    [Test]
     public async Task ValidateSwapQuoteParams_InvalidInputs_ShouldReturnNone()
     {
         // Test invalid mint addresses
@@ -243,7 +243,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         invalidQuote4.IsNone.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task GetMultipleSwapQuotes_DifferentPairs_ShouldReturnConsistentResults()
     {
         // Arrange
@@ -276,7 +276,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         }
     }
 
-    [Fact]
+    [Test]
     public async Task SwapQuoteConsistency_SameParams_ShouldReturnSimilarResults()
     {
         // Arrange
@@ -303,7 +303,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         }
     }
 
-    [Fact]
+    [Test]
     public async Task HighSlippageSwapQuote_ShouldAdjustOutputAmount()
     {
         // Arrange
@@ -331,7 +331,7 @@ public class SwapIntegrationTests : IAsyncLifetime
         }
     }
 
-    [Fact]
+    [Test]
     public async Task SwapServiceDisposal_ShouldCleanupResources()
     {
         // Arrange
@@ -344,11 +344,11 @@ public class SwapIntegrationTests : IAsyncLifetime
         Assert.True(true, "Swap service disposed successfully");
     }
 
-    [Theory]
-    [InlineData(50)]   // 0.5%
-    [InlineData(100)]  // 1%
-    [InlineData(300)]  // 3%
-    [InlineData(1000)] // 10%
+    [Test]
+    [Arguments(50)]   // 0.5%
+    [Arguments(100)]  // 1%
+    [Arguments(300)]  // 3%
+    [Arguments(1000)] // 10%
     public async Task SwapQuoteWithVariousSlippage_ShouldAcceptDifferentValues(decimal slippageBps)
     {
         // Arrange
@@ -366,6 +366,6 @@ public class SwapIntegrationTests : IAsyncLifetime
                 q.OutputAmount.Should().BeGreaterThan(0);
                 q.InputAmount.Should().Be(inputAmount);
             });
-        }
+}
     }
 }

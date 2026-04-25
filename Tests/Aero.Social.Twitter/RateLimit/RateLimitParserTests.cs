@@ -1,12 +1,14 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.RateLimit;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.RateLimit;
 
 public class RateLimitParserTests
 {
-    [Fact]
-    public void ParseRateLimitHeaders_AllHeadersPresent_ReturnsParsedInfo()
+    [Test]
+    public async Task ParseRateLimitHeaders_AllHeadersPresent_ReturnsParsedInfo()
     {
         // Arrange
         var response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -20,13 +22,13 @@ public class RateLimitParserTests
 
         // Assert
         Assert.NotNull(info);
-        Assert.Equal(150, info.Limit);
-        Assert.Equal(75, info.Remaining);
-        Assert.Equal(1234567890, info.ResetTimestamp);
-        Assert.Equal(TimeSpan.FromSeconds(60), info.RetryAfter);
+        await Assert.That(info.Limit).IsEqualTo(150);
+        await Assert.That(info.Remaining).IsEqualTo(75);
+        await Assert.That(info.ResetTimestamp).IsEqualTo(1234567890);
+        await Assert.That(info.RetryAfter).IsEqualTo(TimeSpan.FromSeconds(60));
     }
 
-    [Fact]
+    [Test]
     public void ParseRateLimitHeaders_NoHeaders_ReturnsNull()
     {
         // Arrange
@@ -39,8 +41,8 @@ public class RateLimitParserTests
         Assert.Null(info);
     }
 
-    [Fact]
-    public void ParseRateLimitHeaders_PartialHeaders_ReturnsPartialInfo()
+    [Test]
+    public async Task ParseRateLimitHeaders_PartialHeaders_ReturnsPartialInfo()
     {
         // Arrange
         var response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -53,13 +55,13 @@ public class RateLimitParserTests
 
         // Assert
         Assert.NotNull(info);
-        Assert.Equal(100, info.Limit);
-        Assert.Equal(50, info.Remaining);
-        Assert.Equal(0, info.ResetTimestamp);
+        await Assert.That(info.Limit).IsEqualTo(100);
+        await Assert.That(info.Remaining).IsEqualTo(50);
+        await Assert.That(info.ResetTimestamp).IsEqualTo(0);
     }
 
-    [Fact]
-    public void ParseRateLimitHeaders_InvalidValues_ReturnsPartialInfo()
+    [Test]
+    public async Task ParseRateLimitHeaders_InvalidValues_ReturnsPartialInfo()
     {
         // Arrange
         var response = new HttpResponseMessage(HttpStatusCode.OK);
@@ -72,12 +74,12 @@ public class RateLimitParserTests
 
         // Assert
         Assert.NotNull(info);
-        Assert.Equal(0, info.Limit);
-        Assert.Equal(75, info.Remaining);
-        Assert.Equal(1234567890, info.ResetTimestamp);
+        await Assert.That(info.Limit).IsEqualTo(0);
+        await Assert.That(info.Remaining).IsEqualTo(75);
+        await Assert.That(info.ResetTimestamp).IsEqualTo(1234567890);
     }
 
-    [Fact]
+    [Test]
     public void ParseRateLimitHeaders_NullResponse_ReturnsNull()
     {
         // Act
@@ -87,8 +89,8 @@ public class RateLimitParserTests
         Assert.Null(info);
     }
 
-    [Fact]
-    public void GetRateLimitDescription_WithValidInfo_ReturnsDescriptiveString()
+    [Test]
+    public async Task GetRateLimitDescription_WithValidInfo_ReturnsDescriptiveString()
     {
         // Arrange
         var info = new RateLimitInfo
@@ -102,12 +104,12 @@ public class RateLimitParserTests
         var description = RateLimitParser.GetRateLimitDescription(info);
 
         // Assert
-        Assert.Contains("50 of 100", description);
-        Assert.Contains("50% consumed", description);
+        await Assert.That(description).Contains("50 of 100");
+        await Assert.That(description).Contains("50% consumed");
     }
 
-    [Fact]
-    public void GetRateLimitDescription_WithRateLimit_ReturnsRateLimitedMessage()
+    [Test]
+    public async Task GetRateLimitDescription_WithRateLimit_ReturnsRateLimitedMessage()
     {
         // Arrange
         var info = new RateLimitInfo
@@ -121,11 +123,11 @@ public class RateLimitParserTests
         var description = RateLimitParser.GetRateLimitDescription(info);
 
         // Assert
-        Assert.Contains("Rate limit exceeded", description);
+        await Assert.That(description).Contains("Rate limit exceeded");
     }
 
-    [Fact]
-    public void GetRateLimitDescription_WithApproachingLimit_ReturnsApproachingMessage()
+    [Test]
+    public async Task GetRateLimitDescription_WithApproachingLimit_ReturnsApproachingMessage()
     {
         // Arrange
         var info = new RateLimitInfo
@@ -139,25 +141,25 @@ public class RateLimitParserTests
         var description = RateLimitParser.GetRateLimitDescription(info);
 
         // Assert
-        Assert.Contains("Approaching rate limit", description);
+        await Assert.That(description).Contains("Approaching rate limit");
     }
 
-    [Fact]
-    public void GetRateLimitDescription_WithNullInfo_ReturnsNotAvailableMessage()
+    [Test]
+    public async Task GetRateLimitDescription_WithNullInfo_ReturnsNotAvailableMessage()
     {
         // Act
         var description = RateLimitParser.GetRateLimitDescription(null);
 
         // Assert
-        Assert.Equal("Rate limit information not available.", description);
+        await Assert.That(description).IsEqualTo("Rate limit information not available.");
     }
 
-    [Theory]
-    [InlineData(100, 5, true)]   // Less than 10% remaining
-    [InlineData(100, 0, true)]   // Rate limited
-    [InlineData(100, 15, false)] // Above 10% threshold
-    [InlineData(100, 50, false)] // Well above threshold
-    public void ShouldLogWarning_VariousScenarios_ReturnsExpectedResult(int limit, int remaining, bool expected)
+    [Test]
+    [Arguments(100, 5, true)]   // Less than 10% remaining
+    [Arguments(100, 0, true)]   // Rate limited
+    [Arguments(100, 15, false)] // Above 10% threshold
+    [Arguments(100, 50, false)] // Well above threshold
+    public async Task ShouldLogWarning_VariousScenarios_ReturnsExpectedResult(int limit, int remaining, bool expected)
     {
         // Arrange
         var info = new RateLimitInfo
@@ -168,18 +170,18 @@ public class RateLimitParserTests
         };
 
         // Act & Assert
-        Assert.Equal(expected, RateLimitParser.ShouldLogWarning(info));
+        await Assert.That(RateLimitParser.ShouldLogWarning(info)).IsEqualTo(expected);
     }
 
-    [Fact]
-    public void ShouldLogWarning_WithNullInfo_ReturnsFalse()
+    [Test]
+    public async Task ShouldLogWarning_WithNullInfo_ReturnsFalse()
     {
         // Act & Assert
-        Assert.False(RateLimitParser.ShouldLogWarning(null));
+        await Assert.That(RateLimitParser.ShouldLogWarning(null)).IsFalse();
     }
 
-    [Fact]
-    public void ParseRateLimitHeaders_OnlyRetryAfter_ReturnsInfoWithRetryAfter()
+    [Test]
+    public async Task ParseRateLimitHeaders_OnlyRetryAfter_ReturnsInfoWithRetryAfter()
     {
         // Arrange
         var response = new HttpResponseMessage((HttpStatusCode)429);
@@ -190,8 +192,8 @@ public class RateLimitParserTests
 
         // Assert
         Assert.NotNull(info);
-        Assert.Equal(0, info.Limit);
-        Assert.Equal(0, info.Remaining);
-        Assert.Equal(TimeSpan.FromSeconds(900), info.RetryAfter);
-    }
+        await Assert.That(info.Limit).IsEqualTo(0);
+        await Assert.That(info.Remaining).IsEqualTo(0);
+        await Assert.That(info.RetryAfter).IsEqualTo(TimeSpan.FromSeconds(900));
+}
 }

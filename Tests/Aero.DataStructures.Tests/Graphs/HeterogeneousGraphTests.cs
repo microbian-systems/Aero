@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -13,7 +14,7 @@ public class HeterogeneousGraphTests
 
     //#region Node Tests
 
-    [Fact]
+    [Test]
     public void AddNode_ShouldCreateTypedNode()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -27,7 +28,7 @@ public class HeterogeneousGraphTests
         node.Type.ShouldBe(nodeType);
     }
 
-    [Fact]
+    [Test]
     public void AddNode_ShouldStoreAttributes()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -38,7 +39,7 @@ public class HeterogeneousGraphTests
         node.GetAttribute<int>("age").ShouldBe(30);
     }
 
-    [Fact]
+    [Test]
     public void AddNode_ShouldReturnNull_WhenDuplicate()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -49,7 +50,7 @@ public class HeterogeneousGraphTests
         result.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public void GetNodes_ShouldFilterByType()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -63,7 +64,7 @@ public class HeterogeneousGraphTests
         users.All(n => n.Type == "User").ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void NodeTypeCounts_ShouldBeAccurate()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -79,7 +80,7 @@ public class HeterogeneousGraphTests
 
     //#region Edge Tests
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldCreateTypedEdge()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -94,7 +95,7 @@ public class HeterogeneousGraphTests
         edge.TargetId.ShouldBe("prod1");
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldStoreWeight()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -106,7 +107,7 @@ public class HeterogeneousGraphTests
         edge!.Weight.ShouldBe(0.95);
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldReturnNull_WhenNodesNotExist()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -116,7 +117,7 @@ public class HeterogeneousGraphTests
         edge.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public void GetEdges_ShouldFilterByType()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -132,7 +133,7 @@ public class HeterogeneousGraphTests
         friendEdges.Count().ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void EdgeTypeCounts_ShouldBeAccurate()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -145,7 +146,7 @@ public class HeterogeneousGraphTests
         graph.EdgeTypeCounts["KNOWS"].ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldAutoGenerateEdgeId()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -164,7 +165,7 @@ public class HeterogeneousGraphTests
 
     //#region Neighbor Tests
 
-    [Fact]
+    [Test]
     public void GetNeighbors_ShouldReturnConnectedNodes()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -179,7 +180,7 @@ public class HeterogeneousGraphTests
         neighbors.Select(n => n.Id).ShouldBe(new[] { "n1", "n2" }, ignoreOrder: true);
     }
 
-    [Fact]
+    [Test]
     public void GetNeighbors_WithType_ShouldFilter()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -199,7 +200,7 @@ public class HeterogeneousGraphTests
 
     //#region Meta-Path Tests
 
-    [Fact]
+    [Test]
     public void FindMetaPaths_ShouldFindMatchingPaths()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -221,7 +222,7 @@ public class HeterogeneousGraphTests
         paths[0].Select(n => n.Id).ShouldBe(new[] { "user1", "prod1", "cat1" });
     }
 
-    [Fact]
+    [Test]
     public void ComputePathSimilarity_ShouldCalculateCorrectly()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -249,7 +250,7 @@ public class HeterogeneousGraphTests
 
     //#region Schema Tests
 
-    [Fact]
+    [Test]
     public void GetSchema_ShouldReturnEdgeTypes()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -267,7 +268,7 @@ public class HeterogeneousGraphTests
 
     //#region Remove Tests
 
-    [Fact]
+    [Test]
     public void RemoveNode_ShouldRemoveIncidentEdges()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -280,7 +281,7 @@ public class HeterogeneousGraphTests
         graph.EdgeCount.ShouldBe(0);
     }
 
-    [Fact]
+    [Test]
     public void RemoveEdge_ShouldKeepNodes()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -298,7 +299,7 @@ public class HeterogeneousGraphTests
 
     //#region Clear Tests
 
-    [Fact]
+    [Test]
     public void Clear_ShouldResetGraph()
     {
         var graph = new HeterogeneousGraph<int, string, string>();
@@ -316,7 +317,7 @@ public class HeterogeneousGraphTests
 
     //#region Real-World Scenario Tests
 
-    [Fact]
+    [Test]
     public void ECommerceScenario_ShouldModelCorrectly()
     {
         var graph = new HeterogeneousGraph<string, string, string>();
@@ -336,7 +337,7 @@ public class HeterogeneousGraphTests
         var aliceNeighbors = graph.GetNeighbors("alice", "PURCHASED").ToList();
         aliceNeighbors.ShouldHaveSingleItem();
         aliceNeighbors[0].Id.ShouldBe("laptop");
-    }
+}
 
     //#endregion
 }

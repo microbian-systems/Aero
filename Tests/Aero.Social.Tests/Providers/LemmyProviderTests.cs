@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -19,7 +20,7 @@ public class LemmyProviderTests : ProviderTestBase
         return new LemmyProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -29,7 +30,7 @@ public class LemmyProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn10000()
     {
         var provider = CreateProvider();
@@ -37,7 +38,7 @@ public class LemmyProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(10000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnEmptyUrl()
     {
         var provider = CreateProvider();
@@ -48,5 +49,5 @@ public class LemmyProviderTests : ProviderTestBase
 
         result.Url.ShouldBeEmpty();
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class YouTubeProviderTests : ProviderTestBase
         return new YouTubeProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -33,7 +34,7 @@ public class YouTubeProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(200);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn5000()
     {
         var provider = CreateProvider();
@@ -41,7 +42,7 @@ public class YouTubeProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(5000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -56,5 +57,5 @@ public class YouTubeProviderTests : ProviderTestBase
         result.Url.ShouldContain("scope=");
         result.Url.ShouldContain("youtube.upload");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

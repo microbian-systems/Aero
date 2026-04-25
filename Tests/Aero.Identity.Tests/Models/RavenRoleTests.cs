@@ -1,11 +1,11 @@
+﻿using TUnit.Core;
 using Aero.Identity.Models;
-using Xunit;
 
 namespace Aero.Identity.Tests.Models;
 
 public class AeroRoleTests
 {
-    [Fact]
+    [Test]
     public void CanInitializeAeroRole()
     {
         // Arrange & Act
@@ -15,7 +15,7 @@ public class AeroRoleTests
         Assert.NotNull(role);
     }
 
-    [Fact]
+    [Test]
     public void CanSetRoleProperties()
     {
         // Arrange
@@ -33,5 +33,5 @@ public class AeroRoleTests
         Assert.Equal(roleId, role.Id);
         Assert.Equal(roleName, role.Name);
         Assert.Equal(normalizedName, role.NormalizedName);
-    }
+}
 }

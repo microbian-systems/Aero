@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -23,7 +24,7 @@ public class MastodonProviderTests : ProviderTestBase
         return new MastodonProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -33,7 +34,7 @@ public class MastodonProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(5);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn500()
     {
         var provider = CreateProvider();
@@ -41,7 +42,7 @@ public class MastodonProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(500);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         HttpHandler.WhenGet("*instance*")
@@ -58,5 +59,5 @@ public class MastodonProviderTests : ProviderTestBase
         result.Url.ShouldContain("client_id=");
         result.Url.ShouldContain("redirect_uri=");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

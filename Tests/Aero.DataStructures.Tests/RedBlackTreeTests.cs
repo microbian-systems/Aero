@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,7 @@ namespace Aero.DataStructures.Tests;
 
 public class RedBlackTreeTests
 {
-    [Fact]
+    [Test]
     public void Insert_And_Balance_Test()
     {
         // Arrange
@@ -23,7 +24,7 @@ public class RedBlackTreeTests
         ((RedBlackTreeNode<int>)rbt.Root.Right).Color.ShouldBe(NodeColor.Black);
     }
 
-    [Fact]
+    [Test]
     public void Delete_And_Balance_Test()
     {
         // Arrange
@@ -44,5 +45,5 @@ public class RedBlackTreeTests
         // Assert
         var foundNode = rbt.Find(12);
         foundNode.ShouldBeNull();
-    }
+}
 }

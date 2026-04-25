@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -8,7 +9,7 @@ public class GraphTests
 {
     private readonly Faker _faker = new();
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldAddVertexToGraph()
     {
         // Arrange
@@ -23,7 +24,7 @@ public class GraphTests
         matrix.GetLength(0).ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldNotDuplicateVertices()
     {
         // Arrange
@@ -39,7 +40,7 @@ public class GraphTests
         matrix.GetLength(0).ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldAddEdgeCorrectly_Directed()
     {
         // Arrange
@@ -60,7 +61,7 @@ public class GraphTests
         matrix[1, 0].ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldAddEdgeCorrectly_Undirected()
     {
         // Arrange
@@ -79,7 +80,7 @@ public class GraphTests
         matrix[1, 0].ShouldBe(5);
     }
         
-    [Fact]
+    [Test]
     public void AddEdge_ShouldAutoAddVertices_IfTheyDoNotExist()
     {
         // Arrange
@@ -93,7 +94,7 @@ public class GraphTests
         matrix.GetLength(0).ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void Bfs_ShouldTraverseGraphCorrectly()
     {
         // Arrange
@@ -119,7 +120,7 @@ public class GraphTests
         result.Count.ShouldBe(4);
     }
 
-    [Fact]
+    [Test]
     public void Dfs_ShouldTraverseGraphCorrectly()
     {
         // Arrange
@@ -145,7 +146,7 @@ public class GraphTests
         result.Count.ShouldBe(4);
     }
 
-    [Fact]
+    [Test]
     public void Dijkstra_ShouldFindShortestPaths()
     {
         // Arrange
@@ -167,7 +168,7 @@ public class GraphTests
         distances["C"].ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public void Dijkstra_ShouldHandleUnreachableNodes()
     {
         // Arrange
@@ -182,5 +183,5 @@ public class GraphTests
         // Assert
         distances["A"].ShouldBe(0);
         distances["B"].ShouldBe(int.MaxValue);
-    }
+}
 }

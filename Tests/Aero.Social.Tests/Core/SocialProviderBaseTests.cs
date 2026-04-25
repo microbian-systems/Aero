@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.Core;
 using Aero.Core.Railway;
 using Aero.Social.Abstractions;
@@ -11,7 +12,7 @@ public class SocialProviderBaseTests : ProviderTestBase
 {
     private readonly Mock<ILogger<SocialProviderBase>> _loggerMock = new();
 
-    [Fact]
+    [Test]
     public void CheckScopes_WhenAllScopesGranted_ShouldNotThrow()
     {
         var required = new[] { "read", "write", "email" };
@@ -22,7 +23,7 @@ public class SocialProviderBaseTests : ProviderTestBase
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void CheckScopes_WhenScopeMissing_ShouldReturnFailure()
     {
         var required = new[] { "read", "write", "admin" };
@@ -34,7 +35,7 @@ public class SocialProviderBaseTests : ProviderTestBase
         ((Result<NoneType, AeroError>.Failure)result).Error.ShouldBeOfType<AeroError.Forbidden>();
     }
 
-    [Fact]
+    [Test]
     public void CheckScopes_WhenScopesGrantedAsString_ShouldParseCorrectly()
     {
         var required = new[] { "read", "write" };
@@ -45,7 +46,7 @@ public class SocialProviderBaseTests : ProviderTestBase
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void CheckScopes_WhenScopesGrantedAsCommaDelimited_ShouldParseCorrectly()
     {
         var required = new[] { "read", "write" };
@@ -56,7 +57,7 @@ public class SocialProviderBaseTests : ProviderTestBase
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void CheckScopes_ShouldBeCaseInsensitive()
     {
         var required = new[] { "READ", "Write" };
@@ -67,7 +68,7 @@ public class SocialProviderBaseTests : ProviderTestBase
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void MakeId_ShouldGenerateStringOfCorrectLength()
     {
         var result = CreateTestProvider().TestMakeId(10);
@@ -75,7 +76,7 @@ public class SocialProviderBaseTests : ProviderTestBase
         result.Length.ShouldBe(10);
     }
 
-    [Fact]
+    [Test]
     public void MakeId_ShouldGenerateAlphanumericString()
     {
         var result = CreateTestProvider().TestMakeId(20);
@@ -83,7 +84,7 @@ public class SocialProviderBaseTests : ProviderTestBase
         result.ShouldAllBe(c => char.IsLetterOrDigit(c));
     }
 
-    [Fact]
+    [Test]
     public void MakeId_ShouldGenerateDifferentValues()
     {
         var results = new HashSet<string>();

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Cookies;
 using Bunit;
 using Aero.MerakiUI.Cookies;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Cookies;
 
 public class CookieTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void CookieBanner_ShouldRenderMessage()
     {
         var cut = Render<CookieBanner>(parameters => parameters
@@ -14,5 +15,5 @@ public class CookieTests : BunitContext
         );
 
         Assert.Contains("Test Cookie Message", cut.Markup);
-    }
+}
 }

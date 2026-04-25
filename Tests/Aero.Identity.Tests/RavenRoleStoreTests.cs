@@ -1,11 +1,11 @@
+﻿using TUnit.Core;
 using Aero.Identity.Models;
-using Xunit;
 
 namespace Aero.Identity.Tests;
 
 public class AeroRoleStoreTests : AeroDbTestDriver
 {
-    [Fact]
+    [Test]
     public async Task CanCreateRole()
     {
         // Arrange
@@ -27,7 +27,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         Assert.Equal("Admin", dbRole.Name);
     }
 
-    [Fact]
+    [Test]
     public async Task CanFindRoleById()
     {
         // Arrange
@@ -47,7 +47,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         Assert.Equal("Admin", dbRole.Name);
     }
 
-    [Fact]
+    [Test]
     public async Task CanFindRoleByName()
     {
         // Arrange
@@ -67,7 +67,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         Assert.Equal(role.Id, dbRole.Id);
     }
 
-    [Fact]
+    [Test]
     public async Task CanDeleteRole()
     {
         // Arrange
@@ -90,7 +90,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         Assert.Null(dbRole);
     }
 
-    [Fact]
+    [Test]
     public async Task UpdateAsync_ReturnsSuccess()
     {
         // Arrange
@@ -106,7 +106,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         Assert.True(result.Succeeded);
     }
 
-    [Fact]
+    [Test]
     public async Task CreateAsync_ThrowsOnNullRole()
     {
         // Arrange
@@ -118,7 +118,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         await Assert.ThrowsAsync<ArgumentNullException>(() => roleStore.CreateAsync(null!, CancellationToken.None));
     }
 
-    [Fact]
+    [Test]
     public async Task UpdateAsync_ThrowsOnNullRole()
     {
         // Arrange
@@ -130,7 +130,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         await Assert.ThrowsAsync<ArgumentNullException>(() => roleStore.UpdateAsync(null!, CancellationToken.None));
     }
 
-    [Fact]
+    [Test]
     public async Task DeleteAsync_ThrowsOnNullRole()
     {
         // Arrange
@@ -142,7 +142,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         await Assert.ThrowsAsync<ArgumentNullException>(() => roleStore.DeleteAsync(null!, CancellationToken.None));
     }
 
-    [Fact]
+    [Test]
     public async Task GetRoleIdAsync_ReturnsRoleId()
     {
         // Arrange
@@ -158,7 +158,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         Assert.Equal("roles/1", result);
     }
 
-    [Fact]
+    [Test]
     public async Task GetRoleNameAsync_ReturnsRoleName()
     {
         // Arrange
@@ -174,7 +174,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         Assert.Equal("Admin", result);
     }
 
-    [Fact]
+    [Test]
     public async Task SetRoleNameAsync_SetsRoleName()
     {
         // Arrange
@@ -190,7 +190,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         Assert.Equal("Admin", role.Name);
     }
 
-    [Fact]
+    [Test]
     public async Task GetNormalizedRoleNameAsync_ReturnsNormalizedRoleName()
     {
         // Arrange
@@ -206,7 +206,7 @@ public class AeroRoleStoreTests : AeroDbTestDriver
         Assert.Equal("ADMIN", result);
     }
 
-    [Fact]
+    [Test]
     public async Task SetNormalizedRoleNameAsync_SetsNormalizedRoleName()
     {
         // Arrange
@@ -220,5 +220,5 @@ public class AeroRoleStoreTests : AeroDbTestDriver
 
         // Assert
         Assert.Equal("ADMIN", role.NormalizedName);
-    }
+}
 }

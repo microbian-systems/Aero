@@ -1,11 +1,13 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Serialization;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Serialization;
 
 public class TwitterJsonSerializerTests
 {
-    [Fact]
-    public void Deserialize_ShouldParseValidJson()
+    [Test]
+    public async Task Deserialize_ShouldParseValidJson()
     {
         // Arrange
         var json = @"{""id"": ""123"", ""text"": ""Hello""}";
@@ -15,12 +17,12 @@ public class TwitterJsonSerializerTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("123", result.Id);
-        Assert.Equal("Hello", result.Text);
+        await Assert.That(result.Id).IsEqualTo("123");
+        await Assert.That(result.Text).IsEqualTo("Hello");
     }
 
-    [Fact]
-    public void Deserialize_ShouldHandleSnakeCase()
+    [Test]
+    public async Task Deserialize_ShouldHandleSnakeCase()
     {
         // Arrange
         var json = @"{""created_at"": ""2024-01-15T10:30:00.000Z"", ""author_id"": ""456""}";
@@ -30,11 +32,11 @@ public class TwitterJsonSerializerTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("456", result.AuthorId);
+        await Assert.That(result.AuthorId).IsEqualTo("456");
     }
 
-    [Fact]
-    public void Serialize_ShouldOutputSnakeCase()
+    [Test]
+    public async Task Serialize_ShouldOutputSnakeCase()
     {
         // Arrange
         var model = new TestModel
@@ -48,13 +50,13 @@ public class TwitterJsonSerializerTests
         var json = TwitterJsonSerializer.Serialize(model);
 
         // Assert
-        Assert.Contains("\"id\"", json);
-        Assert.Contains("\"text\"", json);
-        Assert.Contains("\"author_id\"", json);
+        await Assert.That(json).Contains("\"id\"");
+        await Assert.That(json).Contains("\"text\"");
+        await Assert.That(json).Contains("\"author_id\"");
     }
 
-    [Fact]
-    public void Serialize_ShouldSkipNullValues()
+    [Test]
+    public async Task Serialize_ShouldSkipNullValues()
     {
         // Arrange
         var model = new TestModel
@@ -68,14 +70,15 @@ public class TwitterJsonSerializerTests
         var json = TwitterJsonSerializer.Serialize(model);
 
         // Assert
-        Assert.Contains("\"id\"", json);
-        Assert.Contains("\"author_id\"", json);
+        await Assert.That(json).Contains("\"id\"");
+        await Assert.That(json).Contains("\"author_id\"");
     }
 
     private class TestModel
     {
         public string? Id { get; set; }
         public string? Text { get; set; }
-        public string? AuthorId { get; set; }
+        public string? AuthorId { get; set;
+}
     }
 }

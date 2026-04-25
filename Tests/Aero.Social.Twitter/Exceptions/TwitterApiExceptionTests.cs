@@ -1,23 +1,25 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Exceptions;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Exceptions;
 
 public class TwitterApiExceptionTests
 {
-    [Fact]
-    public void TwitterApiException_DefaultConstructor_ShouldCreateException()
+    [Test]
+    public async Task TwitterApiException_DefaultConstructor_ShouldCreateException()
     {
         // Act
         var exception = new TwitterApiException();
 
         // Assert
         Assert.NotNull(exception);
-        Assert.IsType<TwitterApiException>(exception);
+        await Assert.That(exception).IsTypeOf<TwitterApiException>();
     }
 
-    [Fact]
-    public void TwitterApiException_MessageConstructor_ShouldSetMessage()
+    [Test]
+    public async Task TwitterApiException_MessageConstructor_ShouldSetMessage()
     {
         // Arrange
         var message = "Test error message";
@@ -26,11 +28,11 @@ public class TwitterApiExceptionTests
         var exception = new TwitterApiException(message);
 
         // Assert
-        Assert.Equal(message, exception.Message);
+        await Assert.That(exception.Message).IsEqualTo(message);
     }
 
-    [Fact]
-    public void TwitterApiException_FullConstructor_ShouldSetAllProperties()
+    [Test]
+    public async Task TwitterApiException_FullConstructor_ShouldSetAllProperties()
     {
         // Arrange
         var message = "Test error message";
@@ -41,13 +43,13 @@ public class TwitterApiExceptionTests
         var exception = new TwitterApiException(message, innerException, statusCode);
 
         // Assert
-        Assert.Equal(message, exception.Message);
-        Assert.Equal(innerException, exception.InnerException);
-        Assert.Equal(statusCode, exception.StatusCode);
+        await Assert.That(exception.Message).IsEqualTo(message);
+        await Assert.That(exception.InnerException).IsEqualTo(innerException);
+        await Assert.That(exception.StatusCode).IsEqualTo(statusCode);
     }
 
-    [Fact]
-    public void TwitterApiException_StatusCode_ShouldBeAccessible()
+    [Test]
+    public async Task TwitterApiException_StatusCode_ShouldBeAccessible()
     {
         // Arrange
         var statusCode = HttpStatusCode.NotFound;
@@ -56,34 +58,34 @@ public class TwitterApiExceptionTests
         var exception = new TwitterApiException("Not found", null, statusCode);
 
         // Assert
-        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+        await Assert.That(exception.StatusCode).IsEqualTo(HttpStatusCode.NotFound);
     }
 }
 
 public class TwitterRateLimitExceptionTests
 {
-    [Fact]
-    public void TwitterRateLimitException_ShouldInheritFromTwitterApiException()
+    [Test]
+    public async Task TwitterRateLimitException_ShouldInheritFromTwitterApiException()
     {
         // Act
         var exception = new TwitterRateLimitException("Rate limit exceeded");
 
         // Assert
-        Assert.IsAssignableFrom<TwitterApiException>(exception);
+        await Assert.That(exception).IsAssignableTo<TwitterApiException>();
     }
 
-    [Fact]
-    public void TwitterRateLimitException_ShouldHave429StatusCode()
+    [Test]
+    public async Task TwitterRateLimitException_ShouldHave429StatusCode()
     {
         // Act
         var exception = new TwitterRateLimitException("Rate limit exceeded");
 
         // Assert
-        Assert.Equal(HttpStatusCode.TooManyRequests, exception.StatusCode);
+        await Assert.That(exception.StatusCode).IsEqualTo(HttpStatusCode.TooManyRequests);
     }
 
-    [Fact]
-    public void TwitterRateLimitException_ShouldStoreRetryAfter()
+    [Test]
+    public async Task TwitterRateLimitException_ShouldStoreRetryAfter()
     {
         // Arrange
         var retryAfter = TimeSpan.FromMinutes(15);
@@ -92,29 +94,29 @@ public class TwitterRateLimitExceptionTests
         var exception = new TwitterRateLimitException("Rate limit exceeded", retryAfter);
 
         // Assert
-        Assert.Equal(retryAfter, exception.RetryAfter);
+        await Assert.That(exception.RetryAfter).IsEqualTo(retryAfter);
     }
 }
 
 public class TwitterAuthenticationExceptionTests
 {
-    [Fact]
-    public void TwitterAuthenticationException_ShouldInheritFromTwitterApiException()
+    [Test]
+    public async Task TwitterAuthenticationException_ShouldInheritFromTwitterApiException()
     {
         // Act
         var exception = new TwitterAuthenticationException("Authentication failed");
 
         // Assert
-        Assert.IsAssignableFrom<TwitterApiException>(exception);
+        await Assert.That(exception).IsAssignableTo<TwitterApiException>();
     }
 
-    [Fact]
-    public void TwitterAuthenticationException_ShouldHave401StatusCode()
+    [Test]
+    public async Task TwitterAuthenticationException_ShouldHave401StatusCode()
     {
         // Act
         var exception = new TwitterAuthenticationException("Authentication failed");
 
         // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
-    }
+        await Assert.That(exception.StatusCode).IsEqualTo(HttpStatusCode.Unauthorized);
+}
 }

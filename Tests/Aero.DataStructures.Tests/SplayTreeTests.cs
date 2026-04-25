@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,7 @@ namespace Aero.DataStructures.Tests;
 
 public class SplayTreeTests
 {
-    [Fact]
+    [Test]
     public void Insert_And_Splay_Test()
     {
         // Arrange
@@ -22,5 +23,5 @@ public class SplayTreeTests
 
         // Assert
         splay.Root.Value.ShouldBe(20);
-    }
+}
 }

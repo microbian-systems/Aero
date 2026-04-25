@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.Core;
 using Aero.Core.Identity;
 using Aero.Models.Entities;
@@ -52,7 +53,7 @@ public class IdentityIntegrationTests : RavenDbTestBase
         _serviceProvider = services.BuildServiceProvider();
     }
 
-    [Fact]
+    [Test]
     public async Task UserManager_Should_Add_Update_Search_And_Delete_User()
     {
         using var scope = _serviceProvider.CreateScope();
@@ -97,7 +98,7 @@ public class IdentityIntegrationTests : RavenDbTestBase
         deletedUser.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public async Task UserManager_And_RoleManager_Integration_Should_Work()
     {
         using var scope = _serviceProvider.CreateScope();
@@ -130,5 +131,5 @@ public class IdentityIntegrationTests : RavenDbTestBase
 
         var isInRole = await userManager.IsInRoleAsync(user, roleName);
         isInRole.ShouldBeTrue();
-    }
+}
 }

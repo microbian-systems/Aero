@@ -1,10 +1,9 @@
+﻿using TUnit.Core;
 using Aero.Auth.Services;
 using Aero.Common.Web.Infrastructure;
 using FluentAssertions;
 using Microsoft.Extensions.Options;
 using NSubstitute;
-using TUnit.Core;
-
 namespace Aero.Auth.Tests.Services;
 
 public class DefaultApiKeyFactoryTests

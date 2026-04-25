@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Tabs;
 using Bunit;
 using Aero.MerakiUI.Tabs;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Tabs;
 
 public class TabTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void SimpleTabs_ShouldRenderCorrectStructure()
     {
         var cut = Render<SimpleTabs>(parameters => parameters
@@ -26,7 +27,7 @@ public class TabTests : BunitContext
         Assert.Contains("Account Content", cut.Markup);
     }
 
-    [Fact]
+    [Test]
     public void TabWithIcons_ShouldRenderCorrectStructure()
     {
         var items = new List<Aero.MerakiUI.Tabs.TabWithIcons.TabItem>
@@ -48,5 +49,5 @@ public class TabTests : BunitContext
         Assert.Equal(2, buttons.Count);
         Assert.Contains("Profile", buttons[0].TextContent);
         Assert.Contains("<svg>...</svg>", buttons[0].InnerHtml);
-    }
+}
 }

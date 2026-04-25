@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Cards;
 using Bunit;
 using Aero.MerakiUI.Cards;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Cards;
 
 public class CardTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void ProductCard_ShouldRenderCorrectStructure()
     {
         var cut = Render<ProductCard>(parameters => parameters
@@ -28,7 +29,7 @@ public class CardTests : BunitContext
         Assert.Contains("background-image: url(https://example.com/image.jpg)", imageDiv.GetAttribute("style"));
     }
 
-    [Fact]
+    [Test]
     public void ArticleCard_ShouldRenderCorrectStructure()
     {
         var cut = Render<ArticleCard>(parameters => parameters
@@ -46,5 +47,5 @@ public class CardTests : BunitContext
         
         // Verify Date
         Assert.Contains("21 Oct 2023", cut.Find("span.text-gray-600").TextContent);
-    }
+}
 }

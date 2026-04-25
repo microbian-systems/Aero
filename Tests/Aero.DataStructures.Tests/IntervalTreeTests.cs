@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,7 @@ namespace Aero.DataStructures.Tests;
 
 public class IntervalTreeTests
 {
-    [Fact]
+    [Test]
     public void SearchOverlapping_Returns_Correct_Intervals()
     {
         // Arrange
@@ -23,5 +24,5 @@ public class IntervalTreeTests
         overlapping.ShouldContain(i => i.Start == 15 && i.End == 20);
         overlapping.ShouldContain(i => i.Start == 10 && i.End == 30);
         overlapping.ShouldContain(i => i.Start == 5 && i.End == 20);
-    }
+}
 }

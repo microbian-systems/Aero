@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Navbars;
 using Bunit;
 using Aero.MerakiUI.Navbars;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Navbars;
 
 public class NavbarTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void SimpleNavbar_ShouldRenderCorrectClasses()
     {
         var cut = Render<SimpleNavbar>(parameters => parameters
@@ -15,5 +16,5 @@ public class NavbarTests : BunitContext
 
         Assert.Contains("MyBrand", cut.Markup);
         cut.Find("nav");
-    }
+}
 }
