@@ -1,6 +1,5 @@
 using Aero.Core;
-using Microsoft.IdentityModel.JsonWebTokens;
-using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 
 namespace Aero.Auth.Services;
 
@@ -46,6 +45,8 @@ public class JwtTokenService : IJwtTokenService
     public async Task<string> GenerateAccessTokenAsync(
         long userId,
         string email,
+        IEnumerable<string>? roles = null,
+        IEnumerable<Claim>? extraClaims = null,
         CancellationToken cancellationToken = default)
     {
         var signingCredentials = await _signingKeyStore.GetSigningCredentialsAsync(cancellationToken);
@@ -57,6 +58,19 @@ public class JwtTokenService : IJwtTokenService
             new(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Email, email),
             new(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Snowflake.NewId().ToString()),
         };
+
+        if (roles != null)
+        {
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+        }
+
+        if (extraClaims != null)
+        {
+            claims.AddRange(extraClaims);
+        }
 
         var token = new JwtSecurityToken(
             issuer: _config["Auth:Jwt:Issuer"] ?? "Aero",
@@ -124,5 +138,24 @@ public class JwtTokenService : IJwtTokenService
             _logger.LogError(ex, "Unexpected error validating token");
             return (false, null);
         }
+    }
+
+    /// <summary>
+    /// Generates a long-lived refresh token.
+    /// </summary>
+    /// <param name="lifetime">The lifetime of the refresh token.</param>
+    /// <returns>A refresh token result containing the raw token and its hash.</returns>
+    public RefreshTokenResult GenerateRefreshToken(TimeSpan lifetime)
+    {
+        var bytes = RandomNumberGenerator.GetBytes(64);
+        var token = Convert.ToBase64String(bytes);
+
+        var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(token));
+        var hash = Convert.ToHexString(hashBytes);
+
+        return new RefreshTokenResult(
+            token,
+            hash,
+            DateTimeOffset.UtcNow.Add(lifetime));
     }
 }

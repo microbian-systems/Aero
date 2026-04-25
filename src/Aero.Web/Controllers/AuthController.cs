@@ -584,7 +584,7 @@ public partial class AuthController(
         await userManager.UpdateAsync(user);
 
         // Generate tokens
-        var accessToken = await jwtTokenService.GenerateAccessTokenAsync(user.Id, user.Email!, cancellationToken);
+        var accessToken = await jwtTokenService.GenerateAccessTokenAsync(user.Id, user.Email!, []);
         var refreshToken = await refreshTokenService.GenerateRefreshTokenAsync(
             user.Id,
             request.ClientType,
@@ -660,7 +660,7 @@ public partial class AuthController(
         var newAccessToken = await jwtTokenService.GenerateAccessTokenAsync(
             user.Id,
             user.Email!,
-            cancellationToken);
+            []);
 
         logger.LogDebug("Refreshed tokens for user {UserId}", userId);
 
@@ -986,7 +986,7 @@ public partial class AuthController(
         await userManager.UpdateAsync(user);
 
         // Generate tokens
-        var accessToken = await jwtTokenService.GenerateAccessTokenAsync(user.Id, user.Email!, cancellationToken);
+        var accessToken = await jwtTokenService.GenerateAccessTokenAsync(user.Id, user.Email!, []);
         var refreshToken = await refreshTokenService.GenerateRefreshTokenAsync(
             user.Id,
             "mobile",
