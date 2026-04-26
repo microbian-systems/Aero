@@ -20,19 +20,38 @@ public class JwtSigningKeyStore(
     private const string AllKeysCacheKey = "jwt:all_keys";
     private const int CacheDurationMinutes = 5;
 
+    /// <summary>
+    /// Gets the current signing key used to sign new tokens.
+    /// If no key is found, it automatically initializes a new one.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The security key.</returns>
     public async Task<SecurityKey> GetCurrentSigningKeyAsync(CancellationToken cancellationToken = default)
     {
         var key = await _persistence.GetCurrentSigningKeyAsync(cancellationToken);
 
         if (key == null)
         {
-            throw new InvalidOperationException(
-                "No current signing key found. Initialize keys first.");
+            _logger.LogInformation("No current signing key found. Initializing new signing key.");
+            await RotateSigningKeyAsync(cancellationToken);
+            key = await _persistence.GetCurrentSigningKeyAsync(cancellationToken);
+
+            if (key == null)
+            {
+                throw new InvalidOperationException(
+                    "No current signing key found and failed to initialize one. Check persistence layer.");
+            }
         }
 
         return new SymmetricSecurityKey(Convert.FromBase64String(key.KeyMaterial));
     }
 
+    /// <summary>
+    /// Gets the key identifier (kid) for the current signing key.
+    /// If no key is found, it automatically initializes a new one.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The key identifier.</returns>
     public async Task<string> GetCurrentKeyIdAsync(CancellationToken cancellationToken = default)
     {
         // Try cache first
@@ -46,7 +65,14 @@ public class JwtSigningKeyStore(
 
         if (currentKey == null)
         {
-            throw new InvalidOperationException("No current signing key found. Initialize keys first.");
+            _logger.LogInformation("No current signing key found. Initializing new signing key.");
+            await RotateSigningKeyAsync(cancellationToken);
+            currentKey = await _persistence.GetCurrentSigningKeyAsync(cancellationToken);
+
+            if (currentKey == null)
+            {
+                throw new InvalidOperationException("No current signing key found and failed to initialize one.");
+            }
         }
 
         // Cache result
@@ -55,6 +81,11 @@ public class JwtSigningKeyStore(
         return currentKey.KeyId;
     }
 
+    /// <summary>
+    /// Gets all valid (non-revoked) keys used for validating tokens.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A collection of security keys.</returns>
     public async Task<IEnumerable<SecurityKey>> GetValidationKeysAsync(CancellationToken cancellationToken = default)
     {
         // Try cache first
@@ -76,12 +107,22 @@ public class JwtSigningKeyStore(
         return securityKeys;
     }
 
+    /// <summary>
+    /// Gets the signing credentials (key + algorithm) for the current key.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The signing credentials.</returns>
     public async Task<SigningCredentials> GetSigningCredentialsAsync(CancellationToken cancellationToken = default)
     {
         var key = await GetCurrentSigningKeyAsync(cancellationToken);
         return new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
     }
 
+    /// <summary>
+    /// Rotates the signing key - marks current as old and creates new signing key.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The new key identifier.</returns>
     public async Task<string> RotateSigningKeyAsync(CancellationToken cancellationToken = default)
     {
         // Deactivate current signing key
@@ -125,6 +166,11 @@ public class JwtSigningKeyStore(
         return newKey.KeyId;
     }
 
+    /// <summary>
+    /// Revokes a specific key by ID.
+    /// </summary>
+    /// <param name="keyId">The key identifier.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     public async Task RevokeKeyAsync(string keyId, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(keyId, nameof(keyId));
@@ -146,6 +192,12 @@ public class JwtSigningKeyStore(
         _logger.LogInformation("Revoked signing key: {KeyId}", keyId);
     }
 
+    /// <summary>
+    /// Gets a key by its ID (for validation based on JWT kid header).
+    /// </summary>
+    /// <param name="keyId">The key identifier.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The security key, or null if not found.</returns>
     public async Task<SecurityKey?> GetKeyByIdAsync(string keyId, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(keyId, nameof(keyId));
@@ -162,9 +214,6 @@ public class JwtSigningKeyStore(
 
     private static byte[] GenerateRandomKey(int length)
     {
-        using var rng = new RNGCryptoServiceProvider();
-        var key = new byte[length];
-        rng.GetBytes(key);
-        return key;
+        return RandomNumberGenerator.GetBytes(length);
     }
 }
