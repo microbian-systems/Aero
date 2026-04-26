@@ -18,18 +18,13 @@ public static class AeroDbExtensions
         IHostEnvironment env,
         Action<StoreOptions>? UpdateMartenOptions = null)
     {
-        var migrationAssembly = typeof(AeroApiContext)
+        var migrationAssembly = typeof(AeroDbContext)
             //.GetTypeInfo()
             .Assembly
             .GetName().Name;
 
         var connString = config.GetConnectionString("aero");
-        services.AddDbContextPool<AeroApiContext>(o =>
-                o.UseNpgsql(connString,
-                    x => x.MigrationsHistoryTable("__aeroApiMigrations", Schemas.Aero)
-                        .MigrationsAssembly(migrationAssembly)))
-            //.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
-            ;
+
 
         services.AddDbContextPool<AeroDbContext>(o =>
                 o.UseNpgsql(connString,

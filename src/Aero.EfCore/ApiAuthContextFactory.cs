@@ -3,9 +3,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Aero.EfCore;
 
-public class ApiAuthContextFactory : IDesignTimeDbContextFactory<AeroApiContext>
+public class ApiAuthContextFactory : IDesignTimeDbContextFactory<AeroDbContext>
 {
-    public AeroApiContext CreateDbContext(string[] args)
+    public AeroDbContext CreateDbContext(string[] args)
     {
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
@@ -17,10 +17,10 @@ public class ApiAuthContextFactory : IDesignTimeDbContextFactory<AeroApiContext>
             //.AddCommandLine()
             .Build();
         var connString = config.GetConnectionString("aero");
-        var builder = new DbContextOptionsBuilder<AeroApiContext>();
+        var builder = new DbContextOptionsBuilder<AeroDbContext>();
         builder.UseNpgsql(connString, b
-            => b.MigrationsAssembly(typeof(AeroApiContext).Assembly.FullName));
+            => b.MigrationsAssembly(typeof(AeroDbContext).Assembly.FullName));
 
-        return new AeroApiContext(builder.Options);
+        return new AeroDbContext(builder.Options);
     }
 }

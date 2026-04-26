@@ -1,7 +1,6 @@
 using Aero.Core;
 using Aero.Core.Data;
 using Aero.Core.Entities;
-using static Aero.DataStructures.Graphs.KnowledgeGraph<TEntityId>;
 
 namespace Aero.EfCore;
 
@@ -15,7 +14,6 @@ public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(
     public DbSet<CityModel> Cities { get; set; }
     public DbSet<CountryModel> Countries { get; set; }
     public DbSet<StateModel> States { get; set; }
-    public DbSet<AeroUserProfile> UserProfiles { get; set; }
     //public DbSet<UserPasskeys> UserPasskeys { get; set; }
 
     // Authentication token management
