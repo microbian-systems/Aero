@@ -9,7 +9,7 @@ public record ApiKeyAuthRequestModel : IApiKeyAuthRequestModel
     /// Gets or sets the unique identifier (used as API key).
     /// </summary>
     [JsonPropertyName("id")]
-    public string Id { get; init; } = string.Empty;
+    public string Id { get; init; } = string.Empty; // todo - this was an old construct for api key auth requests - we should only pass the key
 
     /// <summary>
     /// Gets or sets the API key. Maps to Id.
