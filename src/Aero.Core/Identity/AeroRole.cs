@@ -52,6 +52,11 @@ public abstract class AeroRole<TKey> : IdentityRole<TKey>, IEntity<TKey>
 {
     protected AeroRole() { }
     protected AeroRole(string roleName) : base(roleName) { }
+
+    public override bool Equals(object? obj) =>
+        obj is AeroRole<TKey> other && EqualityComparer<TKey>.Default.Equals(Id, other.Id);
+
+    public override int GetHashCode() => Id?.GetHashCode() ?? 0;
     public List<IdentityRoleClaim<TKey>> Claims { get; set; } = [];
     public List<TKey> Users { get; set; } = [];
     public DateTimeOffset CreatedOn { get; set; } = DateTimeOffset.UtcNow;

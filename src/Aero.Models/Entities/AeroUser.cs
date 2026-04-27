@@ -55,7 +55,7 @@ public interface IAeroUser<TKey> : IEntity<TKey> where TKey : IEquatable<TKey>
     public IList<IdentityUserClaim<long>> Claims { get; set; }
     public IList<IdentityLogin> Logins { get; set; }
     public IList<IdentityToken> Tokens { get; set; }
-    public ISet<AeroRole> Roles { get; set; }
+    public ICollection<AeroRole> Roles { get; set; }
 }
 
 /// <summary>
@@ -93,7 +93,7 @@ public abstract class AeroUser<TKey>
     public virtual IList<IdentityUserClaim<long>> Claims { get; set; } = [];
     public virtual IList<IdentityLogin> Logins { get; set; } = [];
     public virtual IList<IdentityToken> Tokens { get; set; } = [];
-    public virtual ISet<AeroRole> Roles { get; set; } = new HashSet<AeroRole>();
+    public virtual ICollection<AeroRole> Roles { get; set; } = new List<AeroRole>();
     public virtual IList<string> TwoFactorRecoveryCodes { get; set; } = [];
     public virtual string? TwoFactorAuthenticatorKey { get; set; }
 }
