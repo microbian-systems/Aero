@@ -5,6 +5,7 @@ namespace Aero.Auth;
 
 public class Seeder
 {
+    // todo - verify we need Seeder.cs - this logic is already in the setup module
     // todo - update method signature to have only WebApplication param and get servicprovider and config from that
     public static async Task Initialize(IServiceProvider serviceProvider, IConfiguration configuration)
     {
