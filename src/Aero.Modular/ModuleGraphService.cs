@@ -1,7 +1,6 @@
-namespace Aero.Cms.Web.Core.Modules;
-
-using Aero.Cms.Core.Modules;
 using Microsoft.Extensions.Logging;
+
+namespace Aero.Modular;
 
 /// <summary>
 /// Default implementation of the module graph service with topological sorting.

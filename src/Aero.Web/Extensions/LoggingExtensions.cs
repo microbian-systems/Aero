@@ -2,7 +2,7 @@
 using Serilog;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class LoggingExtensions
 {

@@ -1,6 +1,6 @@
-using Aero.DataStructures.Trees.Persistence.Indexes;
+using Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
-namespace Aero.DataStructures.Trees.Persistence.Linq.Translation;
+namespace Aero.Core.DataStructures.Trees.Persistence.Linq.Translation;
 
 public sealed class TranslatedQuery<TDocument>
 {

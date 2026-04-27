@@ -1,4 +1,4 @@
-namespace Aero.Common.Web.Options;
+namespace Aero.Web.Options;
 
 public record SwaggerOptions
 {

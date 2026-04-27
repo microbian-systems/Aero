@@ -1,4 +1,4 @@
-﻿namespace Aero.Common.Web.Infrastructure;
+﻿namespace Aero.Web.Infrastructure;
 
 public interface IClientsService
 {

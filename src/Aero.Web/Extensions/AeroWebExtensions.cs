@@ -1,13 +1,14 @@
-using Aero.Common.Web.Middleware;
+using Aero.Core;
 using Aero.Services;
 using Aero.Services.Geo;
 using Aero.Services.Mail;
 using Aero.Web.Exceptions;
+using Aero.Web.Middleware;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class AeroWebExtensions
 {

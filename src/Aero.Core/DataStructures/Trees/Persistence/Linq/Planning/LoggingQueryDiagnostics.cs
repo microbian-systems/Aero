@@ -1,6 +1,6 @@
-using Aero.DataStructures.Trees.Persistence.Linq.Translation;
+using Aero.Core.DataStructures.Trees.Persistence.Linq.Translation;
 
-namespace Aero.DataStructures.Trees.Persistence.Linq.Planning;
+namespace Aero.Core.DataStructures.Trees.Persistence.Linq.Planning;
 
 public sealed class LoggingQueryDiagnostics(ILogger<LoggingQueryDiagnostics> logger) : IQueryDiagnostics
 {

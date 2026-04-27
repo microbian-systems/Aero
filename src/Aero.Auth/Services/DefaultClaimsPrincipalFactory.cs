@@ -1,8 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Aero.Core.Extensions;
+﻿using Aero.Core.Extensions;
 
-namespace Aero.Common.Web.Infrastructure;
+namespace Aero.Auth.Services;
 
 /// <summary>
 /// Service used to generate a <see cref="ClaimsPrincipal"/>.

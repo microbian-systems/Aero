@@ -1,9 +1,10 @@
-using Boxed.AspNetCore;
-using Aero.Common.Web.Email;
+using Aero.Core;
 using Aero.Services.Mail;
+using Aero.Web.Email;
+using Boxed.AspNetCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 // FluentEmail - https://github.com/lukencode/FluentEmail
 public static class FluentEmailExtensions

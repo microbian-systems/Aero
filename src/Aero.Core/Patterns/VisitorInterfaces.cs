@@ -1,4 +1,4 @@
-﻿namespace Aero.Common.Patterns;
+﻿namespace Aero.Core.Patterns;
 
 public interface IVisitable
 {

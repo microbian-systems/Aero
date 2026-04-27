@@ -1,6 +1,6 @@
 ﻿using Aero.Caching.Decorators;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class CachingExtensions
 {

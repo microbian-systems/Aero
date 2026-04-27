@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Indexes;
+namespace Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
 public interface IStringKey<TSelf> : IComparable<TSelf>
     where TSelf : unmanaged, IStringKey<TSelf>

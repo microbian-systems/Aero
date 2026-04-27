@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
 
-namespace Aero.DataStructures.Trees.Persistence.Heap;
+namespace Aero.Core.DataStructures.Trees.Persistence.Heap;
 
 public ref struct SlottedPage(Span<byte> page)
 {

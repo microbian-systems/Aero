@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Storage;
+namespace Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 /// <summary>
 /// Abstracts the physical storage medium for tree data structures.

@@ -1,6 +1,6 @@
 ﻿using System.IO.Compression;
 
-namespace Aero.Common.Extensions;
+namespace Aero.Core.Extensions;
 
 public static class StreamExtensions
 {

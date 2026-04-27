@@ -2,13 +2,10 @@ using Aero.Auth.Models;
 using Aero.Auth.Models.ViewModels;
 using Aero.Auth.Services;
 using Aero.Models.Entities;
-using Aero.Web.Core.Controllers;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
-namespace Aero.Auth.Controllers;
+namespace Aero.Web.Controllers;
 
 /// <summary>
 /// Authentication controller supporting multiple authentication methods and session models:

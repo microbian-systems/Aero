@@ -1,6 +1,6 @@
 using Aero.Models.Entities;
 
-namespace Aero.MartenDB;
+namespace Aero.Marten;
 
 public interface IAeroUserRepository : IMartenGenericRepositoryOption<AeroUser>
 {

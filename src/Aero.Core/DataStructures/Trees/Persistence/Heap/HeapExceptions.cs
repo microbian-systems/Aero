@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Heap;
+namespace Aero.Core.DataStructures.Trees.Persistence.Heap;
 
 public sealed class RecordDeletedException(HeapAddress address)
     : Exception($"Record at address ({address.PageId}, {address.SlotIndex}) has been deleted.")

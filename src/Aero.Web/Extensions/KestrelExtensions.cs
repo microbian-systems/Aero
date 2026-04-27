@@ -1,7 +1,7 @@
 ﻿using System.Security.Authentication;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class KestrelExtensions
 {

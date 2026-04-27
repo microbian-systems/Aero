@@ -1,4 +1,4 @@
-﻿namespace Aero.Actors;
+﻿namespace Aero.Actors.Abstractions;
 
 [Serializable]
 [GenerateSerializer]

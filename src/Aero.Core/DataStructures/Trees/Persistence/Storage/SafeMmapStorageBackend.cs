@@ -3,7 +3,7 @@ using System.IO.MemoryMappedFiles;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Storage;
+namespace Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 /// <summary>
 /// Inline array buffer for safe stack-allocated page operations.

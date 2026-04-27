@@ -1,14 +1,12 @@
-
-using Aero.Cms.Core.Modules;
+using Aero.Core.Entities;
+using Marten;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using ILogger = Serilog.ILogger;
-using Marten;
-using Aero.Core.Entities;
 
-namespace Aero.Cms.Web.Core.Modules;
+namespace Aero.Modular;
 
 // todo - move aero module core system to its own project and package (aero.core.modules)
 // so it can be shared with other types of applications (console, desktop, etc)

@@ -1,7 +1,6 @@
-namespace Aero.Cms.Web.Core.Modules;
-
-using Aero.Cms.Core.Modules;
 using Microsoft.Extensions.Logging;
+
+namespace Aero.Modular;
 
 /// <summary>
 /// Loads module state from the database and merges it with reflection-discovered module types.
@@ -22,7 +21,7 @@ public sealed class DatabaseBackedModuleLoader(
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyList<ModuleStateDocument>> LoadModuleStatesAsync(CancellationToken ct = default)
+    public async Task<IReadOnlyList<ModuleDocument>> LoadModuleStatesAsync(CancellationToken ct = default)
     {
         return await stateStore.GetAllAsync(ct);
     }
@@ -82,7 +81,7 @@ public sealed class DatabaseBackedModuleLoader(
         return mergedDescriptors;
     }
 
-    private static ModuleDescriptor MergeDescriptor(ModuleDescriptor reflection, ModuleStateDocument stored)
+    private static ModuleDescriptor MergeDescriptor(ModuleDescriptor reflection, ModuleDocument stored)
     {
         return new ModuleDescriptor
         {

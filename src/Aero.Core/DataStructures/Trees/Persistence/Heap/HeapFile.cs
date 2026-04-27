@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
-using Aero.DataStructures.Trees.Persistence.Storage;
+using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
-namespace Aero.DataStructures.Trees.Persistence.Heap;
+namespace Aero.Core.DataStructures.Trees.Persistence.Heap;
 
 public sealed class HeapFile : IHeapFile
 {

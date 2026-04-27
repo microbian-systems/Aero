@@ -1,7 +1,4 @@
-﻿using Aero.Auth.Extensions;
-using Aero.Web.Extensions;
-
-namespace Aero.Common.Web.Extensions;
+﻿namespace Aero.Web.Extensions;
 
 
 // todo - consolidate the default api extensions w/ the Aero extensions

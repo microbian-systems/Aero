@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
-using Aero.DataStructures.Trees.Persistence.Interfaces;
+using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
 
-namespace Aero.DataStructures.Trees.Persistence.Indexes;
+namespace Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
 public sealed class DocumentIndexRegistry<TDocument> : IDocumentIndexRegistry<TDocument>
     where TDocument : class

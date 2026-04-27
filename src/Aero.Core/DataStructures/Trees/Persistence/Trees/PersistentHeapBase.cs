@@ -1,8 +1,8 @@
 using System.Buffers.Binary;
-using Aero.DataStructures.Trees.Persistence.Serialization;
-using Aero.DataStructures.Trees.Persistence.Storage;
+using Aero.Core.DataStructures.Trees.Persistence.Serialization;
+using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
-namespace Aero.DataStructures.Trees.Persistence.Trees;
+namespace Aero.Core.DataStructures.Trees.Persistence.Trees;
 
 /// <summary>
 /// Base class for persistent heap implementations.

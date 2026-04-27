@@ -3,9 +3,9 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml.XPath;
-using Aero.Common.Xml;
+using Aero.Core.Xml;
 
-namespace Aero.Common.Extensions;
+namespace Aero.Core.Extensions;
 
 public static class XmlDocumentExtension
 {

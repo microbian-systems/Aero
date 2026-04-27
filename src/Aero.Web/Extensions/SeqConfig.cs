@@ -1,3 +1,3 @@
-﻿namespace Aero.Common.Web.Extensions;
+﻿namespace Aero.Web.Extensions;
 
 public record SeqConfig;

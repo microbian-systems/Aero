@@ -2,7 +2,7 @@ using Aero.Core.Encryption;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Aero.Common;
+namespace Aero.Core;
 
 public static class EncryptionExtensions
 {

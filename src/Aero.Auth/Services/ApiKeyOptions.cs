@@ -1,4 +1,4 @@
-﻿namespace Aero.Common.Web.Infrastructure;
+﻿namespace Aero.Auth.Services;
 
 /// <summary>
 /// Contains options used to generate API Keys by the default factory.

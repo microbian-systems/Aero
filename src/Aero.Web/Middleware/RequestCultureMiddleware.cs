@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Aero.Common.Web.Middleware;
+namespace Aero.Web.Middleware;
 
 public class RequestCultureMiddleware(RequestDelegate next)
 {

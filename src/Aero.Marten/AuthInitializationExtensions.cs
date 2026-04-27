@@ -1,7 +1,7 @@
 using Aero.Models.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aero.MartenDB;
+namespace Aero.Marten;
 
 /// <summary>
 /// Helper to initialize authentication infrastructure on app startup

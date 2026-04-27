@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Storage;
+namespace Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 /// <summary>
 /// Optional capability interface that extends IStorageBackend with zero-copy span access.

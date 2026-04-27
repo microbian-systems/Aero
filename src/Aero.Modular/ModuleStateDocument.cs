@@ -1,16 +1,17 @@
-namespace Aero.Cms.Web.Core.Modules;
+using Aero.Core.Entities;
+using System.Reflection.Metadata;
 
-using Aero.Cms.Core.Modules;
+namespace Aero.Modular;
 
 /// <summary>
 /// Document representing the persisted state of a module.
 /// </summary>
-public sealed class ModuleStateDocument
+public sealed class ModuleDocument : Entity<string>
 {
     /// <summary>
     /// Creates a new module state document from a module descriptor.
     /// </summary>
-    public static ModuleStateDocument FromDescriptor(ModuleDescriptor descriptor, bool isBuiltIn = false)
+    public static ModuleDocument FromDescriptor(ModuleDescriptor descriptor, bool isBuiltIn = false)
         => new()
         {
             Id = $"{ModuleIdPrefix}{descriptor.Name}",
@@ -33,7 +34,7 @@ public sealed class ModuleStateDocument
     /// Gets the Marten identity string for this document.
     /// Format: "module:{Name}"
     /// </summary>
-    public string Id { get; set; } = string.Empty;
+    public new string Id { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the name of the module.

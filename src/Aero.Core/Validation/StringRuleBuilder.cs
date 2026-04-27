@@ -1,7 +1,8 @@
+using Aero.Core.Extensions;
+
 namespace Aero.Core.Validation;
 
 using System.Text.RegularExpressions;
-using Aero.Common.Constants;
 
 /// <summary>
 /// Base fluent rule builder for string fields.

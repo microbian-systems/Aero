@@ -1,6 +1,7 @@
 ﻿using Aero.Auth.Services;
 using Aero.Core.Identity;
-using Aero.MartenDB.Extensions;
+using Aero.Marten.Extensions;
+using Aero.Marten.Services;
 using Aero.Models.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class SocialLoginExtensions
 {

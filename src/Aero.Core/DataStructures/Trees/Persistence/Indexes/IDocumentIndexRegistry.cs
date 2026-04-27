@@ -1,6 +1,6 @@
-using Aero.DataStructures.Trees.Persistence.Interfaces;
+using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
 
-namespace Aero.DataStructures.Trees.Persistence.Indexes;
+namespace Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
 public interface IDocumentIndexRegistry<TDocument>
     where TDocument : class

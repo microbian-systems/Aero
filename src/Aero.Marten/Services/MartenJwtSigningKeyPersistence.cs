@@ -1,9 +1,8 @@
-using Aero.MartenDB;
+using Aero.Auth.Services;
 using Aero.Models.Entities;
-using Marten;
 using Marten.Patching;
 
-namespace Aero.Auth.Services;
+namespace Aero.Marten.Services;
 
 /// <summary>
 /// Marten implementation of JWT signing key persistence.

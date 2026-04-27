@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using Aero.Core.Extensions;
-using Aero.Common.Web.Extensions;
+using Aero.Web.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Aero.Common.Web.Middleware;
+namespace Aero.Web.Middleware;
 
 public sealed class RequestResponseActionFilter(ILogger<RequestResponseActionFilter> log)
     : ActionFilterAttribute

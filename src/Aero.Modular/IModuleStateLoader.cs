@@ -1,6 +1,4 @@
-namespace Aero.Cms.Web.Core.Modules;
-
-using Aero.Cms.Core.Modules;
+namespace Aero.Modular;
 
 /// <summary>
 /// Service responsible for loading module state from the database.
@@ -20,7 +18,7 @@ public interface IModuleStateLoader
     /// </summary>
     /// <param name="ct">Cancellation token.</param>
     /// <returns>A read-only list of module state documents, or empty list if none exist.</returns>
-    Task<IReadOnlyList<ModuleStateDocument>> LoadModuleStatesAsync(CancellationToken ct = default);
+    Task<IReadOnlyList<ModuleDocument>> LoadModuleStatesAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Loads module state from the database and merges it with reflection-discovered descriptors.

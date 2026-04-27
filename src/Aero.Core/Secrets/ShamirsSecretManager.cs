@@ -2,7 +2,7 @@
 using SecretSharingDotNet.Cryptography.ShamirsSecretSharing;
 using SecretSharingDotNet.Math;
 
-namespace Aero.Core.Algorithms;
+namespace Aero.Core.Secrets;
 
 public class ShamirsSecretManager : SecretManager
 {

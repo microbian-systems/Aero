@@ -2,7 +2,7 @@ using NetTools;
 
 // https://gist.github.com/tpeczek/f3f341df637e46ea7d077e017ea309e1
 // todo - get cloudflare IPs from their api (vs hard coded)
-namespace Aero.Common.Web.Middleware;
+namespace Aero.Web.Middleware;
 
 public static class CloudFlareConnectingIpExtensions
 {

@@ -1,8 +1,4 @@
-using Aero.Core;
-using Aero.Core.Railway;
-
-
-namespace Aero.Web.Core.Controllers;
+namespace Aero.Web.Controllers;
 
 [Authorize]
 public abstract class AeroWebBaseController(ILogger<AeroWebBaseController> log)

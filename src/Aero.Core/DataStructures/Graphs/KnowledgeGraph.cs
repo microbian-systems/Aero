@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Graphs;
+namespace Aero.Core.DataStructures.Graphs;
 
 /// <summary>
 /// Represents a Knowledge Graph - a network of real-world entities and their relationships,

@@ -1,8 +1,8 @@
-using Aero.DataStructures.Trees.Persistence.Storage;
+using Aero.Core.DataStructures.Trees.Persistence.Storage;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace Aero.DataStructures.Trees.Persistence.Wal;
+namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
 public sealed class CheckpointService(
     IWalStorageBackend walBackend,

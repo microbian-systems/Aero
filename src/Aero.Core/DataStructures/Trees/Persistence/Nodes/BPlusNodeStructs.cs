@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Nodes;
+namespace Aero.Core.DataStructures.Trees.Persistence.Nodes;
 
 /// <summary>
 /// Identifies the type of node in a B+ tree.

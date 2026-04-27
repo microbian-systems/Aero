@@ -1,8 +1,8 @@
 using System.Linq.Expressions;
-using Aero.DataStructures.Trees.Persistence.Indexes;
-using Aero.DataStructures.Trees.Persistence.Serialization;
+using Aero.Core.DataStructures.Trees.Persistence.Indexes;
+using Aero.Core.DataStructures.Trees.Persistence.Serialization;
 
-namespace Aero.DataStructures.Trees.Persistence.Documents;
+namespace Aero.Core.DataStructures.Trees.Persistence.Documents;
 
 public sealed class DocumentCollectionBuilder<TDocument>
     where TDocument : class

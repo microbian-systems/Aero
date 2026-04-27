@@ -1,4 +1,4 @@
-namespace Aero.Cms.Core.Modules;
+namespace Aero.Modular;
 
 /// <summary>
 /// Normalized metadata for a discovered module.

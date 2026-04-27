@@ -1,9 +1,7 @@
 ﻿using Aero.Auth.Jwt;
 using Aero.Auth.Services;
-using Aero.Common.Web.Infrastructure;
 
-
-namespace Aero.Auth.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class ApiServiceExtensions
 {

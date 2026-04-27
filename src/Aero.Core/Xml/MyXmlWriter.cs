@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace Aero.Common.Xml;
+namespace Aero.Core.Xml;
 
 /// <summary>
 /// Extended XmlTextWriter with additional helper methods for common XML writing operations

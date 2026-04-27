@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Interfaces;
+namespace Aero.Core.DataStructures.Trees.Persistence.Interfaces;
 
 /// <summary>
 /// Progress snapshot reported during vacuum operations.

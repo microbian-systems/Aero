@@ -1,10 +1,10 @@
-﻿using Aero.Core;
+﻿using System.Net.Mime;
+using Aero.Core;
 using Aero.Core.Railway;
 using Microsoft.AspNetCore.RateLimiting;
-using System.Net.Mime;
 using static Aero.Core.Railway.Prelude;
 
-namespace Aero.Web.Core.Controllers;
+namespace Aero.Web.Controllers;
 
 [Authorize] 
 [ApiController]

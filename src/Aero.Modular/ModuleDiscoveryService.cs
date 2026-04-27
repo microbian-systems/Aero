@@ -1,11 +1,10 @@
-namespace Aero.Cms.Web.Core.Modules;
-
-using Aero.Cms.Core.Modules;
 using System.Reflection;
 using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+namespace Aero.Modular;
 
 /// <summary>
 /// Default implementation of module discovery using Scrutor-compatible reflection patterns.
@@ -40,7 +39,7 @@ public sealed class ModuleDiscoveryService(
     }
 
     private async Task<IReadOnlyList<ModuleDescriptor>> DiscoverAndMergeWithStoredStateAsync(
-        IReadOnlyList<ModuleStateDocument> storedStates, 
+        IReadOnlyList<ModuleDocument> storedStates, 
         CancellationToken ct)
     {
         var discoveredDescriptors = await DiscoverViaReflectionAsync(ct);
@@ -70,7 +69,7 @@ public sealed class ModuleDiscoveryService(
         return merged;
     }
 
-    private static ModuleDescriptor MergeWithStoredState(ModuleDescriptor reflection, ModuleStateDocument stored)
+    private static ModuleDescriptor MergeWithStoredState(ModuleDescriptor reflection, ModuleDocument stored)
     {
         return new ModuleDescriptor
         {

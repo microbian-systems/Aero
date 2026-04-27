@@ -1,5 +1,5 @@
 ﻿
-namespace Aero.Marten.Optional;
+namespace Aero.Marten;
 
 public interface IMartenReadonlyRepositorySyncOption<T, TKey> 
     : IReadonlyRepositorySyncOption<T,TKey> 

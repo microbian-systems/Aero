@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Nodes;
+namespace Aero.Core.DataStructures.Trees.Persistence.Nodes;
 
 /// <summary>
 /// Flags for individual B+ tree leaf records.

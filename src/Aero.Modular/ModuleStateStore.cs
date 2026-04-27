@@ -1,7 +1,6 @@
 using Marten;
-using Aero.Cms.Core.Modules;
 
-namespace Aero.Cms.Web.Core.Modules;
+namespace Aero.Modular;
 
 /// <summary>
 /// Marten-backed implementation of <see cref="IModuleStateStore"/>.
@@ -16,13 +15,13 @@ public sealed class ModuleStateStore : IModuleStateStore
     }
 
     /// <inheritdoc/>
-    public Task<IReadOnlyList<ModuleStateDocument>> GetAllAsync(CancellationToken ct = default)
+    public Task<IReadOnlyList<ModuleDocument>> GetAllAsync(CancellationToken ct = default)
     {
-        return _session.Query<ModuleStateDocument>().ToListAsync(ct);
+        return _session.Query<ModuleDocument>().ToListAsync(ct);
     }
 
     /// <inheritdoc/>
-    public Task SaveAllAsync(IEnumerable<ModuleStateDocument> modules, CancellationToken ct = default)
+    public Task SaveAllAsync(IEnumerable<ModuleDocument> modules, CancellationToken ct = default)
     {
         foreach (var module in modules)
         {
@@ -32,9 +31,9 @@ public sealed class ModuleStateStore : IModuleStateStore
     }
 
     /// <inheritdoc/>
-    public Task<ModuleStateDocument?> GetByNameAsync(string name, CancellationToken ct = default)
+    public Task<ModuleDocument?> GetByNameAsync(string name, CancellationToken ct = default)
     {
-        var id = $"{ModuleStateDocument.ModuleIdPrefix}{name}";
-        return _session.LoadAsync<ModuleStateDocument>(id, ct);
+        var id = $"{ModuleDocument.ModuleIdPrefix}{name}";
+        return _session.LoadAsync<ModuleDocument>(id, ct);
     }
 }

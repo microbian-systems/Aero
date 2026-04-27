@@ -1,12 +1,10 @@
-﻿using Aero.Common.Extensions;
-using Aero.Core;
+﻿using System.Globalization;
 using Aero.Core.Extensions;
 using Aero.Core.Helpers;
-using System.Globalization;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Aero.Common;
+namespace Aero.Core;
 
 public class AzureBlobStorageClient(ILogger<AzureBlobStorageClient> log) : IBlobStorageClient
 {

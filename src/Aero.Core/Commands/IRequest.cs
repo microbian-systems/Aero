@@ -1,4 +1,4 @@
-namespace Aero.Core.Requests;
+namespace Aero.Core.Commands;
 
 /// <summary>
 /// Generally useful as/in parameter to methods

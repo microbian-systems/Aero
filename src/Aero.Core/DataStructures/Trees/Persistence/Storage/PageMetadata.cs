@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Storage;
+namespace Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 /// <summary>
 /// Lightweight per-page occupancy metadata tracked by the backend.

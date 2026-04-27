@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Aero.Cms.Core.Modules;
+namespace Aero.Modular;
 
 /// <summary>
 /// A composition surface for modules to contribute metadata and services.

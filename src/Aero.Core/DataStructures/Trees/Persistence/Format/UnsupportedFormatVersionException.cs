@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Format;
+namespace Aero.Core.DataStructures.Trees.Persistence.Format;
 
 public sealed class UnsupportedFormatVersionException(ushort found, ushort supported)
     : Exception($"File format version {found} is not supported. Maximum supported: {supported}.")

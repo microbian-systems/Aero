@@ -1,8 +1,8 @@
-using Aero.DataStructures.Trees.Persistence.Interfaces;
-using Aero.DataStructures.Trees.Persistence.Serialization;
-using Aero.DataStructures.Trees.Persistence.Storage;
+using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
+using Aero.Core.DataStructures.Trees.Persistence.Serialization;
+using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
-namespace Aero.DataStructures.Trees.Persistence;
+namespace Aero.Core.DataStructures.Trees.Persistence;
 
 /// <summary>
 /// Factory for creating storage backends.

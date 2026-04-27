@@ -3,7 +3,7 @@ using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Wal;
+namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
 public sealed class WalFile : IWalWriter, IWalReader
 {

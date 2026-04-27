@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using Aero.Common.Commands;
+using Aero.Core.Commands;
 
-namespace Aero.Common.Decorators;
+namespace Aero.Core.Decorators;
 
 public class TimingCommandDecorator(IAsyncCommand decorated, ILogger log) : IAsyncCommand
 {

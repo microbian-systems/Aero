@@ -1,6 +1,6 @@
-using Aero.Common.Commands;
+using Aero.Core.Commands;
 
-namespace Aero.Common.Decorators;
+namespace Aero.Core.Decorators;
 
 public class CpuBoundCommandHandlerDecorator<TCommand>(Func<IAsyncCommand<TCommand>> decorateeFactory, ILogger log)
     : IAsyncCommand<TCommand>

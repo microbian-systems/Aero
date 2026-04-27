@@ -1,13 +1,13 @@
-using Aero.DataStructures.Trees.Persistence.Concurrency;
-using Aero.DataStructures.Trees.Persistence.Interfaces;
-using Aero.DataStructures.Trees.Persistence.Serialization;
-using Aero.DataStructures.Trees.Persistence.Storage;
-using Aero.DataStructures.Trees.Persistence.Trees;
-using Aero.DataStructures.Trees.Persistence.Vacuum;
-using Aero.DataStructures.Trees.Persistence.Wal;
+using Aero.Core.DataStructures.Trees.Persistence.Concurrency;
+using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
+using Aero.Core.DataStructures.Trees.Persistence.Serialization;
+using Aero.Core.DataStructures.Trees.Persistence.Storage;
+using Aero.Core.DataStructures.Trees.Persistence.Trees;
+using Aero.Core.DataStructures.Trees.Persistence.Vacuum;
+using Aero.Core.DataStructures.Trees.Persistence.Wal;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aero.DataStructures.Trees.Persistence.DI;
+namespace Aero.Core.DataStructures.Trees.Persistence.DI;
 
 public static class ServiceCollectionExtensions
 {

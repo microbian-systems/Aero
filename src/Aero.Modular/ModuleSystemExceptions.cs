@@ -1,4 +1,4 @@
-namespace Aero.Cms.Web.Core.Modules;
+namespace Aero.Modular;
 
 /// <summary>
 /// Exception thrown when a module system error occurs during discovery, validation, or loading.

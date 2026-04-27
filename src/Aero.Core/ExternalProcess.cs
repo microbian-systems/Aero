@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Aero.Common;
+namespace Aero.Core;
 
 public static class ExternalProcess
 {

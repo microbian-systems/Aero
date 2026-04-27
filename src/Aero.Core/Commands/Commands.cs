@@ -1,4 +1,4 @@
-namespace Aero.Common.Commands;
+namespace Aero.Core.Commands;
 
 
 

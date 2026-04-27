@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace Aero.DataStructures.Trees.Persistence.Wal;
+namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
 public sealed class TransactionManager(IWalWriter wal) : IAsyncDisposable
 {

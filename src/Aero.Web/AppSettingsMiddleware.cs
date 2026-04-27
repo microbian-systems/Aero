@@ -1,8 +1,9 @@
 using System.Configuration;
-using Aero.Common.Web.Extensions;
+using Aero.Core;
 using Aero.Validators;
+using Aero.Web.Extensions;
 
-namespace Aero.Common.Web;
+namespace Aero.Web;
 
 public static class AppSettingsExtensions
 {

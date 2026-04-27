@@ -2,7 +2,7 @@ using System.Buffers.Binary;
 using System.IO.MemoryMappedFiles;
 using System.Runtime.CompilerServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Storage;
+namespace Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 /// <summary>
 /// A high-performance memory-mapped storage backend using unsafe pointers for direct memory access.

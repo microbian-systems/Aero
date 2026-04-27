@@ -1,10 +1,10 @@
 using System.Runtime.CompilerServices;
-using Aero.DataStructures.Trees.Persistence.Interfaces;
-using Aero.DataStructures.Trees.Persistence.Nodes;
-using Aero.DataStructures.Trees.Persistence.Readers;
-using Aero.DataStructures.Trees.Persistence.Storage;
+using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
+using Aero.Core.DataStructures.Trees.Persistence.Nodes;
+using Aero.Core.DataStructures.Trees.Persistence.Readers;
+using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
-namespace Aero.DataStructures.Trees.Persistence.Trees;
+namespace Aero.Core.DataStructures.Trees.Persistence.Trees;
 
 /// <summary>
 /// A persistent B+ tree implementation with tombstone deletion and vacuum support.

@@ -1,8 +1,8 @@
-using Aero.DataStructures.Trees.Persistence.Interfaces;
+using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace Aero.DataStructures.Trees.Persistence.Vacuum;
+namespace Aero.Core.DataStructures.Trees.Persistence.Vacuum;
 
 public sealed class AutoVacuumService(
     IVacuumable tree,

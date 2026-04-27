@@ -1,6 +1,6 @@
-using Aero.Common.Commands;
+using Aero.Core.Commands;
 
-namespace Aero.Common.Decorators;
+namespace Aero.Core.Decorators;
 
 public class LoggingCommandDecorator(IAsyncCommand decorated, ILogger log) : IAsyncCommand
 {

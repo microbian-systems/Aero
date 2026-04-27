@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 
-namespace Aero.DataStructures.Trees.Persistence.Heap;
+namespace Aero.Core.DataStructures.Trees.Persistence.Heap;
 
 public sealed class FreeSpaceMap
 {

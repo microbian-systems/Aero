@@ -1,4 +1,4 @@
-namespace Aero.Common.Patterns;
+namespace Aero.Core.Patterns;
 
 public abstract class AbstractAsyncDecorator(ILogger log) : IAsyncDecorator
 {

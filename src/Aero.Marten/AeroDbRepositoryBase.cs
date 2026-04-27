@@ -1,7 +1,7 @@
 ﻿using static System.GC;
 
 
-namespace Aero.MartenDB;
+namespace Aero.Marten;
 
 // todo - perform retry on martendb exeption connection type or similar 
 

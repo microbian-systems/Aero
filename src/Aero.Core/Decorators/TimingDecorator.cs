@@ -1,4 +1,4 @@
-﻿namespace Aero.Common.Decorators;
+﻿namespace Aero.Core.Decorators;
 
 // public sealed class TimingCommandDecorator<T, TReturn> : DecoratorBaseAsync<T>, ICommandAsync<T>
 // {

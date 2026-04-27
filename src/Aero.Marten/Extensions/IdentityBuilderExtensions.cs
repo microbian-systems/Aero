@@ -1,10 +1,10 @@
 ﻿using Aero.Core.Identity;
-using Aero.MartenDB.Identity;
+using Aero.Marten.Identity;
 using Aero.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aero.MartenDB.Extensions;
+namespace Aero.Marten.Extensions;
 
 /// <summary>
 /// Extends <see cref="IdentityBuilder"/> so that AeroDB services can be registered through it.

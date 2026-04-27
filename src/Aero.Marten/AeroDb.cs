@@ -1,8 +1,8 @@
 using Aero.Core.Data;
-using Aero.MartenDB.Extensions;
+using Aero.Marten.Extensions;
 using Aero.Models.Entities;
 
-namespace Aero.MartenDB;
+namespace Aero.Marten;
 
 /// <summary>
 /// Database facade containing all domains for Aero CMS (unified db api)

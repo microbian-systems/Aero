@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace Aero.Common.Web.Email;
+namespace Aero.Web.Email;
 
 public class MailtrapEmailSender : IEmailSender
 {

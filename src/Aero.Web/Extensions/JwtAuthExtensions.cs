@@ -1,9 +1,8 @@
-﻿
-using Aero.Auth.Jwt;
+﻿using Aero.Auth.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class JwtAuthExtensions
 {

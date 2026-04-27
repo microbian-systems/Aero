@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Concurrency;
+namespace Aero.Core.DataStructures.Trees.Persistence.Concurrency;
 
 public static class TransactionContext
 {

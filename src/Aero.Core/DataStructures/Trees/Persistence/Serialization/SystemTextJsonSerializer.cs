@@ -1,6 +1,6 @@
 using System.Buffers;
 
-namespace Aero.DataStructures.Trees.Persistence.Serialization;
+namespace Aero.Core.DataStructures.Trees.Persistence.Serialization;
 
 public sealed class SystemTextJsonSerializer<TDocument>(JsonSerializerOptions? options = null)
     : IDocumentSerializer<TDocument>

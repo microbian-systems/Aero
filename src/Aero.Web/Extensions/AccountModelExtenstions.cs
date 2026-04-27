@@ -1,6 +1,6 @@
 ﻿using Aero.Models.Entities;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class AccountModelExtensions
 {

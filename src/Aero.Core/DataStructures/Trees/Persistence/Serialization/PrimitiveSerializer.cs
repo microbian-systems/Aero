@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Serialization;
+namespace Aero.Core.DataStructures.Trees.Persistence.Serialization;
 
 public sealed class PrimitiveSerializer<T> : INodeSerializer<T> where T : unmanaged
 {

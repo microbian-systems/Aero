@@ -1,5 +1,4 @@
-﻿using Aero.Common.Web.Infrastructure;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace Aero.Auth.Services;
 

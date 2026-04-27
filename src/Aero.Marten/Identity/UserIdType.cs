@@ -1,4 +1,4 @@
-namespace Aero.MartenDB.Identity;
+namespace Aero.Marten.Identity;
 
 /// <summary>
 /// Specifies the type of ID used for users.

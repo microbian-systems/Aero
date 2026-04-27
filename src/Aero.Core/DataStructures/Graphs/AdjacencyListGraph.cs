@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Graphs;
+namespace Aero.Core.DataStructures.Graphs;
 
 public class AdjacencyListGraph<T>(bool isDirected = true)
     where T : notnull

@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
-using Aero.DataStructures.Trees.Persistence.Documents;
-using Aero.DataStructures.Trees.Persistence.Indexes;
-using Aero.DataStructures.Trees.Persistence.Linq.Planning;
-using Aero.DataStructures.Trees.Persistence.Linq.Translation;
+using Aero.Core.DataStructures.Trees.Persistence.Documents;
+using Aero.Core.DataStructures.Trees.Persistence.Indexes;
+using Aero.Core.DataStructures.Trees.Persistence.Linq.Planning;
+using Aero.Core.DataStructures.Trees.Persistence.Linq.Translation;
 
-namespace Aero.DataStructures.Trees.Persistence.Linq;
+namespace Aero.Core.DataStructures.Trees.Persistence.Linq;
 
 public sealed class DocumentQueryProvider<TDocument>(
     IDocumentCollection<TDocument> collection,
