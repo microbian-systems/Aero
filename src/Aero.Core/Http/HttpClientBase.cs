@@ -145,6 +145,7 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
             }
             catch (Exception ex)
             {
+                log.LogError(ex, "there was an http request exception");
                 return (Result<T, AeroError>)AeroError.HttpRequestError(response.StatusCode, $"Deserialization failed: {ex.Message}");
             }
         });
@@ -169,12 +170,16 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         }
         catch (Exception ex) when (ex is TaskCanceledException || ex is OperationCanceledException)
         {
+            log.LogError(ex, "there was an http request exception");
+
             return ct.IsCancellationRequested
                 ? AeroError.CancelledError("Canceled")
                 : AeroError.TimeoutError("Timed out");
         }
         catch (HttpRequestException ex)
         {
+            log.LogError(ex, "there was an http request exception");
+
             return AeroError.HttpRequestError(HttpStatusCode.ServiceUnavailable, ex.Message);
         }
         catch (Exception ex)
