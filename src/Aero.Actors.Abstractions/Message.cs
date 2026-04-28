@@ -1,9 +1,12 @@
 ﻿namespace Aero.Actors.Abstractions;
 
-[Serializable]
 [GenerateSerializer]
-public record Message(long Id, string content);
+public record Message(
+    [property: Id(0)] long Id,
+    [property: Id(1)] string content);
 
-[Serializable]
 [GenerateSerializer]
-public record Message<T>(long Id, string content, T payload);
+public record Message<T>(
+    [property: Id(0)] long Id,
+    [property: Id(1)] string content,
+    [property: Id(2)] T payload);
