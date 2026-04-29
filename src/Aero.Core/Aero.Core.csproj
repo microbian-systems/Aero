@@ -56,6 +56,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlSanitizer" />
     <PackageReference Include="System.Configuration.ConfigurationManager" />
     <PackageReference Include="WindowsAzure.Storage" />
   </ItemGroup>
