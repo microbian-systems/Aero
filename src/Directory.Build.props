@@ -18,6 +18,8 @@
         <Authors>Troy Robinson, et al</Authors>
         <Company>Microbians</Company>
         <Copyright>Copyright (c) 2023-2026 Microbians</Copyright>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageTags>asp.net efcore Aero</PackageTags>
 <!--        <PackageIcon>../../assets/Aero2.png</PackageIcon>-->
         <PackageProjectUrl>https://github.com/microbian-systems/Aero</PackageProjectUrl>
