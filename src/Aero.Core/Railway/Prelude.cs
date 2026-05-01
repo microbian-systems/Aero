@@ -77,7 +77,7 @@ public static class Prelude
     /// // Equivalent to: Option&lt;string&gt; name = "Alice";
     /// </code>
     /// </example>
-    public static Option<T> Some<T>(T value) => new Option<T>.Some(value);
+    public static Option<T> Some<T>(T value) => value;
 
     /// <summary>
     /// Represents the absence of a value (None case) for use in Option.
@@ -92,51 +92,35 @@ public static class Prelude
     /// // Equivalent to: Option&lt;string&gt; name = new Option&lt;string&gt;.None();
     /// </code>
     /// </example>
-    public static None None => default;
+    public static readonly NoneType None = default;
     
     /// <summary>
     /// Creates a Result representing success with the specified value.
     /// </summary>
-    /// <typeparam name="TError">The type of the error (for type inference).</typeparam>
     /// <typeparam name="TValue">The type of the success value.</typeparam>
+    /// <typeparam name="TError">The type of the error (for type inference).</typeparam>
     /// <param name="value">The success value.</param>
     /// <returns>A Result.Ok containing the value.</returns>
     /// <remarks>
     /// This method explicitly lifts a value into the Result monadic context as an Ok.
     /// It is useful when type inference needs explicit type parameters or for clarity.
     /// </remarks>
-    /// <example>
-    /// <code>
-    /// Result&lt;string, int&gt; result = Prelude.Ok&lt;string, int&gt;(42);
-    /// // Equivalent to: Result&lt;string, int&gt; result = 42;
-    /// 
-    /// // Useful when type inference needs help
-    /// return Prelude.Ok&lt;ApiError, User&gt;(user);
-    /// </code>
-    /// </example>
-    public static Result<TError, TValue> Ok<TError, TValue>(TValue value) => 
-        new Result<TError, TValue>.Ok(value);
+    public static Result<TValue, TError> Ok<TValue, TError>(TValue value)
+        where TError : AeroError => 
+        new Result<TValue, TError>.Ok(value);
         
     /// <summary>
     /// Creates a Result representing failure with the specified error.
     /// </summary>
-    /// <typeparam name="TError">The type of the error.</typeparam>
     /// <typeparam name="TValue">The type of the success value (for type inference).</typeparam>
+    /// <typeparam name="TError">The type of the error.</typeparam>
     /// <param name="error">The error value.</param>
     /// <returns>A Result.Failure containing the error.</returns>
     /// <remarks>
     /// This method explicitly lifts an error into the Result monadic context as a Failure.
     /// It is useful when type inference needs explicit type parameters or for clarity.
     /// </remarks>
-    /// <example>
-    /// <code>
-    /// Result&lt;string, int&gt; result = Prelude.Fail&lt;string, int&gt;("Not found");
-    /// // Equivalent to: Result&lt;string, int&gt; result = "Not found";
-    /// 
-    /// // Useful when type inference needs help
-    /// return Prelude.Fail&lt;ApiError, User&gt;(new ApiError(404, "User not found"));
-    /// </code>
-    /// </example>
-    public static Result<TError, TValue> Fail<TError, TValue>(TError error) => 
-        new Result<TError, TValue>.Failure(error);
+    public static Result<TValue, TError> Fail<TValue, TError>(TError error)
+        where TError : AeroError => 
+        new Result<TValue, TError>.Failure(error);
 }

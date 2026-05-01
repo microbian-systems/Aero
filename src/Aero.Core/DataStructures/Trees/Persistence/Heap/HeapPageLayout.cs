@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Heap;
+namespace Aero.Core.DataStructures.Trees.Persistence.Heap;
 
 public static class HeapPageLayout
 {

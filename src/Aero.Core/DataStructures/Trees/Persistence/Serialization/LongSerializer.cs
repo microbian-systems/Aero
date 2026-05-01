@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
 
-namespace Aero.DataStructures.Trees.Persistence.Serialization;
+namespace Aero.Core.DataStructures.Trees.Persistence.Serialization;
 
 /// <summary>
 /// Serializes and deserializes 64-bit integers using little-endian encoding.

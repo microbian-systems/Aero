@@ -1,7 +1,7 @@
-using Aero.Common.Commands;
+using Aero.Core.Commands;
 using Polly;
 
-namespace Aero.Common.Decorators;
+namespace Aero.Core.Decorators;
 
 // todo - replace polly with the microsoft.extensions.resilience package
 public class RetryCommandHandlerDecorator<TCommand>(

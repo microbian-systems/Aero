@@ -1,4 +1,4 @@
-namespace Aero.Common.Web;
+namespace Aero.Web;
 
 public class ErrorViewModel
 {

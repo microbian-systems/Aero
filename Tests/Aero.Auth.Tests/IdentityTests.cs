@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Bogus;
 using Aero.Core;
 using Aero.Models;
@@ -6,11 +7,12 @@ using Shouldly;
 using Marten;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
-public class IdentityTests : IClassFixture<TestWebAppFactory>, IDisposable
+[ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
+public class IdentityTests : IDisposable
 {
     private readonly HttpClient client;
     private readonly UserManager<AeroUser> userManager;
@@ -26,12 +28,12 @@ public class IdentityTests : IClassFixture<TestWebAppFactory>, IDisposable
         db = scope.ServiceProvider.GetRequiredService<IDocumentSession>();
     }
 
-    [Fact]
+    [Test]
     public async Task CanCreateUser()
     {
         var user = new AeroUser()
         {
-            Id = Snowflake.NewId().ToString(),
+            Id = Snowflake.NewId(),
             FirstName = faker.Person.FirstName,
             LastName = faker.Person.LastName,
             UserName = faker.Person.UserName,
@@ -44,33 +46,13 @@ public class IdentityTests : IClassFixture<TestWebAppFactory>, IDisposable
             MiddleName = "",
             UserHandle = [],
             RefreshToken = "",
-            Profile = new AeroUserProfile
-            {
-                Username = "testuser",
-                Headline = "💩 My Headline 💩",
-                Location = "Los Angeles, CA",
-                Bio = "This is my bio",
-                Website = "https://example.com",
-                CreatedBy = "system",
-                ModifiedBy = "system",
-                CreatedOn = DateTimeOffset.UtcNow,
-                ModifiedOn = DateTimeOffset.UtcNow,
-            },
-            UserSettings = new UserSettingsModel()
-            {
-                Stuff = "{}",
-                CreatedBy = "system",
-                ModifiedBy = "system",
-                CreatedOn = DateTimeOffset.UtcNow,
-                ModifiedOn = DateTimeOffset.UtcNow,
-            }
         };
         var res = await userManager.CreateAsync(user);
         res.Succeeded.ShouldBeTrue();
 
         var saved = await userManager.FindByEmailAsync(user.Email);
         var saved2 = await userManager.FindByIdAsync(user.Id.ToString());
-        var efuser = await db.LoadAsync<AeroUser>(saved?.Id);
+        var efuser = saved != null ? await db.LoadAsync<AeroUser>(saved.Id) : null;
         var efuseremail = await db.Query<AeroUser>()
             .Where(x => x.Email == user.Email).FirstOrDefaultAsync();
         
@@ -79,5 +61,5 @@ public class IdentityTests : IClassFixture<TestWebAppFactory>, IDisposable
     public void Dispose()
     {
         scope.Dispose();
-    }
+}
 }

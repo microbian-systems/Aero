@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <Description>Aero Authentication Microservice</Description>
+    <Description>Aero Authentication Services</Description>
     <IsPackable>false</IsPackable>
     <Title>Aero.Auth</Title>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -9,9 +9,6 @@
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   </PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Views\**\*.cshtml" />
-  </ItemGroup>
 
 <ItemGroup>
   <InternalsVisibleTo Include="Aero.Auth.Tests" />
@@ -20,20 +17,15 @@
   <ItemGroup>
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
-    <ProjectReference Include="..\Aero.Web\Aero.Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="AeroAuthDbContext.cs" />
-  </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Program.cs" />
-    <Compile Remove="Controllers\PasskeyController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
     <PackageReference Include="starkbank-ecdsa" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 
 </Project>

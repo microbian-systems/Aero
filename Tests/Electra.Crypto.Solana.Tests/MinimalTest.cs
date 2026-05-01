@@ -1,10 +1,9 @@
-using Xunit;
-
+﻿using TUnit.Core;
 namespace Electra.Crypto.Solana.Tests;
 
 public class MinimalTest
 {
-    [Fact]
+    [Test]
     public void SimpleTest_ShouldPass()
     {
         // Arrange

@@ -1,6 +1,6 @@
 ﻿using System.IO.Compression;
 
-namespace Aero.Common.Extensions;
+namespace Aero.Core.Extensions;
 
 // todo - create unit tests for Aero.Core.CompressionHelpers
 public static class Compression

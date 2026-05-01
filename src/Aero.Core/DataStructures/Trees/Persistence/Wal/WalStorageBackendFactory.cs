@@ -1,7 +1,7 @@
-using Aero.DataStructures.Trees.Persistence.Concurrency;
-using Aero.DataStructures.Trees.Persistence.Storage;
+using Aero.Core.DataStructures.Trees.Persistence.Concurrency;
+using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
-namespace Aero.DataStructures.Trees.Persistence.Wal;
+namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
 public static class WalStorageBackendFactory
 {

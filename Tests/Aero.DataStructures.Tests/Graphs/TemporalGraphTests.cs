@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -12,7 +13,7 @@ public class TemporalGraphTests
 
     //#region Vertex Tests
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldCreateTemporalVertex()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -26,7 +27,7 @@ public class TemporalGraphTests
         vertex.Lifetime.End.ShouldBe(end);
     }
 
-    [Fact]
+    [Test]
     public void AddVertex_ShouldSupportOpenEndedLifetime()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -38,7 +39,7 @@ public class TemporalGraphTests
         vertex.Lifetime.Contains(DateTime.Now.AddYears(10)).ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void VertexExistsAt_ShouldReturnCorrectResult()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -56,7 +57,7 @@ public class TemporalGraphTests
 
     //#region Edge Tests
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldCreateTemporalEdge()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -72,7 +73,7 @@ public class TemporalGraphTests
         edge.Lifetime.Start.ShouldBe(start);
     }
 
-    [Fact]
+    [Test]
     public void AddEdge_ShouldThrow_WhenVerticesNotExist()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -82,7 +83,7 @@ public class TemporalGraphTests
         act.ShouldThrow<ArgumentException>();
     }
 
-    [Fact]
+    [Test]
     public void EdgeExistsAt_ShouldReturnCorrectResult()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -102,7 +103,7 @@ public class TemporalGraphTests
 
     //#region TimeInterval Tests
 
-    [Fact]
+    [Test]
     public void TimeInterval_Contains_ShouldWorkCorrectly()
     {
         var start = new DateTime(2020, 1, 1);
@@ -114,7 +115,7 @@ public class TemporalGraphTests
         interval.Contains(new DateTime(2021, 1, 1)).ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void TimeInterval_Overlaps_ShouldWorkCorrectly()
     {
         var interval1 = new TemporalGraph<string, int, DateTime>.TimeInterval(
@@ -129,7 +130,7 @@ public class TemporalGraphTests
 
     //#region Snapshot Tests
 
-    [Fact]
+    [Test]
     public void GetSnapshot_ShouldReturnGraphAtTime()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -149,7 +150,7 @@ public class TemporalGraphTests
         snapshot.ContainsVertex("c").ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void GetSnapshot_ShouldIncludeOnlyActiveEdges()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -173,7 +174,7 @@ public class TemporalGraphTests
 
     //#region Temporal Path Tests
 
-    [Fact]
+    [Test]
     public void GetTemporalPaths_ShouldRespectTimeOrder()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -194,7 +195,7 @@ public class TemporalGraphTests
         paths[0].Last().Vertex.ShouldBe("c");
     }
 
-    [Fact]
+    [Test]
     public void GetEarliestArrival_ShouldComputeCorrectly()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -210,7 +211,7 @@ public class TemporalGraphTests
         arrival.ShouldBe(t2);
     }
 
-    [Fact]
+    [Test]
     public void GetEarliestArrival_ShouldReturnNull_WhenUnreachable()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -226,7 +227,7 @@ public class TemporalGraphTests
 
     //#region Edge Queries Tests
 
-    [Fact]
+    [Test]
     public void GetEdgesInInterval_ShouldFilterCorrectly()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -245,7 +246,7 @@ public class TemporalGraphTests
         edges.Select(e => e.Id).ShouldNotContain(3);
     }
 
-    [Fact]
+    [Test]
     public void GetChangePoints_ShouldReturnAllChanges()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -265,7 +266,7 @@ public class TemporalGraphTests
 
     //#region Remove Tests
 
-    [Fact]
+    [Test]
     public void RemoveVertex_ShouldRemoveIncidentEdges()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -279,7 +280,7 @@ public class TemporalGraphTests
         graph.EdgeCount.ShouldBe(0);
     }
 
-    [Fact]
+    [Test]
     public void RemoveEdge_ShouldKeepVertices()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -298,7 +299,7 @@ public class TemporalGraphTests
 
     //#region Clear Tests
 
-    [Fact]
+    [Test]
     public void Clear_ShouldResetGraph()
     {
         var graph = new TemporalGraph<string, int, DateTime>();
@@ -316,7 +317,7 @@ public class TemporalGraphTests
 
     //#region Real-World Scenario Tests
 
-    [Fact]
+    [Test]
     public void SocialNetworkEvolutionScenario_ShouldWorkCorrectly()
     {
         var graph = new TemporalGraph<string, long, DateTime>();
@@ -338,7 +339,7 @@ public class TemporalGraphTests
         snapshot2021.EdgeCount.ShouldBe(2);
         snapshot2023.EdgeCount.ShouldBe(1);
         snapshot2023.ContainsEdge("bob", "charlie").ShouldBeTrue();
-    }
+}
 
     //#endregion
 }

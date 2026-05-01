@@ -1,8 +1,8 @@
-using Aero.Models.Entities;
-using Aero.Common.Commands;
+using Aero.Core.Commands;
 using Aero.Marten;
+using Aero.Models.Entities;
 
-namespace Aero.Common.Web.Commands;
+namespace Aero.Web.Commands;
 
 public class DeleteRefreshTokenRequest
 {

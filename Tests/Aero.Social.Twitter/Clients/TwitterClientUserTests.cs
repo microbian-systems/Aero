@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
@@ -6,6 +7,7 @@ using Aero.Social.Twitter.Client.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
@@ -25,7 +27,7 @@ public class TwitterClientUserTests
         _logger = Substitute.For<ILogger<TwitterClient>>();
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserByIdAsync_WithValidId_ReturnsUser()
     {
         // Arrange
@@ -58,13 +60,13 @@ public class TwitterClientUserTests
 
         // Assert
         Assert.NotNull(user);
-        Assert.Equal("1234567890", user.Id);
-        Assert.Equal("Test User", user.Name);
-        Assert.Equal("testuser", user.Username);
-        Assert.True(user.Verified);
+        await Assert.That(user.Id).IsEqualTo("1234567890");
+        await Assert.That(user.Name).IsEqualTo("Test User");
+        await Assert.That(user.Username).IsEqualTo("testuser");
+        await Assert.That(user.Verified).IsTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserByIdAsync_WithFields_IncludesFieldsInRequest()
     {
         // Arrange
@@ -99,12 +101,12 @@ public class TwitterClientUserTests
 
         // Assert
         Assert.NotNull(capturedRequest);
-        Assert.Contains("user.fields", capturedRequest.RequestUri?.Query);
-        Assert.Contains("description", capturedRequest.RequestUri?.Query);
-        Assert.Contains("location", capturedRequest.RequestUri?.Query);
+        await Assert.That(capturedRequest.RequestUri?.Query).Contains("user.fields");
+        await Assert.That(capturedRequest.RequestUri?.Query).Contains("description");
+        await Assert.That(capturedRequest.RequestUri?.Query).Contains("location");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserByIdAsync_WithNullUserId_ThrowsArgumentException()
     {
         // Arrange
@@ -113,10 +115,10 @@ public class TwitterClientUserTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() => 
             twitterClient.GetUserByIdAsync(null!));
-        Assert.Contains("User ID cannot be null or empty", exception.Message);
+        await Assert.That(exception.Message).Contains("User ID cannot be null or empty");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserByIdAsync_WithEmptyUserId_ThrowsArgumentException()
     {
         // Arrange
@@ -125,10 +127,10 @@ public class TwitterClientUserTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() => 
             twitterClient.GetUserByIdAsync(""));
-        Assert.Contains("User ID cannot be null or empty", exception.Message);
+        await Assert.That(exception.Message).Contains("User ID cannot be null or empty");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserByIdAsync_WithNotFound_ThrowsTwitterApiException()
     {
         // Arrange
@@ -156,10 +158,10 @@ public class TwitterClientUserTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<TwitterApiException>(() => 
             twitterClient.GetUserByIdAsync("nonexistent"));
-        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+        await Assert.That(exception.StatusCode).IsEqualTo(HttpStatusCode.NotFound);
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserByUsernameAsync_WithValidUsername_ReturnsUser()
     {
         // Arrange
@@ -191,11 +193,11 @@ public class TwitterClientUserTests
 
         // Assert
         Assert.NotNull(user);
-        Assert.Equal("1234567890", user.Id);
-        Assert.Equal("testuser", user.Username);
+        await Assert.That(user.Id).IsEqualTo("1234567890");
+        await Assert.That(user.Username).IsEqualTo("testuser");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserByUsernameAsync_WithAtPrefix_RemovesPrefix()
     {
         // Arrange
@@ -228,11 +230,11 @@ public class TwitterClientUserTests
 
         // Assert
         Assert.NotNull(capturedRequest);
-        Assert.Contains("/by/username/testuser", capturedRequest.RequestUri?.AbsolutePath);
-        Assert.DoesNotContain("@", capturedRequest.RequestUri?.AbsolutePath);
+        await Assert.That(capturedRequest.RequestUri?.AbsolutePath).Contains("/by/username/testuser");
+        await Assert.That(capturedRequest.RequestUri?.AbsolutePath).DoesNotContain("@");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserByUsernameAsync_WithFields_IncludesFieldsInRequest()
     {
         // Arrange
@@ -269,11 +271,11 @@ public class TwitterClientUserTests
 
         // Assert
         Assert.NotNull(capturedRequest);
-        Assert.Contains("user.fields", capturedRequest.RequestUri?.Query);
-        Assert.Contains("public_metrics", capturedRequest.RequestUri?.Query);
+        await Assert.That(capturedRequest.RequestUri?.Query).Contains("user.fields");
+        await Assert.That(capturedRequest.RequestUri?.Query).Contains("public_metrics");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserByUsernameAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Arrange
@@ -282,7 +284,7 @@ public class TwitterClientUserTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() => 
             twitterClient.GetUserByUsernameAsync(null!));
-        Assert.Contains("Username cannot be null or empty", exception.Message);
+        await Assert.That(exception.Message).Contains("Username cannot be null or empty");
     }
 
     private class TestHttpMessageHandler : HttpMessageHandler
@@ -297,6 +299,6 @@ public class TwitterClientUserTests
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return await _handler(request);
-        }
+}
     }
 }

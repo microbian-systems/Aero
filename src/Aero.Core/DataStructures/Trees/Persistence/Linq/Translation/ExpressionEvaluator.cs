@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Aero.DataStructures.Trees.Persistence.Linq.Translation;
+namespace Aero.Core.DataStructures.Trees.Persistence.Linq.Translation;
 
 public static class ExpressionEvaluator
 {

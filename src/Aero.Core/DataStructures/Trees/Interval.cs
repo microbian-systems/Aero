@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees;
+namespace Aero.Core.DataStructures.Trees;
 
 /// <summary>
 /// Represents an interval with a start and an end.

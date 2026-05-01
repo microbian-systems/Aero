@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Security.Claims;
 using Aero.Core;
 using Aero.Core.Identity;
@@ -31,7 +32,7 @@ public class UserStoreTests : RavenDbTestBase
         _userStore = new UserStore<AeroUser, AeroRole>(DocumentStore.LightweightSession(), _logger, _options);
     }
 
-    [Fact]
+    [Test]
     public async Task CreateAsync_Should_Create_User_And_Email_Reservation()
     {
         // Arrange
@@ -62,7 +63,7 @@ public class UserStoreTests : RavenDbTestBase
         reservation.Value.ShouldBe(user.Id);
     }
 
-    [Fact]
+    [Test]
     public async Task CreateAsync_Should_Fail_If_Email_Already_Reserved()
     {
         // Arrange
@@ -95,7 +96,7 @@ public class UserStoreTests : RavenDbTestBase
         result.Errors.ShouldContain(e => e.Code == "DuplicateEmail");
     }
 
-    [Fact]
+    [Test]
     public async Task FindByIdAsync_Should_Return_User()
     {
         // Arrange
@@ -118,7 +119,7 @@ public class UserStoreTests : RavenDbTestBase
         foundUser.Id.ShouldBe(user.Id);
     }
 
-    [Fact]
+    [Test]
     public async Task UpdateAsync_Should_Update_User_And_Sync_Username_If_Match()
     {
         // Arrange
@@ -161,7 +162,7 @@ public class UserStoreTests : RavenDbTestBase
         newReservation.Value.ShouldBe(user.Id);
     }
 
-    [Fact]
+    [Test]
     public async Task DeleteAsync_Should_Remove_User_And_Reservation()
     {
         // Arrange
@@ -191,7 +192,7 @@ public class UserStoreTests : RavenDbTestBase
         reservation.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public async Task AddToRoleAsync_Should_Add_Role_To_User_And_User_To_Role()
     {
         // Arrange
@@ -219,7 +220,7 @@ public class UserStoreTests : RavenDbTestBase
         role.Users.ShouldContain(user.Id);
     }
 
-    [Fact]
+    [Test]
     public async Task Claims_Operations_Should_Work()
     {
         // Arrange
@@ -254,7 +255,7 @@ public class UserStoreTests : RavenDbTestBase
         user.Claims.ShouldBeEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task Logins_Operations_Should_Work()
     {
         // Arrange
@@ -281,7 +282,7 @@ public class UserStoreTests : RavenDbTestBase
         user.Logins.ShouldBeEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task Tokens_Operations_Should_Work()
     {
         // Arrange
@@ -305,5 +306,5 @@ public class UserStoreTests : RavenDbTestBase
 
         // Assert - Remove
         user.Tokens.ShouldBeEmpty();
-    }
+}
 }

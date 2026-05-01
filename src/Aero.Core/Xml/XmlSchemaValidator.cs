@@ -2,7 +2,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 
-namespace Aero.Common.Xml;
+namespace Aero.Core.Xml;
 
 public class XsdSchemaValidator
 {

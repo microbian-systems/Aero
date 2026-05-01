@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Format;
+namespace Aero.Core.DataStructures.Trees.Persistence.Format;
 
 public enum TypeCode : byte
 {

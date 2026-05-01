@@ -1,13 +1,13 @@
+﻿using TUnit.Core;
 using System;
 using System.Threading.Tasks;
-using Xunit;
 using FluentAssertions;
 
 namespace Electra.Crypto.Solana.Tests;
 
 public class BasicCompilationTest
 {
-    [Fact]
+    [Test]
     public void BasicArraySyntax_ShouldWork()
     {
         // Test C# 12 collection initializer syntax
@@ -23,7 +23,7 @@ public class BasicCompilationTest
         arrayWithItems[1].Should().Be("item2");
     }
     
-    [Fact]
+    [Test]
     public async Task BasicAsync_ShouldWork()
     {
         // Test basic async functionality
@@ -39,7 +39,7 @@ public class BasicCompilationTest
         return "test";
     }
     
-    [Fact]
+    [Test]
     public void BasicRecord_ShouldWork()
     {
         // Test record syntax

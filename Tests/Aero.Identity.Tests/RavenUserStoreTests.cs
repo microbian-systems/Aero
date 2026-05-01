@@ -1,12 +1,12 @@
+﻿using TUnit.Core;
 using Aero.Identity.Models;
 using Microsoft.AspNetCore.Identity;
-using Xunit;
 
 namespace Aero.Identity.Tests;
 
 public class AeroUserStoreTests : AeroDbTestDriver
 {
-    [Fact]
+    [Test]
     public async Task CanCreateUser()
     {
         // Arrange
@@ -27,7 +27,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("testuser", dbUser.UserName);
     }
 
-    [Fact]
+    [Test]
     public async Task CanFindUserById()
     {
         // Arrange
@@ -46,7 +46,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("testuser", dbUser.UserName);
     }
 
-    [Fact]
+    [Test]
     public async Task CanFindUserByName()
     {
         // Arrange
@@ -66,7 +66,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(user.Id, dbUser.Id);
     }
 
-    [Fact]
+    [Test]
     public async Task CanSetPasswordHash()
     {
         // Arrange
@@ -83,7 +83,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(hash, user.PasswordHash);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetPasswordHash()
     {
         // Arrange
@@ -100,7 +100,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(hash, result);
     }
 
-    [Fact]
+    [Test]
     public async Task CanSetSecurityStamp()
     {
         // Arrange
@@ -117,7 +117,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(stamp, user.SecurityStamp);
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserIdAsync_ReturnsUserId()
     {
         // Arrange
@@ -133,7 +133,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("users/1", result);
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserNameAsync_ReturnsUserName()
     {
         // Arrange
@@ -149,7 +149,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("test", result);
     }
 
-    [Fact]
+    [Test]
     public async Task SetUserNameAsync_SetsUserName()
     {
         // Arrange
@@ -165,7 +165,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("test", user.UserName);
     }
 
-    [Fact]
+    [Test]
     public async Task GetNormalizedUserNameAsync_ReturnsNormalizedUserName()
     {
         // Arrange
@@ -181,7 +181,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("TEST", result);
     }
 
-    [Fact]
+    [Test]
     public async Task SetNormalizedUserNameAsync_SetsNormalizedUserName()
     {
         // Arrange
@@ -197,7 +197,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("TEST", user.NormalizedUserName);
     }
 
-    [Fact]
+    [Test]
     public async Task HasPasswordAsync_ReturnsTrueIfPasswordSet()
     {
         // Arrange
@@ -213,7 +213,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.True(result);
     }
 
-    [Fact]
+    [Test]
     public async Task HasPasswordAsync_ReturnsFalseIfPasswordNotSet()
     {
         // Arrange
@@ -229,7 +229,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.False(result);
     }
 
-    [Fact]
+    [Test]
     public async Task GetSecurityStampAsync_ReturnsSecurityStamp()
     {
         // Arrange
@@ -245,7 +245,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("stamp", result);
     }
 
-    [Fact]
+    [Test]
     public async Task CanDeleteUser()
     {
         // Arrange
@@ -268,7 +268,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Null(dbUser);
     }
 
-    [Fact]
+    [Test]
     public async Task UpdateAsync_ReturnsSuccess()
     {
         // Arrange
@@ -284,7 +284,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.True(result.Succeeded);
     }
 
-    [Fact]
+    [Test]
     public async Task CreateAsync_ThrowsOnNullUser()
     {
         // Arrange
@@ -296,7 +296,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         await Assert.ThrowsAsync<ArgumentNullException>(() => userStore.CreateAsync(null!, CancellationToken.None));
     }
 
-    [Fact]
+    [Test]
     public async Task UpdateAsync_ThrowsOnNullUser()
     {
         // Arrange
@@ -308,7 +308,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         await Assert.ThrowsAsync<ArgumentNullException>(() => userStore.UpdateAsync(null!, CancellationToken.None));
     }
 
-    [Fact]
+    [Test]
     public async Task DeleteAsync_ThrowsOnNullUser()
     {
         // Arrange
@@ -320,7 +320,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         await Assert.ThrowsAsync<ArgumentNullException>(() => userStore.DeleteAsync(null!, CancellationToken.None));
     }
 
-    [Fact]
+    [Test]
     public async Task CreateAsync_ThrowsOnCancelledToken()
     {
         // Arrange
@@ -335,7 +335,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         await Assert.ThrowsAsync<OperationCanceledException>(() => userStore.CreateAsync(user, cts.Token));
     }
 
-    [Fact]
+    [Test]
     public async Task CanSetEmail()
     {
         // Arrange
@@ -352,7 +352,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(email, user.Email);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetEmail()
     {
         // Arrange
@@ -369,7 +369,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(email, result);
     }
 
-    [Fact]
+    [Test]
     public async Task CanSetEmailConfirmed()
     {
         // Arrange
@@ -385,7 +385,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.True(user.EmailConfirmed);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetEmailConfirmed()
     {
         // Arrange
@@ -401,7 +401,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.True(result);
     }
 
-    [Fact]
+    [Test]
     public async Task CanFindByEmail()
     {
         // Arrange
@@ -422,7 +422,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(user.Id, dbUser.Id);
     }
 
-    [Fact]
+    [Test]
     public async Task CanSetPhoneNumber()
     {
         // Arrange
@@ -439,7 +439,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(phone, user.PhoneNumber);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetPhoneNumber()
     {
         // Arrange
@@ -456,7 +456,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(phone, result);
     }
 
-    [Fact]
+    [Test]
     public async Task CanSetPhoneNumberConfirmed()
     {
         // Arrange
@@ -472,7 +472,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.True(user.PhoneNumberConfirmed);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetPhoneNumberConfirmed()
     {
         // Arrange
@@ -488,7 +488,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.True(result);
     }
 
-    [Fact]
+    [Test]
     public async Task CanAddToRole()
     {
         // Arrange
@@ -506,7 +506,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Contains("ADMIN", user.Roles);
     }
 
-    [Fact]
+    [Test]
     public async Task CanRemoveFromRole()
     {
         // Arrange
@@ -524,7 +524,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.DoesNotContain("ADMIN", user.Roles);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetRoles()
     {
         // Arrange
@@ -541,7 +541,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(roles, result);
     }
 
-    [Fact]
+    [Test]
     public async Task IsInRole_ReturnsTrueIfInRole()
     {
         // Arrange
@@ -557,7 +557,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.True(result);
     }
 
-    [Fact]
+    [Test]
     public async Task GetUsersInRoleAsync_ReturnsUsers()
     {
         // Arrange
@@ -579,7 +579,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("user1", result[0].UserName);
     }
 
-    [Fact]
+    [Test]
     public async Task CanAddLogin()
     {
         // Arrange
@@ -598,7 +598,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("key1", user.Logins[0].ProviderKey);
     }
 
-    [Fact]
+    [Test]
     public async Task CanRemoveLogin()
     {
         // Arrange
@@ -618,7 +618,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Empty(user.Logins);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetLogins()
     {
         // Arrange
@@ -639,7 +639,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("Google", result[0].LoginProvider);
     }
 
-    [Fact]
+    [Test]
     public async Task CanFindByLogin()
     {
         // Arrange
@@ -663,7 +663,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(user.Id, dbUser.Id);
     }
 
-    [Fact]
+    [Test]
     public async Task CanAddClaims()
     {
         // Arrange
@@ -682,7 +682,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("value1", user.Claims[0].ClaimValue);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetClaims()
     {
         // Arrange
@@ -704,7 +704,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("value1", result[0].Value);
     }
 
-    [Fact]
+    [Test]
     public async Task CanRemoveClaims()
     {
         // Arrange
@@ -731,7 +731,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("type2", user.Claims[0].ClaimType);
     }
 
-    [Fact]
+    [Test]
     public async Task ReplaceClaim_UpdatesClaim()
     {
         // Arrange
@@ -754,7 +754,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("updated", user.Claims[0].ClaimValue);
     }
 
-    [Fact]
+    [Test]
     public async Task GetUsersForClaimAsync_ReturnsUsers()
     {
         // Arrange
@@ -785,7 +785,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("user1", result[0].UserName);
     }
 
-    [Fact]
+    [Test]
     public async Task CanSetTwoFactorEnabled()
     {
         // Arrange
@@ -801,7 +801,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.True(user.TwoFactorEnabled);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetTwoFactorEnabled()
     {
         // Arrange
@@ -817,7 +817,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.True(result);
     }
 
-    [Fact]
+    [Test]
     public async Task CanSetAuthenticatorKey()
     {
         // Arrange
@@ -834,7 +834,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(key, user.AuthenticatorKey);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetAuthenticatorKey()
     {
         // Arrange
@@ -851,7 +851,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(key, result);
     }
 
-    [Fact]
+    [Test]
     public async Task CanReplaceCodes()
     {
         // Arrange
@@ -868,7 +868,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("code1;code2", user.RecoveryCodes);
     }
 
-    [Fact]
+    [Test]
     public async Task CanRedeemCode()
     {
         // Arrange
@@ -885,7 +885,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal("code2", user.RecoveryCodes);
     }
 
-    [Fact]
+    [Test]
     public async Task CanCountCodes()
     {
         // Arrange
@@ -901,7 +901,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(2, result);
     }
 
-    [Fact]
+    [Test]
     public async Task CanAddPasskey()
     {
         // Arrange
@@ -920,7 +920,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(new byte[] { 1 }, user.Passkeys[0].CredentialId);
     }
 
-    [Fact]
+    [Test]
     public async Task CanGetPasskeys()
     {
         // Arrange
@@ -947,7 +947,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(new byte[] { 1 }, result[0].CredentialId);
     }
 
-    [Fact]
+    [Test]
     public async Task CanRemovePasskey()
     {
         // Arrange
@@ -964,7 +964,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Empty(user.Passkeys);
     }
 
-    [Fact]
+    [Test]
     public async Task CanFindByPasskeyId()
     {
         // Arrange
@@ -995,7 +995,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(user.Id, dbUser.Id);
     }
 
-    [Fact]
+    [Test]
     public async Task CanFindPasskey()
     {
         // Arrange
@@ -1022,7 +1022,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Equal(new byte[] { 1 }, result.CredentialId);
     }
 
-    [Fact]
+    [Test]
     public async Task FindPasskey_ReturnsNullIfNotFound()
     {
         // Arrange
@@ -1038,7 +1038,7 @@ public class AeroUserStoreTests : AeroDbTestDriver
         Assert.Null(result);
     }
     //
-    // [Fact]
+    // [Test]
     // public async Task Concurrency_Update_Fails_When_ETag_Mismatch()
     // {
     //     // Arrange
@@ -1074,5 +1074,5 @@ public class AeroUserStoreTests : AeroDbTestDriver
     //
     //     // Assert
     //     await Assert.ThrowsAsync<ConcurrencyException>(() => session2.SaveChangesAsync());
-    // }
+// }
 }

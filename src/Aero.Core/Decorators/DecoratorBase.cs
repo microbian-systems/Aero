@@ -1,6 +1,6 @@
-﻿using Aero.Common.Commands;
+﻿using Aero.Core.Commands;
 
-namespace Aero.Common.Decorators;
+namespace Aero.Core.Decorators;
 
 public abstract class DecoratorBaseAsync<T>(ICommandAsync<T> cmd, ILogger<DecoratorBaseAsync<T>> log) : ICommandAsync<T>
 {

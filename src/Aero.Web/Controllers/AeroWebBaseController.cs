@@ -1,9 +1,8 @@
-namespace Aero.Web.Core.Controllers;
+namespace Aero.Web.Controllers;
 
-// [Authorize]
-// [AutoValidateAntiforgeryToken]
-// public abstract class AeroWebBaseController(ILogger<AeroWebBaseController> log)
-//     : Controller
-// {
-//     protected readonly ILogger<AeroWebBaseController> log = log;
-// }
+[Authorize]
+public abstract class AeroWebBaseController(ILogger<AeroWebBaseController> log)
+    : Controller
+{
+    protected readonly ILogger<AeroWebBaseController> log = log;
+}

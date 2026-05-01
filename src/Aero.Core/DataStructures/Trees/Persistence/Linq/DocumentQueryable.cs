@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Linq.Expressions;
 
-namespace Aero.DataStructures.Trees.Persistence.Linq;
+namespace Aero.Core.DataStructures.Trees.Persistence.Linq;
 
 public sealed class DocumentQueryable<TDocument> : IQueryable<TDocument>
     where TDocument : class

@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Graphs;
+namespace Aero.Core.DataStructures.Graphs;
 
 /// <summary>
 /// Represents a heterogeneous graph with multiple types of nodes and edges.

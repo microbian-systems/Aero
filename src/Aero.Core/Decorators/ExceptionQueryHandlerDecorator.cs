@@ -1,6 +1,6 @@
-using Aero.Common.Patterns;
+using Aero.Core.Patterns;
 
-namespace Aero.Common.Decorators;
+namespace Aero.Core.Decorators;
 
 public class ExceptionQueryHandlerDecorator<TReturn>(IAsyncQueryHandler<TReturn> decorated, ILogger log)
     : IAsyncQueryHandler<TReturn>

@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees;
+namespace Aero.Core.DataStructures.Trees;
 
 /// <summary>
 /// Represents an R-Tree for storing spatial data.

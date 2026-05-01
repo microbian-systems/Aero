@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Storage;
+namespace Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 /// <summary>
 /// Exception thrown when a requested page does not exist in the storage backend.

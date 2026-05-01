@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Aero.Common.Extensions;
+namespace Aero.Core.Extensions;
 
 public static class FuncExtensions
 {

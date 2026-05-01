@@ -1,4 +1,4 @@
-﻿namespace Aero.MartenDB.Extensions;
+﻿namespace Aero.Marten.Extensions;
 
 public static class MartenDbExtensions
 {

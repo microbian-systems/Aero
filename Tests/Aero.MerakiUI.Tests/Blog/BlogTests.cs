@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Blog;
 using Bunit;
 using Aero.MerakiUI.Blog;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Blog;
 
 public class BlogTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void BlogCard_ShouldRender()
     {
         var cut = Render<BlogCard>(parameters => parameters
@@ -16,7 +17,7 @@ public class BlogTests : BunitContext
         Assert.Contains("Awesome Post", cut.Markup);
     }
 
-    [Fact]
+    [Test]
     public void BlogSection_ShouldRenderTitle()
     {
         var cut = Render<BlogSection>(parameters => parameters
@@ -24,5 +25,5 @@ public class BlogTests : BunitContext
         );
 
         Assert.Contains("Latest News", cut.Markup);
-    }
+}
 }

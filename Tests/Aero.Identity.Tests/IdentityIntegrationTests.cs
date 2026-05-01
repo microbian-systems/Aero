@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.Identity.Extensions;
 using Aero.Identity.Models;
 using Marten;
@@ -6,13 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 
-using Xunit;
 
 namespace Aero.Identity.Tests;
 
 public class IdentityIntegrationTests : AeroDbTestDriver
 {
-    [Fact]
+    [Test]
     public async Task UserManager_CanCreateAndFindUser()
     {
         // Arrange
@@ -51,7 +51,7 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         Assert.Equal("integrated@example.com", dbUser.Email);
     }
 
-    [Fact]
+    [Test]
     public async Task UserManager_CanHandleRoles()
     {
         // Arrange
@@ -105,7 +105,7 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         Assert.Contains("TESTER", roles); // UserManager normalizes to uppercase
     }
 
-    [Fact]
+    [Test]
     public async Task UserManager_ScaleAndSearchTest()
     {
         // Arrange
@@ -209,7 +209,7 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         Assert.Equal("user500", updatedUser.UserName);
     }
 
-    [Fact]
+    [Test]
     public async Task UserManager_CanFindUsersInMultipleRoles()
     {
         // Arrange
@@ -279,6 +279,6 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         foreach (var expectedUserName in expectedUsersInAllRoles)
         {
             Assert.Contains(usersInAllRoles, u => u.UserName == expectedUserName);
-        }
+}
     }
 }

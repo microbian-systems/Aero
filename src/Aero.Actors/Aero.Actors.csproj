@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Aero.Actors.Abstractions\Aero.Actors.Abstractions.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
   </ItemGroup>
 </Project>

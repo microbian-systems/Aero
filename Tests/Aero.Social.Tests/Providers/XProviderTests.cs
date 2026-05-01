@@ -1,4 +1,7 @@
+﻿using TUnit.Core;
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -21,7 +24,7 @@ public class XProviderTests : ProviderTestBase
         return new XProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -32,7 +35,7 @@ public class XProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn200ForFree()
     {
         var provider = CreateProvider();
@@ -40,7 +43,7 @@ public class XProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(200);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn4000ForPremium()
     {
         var provider = CreateProvider();
@@ -48,7 +51,7 @@ public class XProviderTests : ProviderTestBase
         provider.MaxLength(true).ShouldBe(4000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         HttpHandler.WhenPost("*request_token*")
@@ -56,15 +59,17 @@ public class XProviderTests : ProviderTestBase
 
         var provider = CreateProvider();
         
-        var result = await provider.GenerateAuthUrlAsync();
-        
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
+
         result.Url.ShouldContain("api.twitter.com/oauth/authenticate");
         result.Url.ShouldContain("oauth_token=request_token_value");
         result.CodeVerifier.ShouldContain("request_token_value");
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_ShouldReturnTokenDetails()
     {
         HttpHandler.WhenPost("*access_token*")
@@ -77,20 +82,22 @@ public class XProviderTests : ProviderTestBase
         var parameters = new AuthenticateParams("oauth_verifier", "request_token:request_token_secret");
         
         var result = await provider.AuthenticateAsync(parameters);
-        
-        result.AccessToken.ShouldBe("access_token_value:access_token_secret");
-        result.Id.ShouldBe("123456");
-        result.Name.ShouldBe("Test User");
+
+        var value = ((Result<AuthTokenDetails, AeroError>.Ok)result).Value;
+        value.AccessToken.ShouldBe("access_token_value:access_token_secret");
+        value.Id.ShouldBe("123456");
+        value.Name.ShouldBe("Test User");
     }
 
-    [Fact]
+    [Test]
     public async Task RefreshTokenAsync_ShouldReturnEmptyToken()
     {
         var provider = CreateProvider();
         
         var result = await provider.RefreshTokenAsync("any_refresh_token");
-        
-        result.AccessToken.ShouldBeEmpty();
-        result.RefreshToken.ShouldBeEmpty();
-    }
+
+        var value = ((Result<AuthTokenDetails, AeroError>.Ok)result).Value;
+        value.AccessToken.ShouldBeEmpty();
+        value.RefreshToken.ShouldBeEmpty();
+}
 }

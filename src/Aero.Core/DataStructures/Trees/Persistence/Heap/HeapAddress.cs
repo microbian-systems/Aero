@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Heap;
+namespace Aero.Core.DataStructures.Trees.Persistence.Heap;
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public readonly record struct HeapAddress(long PageId, short SlotIndex)

@@ -1,11 +1,13 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class TweetFieldsTests
 {
-    [Fact]
-    public void TweetFields_ToApiString_WithNone_ReturnsEmptyString()
+    [Test]
+    public async Task TweetFields_ToApiString_WithNone_ReturnsEmptyString()
     {
         // Arrange
         var fields = TweetFields.None;
@@ -14,34 +16,34 @@ public class TweetFieldsTests
         var result = fields.ToApiString();
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        await Assert.That(result).IsEqualTo(string.Empty);
     }
 
-    [Theory]
-    [InlineData(TweetFields.AuthorId, "author_id")]
-    [InlineData(TweetFields.CreatedAt, "created_at")]
-    [InlineData(TweetFields.Text, "text")]
-    [InlineData(TweetFields.Entities, "entities")]
-    [InlineData(TweetFields.Geo, "geo")]
-    [InlineData(TweetFields.InReplyToUserId, "in_reply_to_user_id")]
-    [InlineData(TweetFields.Lang, "lang")]
-    [InlineData(TweetFields.NonPublicMetrics, "non_public_metrics")]
-    [InlineData(TweetFields.OrganicMetrics, "organic_metrics")]
-    [InlineData(TweetFields.PromotedMetrics, "promoted_metrics")]
-    [InlineData(TweetFields.PublicMetrics, "public_metrics")]
-    [InlineData(TweetFields.ReferencedTweets, "referenced_tweets")]
-    [InlineData(TweetFields.Source, "source")]
-    public void TweetFields_ToApiString_IndividualFields_ReturnCorrectValues(TweetFields field, string expected)
+    [Test]
+    [Arguments(TweetFields.AuthorId, "author_id")]
+    [Arguments(TweetFields.CreatedAt, "created_at")]
+    [Arguments(TweetFields.Text, "text")]
+    [Arguments(TweetFields.Entities, "entities")]
+    [Arguments(TweetFields.Geo, "geo")]
+    [Arguments(TweetFields.InReplyToUserId, "in_reply_to_user_id")]
+    [Arguments(TweetFields.Lang, "lang")]
+    [Arguments(TweetFields.NonPublicMetrics, "non_public_metrics")]
+    [Arguments(TweetFields.OrganicMetrics, "organic_metrics")]
+    [Arguments(TweetFields.PromotedMetrics, "promoted_metrics")]
+    [Arguments(TweetFields.PublicMetrics, "public_metrics")]
+    [Arguments(TweetFields.ReferencedTweets, "referenced_tweets")]
+    [Arguments(TweetFields.Source, "source")]
+    public async Task TweetFields_ToApiString_IndividualFields_ReturnCorrectValues(TweetFields field, string expected)
     {
         // Act
         var result = field.ToApiString();
 
         // Assert
-        Assert.Equal(expected, result);
+        await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Fact]
-    public void TweetFields_ToApiString_WithMultipleFields_ReturnsCommaSeparatedString()
+    [Test]
+    public async Task TweetFields_ToApiString_WithMultipleFields_ReturnsCommaSeparatedString()
     {
         // Arrange
         var fields = TweetFields.AuthorId | TweetFields.CreatedAt | TweetFields.Text;
@@ -50,14 +52,14 @@ public class TweetFieldsTests
         var result = fields.ToApiString();
 
         // Assert
-        Assert.Contains("author_id", result);
-        Assert.Contains("created_at", result);
-        Assert.Contains("text", result);
-        Assert.Contains(",", result);
+        await Assert.That(result).Contains("author_id");
+        await Assert.That(result).Contains("created_at");
+        await Assert.That(result).Contains("text");
+        await Assert.That(result).Contains(",");
     }
 
-    [Fact]
-    public void TweetFields_ToApiString_WithAllFields_ReturnsAllFieldNames()
+    [Test]
+    public async Task TweetFields_ToApiString_WithAllFields_ReturnsAllFieldNames()
     {
         // Arrange
         var fields = TweetFields.All;
@@ -66,23 +68,23 @@ public class TweetFieldsTests
         var result = fields.ToApiString();
 
         // Assert
-        Assert.Contains("author_id", result);
-        Assert.Contains("created_at", result);
-        Assert.Contains("text", result);
-        Assert.Contains("entities", result);
-        Assert.Contains("geo", result);
-        Assert.Contains("in_reply_to_user_id", result);
-        Assert.Contains("lang", result);
-        Assert.Contains("non_public_metrics", result);
-        Assert.Contains("organic_metrics", result);
-        Assert.Contains("promoted_metrics", result);
-        Assert.Contains("public_metrics", result);
-        Assert.Contains("referenced_tweets", result);
-        Assert.Contains("source", result);
+        await Assert.That(result).Contains("author_id");
+        await Assert.That(result).Contains("created_at");
+        await Assert.That(result).Contains("text");
+        await Assert.That(result).Contains("entities");
+        await Assert.That(result).Contains("geo");
+        await Assert.That(result).Contains("in_reply_to_user_id");
+        await Assert.That(result).Contains("lang");
+        await Assert.That(result).Contains("non_public_metrics");
+        await Assert.That(result).Contains("organic_metrics");
+        await Assert.That(result).Contains("promoted_metrics");
+        await Assert.That(result).Contains("public_metrics");
+        await Assert.That(result).Contains("referenced_tweets");
+        await Assert.That(result).Contains("source");
     }
 
-    [Fact]
-    public void TweetFields_ToApiString_WithComplexCombination_ReturnsCorrectString()
+    [Test]
+    public async Task TweetFields_ToApiString_WithComplexCombination_ReturnsCorrectString()
     {
         // Arrange
         var fields = TweetFields.AuthorId | TweetFields.PublicMetrics | TweetFields.ReferencedTweets;
@@ -91,8 +93,8 @@ public class TweetFieldsTests
         var result = fields.ToApiString();
 
         // Assert
-        Assert.Contains("author_id", result);
-        Assert.Contains("public_metrics", result);
-        Assert.Contains("referenced_tweets", result);
-    }
+        await Assert.That(result).Contains("author_id");
+        await Assert.That(result).Contains("public_metrics");
+        await Assert.That(result).Contains("referenced_tweets");
+}
 }

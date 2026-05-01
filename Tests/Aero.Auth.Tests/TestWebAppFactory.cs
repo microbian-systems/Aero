@@ -3,6 +3,7 @@ using JasperFx;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Aero.Auth.Tests.WebHost;
 
 namespace Aero.Auth.Tests;
 

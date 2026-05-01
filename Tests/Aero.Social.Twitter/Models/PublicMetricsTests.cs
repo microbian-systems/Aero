@@ -1,25 +1,27 @@
+﻿using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class PublicMetricsTests
 {
-    [Fact]
-    public void PublicMetrics_ShouldHaveDefaultValues()
+    [Test]
+    public async Task PublicMetrics_ShouldHaveDefaultValues()
     {
         // Arrange & Act
         var metrics = new PublicMetrics();
 
         // Assert
-        Assert.Equal(0, metrics.RetweetCount);
-        Assert.Equal(0, metrics.ReplyCount);
-        Assert.Equal(0, metrics.LikeCount);
-        Assert.Equal(0, metrics.QuoteCount);
+        await Assert.That(metrics.RetweetCount).IsEqualTo(0);
+        await Assert.That(metrics.ReplyCount).IsEqualTo(0);
+        await Assert.That(metrics.LikeCount).IsEqualTo(0);
+        await Assert.That(metrics.QuoteCount).IsEqualTo(0);
     }
 
-    [Fact]
-    public void PublicMetrics_Serialization_ShouldIncludeAllProperties()
+    [Test]
+    public async Task PublicMetrics_Serialization_ShouldIncludeAllProperties()
     {
         // Arrange
         var metrics = new PublicMetrics
@@ -34,14 +36,14 @@ public class PublicMetricsTests
         var json = JsonSerializer.Serialize(metrics);
 
         // Assert
-        Assert.Contains("100", json);
-        Assert.Contains("25", json);
-        Assert.Contains("500", json);
-        Assert.Contains("10", json);
+        await Assert.That(json).Contains("100");
+        await Assert.That(json).Contains("25");
+        await Assert.That(json).Contains("500");
+        await Assert.That(json).Contains("10");
     }
 
-    [Fact]
-    public void PublicMetrics_Deserialization_ShouldParseAllProperties()
+    [Test]
+    public async Task PublicMetrics_Deserialization_ShouldParseAllProperties()
     {
         // Arrange
         var json = @"{
@@ -56,9 +58,9 @@ public class PublicMetricsTests
 
         // Assert
         Assert.NotNull(metrics);
-        Assert.Equal(100, metrics.RetweetCount);
-        Assert.Equal(25, metrics.ReplyCount);
-        Assert.Equal(500, metrics.LikeCount);
-        Assert.Equal(10, metrics.QuoteCount);
-    }
+        await Assert.That(metrics.RetweetCount).IsEqualTo(100);
+        await Assert.That(metrics.ReplyCount).IsEqualTo(25);
+        await Assert.That(metrics.LikeCount).IsEqualTo(500);
+        await Assert.That(metrics.QuoteCount).IsEqualTo(10);
+}
 }

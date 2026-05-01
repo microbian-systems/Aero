@@ -1,4 +1,4 @@
-namespace Aero.Common;
+namespace Aero.Core;
 
 public class SmtpEmailOptions : BaseOptions
 {

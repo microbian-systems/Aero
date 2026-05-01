@@ -1,3 +1,6 @@
+﻿using TUnit.Core;
+using Aero.Core;
+using Aero.Core.Railway;
 using System.Net;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
@@ -9,13 +12,16 @@ namespace Aero.Social.Tests.Core;
 
 public class AuthenticationTests : ProviderTestBase
 {
-    [Fact]
+    private readonly Mock<ILogger<SocialProviderBase>> _loggerMock = new();
+
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
-        var provider = new TestOAuth2Provider(HttpClient, LoggerMock.Object, ConfigurationMock.Object);
+        var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
         
-        var result = await provider.GenerateAuthUrlAsync();
-        
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
         result.Url.ShouldNotBeNullOrEmpty();
         result.Url.ShouldContain("https://test.com/oauth/authorize");
         result.Url.ShouldContain("client_id=");
@@ -25,7 +31,7 @@ public class AuthenticationTests : ProviderTestBase
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_ShouldExchangeCodeForToken()
     {
         HttpHandler.WhenPost("*token*")
@@ -34,45 +40,51 @@ public class AuthenticationTests : ProviderTestBase
         HttpHandler.WhenGet("*userinfo*")
             .RespondWith("{\"id\": \"123\", \"name\": \"Test User\"}");
 
-        var provider = new TestOAuth2Provider(HttpClient, LoggerMock.Object, ConfigurationMock.Object);
+        var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
         var parameters = new AuthenticateParams("auth_code", "code_verifier");
         
         var result = await provider.AuthenticateAsync(parameters);
         
-        result.AccessToken.ShouldBe("test_access_token");
-        result.RefreshToken.ShouldBe("test_refresh_token");
-        result.Id.ShouldBe("123");
-        result.Name.ShouldBe("Test User");
+        result.IsSuccess.ShouldBeTrue();
+        var value = ((Result<AuthTokenDetails, AeroError>.Ok)result).Value;
+        value.AccessToken.ShouldBe("test_access_token");
+        value.RefreshToken.ShouldBe("test_refresh_token");
+        value.Id.ShouldBe("123");
+        value.Name.ShouldBe("Test User");
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_OnError_ShouldThrowException()
     {
         HttpHandler.WhenPost("*token*")
             .RespondWith(MockResponses.OAuth2.ErrorResponse("invalid_grant", "Invalid authorization code"), 
                 HttpStatusCode.BadRequest);
 
-        var provider = new TestOAuth2Provider(HttpClient, LoggerMock.Object, ConfigurationMock.Object);
+        var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
         var parameters = new AuthenticateParams("invalid_code", "code_verifier");
         
-        await Should.ThrowAsync<Exception>(() => provider.AuthenticateAsync(parameters));
+        var result = await provider.AuthenticateAsync(parameters);
+
+        result.IsFailure.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task RefreshTokenAsync_ShouldReturnNewToken()
     {
         HttpHandler.WhenPost("*token*")
             .RespondWith(MockResponses.OAuth2.TokenResponse("new_access_token", "new_refresh_token"));
 
-        var provider = new TestOAuth2Provider(HttpClient, LoggerMock.Object, ConfigurationMock.Object);
+        var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
         
         var result = await provider.RefreshTokenAsync("old_refresh_token");
         
-        result.AccessToken.ShouldBe("new_access_token");
-        result.RefreshToken.ShouldBe("new_refresh_token");
+        result.IsSuccess.ShouldBeTrue();
+        var value = ((Result<AuthTokenDetails, AeroError>.Ok)result).Value;
+        value.AccessToken.ShouldBe("new_access_token");
+        value.RefreshToken.ShouldBe("new_refresh_token");
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_WithPKCE_ShouldIncludeCodeVerifier()
     {
         var receivedContent = "";
@@ -94,18 +106,20 @@ public class AuthenticationTests : ProviderTestBase
         HttpHandler.WhenGet("*userinfo*")
             .RespondWith("{\"id\": \"123\", \"name\": \"Test User\"}");
 
-        var provider = new TestOAuth2Provider(HttpClient, LoggerMock.Object, ConfigurationMock.Object);
+        var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
         var parameters = new AuthenticateParams("auth_code", "my_code_verifier");
         
-        await provider.AuthenticateAsync(parameters);
+        var result = await provider.AuthenticateAsync(parameters);
+
+        result.IsSuccess.ShouldBeTrue();
         
         receivedContent.ShouldContain("code_verifier=my_code_verifier");
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_WithClientInformation_ShouldUseCustomSettings()
     {
-        var provider = new TestOAuth2Provider(HttpClient, LoggerMock.Object, ConfigurationMock.Object);
+        var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
         var clientInfo = new ClientInformation
         {
             ClientId = "custom_client_id",
@@ -113,8 +127,9 @@ public class AuthenticationTests : ProviderTestBase
             InstanceUrl = "https://custom.com"
         };
         
-        var result = await provider.GenerateAuthUrlAsync(clientInfo);
-        
+        var authResult = await provider.GenerateAuthUrlAsync(clientInfo);
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
         result.Url.ShouldContain("client_id=custom_client_id");
     }
 }
@@ -123,7 +138,7 @@ public class TestOAuth2Provider : SocialProviderBase
 {
     private readonly IConfiguration _configuration;
 
-    public TestOAuth2Provider(HttpClient httpClient, ILogger logger, IConfiguration configuration) 
+    public TestOAuth2Provider(HttpClient httpClient, ILogger<SocialProviderBase> logger, IConfiguration configuration) 
         : base(httpClient, logger)
     {
         _configuration = configuration;
@@ -139,14 +154,14 @@ public class TestOAuth2Provider : SocialProviderBase
     protected string GetClientSecret() => _configuration["TEST_CLIENT_SECRET"] ?? "default_secret";
     protected string GetRedirectUri() => _configuration["TEST_REDIRECT_URI"] ?? "https://localhost/callback";
 
-    public override async Task<PostResponse[]> PostAsync(
+    public override Task<Result<PostResponse[], AeroError>> PostAsync(
         string id, string accessToken, List<PostDetails> posts, 
         Integration integration, CancellationToken cancellationToken = default)
     {
-        return Array.Empty<PostResponse>();
+        return Task.FromResult<Result<PostResponse[], AeroError>>(Array.Empty<PostResponse>());
     }
 
-    public override Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -161,7 +176,7 @@ public class TestOAuth2Provider : SocialProviderBase
                   $"&scope={string.Join(" ", Scopes)}" +
                   $"&state={state}";
 
-        return Task.FromResult(new GenerateAuthUrlResponse
+        return Task.FromResult<Result<GenerateAuthUrlResponse, AeroError>>(new GenerateAuthUrlResponse
         {
             Url = url,
             State = state,
@@ -169,7 +184,7 @@ public class TestOAuth2Provider : SocialProviderBase
         });
     }
 
-    public override async Task<AuthTokenDetails> AuthenticateAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -191,12 +206,12 @@ public class TestOAuth2Provider : SocialProviderBase
             })
         };
 
-        var tokenResponse = await HttpClient.SendAsync(tokenRequest, cancellationToken);
+            var tokenResponse = await client.SendAsync(tokenRequest, cancellationToken);
         var tokenContent = await tokenResponse.Content.ReadAsStringAsync(cancellationToken);
 
         if (!tokenResponse.IsSuccessStatusCode)
         {
-            throw new Exception($"Token request failed: {tokenContent}");
+            return AeroError.CreateError($"Token request failed: {tokenContent}");
         }
 
         var tokenData = System.Text.Json.JsonSerializer.Deserialize<TokenResponse>(tokenContent);
@@ -204,7 +219,7 @@ public class TestOAuth2Provider : SocialProviderBase
         var userRequest = new HttpRequestMessage(HttpMethod.Get, "https://test.com/oauth/userinfo");
         userRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenData!.access_token);
         
-        var userResponse = await HttpClient.SendAsync(userRequest, cancellationToken);
+        var userResponse = await client.SendAsync(userRequest, cancellationToken);
         var userContent = await userResponse.Content.ReadAsStringAsync(cancellationToken);
         var userData = System.Text.Json.JsonSerializer.Deserialize<UserResponse>(userContent);
 
@@ -218,7 +233,7 @@ public class TestOAuth2Provider : SocialProviderBase
         };
     }
 
-    public override async Task<AuthTokenDetails> RefreshTokenAsync(
+    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -233,7 +248,7 @@ public class TestOAuth2Provider : SocialProviderBase
             })
         };
 
-        var tokenResponse = await HttpClient.SendAsync(tokenRequest, cancellationToken);
+        var tokenResponse = await client.SendAsync(tokenRequest, cancellationToken);
         var tokenContent = await tokenResponse.Content.ReadAsStringAsync(cancellationToken);
         var tokenData = System.Text.Json.JsonSerializer.Deserialize<TokenResponse>(tokenContent);
 
@@ -255,6 +270,7 @@ public class TestOAuth2Provider : SocialProviderBase
     private class UserResponse
     {
         public string id { get; set; } = "";
-        public string? name { get; set; }
+        public string? name { get; set;
+}
     }
 }

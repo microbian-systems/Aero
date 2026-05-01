@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Aero.Common;
+namespace Aero.Core;
 
 public static class DataHelper
 {

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,7 @@ namespace Aero.DataStructures.Tests;
 
 public class BPlusTreeTests
 {
-    [Fact]
+    [Test]
     public void Insert_And_Find_Success()
     {
         // Arrange
@@ -23,7 +24,7 @@ public class BPlusTreeTests
         found.Value.ShouldBe(30);
     }
 
-    [Fact]
+    [Test]
     public void FindRange_Returns_Correct_Range()
     {
         // Arrange
@@ -40,5 +41,5 @@ public class BPlusTreeTests
         // Assert
         range.Count().ShouldBe(3);
         range.ShouldBeInOrder();
-    }
+}
 }

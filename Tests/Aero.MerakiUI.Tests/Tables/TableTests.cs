@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Tables;
 using Bunit;
 using Aero.MerakiUI.Tables;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Tables;
 
 public class TableTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void SimpleTable_ShouldRenderCorrectStructure()
     {
         var headers = new[] { "Name", "Status", "Role" };
@@ -22,5 +23,5 @@ public class TableTests : BunitContext
         
         // Verify rows
         Assert.Contains("John Doe", cut.Markup);
-    }
+}
 }

@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees;
+namespace Aero.Core.DataStructures.Trees;
 
 /// <summary>
 /// Represents a Trie node that wraps a complete word for ITreeNode interface.

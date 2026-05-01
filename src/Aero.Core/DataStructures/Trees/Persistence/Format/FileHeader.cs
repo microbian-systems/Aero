@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
-using Aero.DataStructures.Trees.Persistence.Wal;
+using Aero.Core.DataStructures.Trees.Persistence.Wal;
 
-namespace Aero.DataStructures.Trees.Persistence.Format;
+namespace Aero.Core.DataStructures.Trees.Persistence.Format;
 
 public sealed class FileHeader
 {

@@ -1,4 +1,7 @@
+﻿using TUnit.Core;
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -20,7 +23,7 @@ public class FarcasterProviderTests : ProviderTestBase
         return new FarcasterProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -31,7 +34,7 @@ public class FarcasterProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn800()
     {
         var provider = CreateProvider();
@@ -39,14 +42,16 @@ public class FarcasterProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(800);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnClientIdAndState()
     {
         var provider = CreateProvider();
 
-        var result = await provider.GenerateAuthUrlAsync();
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
 
         result.Url.ShouldContain("test_client_id");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

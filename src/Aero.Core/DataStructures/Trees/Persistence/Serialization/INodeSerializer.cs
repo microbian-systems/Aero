@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Serialization;
+namespace Aero.Core.DataStructures.Trees.Persistence.Serialization;
 
 /// <summary>
 /// Serializes and deserializes tree nodes to and from fixed-size byte spans.

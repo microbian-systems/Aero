@@ -1,7 +1,7 @@
-﻿using Aero.Common.Web.Infrastructure;
-using Aero.Common.Web.Jwt;
+﻿using Aero.Auth.Jwt;
+using Aero.Auth.Services;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class ApiServiceExtensions
 {

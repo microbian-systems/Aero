@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees;
+namespace Aero.Core.DataStructures.Trees;
 
 /// <summary>
 /// Performs a Breadth-First Search (Level-Order) on a binary tree.

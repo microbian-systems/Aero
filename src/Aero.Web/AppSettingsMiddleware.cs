@@ -1,8 +1,9 @@
 using System.Configuration;
-using Aero.Common.Web.Extensions;
+using Aero.Core;
 using Aero.Validators;
+using Aero.Web.Extensions;
 
-namespace Aero.Common.Web;
+namespace Aero.Web;
 
 public static class AppSettingsExtensions
 {
@@ -52,7 +53,7 @@ public static class AppSettingsExtensions
         else
         {
             log.LogInformation($"AppSettings were successfully loaded");
-            log.LogInformation("{o}", settings.ToJson());
+            log.LogInformation("{o}", Aero.Core.Extensions.ObjectExtensions.ToJson(settings));
         }
 
         services.AddSingleton(settings);

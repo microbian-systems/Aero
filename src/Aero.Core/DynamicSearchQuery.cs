@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using Aero.Common.Patterns;
+using Aero.Core.Patterns;
 
-namespace Aero.Common;
+namespace Aero.Core;
 
 /// <summary>
 /// A type that represents a search parameter for IDynamicSearchParam

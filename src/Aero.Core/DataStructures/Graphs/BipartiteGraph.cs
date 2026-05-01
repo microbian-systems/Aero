@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Graphs;
+namespace Aero.Core.DataStructures.Graphs;
 
 /// <summary>
 /// Represents a bipartite graph where vertices can be divided into two disjoint sets

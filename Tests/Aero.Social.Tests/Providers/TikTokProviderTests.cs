@@ -1,4 +1,7 @@
+﻿using TUnit.Core;
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -21,7 +24,7 @@ public class TikTokProviderTests : ProviderTestBase
         return new TikTokProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -32,7 +35,7 @@ public class TikTokProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(1);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn2000()
     {
         var provider = CreateProvider();
@@ -40,17 +43,19 @@ public class TikTokProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(2000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
 
-        var result = await provider.GenerateAuthUrlAsync();
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
 
         result.Url.ShouldContain("tiktok.com/v2/auth/authorize");
         result.Url.ShouldContain("client_key=test_client_id");
         result.Url.ShouldContain("redirect_uri=");
         result.Url.ShouldContain("response_type=code");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

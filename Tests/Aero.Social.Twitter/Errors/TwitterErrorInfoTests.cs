@@ -1,66 +1,68 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Errors;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Errors;
 
 public class TwitterErrorInfoTests
 {
-    [Theory]
-    [InlineData(32, "Could not authenticate you")]
-    [InlineData(34, "Sorry, that page does not exist")]
-    [InlineData(88, "Rate limit exceeded")]
-    [InlineData(144, "No status found with that ID")]
-    [InlineData(187, "Status is a duplicate")]
-    [InlineData(215, "Bad authentication data")]
-    public void GetErrorTitle_KnownErrorCode_ReturnsExpectedTitle(int code, string expectedTitle)
+    [Test]
+    [Arguments(32, "Could not authenticate you")]
+    [Arguments(34, "Sorry, that page does not exist")]
+    [Arguments(88, "Rate limit exceeded")]
+    [Arguments(144, "No status found with that ID")]
+    [Arguments(187, "Status is a duplicate")]
+    [Arguments(215, "Bad authentication data")]
+    public async Task GetErrorTitle_KnownErrorCode_ReturnsExpectedTitle(int code, string expectedTitle)
     {
         // Act
         var title = TwitterErrorInfo.GetErrorTitle(code);
 
         // Assert
-        Assert.Equal(expectedTitle, title);
+        await Assert.That(title).IsEqualTo(expectedTitle);
     }
 
-    [Fact]
-    public void GetErrorTitle_UnknownErrorCode_ReturnsUnknownError()
+    [Test]
+    public async Task GetErrorTitle_UnknownErrorCode_ReturnsUnknownError()
     {
         // Act
         var title = TwitterErrorInfo.GetErrorTitle(99999);
 
         // Assert
-        Assert.Equal("Unknown Error", title);
+        await Assert.That(title).IsEqualTo("Unknown Error");
     }
 
-    [Theory]
-    [InlineData(32)]
-    [InlineData(88)]
-    [InlineData(144)]
-    public void GetSuggestedAction_KnownErrorCode_ReturnsNonEmptyAction(int code)
+    [Test]
+    [Arguments(32)]
+    [Arguments(88)]
+    [Arguments(144)]
+    public async Task GetSuggestedAction_KnownErrorCode_ReturnsNonEmptyAction(int code)
     {
         // Act
         var action = TwitterErrorInfo.GetSuggestedAction(code);
 
         // Assert
-        Assert.False(string.IsNullOrEmpty(action));
-        Assert.DoesNotContain("unexpected error", action);
+        await Assert.That(string.IsNullOrEmpty(action)).IsFalse();
+        await Assert.That(action).DoesNotContain("unexpected error");
     }
 
-    [Theory]
-    [InlineData(32)]
-    [InlineData(88)]
-    [InlineData(144)]
-    public void GetDocumentationUrl_KnownErrorCode_ReturnsValidUrl(int code)
+    [Test]
+    [Arguments(32)]
+    [Arguments(88)]
+    [Arguments(144)]
+    public async Task GetDocumentationUrl_KnownErrorCode_ReturnsValidUrl(int code)
     {
         // Act
         var url = TwitterErrorInfo.GetDocumentationUrl(code);
 
         // Assert
-        Assert.False(string.IsNullOrEmpty(url));
-        Assert.StartsWith("https://", url);
+        await Assert.That(string.IsNullOrEmpty(url)).IsFalse();
+        await Assert.That(url).StartsWith("https://");
     }
 
-    [Fact]
-    public void BuildEnhancedMessage_KnownErrorCode_IncludesAllComponents()
+    [Test]
+    public async Task BuildEnhancedMessage_KnownErrorCode_IncludesAllComponents()
     {
         // Arrange
         int code = 88;
@@ -70,16 +72,16 @@ public class TwitterErrorInfoTests
         var message = TwitterErrorInfo.BuildEnhancedMessage(code, apiMessage);
 
         // Assert
-        Assert.Contains("Twitter API Error 88", message);
-        Assert.Contains("Rate limit exceeded", message);
-        Assert.Contains("API Message:", message);
-        Assert.Contains("Suggested Action:", message);
-        Assert.Contains("Documentation:", message);
-        Assert.Contains("https://", message);
+        await Assert.That(message).Contains("Twitter API Error 88");
+        await Assert.That(message).Contains("Rate limit exceeded");
+        await Assert.That(message).Contains("API Message:");
+        await Assert.That(message).Contains("Suggested Action:");
+        await Assert.That(message).Contains("Documentation:");
+        await Assert.That(message).Contains("https://");
     }
 
-    [Fact]
-    public void BuildEnhancedMessage_NullApiMessage_DoesNotIncludeApiMessage()
+    [Test]
+    public async Task BuildEnhancedMessage_NullApiMessage_DoesNotIncludeApiMessage()
     {
         // Arrange
         int code = 88;
@@ -88,60 +90,60 @@ public class TwitterErrorInfoTests
         var message = TwitterErrorInfo.BuildEnhancedMessage(code, null);
 
         // Assert
-        Assert.Contains("Twitter API Error 88", message);
-        Assert.DoesNotContain("API Message:", message);
+        await Assert.That(message).Contains("Twitter API Error 88");
+        await Assert.That(message).DoesNotContain("API Message:");
     }
 
-    [Theory]
-    [InlineData(400, true)]   // Bad Request
-    [InlineData(404, true)]   // Not Found
-    [InlineData(429, true)]   // Too Many Requests
-    [InlineData(499, true)]   // Client closed request
-    [InlineData(399, false)]  // Just below 4xx
-    [InlineData(500, false)]  // Server error
-    [InlineData(200, false)]  // OK
-    public void IsClientError_VariousStatusCodes_ReturnsExpectedResult(int statusCode, bool expected)
+    [Test]
+    [Arguments(400, true)]   // Bad Request
+    [Arguments(404, true)]   // Not Found
+    [Arguments(429, true)]   // Too Many Requests
+    [Arguments(499, true)]   // Client closed request
+    [Arguments(399, false)]  // Just below 4xx
+    [Arguments(500, false)]  // Server error
+    [Arguments(200, false)]  // OK
+    public async Task IsClientError_VariousStatusCodes_ReturnsExpectedResult(int statusCode, bool expected)
     {
         // Act
         var result = TwitterErrorInfo.IsClientError((HttpStatusCode)statusCode);
 
         // Assert
-        Assert.Equal(expected, result);
+        await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Theory]
-    [InlineData(500, true)]   // Internal Server Error
-    [InlineData(503, true)]   // Service Unavailable
-    [InlineData(504, true)]   // Gateway Timeout
-    [InlineData(599, true)]   // Unknown server error
-    [InlineData(499, false)]  // Just below 5xx
-    [InlineData(400, false)]  // Client error
-    [InlineData(200, false)]  // OK
-    public void IsServerError_VariousStatusCodes_ReturnsExpectedResult(int statusCode, bool expected)
+    [Test]
+    [Arguments(500, true)]   // Internal Server Error
+    [Arguments(503, true)]   // Service Unavailable
+    [Arguments(504, true)]   // Gateway Timeout
+    [Arguments(599, true)]   // Unknown server error
+    [Arguments(499, false)]  // Just below 5xx
+    [Arguments(400, false)]  // Client error
+    [Arguments(200, false)]  // OK
+    public async Task IsServerError_VariousStatusCodes_ReturnsExpectedResult(int statusCode, bool expected)
     {
         // Act
         var result = TwitterErrorInfo.IsServerError((HttpStatusCode)statusCode);
 
         // Assert
-        Assert.Equal(expected, result);
+        await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Theory]
-    [InlineData(429, true)]   // Too Many Requests
-    [InlineData(428, false)]  // Precondition Required
-    [InlineData(430, false)]  // Unknown
-    [InlineData(200, false)]  // OK
-    public void IsRateLimitError_VariousStatusCodes_ReturnsExpectedResult(int statusCode, bool expected)
+    [Test]
+    [Arguments(429, true)]   // Too Many Requests
+    [Arguments(428, false)]  // Precondition Required
+    [Arguments(430, false)]  // Unknown
+    [Arguments(200, false)]  // OK
+    public async Task IsRateLimitError_VariousStatusCodes_ReturnsExpectedResult(int statusCode, bool expected)
     {
         // Act
         var result = TwitterErrorInfo.IsRateLimitError((HttpStatusCode)statusCode);
 
         // Assert
-        Assert.Equal(expected, result);
+        await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Fact]
-    public void GetErrorInfo_KnownErrorCode_ReturnsAllComponents()
+    [Test]
+    public async Task GetErrorInfo_KnownErrorCode_ReturnsAllComponents()
     {
         // Arrange
         int code = 32;
@@ -150,13 +152,13 @@ public class TwitterErrorInfoTests
         var (title, action, docUrl) = TwitterErrorInfo.GetErrorInfo(code);
 
         // Assert
-        Assert.Equal("Could not authenticate you", title);
-        Assert.False(string.IsNullOrEmpty(action));
-        Assert.StartsWith("https://", docUrl);
+        await Assert.That(title).IsEqualTo("Could not authenticate you");
+        await Assert.That(string.IsNullOrEmpty(action)).IsFalse();
+        await Assert.That(docUrl).StartsWith("https://");
     }
 
-    [Fact]
-    public void GetErrorInfo_UnknownErrorCode_ReturnsDefaultComponents()
+    [Test]
+    public async Task GetErrorInfo_UnknownErrorCode_ReturnsDefaultComponents()
     {
         // Arrange
         int code = 99999;
@@ -165,8 +167,8 @@ public class TwitterErrorInfoTests
         var (title, action, docUrl) = TwitterErrorInfo.GetErrorInfo(code);
 
         // Assert
-        Assert.Equal("Unknown Error", title);
-        Assert.Contains("unexpected error", action);
-        Assert.StartsWith("https://", docUrl);
-    }
+        await Assert.That(title).IsEqualTo("Unknown Error");
+        await Assert.That(action).Contains("unexpected error");
+        await Assert.That(docUrl).StartsWith("https://");
+}
 }

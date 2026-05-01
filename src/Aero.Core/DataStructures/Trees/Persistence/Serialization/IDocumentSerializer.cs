@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Serialization;
+namespace Aero.Core.DataStructures.Trees.Persistence.Serialization;
 
 public interface IDocumentSerializer<TDocument>
     where TDocument : class

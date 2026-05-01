@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Graphs;
+namespace Aero.Core.DataStructures.Graphs;
 
 /// <summary>
 /// Represents an undirected graph where edges have no direction.

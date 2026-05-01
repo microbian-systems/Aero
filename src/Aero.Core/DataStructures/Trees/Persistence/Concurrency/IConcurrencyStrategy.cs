@@ -1,6 +1,6 @@
-using Aero.DataStructures.Trees.Persistence.Wal;
+using Aero.Core.DataStructures.Trees.Persistence.Wal;
 
-namespace Aero.DataStructures.Trees.Persistence.Concurrency;
+namespace Aero.Core.DataStructures.Trees.Persistence.Concurrency;
 
 public interface IConcurrencyStrategy : IAsyncDisposable
 {

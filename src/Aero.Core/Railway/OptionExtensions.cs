@@ -211,24 +211,25 @@ public static class OptionExtensions
     /// <example>
     /// <code>
     /// Option&lt;User&gt; user = FindUser(123);
-    /// Result&lt;string, User&gt; result = user.OkOrFailure("User not found");
+    /// Result&lt;User, AeroError&gt; result = user.OkOrFailure(AeroError.NotFound("User not found"));
     /// // If user is Some, result is Ok(user)
-    /// // If user is None, result is Failure("User not found")
+    /// // If user is None, result is Failure(AeroError.NotFound("User not found"))
     /// 
     /// // Now you can use Result operations
     /// var email = result.Map(u => u.Email)
     ///     .Match(
     ///         e => e,
-    ///         err => $"Error: {err}"
+    ///         err => $"Error: {err.Message}"
     ///     );
     /// </code>
     /// </example>
-    public static Result<TError, TValue> OkOrFailure<TError, TValue>(
-        this Option<TValue> option, TError error) =>
+    public static Result<TValue, TError> OkOrFailure<TValue, TError>(
+        this Option<TValue> option, TError error) 
+        where TError : AeroError =>
         option switch
         {
-            Option<TValue>.Some(var value) => new Result<TError, TValue>.Ok(value),
-            Option<TValue>.None => new Result<TError, TValue>.Failure(error),
+            Option<TValue>.Some(var value) => new Result<TValue, TError>.Ok(value),
+            Option<TValue>.None => new Result<TValue, TError>.Failure(error),
         };
 
     /// <summary>

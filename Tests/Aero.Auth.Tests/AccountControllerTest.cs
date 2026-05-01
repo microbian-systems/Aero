@@ -1,10 +1,13 @@
+﻿using TUnit.Core;
 // Basic Account Controller tests - main tests are in ElectraAuthIntegrationTests.cs
 using System.Net;
 using Shouldly;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
-public class AccountControllerIntegrationTests : IClassFixture<TestWebAppFactory>
+[ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
+public class AccountControllerIntegrationTests
 {
     private readonly HttpClient _client;
 
@@ -13,7 +16,7 @@ public class AccountControllerIntegrationTests : IClassFixture<TestWebAppFactory
         _client = factory.CreateClient();
     }
 
-    [Fact]
+    [Test]
     public async Task GetAccountListPasskeys_ShouldReturnUnauthorized_WhenNotAuthenticated()
     {
         // Act
@@ -23,7 +26,7 @@ public class AccountControllerIntegrationTests : IClassFixture<TestWebAppFactory
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Fact]
+    [Test]
     public async Task PostLogout_ShouldRequireAntiForgeryToken()
     {
         // Arrange
@@ -34,5 +37,5 @@ public class AccountControllerIntegrationTests : IClassFixture<TestWebAppFactory
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-    }
+}
 }

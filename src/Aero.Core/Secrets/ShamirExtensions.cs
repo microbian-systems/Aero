@@ -1,4 +1,4 @@
-﻿namespace Aero.Core.Algorithms;
+﻿namespace Aero.Core.Secrets;
 
 public static class ShamirExtensions
 {

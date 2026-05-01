@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI;
 using Bunit;
 using Microsoft.AspNetCore.Components;
@@ -11,7 +12,7 @@ public class MerakiComponentBaseTests : BunitContext
     {
     }
 
-    [Fact]
+    [Test]
     public void BaseComponent_ShouldHaveStandardParameters()
     {
         var cut = Render<TestComponent>(parameters => parameters
@@ -29,5 +30,5 @@ public class MerakiComponentBaseTests : BunitContext
         Assert.NotNull(instance.AdditionalAttributes);
         Assert.Contains("data-test", instance.AdditionalAttributes.Keys);
         Assert.Equal("value", instance.AdditionalAttributes["data-test"]);
-    }
+}
 }

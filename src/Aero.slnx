@@ -30,6 +30,7 @@
     <Project Path="../Tests/Aero.SendGrid.Tests/Aero.SendGrid.Tests.csproj" />
     <Project Path="../Tests/Aero.Social.Twitter/Aero.Social.Twitter.csproj" />
   </Folder>
+  <Project Path="Aero.Actors.Abstractions/Aero.Actors.Abstractions.csproj" Id="d207bb85-9421-4841-b0e9-d86e216f8970" />
   <Project Path="Aero.Actors/Aero.Actors.csproj" />
   <Project Path="Aero.Auth/Aero.Auth.csproj" />
   <Project Path="Aero.Caching/Aero.Caching.csproj" />
@@ -40,6 +41,8 @@
   <Project Path="Aero.Models/Aero.Models.csproj" />
   <Project Path="Aero.EfCore/Aero.EfCore.csproj" />
   <Project Path="Aero.Marten/Aero.Marten.csproj" />
+  <Project Path="Aero.Modular/Aero.Modular.csproj" Id="5749f953-266f-4031-a6bc-30a8e158528d" />
+  <Project Path="Aero.Secrets/Aero.Secrets.csproj" Id="afaccf41-5e06-4191-a726-dc939f33218e" />
   <Project Path="Aero.Services/Aero.Services.csproj" />
   <Project Path="Aero.SignalR/Aero.SignalR.csproj" />
   <Project Path="Aero.Social/Aero.Social.csproj" />

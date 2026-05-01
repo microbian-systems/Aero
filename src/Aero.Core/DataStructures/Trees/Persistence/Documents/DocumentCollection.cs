@@ -1,12 +1,12 @@
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using Aero.DataStructures.Trees.Persistence.Heap;
-using Aero.DataStructures.Trees.Persistence.Indexes;
-using Aero.DataStructures.Trees.Persistence.Interfaces;
-using Aero.DataStructures.Trees.Persistence.Serialization;
-using Aero.DataStructures.Trees.Persistence.Wal;
+using Aero.Core.DataStructures.Trees.Persistence.Heap;
+using Aero.Core.DataStructures.Trees.Persistence.Indexes;
+using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
+using Aero.Core.DataStructures.Trees.Persistence.Serialization;
+using Aero.Core.DataStructures.Trees.Persistence.Wal;
 
-namespace Aero.DataStructures.Trees.Persistence.Documents;
+namespace Aero.Core.DataStructures.Trees.Persistence.Documents;
 
 public sealed class DocumentCollection<TDocument>(
     IWalStorageBackend storage,

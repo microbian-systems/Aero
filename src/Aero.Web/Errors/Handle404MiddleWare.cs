@@ -1,6 +1,6 @@
 using ILogger = Serilog.ILogger;
 
-namespace Aero.Common.Web.Errors;
+namespace Aero.Web.Errors;
 
 /// <summary>
 /// Middleware to handle 404 page not found errors

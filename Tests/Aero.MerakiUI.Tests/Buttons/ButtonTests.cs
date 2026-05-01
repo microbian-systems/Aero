@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Buttons;
 using Bunit;
 using Aero.MerakiUI.Buttons;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Buttons;
 
 public class ButtonTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void PrimaryButton_ShouldRenderCorrectClasses()
     {
         var cut = Render<PrimaryButton>(parameters => parameters
@@ -15,5 +16,5 @@ public class ButtonTests : BunitContext
 
         cut.Find("button.bg-blue-600");
         Assert.Contains("Click Me", cut.Markup);
-    }
+}
 }

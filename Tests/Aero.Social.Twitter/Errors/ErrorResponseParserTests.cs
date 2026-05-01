@@ -1,11 +1,13 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Errors;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Errors;
 
 public class ErrorResponseParserTests
 {
-    [Fact]
-    public void ParseErrorResponse_V2Format_ReturnsParsedErrors()
+    [Test]
+    public async Task ParseErrorResponse_V2Format_ReturnsParsedErrors()
     {
         // Arrange
         var json = @"{
@@ -22,15 +24,15 @@ public class ErrorResponseParserTests
         var errors = ErrorResponseParser.ParseErrorResponse(json);
 
         // Assert
-        Assert.Single(errors);
-        Assert.Equal(34, errors[0].Code);
-        Assert.Equal("Sorry, that page does not exist", errors[0].Message);
-        Assert.Equal("id", errors[0].Field);
+        await Assert.That(errors).HasSingleItem();
+        await Assert.That(errors[0].Code).IsEqualTo(34);
+        await Assert.That(errors[0].Message).IsEqualTo("Sorry, that page does not exist");
+        await Assert.That(errors[0].Field).IsEqualTo("id");
         Assert.NotNull(errors[0].DocumentationUrl);
     }
 
-    [Fact]
-    public void ParseErrorResponse_V1ErrorFormat_ReturnsParsedError()
+    [Test]
+    public async Task ParseErrorResponse_V1ErrorFormat_ReturnsParsedError()
     {
         // Arrange
         var json = @"{ ""error"": ""Rate limit exceeded"", ""code"": 88 }";
@@ -39,13 +41,13 @@ public class ErrorResponseParserTests
         var errors = ErrorResponseParser.ParseErrorResponse(json);
 
         // Assert
-        Assert.Single(errors);
-        Assert.Equal(88, errors[0].Code);
-        Assert.Equal("Rate limit exceeded", errors[0].Message);
+        await Assert.That(errors).HasSingleItem();
+        await Assert.That(errors[0].Code).IsEqualTo(88);
+        await Assert.That(errors[0].Message).IsEqualTo("Rate limit exceeded");
     }
 
-    [Fact]
-    public void ParseErrorResponse_V1ErrorObjectFormat_ReturnsParsedError()
+    [Test]
+    public async Task ParseErrorResponse_V1ErrorObjectFormat_ReturnsParsedError()
     {
         // Arrange
         var json = @"{ ""errors"": { ""88"": ""Rate limit exceeded"" } }";
@@ -54,13 +56,13 @@ public class ErrorResponseParserTests
         var errors = ErrorResponseParser.ParseErrorResponse(json);
 
         // Assert
-        Assert.Single(errors);
-        Assert.Equal(88, errors[0].Code);
-        Assert.Equal("Rate limit exceeded", errors[0].Message);
+        await Assert.That(errors).HasSingleItem();
+        await Assert.That(errors[0].Code).IsEqualTo(88);
+        await Assert.That(errors[0].Message).IsEqualTo("Rate limit exceeded");
     }
 
-    [Fact]
-    public void ParseErrorResponse_MultipleErrors_ReturnsAllErrors()
+    [Test]
+    public async Task ParseErrorResponse_MultipleErrors_ReturnsAllErrors()
     {
         // Arrange
         var json = @"{
@@ -80,13 +82,13 @@ public class ErrorResponseParserTests
         var errors = ErrorResponseParser.ParseErrorResponse(json);
 
         // Assert
-        Assert.Equal(2, errors.Count);
-        Assert.Equal(34, errors[0].Code);
-        Assert.Equal(50, errors[1].Code);
+        await Assert.That(errors.Count).IsEqualTo(2);
+        await Assert.That(errors[0].Code).IsEqualTo(34);
+        await Assert.That(errors[1].Code).IsEqualTo(50);
     }
 
-    [Fact]
-    public void ParseErrorResponse_V2FormatWithResource_ReturnsResourceInfo()
+    [Test]
+    public async Task ParseErrorResponse_V2FormatWithResource_ReturnsResourceInfo()
     {
         // Arrange
         var json = @"{
@@ -104,13 +106,13 @@ public class ErrorResponseParserTests
         var errors = ErrorResponseParser.ParseErrorResponse(json);
 
         // Assert
-        Assert.Single(errors);
-        Assert.Equal("user", errors[0].ResourceType);
-        Assert.Equal("12345", errors[0].ResourceId);
+        await Assert.That(errors).HasSingleItem();
+        await Assert.That(errors[0].ResourceType).IsEqualTo("user");
+        await Assert.That(errors[0].ResourceId).IsEqualTo("12345");
     }
 
-    [Fact]
-    public void ParseErrorResponse_InvalidJson_ReturnsEmptyList()
+    [Test]
+    public async Task ParseErrorResponse_InvalidJson_ReturnsEmptyList()
     {
         // Arrange
         var json = "not valid json";
@@ -119,31 +121,31 @@ public class ErrorResponseParserTests
         var errors = ErrorResponseParser.ParseErrorResponse(json);
 
         // Assert
-        Assert.Empty(errors);
+        await Assert.That(errors).IsEmpty();
     }
 
-    [Fact]
-    public void ParseErrorResponse_NullResponse_ReturnsEmptyList()
+    [Test]
+    public async Task ParseErrorResponse_NullResponse_ReturnsEmptyList()
     {
         // Act
         var errors = ErrorResponseParser.ParseErrorResponse(null);
 
         // Assert
-        Assert.Empty(errors);
+        await Assert.That(errors).IsEmpty();
     }
 
-    [Fact]
-    public void ParseErrorResponse_EmptyResponse_ReturnsEmptyList()
+    [Test]
+    public async Task ParseErrorResponse_EmptyResponse_ReturnsEmptyList()
     {
         // Act
         var errors = ErrorResponseParser.ParseErrorResponse("");
 
         // Assert
-        Assert.Empty(errors);
+        await Assert.That(errors).IsEmpty();
     }
 
-    [Fact]
-    public void ParseErrorResponse_NoErrorsField_ReturnsEmptyList()
+    [Test]
+    public async Task ParseErrorResponse_NoErrorsField_ReturnsEmptyList()
     {
         // Arrange
         var json = @"{ ""data"": ""some value"" }";
@@ -152,11 +154,11 @@ public class ErrorResponseParserTests
         var errors = ErrorResponseParser.ParseErrorResponse(json);
 
         // Assert
-        Assert.Empty(errors);
+        await Assert.That(errors).IsEmpty();
     }
 
-    [Fact]
-    public void ParseErrorResponse_V1WithErrorCodeInMessage_ExtractsCode()
+    [Test]
+    public async Task ParseErrorResponse_V1WithErrorCodeInMessage_ExtractsCode()
     {
         // Arrange
         var json = @"{ ""error"": ""Could not authenticate you"" }";
@@ -165,13 +167,13 @@ public class ErrorResponseParserTests
         var errors = ErrorResponseParser.ParseErrorResponse(json);
 
         // Assert
-        Assert.Single(errors);
-        Assert.Equal(32, errors[0].Code); // Code extracted from message
-        Assert.Equal("Could not authenticate you", errors[0].Message);
+        await Assert.That(errors).HasSingleItem();
+        await Assert.That(errors[0].Code).IsEqualTo(32); // Code extracted from message
+        await Assert.That(errors[0].Message).IsEqualTo("Could not authenticate you");
     }
 
-    [Fact]
-    public void GetPrimaryErrorMessage_SingleError_ReturnsEnhancedMessage()
+    [Test]
+    public async Task GetPrimaryErrorMessage_SingleError_ReturnsEnhancedMessage()
     {
         // Arrange
         var errors = new List<TwitterError>
@@ -183,12 +185,12 @@ public class ErrorResponseParserTests
         var message = ErrorResponseParser.GetPrimaryErrorMessage(errors);
 
         // Assert
-        Assert.Contains("Twitter API Error 88", message);
-        Assert.Contains("Rate limit exceeded", message);
+        await Assert.That(message).Contains("Twitter API Error 88");
+        await Assert.That(message).Contains("Rate limit exceeded");
     }
 
-    [Fact]
-    public void GetPrimaryErrorMessage_EmptyList_ReturnsDefaultMessage()
+    [Test]
+    public async Task GetPrimaryErrorMessage_EmptyList_ReturnsDefaultMessage()
     {
         // Arrange
         var errors = new List<TwitterError>();
@@ -197,11 +199,11 @@ public class ErrorResponseParserTests
         var message = ErrorResponseParser.GetPrimaryErrorMessage(errors);
 
         // Assert
-        Assert.Equal("An unknown error occurred.", message);
+        await Assert.That(message).IsEqualTo("An unknown error occurred.");
     }
 
-    [Fact]
-    public void GetPrimaryErrorMessage_ErrorWithoutCode_ReturnsMessageOnly()
+    [Test]
+    public async Task GetPrimaryErrorMessage_ErrorWithoutCode_ReturnsMessageOnly()
     {
         // Arrange
         var errors = new List<TwitterError>
@@ -213,11 +215,11 @@ public class ErrorResponseParserTests
         var message = ErrorResponseParser.GetPrimaryErrorMessage(errors);
 
         // Assert
-        Assert.Equal("Some error without code", message);
+        await Assert.That(message).IsEqualTo("Some error without code");
     }
 
-    [Fact]
-    public void BuildComprehensiveErrorMessage_SingleError_ReturnsEnhancedMessage()
+    [Test]
+    public async Task BuildComprehensiveErrorMessage_SingleError_ReturnsEnhancedMessage()
     {
         // Arrange
         var errors = new List<TwitterError>
@@ -229,11 +231,11 @@ public class ErrorResponseParserTests
         var message = ErrorResponseParser.BuildComprehensiveErrorMessage(errors);
 
         // Assert
-        Assert.Contains("Twitter API Error 88", message);
+        await Assert.That(message).Contains("Twitter API Error 88");
     }
 
-    [Fact]
-    public void BuildComprehensiveErrorMessage_MultipleErrors_ReturnsAllErrors()
+    [Test]
+    public async Task BuildComprehensiveErrorMessage_MultipleErrors_ReturnsAllErrors()
     {
         // Arrange
         var errors = new List<TwitterError>
@@ -246,18 +248,18 @@ public class ErrorResponseParserTests
         var message = ErrorResponseParser.BuildComprehensiveErrorMessage(errors);
 
         // Assert
-        Assert.Contains("Multiple errors occurred (2)", message);
-        Assert.Contains("1.", message);
-        Assert.Contains("Error 34", message);
-        Assert.Contains("2.", message);
-        Assert.Contains("Error 50", message);
-        Assert.Contains("Field: id", message);
-        Assert.Contains("Field: username", message);
-        Assert.Contains("developer.twitter.com", message);
+        await Assert.That(message).Contains("Multiple errors occurred (2)");
+        await Assert.That(message).Contains("1.");
+        await Assert.That(message).Contains("Error 34");
+        await Assert.That(message).Contains("2.");
+        await Assert.That(message).Contains("Error 50");
+        await Assert.That(message).Contains("Field: id");
+        await Assert.That(message).Contains("Field: username");
+        await Assert.That(message).Contains("developer.twitter.com");
     }
 
-    [Fact]
-    public void BuildComprehensiveErrorMessage_EmptyList_ReturnsDefaultMessage()
+    [Test]
+    public async Task BuildComprehensiveErrorMessage_EmptyList_ReturnsDefaultMessage()
     {
         // Arrange
         var errors = new List<TwitterError>();
@@ -266,6 +268,6 @@ public class ErrorResponseParserTests
         var message = ErrorResponseParser.BuildComprehensiveErrorMessage(errors);
 
         // Assert
-        Assert.Equal("An unknown error occurred.", message);
-    }
+        await Assert.That(message).IsEqualTo("An unknown error occurred.");
+}
 }

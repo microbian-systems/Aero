@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
 
-namespace Aero.Common.Web.Middleware;
+namespace Aero.Web.Middleware;
 
 public class RequestResponseLoggingMiddleware(
     RequestDelegate next,

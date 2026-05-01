@@ -1,4 +1,7 @@
+﻿using TUnit.Core;
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -17,7 +20,7 @@ public class ListmonkProviderTests : ProviderTestBase
         return new ListmonkProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -28,11 +31,11 @@ public class ListmonkProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(100);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn100000000()
     {
         var provider = CreateProvider();
 
         provider.MaxLength().ShouldBe(100000000);
-    }
+}
 }

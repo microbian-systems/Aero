@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 using Bogus;
@@ -8,7 +9,7 @@ public class BinarySearchTreeTests
 {
     private readonly Faker _faker = new();
 
-    [Fact]
+    [Test]
     public void Insert_ShouldAddItemsCorrectly()
     {
         // Arrange
@@ -29,7 +30,7 @@ public class BinarySearchTreeTests
         }
     }
 
-    [Fact]
+    [Test]
     public void Find_ShouldReturnNull_WhenItemDoesNotExist()
     {
         // Arrange
@@ -45,7 +46,7 @@ public class BinarySearchTreeTests
         result.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public void Delete_ShouldRemoveLeafNode()
     {
         // Arrange
@@ -64,7 +65,7 @@ public class BinarySearchTreeTests
         bst.Root.Right.Value.ShouldBe(15);
     }
 
-    [Fact]
+    [Test]
     public void Delete_ShouldRemoveNodeWithOneChild_Left()
     {
         // Arrange
@@ -82,7 +83,7 @@ public class BinarySearchTreeTests
         bst.Root.Left.Value.ShouldBe(3);
     }
 
-    [Fact]
+    [Test]
     public void Delete_ShouldRemoveNodeWithOneChild_Right()
     {
         // Arrange
@@ -100,7 +101,7 @@ public class BinarySearchTreeTests
         bst.Root.Left.Value.ShouldBe(7);
     }
 
-    [Fact]
+    [Test]
     public void Delete_ShouldRemoveNodeWithTwoChildren()
     {
         // Arrange
@@ -122,7 +123,7 @@ public class BinarySearchTreeTests
         bst.Find(7).ShouldNotBeNull();
     }
 
-    [Fact]
+    [Test]
     public void Delete_ShouldRemoveRoot_WhenRootIsLeaf()
     {
         // Arrange
@@ -137,7 +138,7 @@ public class BinarySearchTreeTests
         bst.Root.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public void Delete_ShouldRemoveRoot_WhenRootHasOneChild()
     {
         // Arrange
@@ -153,7 +154,7 @@ public class BinarySearchTreeTests
         bst.Root.Value.ShouldBe(15);
     }
 
-    [Fact]
+    [Test]
     public void Delete_ShouldRemoveRoot_WhenRootHasTwoChildren()
     {
         // Arrange
@@ -175,7 +176,7 @@ public class BinarySearchTreeTests
         bst.Root.Left.Value.ShouldBe(5);
     }
 
-    [Fact]
+    [Test]
     public void Delete_ShouldDoNothing_WhenNodeNotFound()
     {
         // Arrange
@@ -192,7 +193,7 @@ public class BinarySearchTreeTests
         bst.Root.Value.ShouldBe(10);
     }
 
-    [Fact]
+    [Test]
     public void Find_ShouldWorkWithStrings()
     {
         // Arrange
@@ -207,5 +208,5 @@ public class BinarySearchTreeTests
         // Assert
         node.ShouldNotBeNull();
         node.Value.ShouldBe("banana");
-    }
+}
 }

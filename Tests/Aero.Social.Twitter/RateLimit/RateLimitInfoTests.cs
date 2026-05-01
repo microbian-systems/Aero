@@ -1,11 +1,13 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.RateLimit;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.RateLimit;
 
 public class RateLimitInfoTests
 {
-    [Fact]
-    public void IsRateLimited_RemainingIsZero_ReturnsTrue()
+    [Test]
+    public async Task IsRateLimited_RemainingIsZero_ReturnsTrue()
     {
         // Arrange
         var info = new RateLimitInfo
@@ -16,11 +18,11 @@ public class RateLimitInfoTests
         };
 
         // Act & Assert
-        Assert.True(info.IsRateLimited);
+        await Assert.That(info.IsRateLimited).IsTrue();
     }
 
-    [Fact]
-    public void IsRateLimited_RemainingIsGreaterThanZero_ReturnsFalse()
+    [Test]
+    public async Task IsRateLimited_RemainingIsGreaterThanZero_ReturnsFalse()
     {
         // Arrange
         var info = new RateLimitInfo
@@ -31,15 +33,15 @@ public class RateLimitInfoTests
         };
 
         // Act & Assert
-        Assert.False(info.IsRateLimited);
+        await Assert.That(info.IsRateLimited).IsFalse();
     }
 
-    [Theory]
-    [InlineData(100, 20, false)]  // 80% consumed, above 20% threshold
-    [InlineData(100, 19, true)]   // 81% consumed, below 20% threshold
-    [InlineData(100, 10, true)]   // 90% consumed
-    [InlineData(100, 0, false)]   // 100% consumed but remaining is 0
-    public void IsApproachingLimit_VariousScenarios_ReturnsExpectedResult(int limit, int remaining, bool expected)
+    [Test]
+    [Arguments(100, 20, false)]  // 80% consumed, above 20% threshold
+    [Arguments(100, 19, true)]   // 81% consumed, below 20% threshold
+    [Arguments(100, 10, true)]   // 90% consumed
+    [Arguments(100, 0, false)]   // 100% consumed but remaining is 0
+    public async Task IsApproachingLimit_VariousScenarios_ReturnsExpectedResult(int limit, int remaining, bool expected)
     {
         // Arrange
         var info = new RateLimitInfo
@@ -50,15 +52,15 @@ public class RateLimitInfoTests
         };
 
         // Act & Assert
-        Assert.Equal(expected, info.IsApproachingLimit);
+        await Assert.That(info.IsApproachingLimit).IsEqualTo(expected);
     }
 
-    [Theory]
-    [InlineData(100, 50, 50)]   // 50% consumed
-    [InlineData(100, 0, 100)]   // 100% consumed
-    [InlineData(100, 100, 0)]   // 0% consumed
-    [InlineData(0, 0, 0)]       // Edge case: limit is 0
-    public void PercentConsumed_VariousScenarios_ReturnsExpectedPercentage(int limit, int remaining, double expected)
+    [Test]
+    [Arguments(100, 50, 50)]   // 50% consumed
+    [Arguments(100, 0, 100)]   // 100% consumed
+    [Arguments(100, 100, 0)]   // 0% consumed
+    [Arguments(0, 0, 0)]       // Edge case: limit is 0
+    public async Task PercentConsumed_VariousScenarios_ReturnsExpectedPercentage(int limit, int remaining, double expected)
     {
         // Arrange
         var info = new RateLimitInfo
@@ -69,11 +71,11 @@ public class RateLimitInfoTests
         };
 
         // Act & Assert
-        Assert.Equal(expected, info.PercentConsumed);
+        await Assert.That(info.PercentConsumed).IsEqualTo(expected);
     }
 
-    [Fact]
-    public void ResetTime_ValidTimestamp_ReturnsCorrectDateTimeOffset()
+    [Test]
+    public async Task ResetTime_ValidTimestamp_ReturnsCorrectDateTimeOffset()
     {
         // Arrange
         var futureTime = DateTimeOffset.UtcNow.AddMinutes(15);
@@ -86,11 +88,11 @@ public class RateLimitInfoTests
         var resetTime = info.ResetTime;
 
         // Assert
-        Assert.Equal(futureTime.ToUnixTimeSeconds(), resetTime.ToUnixTimeSeconds());
+        await Assert.That(resetTime.ToUnixTimeSeconds()).IsEqualTo(futureTime.ToUnixTimeSeconds());
     }
 
-    [Fact]
-    public void TimeUntilReset_FutureResetTime_ReturnsPositiveTimeSpan()
+    [Test]
+    public async Task TimeUntilReset_FutureResetTime_ReturnsPositiveTimeSpan()
     {
         // Arrange
         var info = new RateLimitInfo
@@ -102,12 +104,12 @@ public class RateLimitInfoTests
         var timeUntilReset = info.TimeUntilReset;
 
         // Assert
-        Assert.True(timeUntilReset > TimeSpan.Zero);
-        Assert.True(timeUntilReset.TotalMinutes < 16);
+        await Assert.That(timeUntilReset > TimeSpan.Zero).IsTrue();
+        await Assert.That(timeUntilReset.TotalMinutes < 16).IsTrue();
     }
 
-    [Fact]
-    public void TimeUntilReset_PastResetTime_ReturnsZero()
+    [Test]
+    public async Task TimeUntilReset_PastResetTime_ReturnsZero()
     {
         // Arrange
         var info = new RateLimitInfo
@@ -119,11 +121,11 @@ public class RateLimitInfoTests
         var timeUntilReset = info.TimeUntilReset;
 
         // Assert
-        Assert.Equal(TimeSpan.Zero, timeUntilReset);
+        await Assert.That(timeUntilReset).IsEqualTo(TimeSpan.Zero);
     }
 
-    [Fact]
-    public void Properties_CanBeSetAndRetrieved()
+    [Test]
+    public async Task Properties_CanBeSetAndRetrieved()
     {
         // Arrange
         var info = new RateLimitInfo
@@ -135,9 +137,9 @@ public class RateLimitInfoTests
         };
 
         // Act & Assert
-        Assert.Equal(150, info.Limit);
-        Assert.Equal(75, info.Remaining);
-        Assert.Equal(1234567890, info.ResetTimestamp);
-        Assert.Equal(TimeSpan.FromSeconds(60), info.RetryAfter);
-    }
+        await Assert.That(info.Limit).IsEqualTo(150);
+        await Assert.That(info.Remaining).IsEqualTo(75);
+        await Assert.That(info.ResetTimestamp).IsEqualTo(1234567890);
+        await Assert.That(info.RetryAfter).IsEqualTo(TimeSpan.FromSeconds(60));
+}
 }

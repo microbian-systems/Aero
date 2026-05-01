@@ -1,4 +1,4 @@
-namespace Aero.MartenDB.Identity;
+namespace Aero.Marten.Identity;
 
 /// <summary>
 /// Options for configuring AeroDB-based identity.

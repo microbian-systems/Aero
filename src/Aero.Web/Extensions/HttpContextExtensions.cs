@@ -1,7 +1,7 @@
 ﻿using Aero.Models;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class HttpContextExtensions
 {

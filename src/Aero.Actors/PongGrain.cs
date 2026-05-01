@@ -1,39 +1,21 @@
-﻿
-using Aero.Core;
+﻿using Aero.Actors.Abstractions;
+using Orleans.Concurrency;
 
 namespace Aero.Actors;
 
-public interface IPongGrain : IGrainWithGuidKey
+public interface IPongGrain : IAeroActor
 {
-    [Alias("Pong")]
-    Task Pong(Message message);
+    Task<string> AreYouAwake(Message message);
 }
 
-public class PongGrain(ILogger<PongGrain> log) : AeroGrain(log), IPongGrain
+[StatelessWorker]
+public class PongGrain(ILogger<PongGrain> log) : AeroActor(log), IPongGrain
 {
-    public override async Task OnActivateAsync(CancellationToken cancellationToken)
+    public Task<string> AreYouAwake(Message message)
     {
-        log.LogInformation("PongGrain activated.");
-        await base.OnActivateAsync(cancellationToken);
-    }
-
-    public override async Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
-    {
-        log.LogInformation("PongGrain deactivated.");
-        await base.OnDeactivateAsync(reason, cancellationToken);
-    }
-
-    public Task Pong(Message message)
-    {
-        log.LogInformation($"Ping received: {message.content}");
-
-        var id = Snowflake.NewId();
-        // Create a response message
-        var responseMessage = new Message(id, $"pong! ping received: {message.content}");
-
-        // Log the response
-        log.LogInformation(responseMessage.content);
-
-        return Task.CompletedTask;
+        var activity = Span.StartActivity("PongGrain.AreYouAwake");
+        log.LogInformation("Ping received: {Content}", message.content);
+        activity?.SetTag("message.id", message.Id.ToString());
+        return Task.FromResult($"pong! ping received: {message.content}");
     }
 }

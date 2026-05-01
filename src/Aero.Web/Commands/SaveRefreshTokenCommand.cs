@@ -1,9 +1,9 @@
-using Aero.Models.Entities;
-using Aero.Common.Commands;
+using Aero.Core.Commands;
 using Aero.Core.Entities;
 using Aero.Marten;
+using Aero.Models.Entities;
 
-namespace Aero.Common.Web.Commands;
+namespace Aero.Web.Commands;
 
 // todo - move this to the marten cqs project
 public class SaveRefreshTokenCommand(

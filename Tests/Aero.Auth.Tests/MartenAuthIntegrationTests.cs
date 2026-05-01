@@ -1,15 +1,18 @@
+﻿using TUnit.Core;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Shouldly;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
-public class MartenAuthIntegrationTests(TestWebAppFactory factory) : IClassFixture<TestWebAppFactory>
+[ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
+public class MartenAuthIntegrationTests(TestWebAppFactory factory)
 {
     private readonly HttpClient _client = factory.CreateClient();
 
-    [Fact]
+    [Test]
     public async Task Registration_And_Login_ShouldWork_WithMarten()
     {
         var email = $"marten_test_{Guid.NewGuid()}@example.com";
@@ -38,5 +41,5 @@ public class MartenAuthIntegrationTests(TestWebAppFactory factory) : IClassFixtu
         
         var loginResult = await loginResponse.Content.ReadFromJsonAsync<JsonElement>();
         loginResult.TryGetProperty("accessToken", out _).ShouldBeTrue();
-    }
+}
 }

@@ -1,6 +1,6 @@
-using Aero.Common.Commands;
+using Aero.Core.Commands;
 
-namespace Aero.Common.Patterns;
+namespace Aero.Core.Patterns;
 
 public abstract class AbstractAsyncCommandHandler(ILogger<AbstractAsyncCommandHandler> log) : IAsyncCommand
 {
@@ -18,5 +18,6 @@ public abstract class AbstractAsyncCommandHandler<T, TReturn>(ILogger<AbstractAs
     : IAsyncCommand<T, TReturn>
 {
     private readonly ILogger<AbstractAsyncCommandHandler> log = log;
+
     public abstract Task<TReturn> ExecuteAsync(T param);
 }

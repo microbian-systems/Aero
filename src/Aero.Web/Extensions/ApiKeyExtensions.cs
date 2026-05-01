@@ -1,4 +1,5 @@
-﻿using Aero.Common.Web.Infrastructure;
+﻿using Aero.Auth.Services;
+using Aero.Common.Web.Infrastructure;
 using Aero.Common.Web.Services;
 
 namespace Aero.Common.Web.Extensions;

@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Indexes;
+namespace Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public readonly record struct CompositeKey<TField, TId>(TField Field, TId Id)

@@ -1,13 +1,15 @@
+﻿using TUnit.Core;
 using System.Net;
 using Microsoft.Extensions.Http.Logging;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Logging;
 
 public class LoggingHttpMessageHandlerTests
 {
-    [Fact]
+    [Test]
     public async Task SendAsync_WithSuccessfulRequest_ShouldLogRequestAndResponse()
     {
         // Arrange
@@ -24,7 +26,7 @@ public class LoggingHttpMessageHandlerTests
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        await Assert.That(response.StatusCode).IsEqualTo(HttpStatusCode.OK);
         logger.Received().Log(
             LogLevel.Information,
             Arg.Any<EventId>(),
@@ -39,7 +41,7 @@ public class LoggingHttpMessageHandlerTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
-    [Fact]
+    [Test]
     public async Task SendAsync_WithErrorResponse_ShouldLogWarning()
     {
         // Arrange
@@ -56,7 +58,7 @@ public class LoggingHttpMessageHandlerTests
         var response = await client.SendAsync(request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        await Assert.That(response.StatusCode).IsEqualTo(HttpStatusCode.NotFound);
         logger.Received().Log(
             LogLevel.Warning,
             Arg.Any<EventId>(),
@@ -65,7 +67,7 @@ public class LoggingHttpMessageHandlerTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
-    [Fact]
+    [Test]
     public async Task SendAsync_WithException_ShouldLogError()
     {
         // Arrange
@@ -90,7 +92,7 @@ public class LoggingHttpMessageHandlerTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
-    [Fact]
+    [Test]
     public async Task SendAsync_ShouldRedactAuthorizationHeader()
     {
         // Arrange
@@ -150,6 +152,6 @@ public class LoggingHttpMessageHandlerTests
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             throw _exception;
-        }
+}
     }
 }

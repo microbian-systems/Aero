@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 
-namespace Aero.Common.Web.Infrastructure;
+namespace Aero.Web.Infrastructure;
 
 /// <summary>
 /// Service used to resolve and invalidate API keys.

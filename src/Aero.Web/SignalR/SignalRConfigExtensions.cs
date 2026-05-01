@@ -1,4 +1,4 @@
-namespace Aero.Common.Web.SignalR;
+namespace Aero.Web.SignalR;
 
 public static class SignalRConfigExtensions
 {

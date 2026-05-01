@@ -1,4 +1,5 @@
 using System.Net.Mail;
+using Aero.Core;
 using FluentEmail.Core.Interfaces;
 using FluentEmail.Core.Models;
 using FluentEmail.Smtp;

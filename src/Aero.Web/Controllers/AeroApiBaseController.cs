@@ -1,8 +1,10 @@
 ﻿using System.Net.Mime;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Aero.Core;
+using Aero.Core.Railway;
 using Microsoft.AspNetCore.RateLimiting;
+using static Aero.Core.Railway.Prelude;
 
-namespace Aero.Web.Core.Controllers;
+namespace Aero.Web.Controllers;
 
 [Authorize] 
 [ApiController]
@@ -23,38 +25,38 @@ public abstract class AeroApiBaseController(ILogger<AeroApiBaseController> log)
     : ControllerBase
 {
     protected readonly ILogger<AeroApiBaseController> log = log;
-    protected Guid GetUserID()
+
+    protected Option<long> GetUserId()
     {
-        if (this.User.Claims.FirstOrDefault(x => x.Type == "id") == null)
-            throw new Exception("Invalid User");
-        if (Guid.TryParse(this.User.Claims.FirstOrDefault(x => x.Type == "id").Value, out Guid custid))
-            return custid;
-        throw new Exception("Invalid User Format");
+        var claim = User.Claims.FirstOrDefault(c => c.Type == "id");
+
+        if (claim is null)
+        {
+            log.LogWarning("User does not have a id claim");
+            return None;
+        }
+
+        return long.TryParse(claim.Value, out var id)
+            ? Some(id)
+            : None;
     }
 
-
-    protected virtual InternalErrorResult InternalError() => new();
-
-    protected ActionResult InternalServerError(Exception ex, string message = null)
+    protected IActionResult HandleResult<T>(Result<T, AeroError> result)
     {
-        log.LogError(ex, $"en error has occured: {string.Join(Environment.NewLine, message, ex.Message)}");
-        return new StatusCodeResult(500);
-    }
-}
+        return result switch
+        {
+            Result<T, AeroError>.Ok(var value) => Ok(value),
+            Result<T, AeroError>.Failure(AeroError.NotFound nf) => NotFound(nf.msg),
+            Result<T, AeroError>.Failure(AeroError.Validation v) => BadRequest(v.Errors),
+            Result<T, AeroError>.Failure(AeroError.Unauthorized) => Unauthorized(),
+            Result<T, AeroError>.Failure(AeroError.Conflict c) => Conflict(c.msg),
+            Result<T, AeroError>.Failure(AeroError.BadRequest c) => BadRequest(c.msg),
+            Result<T, AeroError>.Failure(AeroError.NotAllowed c) => Problem(c.msg),
+            Result<T, AeroError>.Failure(AeroError.Forbidden c) => Forbid(),
+            Result<T, AeroError>.Failure(AeroError.Exists c) => Problem(c.msg),
 
-/// <summary>
-/// Represents an <see cref="InternalErrorResult"/> that when
-/// executed will produce an error (500) response.
-/// </summary>
-[DefaultStatusCode(DefaultStatusCode)]
-public class InternalErrorResult : StatusCodeResult
-{
-    private const int DefaultStatusCode = StatusCodes.Status500InternalServerError;
+            _ => Problem("Unexpected error")
+        };
 
-    /// <summary>
-    /// Creates a new <see cref="InternalErrorResult"/> instance.
-    /// </summary>
-    public InternalErrorResult() : base(DefaultStatusCode)
-    {
     }
 }

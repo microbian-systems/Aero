@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
@@ -6,6 +7,7 @@ using Aero.Social.Twitter.Client.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
@@ -25,7 +27,7 @@ public class TwitterClientTimelineTests
 
     //#region GetUserTweetsAsync Tests
 
-    [Fact]
+    [Test]
     public async Task GetUserTweetsAsync_WithValidUserId_ReturnsTweets()
     {
         // Arrange
@@ -72,14 +74,14 @@ public class TwitterClientTimelineTests
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(result.Data);
-        Assert.Equal(2, result.Data.Count);
-        Assert.Equal("1234567890", result.Data[0].Id);
-        Assert.Equal("1234567891", result.Data[1].Id);
+        await Assert.That(result.Data.Count).IsEqualTo(2);
+        await Assert.That(result.Data[0].Id).IsEqualTo("1234567890");
+        await Assert.That(result.Data[1].Id).IsEqualTo("1234567891");
         Assert.NotNull(result.Meta);
-        Assert.Equal("next_page_token", result.Meta.NextToken);
+        await Assert.That(result.Meta.NextToken).IsEqualTo("next_page_token");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserTweetsAsync_WithOptions_IncludesAllParameters()
     {
         // Arrange
@@ -125,18 +127,18 @@ public class TwitterClientTimelineTests
         // Assert
         Assert.NotNull(capturedRequest);
         var query = capturedRequest.RequestUri?.Query;
-        Assert.Contains("max_results=50", query);
-        Assert.Contains("since_id=1000000000", query);
-        Assert.Contains("until_id=9999999999", query);
-        Assert.Contains("start_time=", query);
-        Assert.Contains("end_time=", query);
-        Assert.Contains("pagination_token=b26v89c19zqg8o3f", query);
-        Assert.Contains("exclude=retweets%2Creplies", query);
-        Assert.Contains("tweet.fields=", query);
-        Assert.Contains("expansions=author_id", query);
+        await Assert.That(query).Contains("max_results=50");
+        await Assert.That(query).Contains("since_id=1000000000");
+        await Assert.That(query).Contains("until_id=9999999999");
+        await Assert.That(query).Contains("start_time=");
+        await Assert.That(query).Contains("end_time=");
+        await Assert.That(query).Contains("pagination_token=b26v89c19zqg8o3f");
+        await Assert.That(query).Contains("exclude=retweets%2Creplies");
+        await Assert.That(query).Contains("tweet.fields=");
+        await Assert.That(query).Contains("expansions=author_id");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserTweetsAsync_WithNullUserId_ThrowsArgumentException()
     {
         // Arrange
@@ -146,10 +148,10 @@ public class TwitterClientTimelineTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
             twitterClient.GetUserTweetsAsync(null!));
-        Assert.Contains("User ID cannot be null or empty", exception.Message);
+        await Assert.That(exception.Message).Contains("User ID cannot be null or empty");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserTweetsAsync_WithInvalidMaxResults_ThrowsArgumentException()
     {
         // Arrange
@@ -164,10 +166,10 @@ public class TwitterClientTimelineTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
             twitterClient.GetUserTweetsAsync("9876543210", options));
-        Assert.Contains("MaxResults must be between 5 and 100", exception.Message);
+        await Assert.That(exception.Message).Contains("MaxResults must be between 5 and 100");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserTweetsAsync_WithNotFound_ThrowsTwitterApiException()
     {
         // Arrange
@@ -195,14 +197,14 @@ public class TwitterClientTimelineTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<TwitterApiException>(() =>
             twitterClient.GetUserTweetsAsync("nonexistent"));
-        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+        await Assert.That(exception.StatusCode).IsEqualTo(HttpStatusCode.NotFound);
     }
 
     //#endregion
 
     //#region GetUserMentionsAsync Tests
 
-    [Fact]
+    [Test]
     public async Task GetUserMentionsAsync_WithValidUserId_ReturnsMentions()
     {
         // Arrange
@@ -248,12 +250,12 @@ public class TwitterClientTimelineTests
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(result.Data);
-        Assert.Equal(2, result.Data.Count);
-        Assert.Contains("@testuser", result.Data[0].Text);
-        Assert.Contains("@testuser", result.Data[1].Text);
+        await Assert.That(result.Data.Count).IsEqualTo(2);
+        await Assert.That(result.Data[0].Text).Contains("@testuser");
+        await Assert.That(result.Data[1].Text).Contains("@testuser");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserMentionsAsync_WithOptions_IncludesParameters()
     {
         // Arrange
@@ -293,12 +295,12 @@ public class TwitterClientTimelineTests
         // Assert
         Assert.NotNull(capturedRequest);
         var query = capturedRequest.RequestUri?.Query;
-        Assert.Contains("max_results=25", query);
-        Assert.Contains("pagination_token=test_token", query);
-        Assert.Contains("tweet.fields=public_metrics", query);
+        await Assert.That(query).Contains("max_results=25");
+        await Assert.That(query).Contains("pagination_token=test_token");
+        await Assert.That(query).Contains("tweet.fields=public_metrics");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserMentionsAsync_WithNullUserId_ThrowsArgumentException()
     {
         // Arrange
@@ -308,10 +310,10 @@ public class TwitterClientTimelineTests
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
             twitterClient.GetUserMentionsAsync(null!));
-        Assert.Contains("User ID cannot be null or empty", exception.Message);
+        await Assert.That(exception.Message).Contains("User ID cannot be null or empty");
     }
 
-    [Fact]
+    [Test]
     public async Task GetUserMentionsAsync_WithEmptyResult_ReturnsEmptyList()
     {
         // Arrange
@@ -342,8 +344,8 @@ public class TwitterClientTimelineTests
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(result.Data);
-        Assert.Empty(result.Data);
-        Assert.Equal(0, result.Meta?.ResultCount);
+        await Assert.That(result.Data).IsEmpty();
+        await Assert.That(result.Meta?.ResultCount).IsEqualTo(0);
     }
 
     //#endregion
@@ -360,6 +362,6 @@ public class TwitterClientTimelineTests
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return await _handler(request);
-        }
+}
     }
 }

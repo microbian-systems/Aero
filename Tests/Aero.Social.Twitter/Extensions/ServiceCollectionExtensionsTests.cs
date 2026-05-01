@@ -1,14 +1,16 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
 using Aero.Social.Twitter.Client.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Extensions;
 
 public class ServiceCollectionExtensionsTests
 {
-    [Fact]
-    public void AddTwitterClient_ShouldRegisterServices()
+    [Test]
+    public async Task AddTwitterClient_ShouldRegisterServices()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -23,11 +25,11 @@ public class ServiceCollectionExtensionsTests
         var provider = services.BuildServiceProvider();
         var client = provider.GetService<ITwitterClient>();
         Assert.NotNull(client);
-        Assert.IsType<TwitterClient>(client);
+        await Assert.That(client).IsTypeOf<TwitterClient>();
     }
 
-    [Fact]
-    public void AddTwitterClient_ShouldConfigureOptions()
+    [Test]
+    public async Task AddTwitterClient_ShouldConfigureOptions()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -43,8 +45,8 @@ public class ServiceCollectionExtensionsTests
         // Assert
         var provider = services.BuildServiceProvider();
         var options = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<TwitterClientOptions>>().Value;
-        Assert.Equal("test-key", options.ConsumerKey);
-        Assert.Equal("test-secret", options.ConsumerSecret);
-        Assert.Equal(5, options.MaxRetries);
-    }
+        await Assert.That(options.ConsumerKey).IsEqualTo("test-key");
+        await Assert.That(options.ConsumerSecret).IsEqualTo("test-secret");
+        await Assert.That(options.MaxRetries).IsEqualTo(5);
+}
 }

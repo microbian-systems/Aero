@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using FluentAssertions;
 using LanguageExt;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,7 +8,6 @@ using Solnet.Rpc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
 using System.Threading;
 using Electra.Crypto.Solana.Extensions;
 
@@ -69,7 +69,7 @@ public class E2EWalletSwapTests : IAsyncLifetime
         _serviceProvider?.GetService<IDisposable>()?.Dispose();
     }
 
-    [Fact]
+    [Test]
     public async Task E2E_CreateTwoWallets_CheckBalances_TransferSol()
     {
         // Step 1: Create two wallets with seed phrases
@@ -171,7 +171,7 @@ public class E2EWalletSwapTests : IAsyncLifetime
         retrievedWallet2.IfSome(w => w.Name.Should().Be(TestWallet2Name));
     }
 
-    [Fact]
+    [Test]
     public async Task E2E_CreateWallet_GetSwapQuote_ValidateSwapPreparation()
     {
         // Step 1: Create a wallet for swap testing
@@ -253,7 +253,7 @@ public class E2EWalletSwapTests : IAsyncLifetime
         await _walletManager.DeleteWalletAsync("SwapE2EWallet");
     }
 
-    [Fact]
+    [Test]
     public async Task E2E_BurnerWalletWorkflow_CreateUseAndBurn()
     {
         // Step 1: Create a burner wallet with seed phrase
@@ -302,7 +302,7 @@ public class E2EWalletSwapTests : IAsyncLifetime
         postBurnBalance.IsNone.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task E2E_PortfolioManagement_MultipleWalletsAndTokens()
     {
         // Step 1: Create multiple wallets
@@ -368,7 +368,7 @@ public class E2EWalletSwapTests : IAsyncLifetime
         await _walletManager.DeleteWalletAsync("PortfolioBurner");
     }
 
-    [Fact]
+    [Test]
     public async Task E2E_WalletSecurity_SigningAndVerification()
     {
         // Step 1: Create a wallet for security testing
@@ -384,7 +384,7 @@ public class E2EWalletSwapTests : IAsyncLifetime
             "Hello, Solana!",
             "Transaction data: SOL transfer 0.1",
             "Swap authorization: SOL to USDC",
-            "🚀 Unicode test message",
+            "ðŸš€ Unicode test message",
             ""
         };
 
@@ -427,7 +427,7 @@ public class E2EWalletSwapTests : IAsyncLifetime
         await _walletManager.DeleteWalletAsync("SecurityTestWallet");
     }
 
-    [Fact]
+    [Test]
     public async Task E2E_ServiceIntegration_DependencyInjection()
     {
         // Verify all services are properly registered and working
@@ -459,5 +459,5 @@ public class E2EWalletSwapTests : IAsyncLifetime
         testWallet.IsSome.Should().BeTrue();
 
         await walletManager.DeleteWalletAsync("DITestWallet");
-    }
+}
 }

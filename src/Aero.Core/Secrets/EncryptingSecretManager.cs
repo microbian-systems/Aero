@@ -1,6 +1,6 @@
 ﻿using Aero.Core.Encryption;
 
-namespace Aero.Core.Algorithms;
+namespace Aero.Core.Secrets;
 
 public sealed class EncryptingSecretManager(
     ISecretManager manager,

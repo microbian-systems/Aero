@@ -1,4 +1,4 @@
-namespace Aero.Common.Patterns;
+namespace Aero.Core.Patterns;
 
 /// <summary>
 /// Represents a Query Request in a CQS model

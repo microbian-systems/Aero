@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,7 @@ namespace Aero.DataStructures.Tests;
 
 public class TreapTests
 {
-    [Fact]
+    [Test]
     public void Insert_And_Maintains_Heap_Property()
     {
         // Arrange
@@ -38,6 +39,6 @@ public class TreapTests
         foreach (var val in GetInorder((TreapNode<int>)node.Right))
         {
             yield return val;
-        }
+}
     }
 }

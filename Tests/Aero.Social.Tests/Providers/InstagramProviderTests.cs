@@ -1,4 +1,7 @@
+﻿using TUnit.Core;
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -21,7 +24,7 @@ public class InstagramProviderTests : ProviderTestBase
         return new InstagramProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -32,7 +35,7 @@ public class InstagramProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(200);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn2200()
     {
         var provider = CreateProvider();
@@ -40,17 +43,19 @@ public class InstagramProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(2200);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
         
-        var result = await provider.GenerateAuthUrlAsync();
-        
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
+
         result.Url.ShouldContain("facebook.com");
         result.Url.ShouldContain("client_id=test_app_id");
         result.Url.ShouldContain("redirect_uri=");
         result.Url.ShouldContain("scope=");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

@@ -1,6 +1,6 @@
-using Aero.Common.Commands;
+using Aero.Core.Commands;
 
-namespace Aero.Common.Patterns;
+namespace Aero.Core.Patterns;
 
 public interface IDecorator : ICommand{}
 public interface IDecorator<T> : ICommand<T>{}

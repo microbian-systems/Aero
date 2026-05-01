@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.Core;
 using Aero.Models.Entities;
 using FakeItEasy;
@@ -18,7 +19,7 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         A.CallTo(() => _loggerFactory.CreateLogger(A<string>._)).Returns(A.Fake<ILogger>());
     }
 
-    [Fact]
+    [Test]
     public async Task SaveChangesAsync_Should_Return_Change_Count()
     {
         // Arrange
@@ -35,7 +36,7 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         count.ShouldBeGreaterThan(0);
     }
 
-    [Fact]
+    [Test]
     public void Users_Property_Should_Be_Lazy_Initialized()
     {
         // Arrange
@@ -52,7 +53,7 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         users1.ShouldBeSameAs(users2);
     }
 
-    [Fact]
+    [Test]
     public async Task SaveChangesAsync_Should_Handle_Exceptions()
     {
         // Arrange
@@ -71,7 +72,7 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         // Note: Generic loggers are tricky to verify with A.CallTo, but we can verify it didn't crash.
     }
 
-    [Fact]
+    [Test]
     public async Task Find_Method_Locates_Users_Should_Success()
     {
         var session = DocumentStore.LightweightSession();
@@ -101,7 +102,7 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         searchData.Count().ShouldBeGreaterThanOrEqualTo(2);
     }
 
-    [Fact]
+    [Test]
     public async Task RollbackTransactionAsync_Should_Clear_Session()
     {
         // Arrange
@@ -120,5 +121,5 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         session.Advanced.HasChanged(user).ShouldBeFalse();
         var count = await uow.SaveChangesAsync();
         count.ShouldBe(0);
-    }
+}
 }

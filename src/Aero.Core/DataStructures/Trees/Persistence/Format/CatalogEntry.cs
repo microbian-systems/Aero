@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Format;
+namespace Aero.Core.DataStructures.Trees.Persistence.Format;
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct CatalogEntry

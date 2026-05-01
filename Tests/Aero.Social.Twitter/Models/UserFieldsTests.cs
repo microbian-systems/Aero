@@ -1,11 +1,13 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class UserFieldsTests
 {
-    [Fact]
-    public void UserFields_ToApiString_WithSingleField_ReturnsCorrectString()
+    [Test]
+    public async Task UserFields_ToApiString_WithSingleField_ReturnsCorrectString()
     {
         // Arrange
         var fields = UserFields.Description;
@@ -14,11 +16,11 @@ public class UserFieldsTests
         var result = fields.ToApiString();
 
         // Assert
-        Assert.Equal("description", result);
+        await Assert.That(result).IsEqualTo("description");
     }
 
-    [Fact]
-    public void UserFields_ToApiString_WithMultipleFields_ReturnsCommaSeparatedString()
+    [Test]
+    public async Task UserFields_ToApiString_WithMultipleFields_ReturnsCommaSeparatedString()
     {
         // Arrange
         var fields = UserFields.Description | UserFields.Location | UserFields.Verified;
@@ -27,14 +29,14 @@ public class UserFieldsTests
         var result = fields.ToApiString();
 
         // Assert
-        Assert.Contains("description", result);
-        Assert.Contains("location", result);
-        Assert.Contains("verified", result);
-        Assert.Contains(",", result);
+        await Assert.That(result).Contains("description");
+        await Assert.That(result).Contains("location");
+        await Assert.That(result).Contains("verified");
+        await Assert.That(result).Contains(",");
     }
 
-    [Fact]
-    public void UserFields_ToApiString_WithAllFields_ReturnsAllFieldNames()
+    [Test]
+    public async Task UserFields_ToApiString_WithAllFields_ReturnsAllFieldNames()
     {
         // Arrange
         var fields = UserFields.All;
@@ -43,16 +45,16 @@ public class UserFieldsTests
         var result = fields.ToApiString();
 
         // Assert
-        Assert.Contains("created_at", result);
-        Assert.Contains("description", result);
-        Assert.Contains("location", result);
-        Assert.Contains("verified", result);
-        Assert.Contains("public_metrics", result);
-        Assert.Contains("profile_image_url", result);
+        await Assert.That(result).Contains("created_at");
+        await Assert.That(result).Contains("description");
+        await Assert.That(result).Contains("location");
+        await Assert.That(result).Contains("verified");
+        await Assert.That(result).Contains("public_metrics");
+        await Assert.That(result).Contains("profile_image_url");
     }
 
-    [Fact]
-    public void UserFields_ToApiString_WithNone_ReturnsEmptyString()
+    [Test]
+    public async Task UserFields_ToApiString_WithNone_ReturnsEmptyString()
     {
         // Arrange
         var fields = UserFields.None;
@@ -61,24 +63,24 @@ public class UserFieldsTests
         var result = fields.ToApiString();
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        await Assert.That(result).IsEqualTo(string.Empty);
     }
 
-    [Theory]
-    [InlineData(UserFields.CreatedAt, "created_at")]
-    [InlineData(UserFields.Description, "description")]
-    [InlineData(UserFields.Location, "location")]
-    [InlineData(UserFields.Verified, "verified")]
-    [InlineData(UserFields.PublicMetrics, "public_metrics")]
-    [InlineData(UserFields.ProfileImageUrl, "profile_image_url")]
-    [InlineData(UserFields.Url, "url")]
-    [InlineData(UserFields.Username, "username")]
-    public void UserFields_ToApiString_IndividualFields_ReturnCorrectValues(UserFields field, string expected)
+    [Test]
+    [Arguments(UserFields.CreatedAt, "created_at")]
+    [Arguments(UserFields.Description, "description")]
+    [Arguments(UserFields.Location, "location")]
+    [Arguments(UserFields.Verified, "verified")]
+    [Arguments(UserFields.PublicMetrics, "public_metrics")]
+    [Arguments(UserFields.ProfileImageUrl, "profile_image_url")]
+    [Arguments(UserFields.Url, "url")]
+    [Arguments(UserFields.Username, "username")]
+    public async Task UserFields_ToApiString_IndividualFields_ReturnCorrectValues(UserFields field, string expected)
     {
         // Act
         var result = field.ToApiString();
 
         // Assert
-        Assert.Equal(expected, result);
-    }
+        await Assert.That(result).IsEqualTo(expected);
+}
 }

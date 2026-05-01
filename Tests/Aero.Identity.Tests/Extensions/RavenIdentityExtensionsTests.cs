@@ -1,15 +1,15 @@
+﻿using TUnit.Core;
 using Aero.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Marten;
-using Xunit;
 
 namespace Aero.Identity.Tests.Extensions;
 
 public class AeroIdentityExtensionsTests
 {
-    [Fact]
+    [Test]
     public void AddAeroDbIdentity_RegistersStores()
     {
         // Arrange
@@ -35,7 +35,7 @@ public class AeroIdentityExtensionsTests
         Assert.IsType<AeroRoleStore<AeroRole>>(roleStore);
     }
 
-    [Fact]
+    [Test]
     public void AddAeroDbIdentity_WithoutRoles_RegistersUserStoreOnly()
     {
         // Arrange
@@ -60,7 +60,7 @@ public class AeroIdentityExtensionsTests
     }
 
     /*
-    [Fact]
+    [Test]
     public void AddAeroAeroDbIdentity_RegistersEverything()
     {
         // Arrange
@@ -86,6 +86,6 @@ public class AeroIdentityExtensionsTests
 
         // Verify module registration
         Assert.True(App.Modules.Any(m => m.Instance is AeroIdentityModule));
-    }
+}
     */
 }

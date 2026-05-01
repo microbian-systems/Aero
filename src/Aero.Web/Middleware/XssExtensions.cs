@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Antiforgery;
 
-namespace Aero.Common.Web.Middleware;
+namespace Aero.Web.Middleware;
 
 // todo - verify the XssExtensions are obsoleted by asp.net core antiforgery options
 public static class WebSecurityExtensions

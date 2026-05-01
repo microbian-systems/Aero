@@ -1,7 +1,7 @@
 ﻿using Aero.Models;
 using Aero.Models.Entities;
 
-namespace Aero.Common.Web.Services;
+namespace Aero.Web.Services;
 
 public interface IApiService<T, TKey> //where T : IAuthRequestModel
     where TKey : IEquatable<TKey>, IComparable<TKey>

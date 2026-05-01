@@ -1,12 +1,12 @@
-namespace Aero.Common.Commands;
+namespace Aero.Core.Commands;
+
+
 
 /// <summary>
 /// Command pattern to be used as a base interface for specific ICommandX interfaces (see remarks)
 /// </summary>
-/// <remarks>example usage: ISpecificCommand : ICommand.
-/// can be combined with other generic ICommands to make it more robust
-/// </remarks>
-public interface IAsyncCommand
+/// <remarks>compatible with orleans serialization</remarks>
+public interface IAsyncCommand 
 {
     Task ExecuteAsync();
 }
@@ -15,8 +15,8 @@ public interface IAsyncCommand
 /// 
 /// </summary>
 /// <typeparam name="T">Any type to be based to Execute method</typeparam>
-/// <remarks>can make the parameter optional to have it injected</remarks>
-public interface IAsyncCommand<in T>
+/// <remarks>compatible with orleans serialization</remarks>
+public interface IAsyncCommand<in T> 
 {
     Task ExecuteAsync(T parameter);
 }
@@ -26,8 +26,8 @@ public interface IAsyncCommand<in T>
 /// </summary>
 /// <typeparam name="T">Any type to be based to Execute method</typeparam>
 /// <typeparam name="TReturn">Expected return value of type TReturn</typeparam>
-/// <remarks>can make the parameter optional to have it injected</remarks>
-public interface IAsyncCommand<in T, TReturn>
+/// <remarks>compatible with orleans serialization</remarks>
+public interface IAsyncCommand<in T, TReturn> 
 {
     Task<TReturn> ExecuteAsync(T parameter);
 }
@@ -37,7 +37,13 @@ public interface IAsyncCommand<in T, TReturn>
 //     void Execute(T param);
 // }
 
-public interface ICommand<in T, out TReturn>
+/// <summary>
+/// 
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <typeparam name="TReturn"></typeparam>
+/// <remarks>compatible with orleans serialization</remarks>
+public interface ICommand<in T, out TReturn> 
 {
     TReturn Execute(T param);
 }

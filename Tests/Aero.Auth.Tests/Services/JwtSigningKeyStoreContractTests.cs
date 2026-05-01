@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -26,7 +27,7 @@ public class JwtSigningKeyStoreContractTests
 
     //#region Interface Contract Tests
 
-    [Fact]
+    [Test]
     public void JwtSigningKeyStore_ImplementsInterface()
     {
         // Arrange & Act
@@ -37,7 +38,7 @@ public class JwtSigningKeyStoreContractTests
         store.ShouldBeAssignableTo<IJwtSigningKeyStore>();
     }
 
-    [Fact]
+    [Test]
     public void IJwtSigningKeyStore_HasRequiredMethods()
     {
         // Arrange
@@ -56,7 +57,7 @@ public class JwtSigningKeyStoreContractTests
         methods.ShouldContain(m => m.Name == "GetKeyByIdAsync");
     }
 
-    [Fact]
+    [Test]
     public void GetSigningCredentials_ShouldReturnCorrectType()
     {
         // Act
@@ -72,7 +73,7 @@ public class JwtSigningKeyStoreContractTests
 
     //#region Cache Behavior Tests
 
-    [Fact]
+    [Test]
     public void MemoryCache_CanStoreAndRetrieveValues()
     {
         // Arrange
@@ -88,7 +89,7 @@ public class JwtSigningKeyStoreContractTests
         value.ShouldBe(cacheValue);
     }
 
-    [Fact]
+    [Test]
     public void MemoryCache_CanRemoveValues()
     {
         // Arrange
@@ -107,7 +108,7 @@ public class JwtSigningKeyStoreContractTests
 
     //#region Dependency Injection Tests
 
-    [Fact]
+    [Test]
     public void Constructor_WithValidDependencies_ShouldNotThrow()
     {
         // Act
@@ -117,7 +118,7 @@ public class JwtSigningKeyStoreContractTests
         act.ShouldNotThrow();
     }
 
-    [Fact]
+    [Test]
     public void Constructor_WithNullPersistence_ShouldThrowArgumentNullException()
     {
         // Act
@@ -127,7 +128,7 @@ public class JwtSigningKeyStoreContractTests
         act.ShouldThrow<ArgumentNullException>();
     }
 
-    [Fact]
+    [Test]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
     {
         // Act
@@ -137,7 +138,7 @@ public class JwtSigningKeyStoreContractTests
         act.ShouldThrow<ArgumentNullException>();
     }
 
-    [Fact]
+    [Test]
     public void Constructor_WithNullCache_ShouldThrowArgumentNullException()
     {
         // Act
@@ -151,7 +152,7 @@ public class JwtSigningKeyStoreContractTests
 
     //#region Algorithm Tests
 
-    [Fact]
+    [Test]
     public void SigningKey_ShouldUseHmacSha256Algorithm()
     {
         // Act
@@ -159,7 +160,7 @@ public class JwtSigningKeyStoreContractTests
 
         // Assert
         algorithm.ShouldBe("HS256");
-    }
+}
 
     //#endregion
 }

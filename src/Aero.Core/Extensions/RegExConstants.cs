@@ -1,4 +1,4 @@
-namespace Aero.Common.Constants;
+namespace Aero.Core.Extensions;
 
 public static class RegExConstants
 {

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.ErrorPages;
 using Bunit;
 using Aero.MerakiUI.ErrorPages;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.ErrorPages;
 
 public class ErrorPagesTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void Simple404_ShouldRender()
     {
         var cut = Render<Simple404>(parameters => parameters
@@ -16,7 +17,7 @@ public class ErrorPagesTests : BunitContext
         Assert.Contains("Page Not Found", cut.Markup);
     }
 
-    [Fact]
+    [Test]
     public void Centered404_ShouldRender()
     {
         var cut = Render<Centered404>(parameters => parameters
@@ -26,7 +27,7 @@ public class ErrorPagesTests : BunitContext
         Assert.Contains("Centered Not Found", cut.Markup);
     }
 
-    [Fact]
+    [Test]
     public void Illustration404_ShouldRender()
     {
         var cut = Render<Illustration404>(parameters => parameters
@@ -36,7 +37,7 @@ public class ErrorPagesTests : BunitContext
         Assert.Contains("src=\"test.svg\"", cut.Markup);
     }
 
-    [Fact]
+    [Test]
     public void Image404_ShouldRender()
     {
         var cut = Render<Image404>(parameters => parameters
@@ -44,5 +45,5 @@ public class ErrorPagesTests : BunitContext
         );
 
         Assert.Contains("src=\"test.jpg\"", cut.Markup);
-    }
+}
 }

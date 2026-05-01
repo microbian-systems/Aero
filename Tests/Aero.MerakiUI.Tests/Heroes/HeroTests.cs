@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Heroes;
 using Bunit;
 using Aero.MerakiUI.Heroes;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Heroes;
 
 public class HeroTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void HeroWithImage_ShouldRenderCorrectStructure()
     {
         var cut = Render<HeroWithImage>(parameters => parameters
@@ -24,7 +25,7 @@ public class HeroTests : BunitContext
         Assert.Equal("https://example.com/hero.jpg", img.GetAttribute("src"));
     }
 
-    [Fact]
+    [Test]
     public void HeroWithForm_ShouldRenderCorrectStructure()
     {
         var cut = Render<HeroWithForm>(parameters => parameters
@@ -38,5 +39,5 @@ public class HeroTests : BunitContext
         // Verify Form input existence
         var input = cut.Find("input");
         Assert.NotNull(input);
-    }
+}
 }

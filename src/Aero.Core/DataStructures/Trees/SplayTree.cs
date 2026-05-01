@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees;
+namespace Aero.Core.DataStructures.Trees;
 
 /// <summary>
 /// Represents a Splay Tree, a self-balancing binary search tree.

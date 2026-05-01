@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Interfaces;
+namespace Aero.Core.DataStructures.Trees.Persistence.Interfaces;
 
 /// <summary>
 /// Interface for double-ended priority tree structures that support access to both

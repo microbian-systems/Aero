@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using FluentAssertions;
 using LanguageExt;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,6 @@ using Solnet.Rpc.Types;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
 using Solnet.Programs.Utilities;
 using System.Threading;
 using Solnet.Wallet;
@@ -56,7 +56,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    [Fact]
+    [Test]
     public async Task CreateTwoWallets_ShouldCreateSuccessfully()
     {
         // Arrange & Act
@@ -84,7 +84,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task ImportTestWallets_ShouldImportSuccessfully()
     {
         // Act
@@ -110,7 +110,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task CheckWalletBalances_ShouldReturnBalanceInfo()
     {
         // Arrange
@@ -134,7 +134,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task SendSol_BetweenWallets_ShouldTransferSuccessfully()
     {
         // Arrange
@@ -192,7 +192,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         senderFinalBalance.IfNone(0).Should().BeLessThan(senderInitialBalance.IfNone(0));
     }
 
-    [Fact]
+    [Test]
     public async Task RequestTestnetAirdrop_ShouldReceiveSol()
     {
         // Arrange
@@ -218,7 +218,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         finalBalance.IfNone(0).Should().BeGreaterThan(initialBalance.IfNone(0));
     }
 
-    [Fact]
+    [Test]
     public async Task CreateAndFundMultipleWallets_ShouldManagePortfolio()
     {
         // Arrange & Act
@@ -247,7 +247,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         totalValue.Should().BeGreaterThanOrEqualTo(0);
     }
 
-    [Fact]
+    [Test]
     public async Task SwapSolToUsdc_ShouldExecuteSuccessfully()
     {
         // Arrange
@@ -301,7 +301,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task SimulateTokenSwapFlow_ShouldPrepareSwapParameters()
     {
         // Arrange
@@ -345,7 +345,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task CreateAssociatedTokenAccounts_ShouldPrepareForTokenOperations()
     {
         // Arrange
@@ -376,7 +376,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task SendTokenBetweenWallets_ShouldTransferTokenSuccessfully()
     {
         // Arrange
@@ -427,7 +427,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task GetTokenPricesAndValues_ShouldRetrievePriceInformation()
     {
         // Arrange
@@ -464,7 +464,7 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Fact]
+    [Test]
     public async Task BurnerWalletLifecycle_ShouldManageTemporaryWallet()
     {
         // Arrange & Act
@@ -494,5 +494,5 @@ public class SolanaTestnetIntegrationTests : IAsyncLifetime
             burnResult.Should().BeTrue();
             burnerWallet.IsLocked.Should().BeTrue();
         });
-    }
+}
 }

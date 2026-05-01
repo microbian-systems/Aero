@@ -1,13 +1,14 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class ExpansionResolverTests
 {
     //#region ResolveAuthor Tests
-
-    [Fact]
-    public void ResolveAuthor_WithValidAuthorId_ReturnsUser()
+    [Test]
+    public async Task ResolveAuthor_WithValidAuthorId_ReturnsUser()
     {
         // Arrange
         var user = new User { Id = "123", Username = "testuser", Name = "Test User" };
@@ -19,11 +20,11 @@ public class ExpansionResolverTests
 
         // Assert
         Assert.NotNull(author);
-        Assert.Equal("testuser", author.Username);
-        Assert.Equal("Test User", author.Name);
+        await Assert.That(author.Username).IsEqualTo("testuser");
+        await Assert.That(author.Name).IsEqualTo("Test User");
     }
 
-    [Fact]
+    [Test]
     public void ResolveAuthor_WithNullTweet_ReturnsNull()
     {
         // Arrange
@@ -37,7 +38,7 @@ public class ExpansionResolverTests
         Assert.Null(author);
     }
 
-    [Fact]
+    [Test]
     public void ResolveAuthor_WithNullAuthorId_ReturnsNull()
     {
         // Arrange
@@ -51,7 +52,7 @@ public class ExpansionResolverTests
         Assert.Null(author);
     }
 
-    [Fact]
+    [Test]
     public void ResolveAuthor_WithNullIncludes_ReturnsNull()
     {
         // Arrange
@@ -65,7 +66,7 @@ public class ExpansionResolverTests
         Assert.Null(author);
     }
 
-    [Fact]
+    [Test]
     public void ResolveAuthor_WithEmptyUsersList_ReturnsNull()
     {
         // Arrange
@@ -79,7 +80,7 @@ public class ExpansionResolverTests
         Assert.Null(author);
     }
 
-    [Fact]
+    [Test]
     public void ResolveAuthor_WithUserNotFound_ReturnsNull()
     {
         // Arrange
@@ -97,8 +98,8 @@ public class ExpansionResolverTests
 
     //#region ResolveUser Tests
 
-    [Fact]
-    public void ResolveUser_WithValidUserId_ReturnsUser()
+    [Test]
+    public async Task ResolveUser_WithValidUserId_ReturnsUser()
     {
         // Arrange
         var includes = new Includes { Users = new List<User> { new User { Id = "123", Username = "testuser" } } };
@@ -108,10 +109,10 @@ public class ExpansionResolverTests
 
         // Assert
         Assert.NotNull(user);
-        Assert.Equal("testuser", user.Username);
+        await Assert.That(user.Username).IsEqualTo("testuser");
     }
 
-    [Fact]
+    [Test]
     public void ResolveUser_WithNullIncludes_ReturnsNull()
     {
         // Arrange
@@ -124,7 +125,7 @@ public class ExpansionResolverTests
         Assert.Null(user);
     }
 
-    [Fact]
+    [Test]
     public void ResolveUser_WithNullUserId_ReturnsNull()
     {
         // Arrange
@@ -137,7 +138,7 @@ public class ExpansionResolverTests
         Assert.Null(user);
     }
 
-    [Fact]
+    [Test]
     public void ResolveUser_WithEmptyUserId_ReturnsNull()
     {
         // Arrange
@@ -154,8 +155,8 @@ public class ExpansionResolverTests
 
     //#region ResolveTweet Tests
 
-    [Fact]
-    public void ResolveTweet_WithValidTweetId_ReturnsTweet()
+    [Test]
+    public async Task ResolveTweet_WithValidTweetId_ReturnsTweet()
     {
         // Arrange
         var includes = new Includes { Tweets = new List<Tweet> { new Tweet { Id = "456", Text = "Original tweet" } } };
@@ -165,10 +166,10 @@ public class ExpansionResolverTests
 
         // Assert
         Assert.NotNull(tweet);
-        Assert.Equal("Original tweet", tweet.Text);
+        await Assert.That(tweet.Text).IsEqualTo("Original tweet");
     }
 
-    [Fact]
+    [Test]
     public void ResolveTweet_WithNullIncludes_ReturnsNull()
     {
         // Arrange
@@ -181,7 +182,7 @@ public class ExpansionResolverTests
         Assert.Null(tweet);
     }
 
-    [Fact]
+    [Test]
     public void ResolveTweet_WithTweetNotFound_ReturnsNull()
     {
         // Arrange
@@ -198,8 +199,8 @@ public class ExpansionResolverTests
 
     //#region ResolveMedia (Single) Tests
 
-    [Fact]
-    public void ResolveMedia_WithValidMediaKey_ReturnsMedia()
+    [Test]
+    public async Task ResolveMedia_WithValidMediaKey_ReturnsMedia()
     {
         // Arrange
         var includes = new Includes { Media = new List<Media> { new Media { MediaKey = "media_1", Type = "photo" } } };
@@ -209,10 +210,10 @@ public class ExpansionResolverTests
 
         // Assert
         Assert.NotNull(media);
-        Assert.Equal("photo", media.Type);
+        await Assert.That(media.Type).IsEqualTo("photo");
     }
 
-    [Fact]
+    [Test]
     public void ResolveMedia_WithNullMediaKey_ReturnsNull()
     {
         // Arrange
@@ -225,7 +226,7 @@ public class ExpansionResolverTests
         Assert.Null(media);
     }
 
-    [Fact]
+    [Test]
     public void ResolveMedia_WithMediaNotFound_ReturnsNull()
     {
         // Arrange
@@ -242,8 +243,8 @@ public class ExpansionResolverTests
 
     //#region ResolveMedia (Multiple) Tests
 
-    [Fact]
-    public void ResolveMedia_WithMultipleKeys_ReturnsMatchingMedia()
+    [Test]
+    public async Task ResolveMedia_WithMultipleKeys_ReturnsMatchingMedia()
     {
         // Arrange
         var includes = new Includes
@@ -261,13 +262,13 @@ public class ExpansionResolverTests
         var media = includes.ResolveMedia(keys);
 
         // Assert
-        Assert.Equal(2, media.Count);
-        Assert.Contains(media, m => m.MediaKey == "media_1");
-        Assert.Contains(media, m => m.MediaKey == "media_3");
+        await Assert.That(media.Count).IsEqualTo(2);
+        await Assert.That(media).Any(m => m.MediaKey == "media_1");
+        await Assert.That(media).Any(m => m.MediaKey == "media_3");
     }
 
-    [Fact]
-    public void ResolveMedia_WithEmptyKeys_ReturnsEmptyList()
+    [Test]
+    public async Task ResolveMedia_WithEmptyKeys_ReturnsEmptyList()
     {
         // Arrange
         var includes = new Includes { Media = new List<Media> { new Media { MediaKey = "media_1" } } };
@@ -276,11 +277,11 @@ public class ExpansionResolverTests
         var media = includes.ResolveMedia(new List<string>());
 
         // Assert
-        Assert.Empty(media);
+        await Assert.That(media).IsEmpty();
     }
 
-    [Fact]
-    public void ResolveMedia_WithNullKeys_ReturnsEmptyList()
+    [Test]
+    public async Task ResolveMedia_WithNullKeys_ReturnsEmptyList()
     {
         // Arrange
         var includes = new Includes { Media = new List<Media> { new Media { MediaKey = "media_1" } } };
@@ -289,11 +290,11 @@ public class ExpansionResolverTests
         var media = includes.ResolveMedia((IEnumerable<string>?)null);
 
         // Assert
-        Assert.Empty(media);
+        await Assert.That(media).IsEmpty();
     }
 
-    [Fact]
-    public void ResolveMedia_WithPartialMatch_ReturnsMatchedOnly()
+    [Test]
+    public async Task ResolveMedia_WithPartialMatch_ReturnsMatchedOnly()
     {
         // Arrange
         var includes = new Includes
@@ -310,16 +311,16 @@ public class ExpansionResolverTests
         var media = includes.ResolveMedia(keys);
 
         // Assert
-        Assert.Single(media);
-        Assert.Equal("media_1", media[0].MediaKey);
+        await Assert.That(media).HasSingleItem();
+        await Assert.That(media[0].MediaKey).IsEqualTo("media_1");
     }
 
     //#endregion
 
     //#region ResolveUsersByUsername Tests
 
-    [Fact]
-    public void ResolveUsersByUsername_WithValidUsernames_ReturnsUsers()
+    [Test]
+    public async Task ResolveUsersByUsername_WithValidUsernames_ReturnsUsers()
     {
         // Arrange
         var includes = new Includes
@@ -337,13 +338,13 @@ public class ExpansionResolverTests
         var users = includes.ResolveUsersByUsername(usernames);
 
         // Assert
-        Assert.Equal(2, users.Count);
-        Assert.Contains(users, u => u.Username == "user1");
-        Assert.Contains(users, u => u.Username == "user3");
+        await Assert.That(users.Count).IsEqualTo(2);
+        await Assert.That(users).Any(u => u.Username == "user1");
+        await Assert.That(users).Any(u => u.Username == "user3");
     }
 
-    [Fact]
-    public void ResolveUsersByUsername_WithNullUsernames_ReturnsEmptyList()
+    [Test]
+    public async Task ResolveUsersByUsername_WithNullUsernames_ReturnsEmptyList()
     {
         // Arrange
         var includes = new Includes { Users = new List<User> { new User { Username = "user1" } } };
@@ -352,11 +353,11 @@ public class ExpansionResolverTests
         var users = includes.ResolveUsersByUsername(null);
 
         // Assert
-        Assert.Empty(users);
+        await Assert.That(users).IsEmpty();
     }
 
-    [Fact]
-    public void ResolveUsersByUsername_WithNullIncludes_ReturnsEmptyList()
+    [Test]
+    public async Task ResolveUsersByUsername_WithNullIncludes_ReturnsEmptyList()
     {
         // Arrange
         Includes? includes = null;
@@ -365,11 +366,11 @@ public class ExpansionResolverTests
         var users = includes.ResolveUsersByUsername(new[] { "user1" });
 
         // Assert
-        Assert.Empty(users);
+        await Assert.That(users).IsEmpty();
     }
 
-    [Fact]
-    public void ResolveUsersByUsername_CaseSensitive_MatchesExactCase()
+    [Test]
+    public async Task ResolveUsersByUsername_CaseSensitive_MatchesExactCase()
     {
         // Arrange
         var includes = new Includes
@@ -386,15 +387,15 @@ public class ExpansionResolverTests
         var users = includes.ResolveUsersByUsername(usernames);
 
         // Assert
-        Assert.Empty(users); // Should not match "User1" due to case sensitivity
+        await Assert.That(users).IsEmpty(); // Should not match "User1" due to case sensitivity
     }
 
     //#endregion
 
     //#region Integration Tests
 
-    [Fact]
-    public void ExpansionResolver_ResolvesCompleteExpansionScenario()
+    [Test]
+    public async Task ExpansionResolver_ResolvesCompleteExpansionScenario()
     {
         // Arrange - simulate a complete response with expansions
         var author = new User { Id = "author_1", Username = "author", Name = "The Author" };
@@ -424,12 +425,12 @@ public class ExpansionResolverTests
 
         // Assert
         Assert.NotNull(resolvedAuthor);
-        Assert.Equal("author", resolvedAuthor.Username);
+        await Assert.That(resolvedAuthor.Username).IsEqualTo("author");
         Assert.NotNull(resolvedTweet);
-        Assert.Equal("Original tweet", resolvedTweet.Text);
+        await Assert.That(resolvedTweet.Text).IsEqualTo("Original tweet");
         Assert.NotNull(resolvedMedia);
-        Assert.Equal(2, resolvedUsers.Count);
-    }
+        await Assert.That(resolvedUsers.Count).IsEqualTo(2);
+}
 
     //#endregion
 }

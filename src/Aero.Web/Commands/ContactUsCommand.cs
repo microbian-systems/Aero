@@ -1,12 +1,12 @@
-using Aero.Models.Entities;
-using Aero.Models;
-using Aero.Common.Commands;
+using Aero.Core.Commands;
 using Aero.Marten;
+using Aero.Models;
+using Aero.Models.Entities;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using ILogger = Serilog.ILogger;
 using WebResponse = Aero.Models.WebResponse;
 
-namespace Aero.Common.Web.Commands;
+namespace Aero.Web.Commands;
 
 public class ContactUsCommand(IDynamicMartenRepository db, IEmailSender emailer, ILogger log)
     : IAsyncCommand<ContactUsModel, WebResponse>

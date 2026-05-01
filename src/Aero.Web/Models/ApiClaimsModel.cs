@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Aero.Common.Web.Models;
+namespace Aero.Web.Models;
 
 public record ApiClaimsModel
 {

@@ -1,3 +1,5 @@
+using Aero.Core;
+
 namespace Aero.Services;
 
 public interface IJwtTokenBuilder
@@ -14,6 +16,13 @@ public interface IJwtTokenBuilder
     JwtTokenBuilder AddExpiry(TimeSpan expiry);
     JwtToken Build();
 }
+
+public sealed class JwtToken(JwtSecurityToken token)
+{
+    public DateTime ValidTo => token.ValidTo;
+    public string Value => new JwtSecurityTokenHandler().WriteToken(token);
+}
+
 
 public sealed class JwtTokenBuilder(IOptions<AppSettings> settings) : IJwtTokenBuilder
 {

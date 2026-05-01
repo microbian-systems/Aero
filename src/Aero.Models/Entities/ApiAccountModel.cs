@@ -13,9 +13,7 @@ public class ApiAccountModel : Entity
     [MaxLength(1024)]
     public string RefreshToken { get; set; }
     public DateTimeOffset RefreshTokenExpiry { get; set; }
-    public DateTimeOffset CreateDate { get; set; }
-    public DateTimeOffset ModifiedDate { get; set; }
-    public virtual List<ApiClaimsModel> Claims { get; set; } = new();
+    public virtual List<ApiClaimsModel> Claims { get; set; } = [];
 }
 
 // public record ApiAccountModel : IEntity<int>

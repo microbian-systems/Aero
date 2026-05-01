@@ -1,3 +1,6 @@
+﻿using TUnit.Core;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Tests.Infrastructure;
@@ -7,60 +10,65 @@ namespace Aero.Social.Tests.Core;
 
 public class SocialProviderBaseTests : ProviderTestBase
 {
-    [Fact]
+    private readonly Mock<ILogger<SocialProviderBase>> _loggerMock = new();
+
+    [Test]
     public void CheckScopes_WhenAllScopesGranted_ShouldNotThrow()
     {
         var required = new[] { "read", "write", "email" };
         var granted = new[] { "read", "write", "email", "profile" };
 
-        var exception = Record.Exception(() => CreateTestProvider().TestCheckScopes(required, granted));
-        
-        exception.ShouldBeNull();
+        var result = CreateTestProvider().TestCheckScopes(required, granted);
+
+        result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
-    public void CheckScopes_WhenScopeMissing_ShouldThrowNotEnoughScopesException()
+    [Test]
+    public void CheckScopes_WhenScopeMissing_ShouldReturnFailure()
     {
         var required = new[] { "read", "write", "admin" };
         var granted = new[] { "read", "write" };
 
-        Should.Throw<NotEnoughScopesException>(() => CreateTestProvider().TestCheckScopes(required, granted));
+        var result = CreateTestProvider().TestCheckScopes(required, granted);
+
+        result.IsFailure.ShouldBeTrue();
+        ((Result<NoneType, AeroError>.Failure)result).Error.ShouldBeOfType<AeroError.Forbidden>();
     }
 
-    [Fact]
+    [Test]
     public void CheckScopes_WhenScopesGrantedAsString_ShouldParseCorrectly()
     {
         var required = new[] { "read", "write" };
         var grantedScopes = "read write email";
 
-        var exception = Record.Exception(() => CreateTestProvider().TestCheckScopes(required, grantedScopes));
-        
-        exception.ShouldBeNull();
+        var result = CreateTestProvider().TestCheckScopes(required, grantedScopes);
+
+        result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void CheckScopes_WhenScopesGrantedAsCommaDelimited_ShouldParseCorrectly()
     {
         var required = new[] { "read", "write" };
         var grantedScopes = "read,write,email";
 
-        var exception = Record.Exception(() => CreateTestProvider().TestCheckScopes(required, grantedScopes));
-        
-        exception.ShouldBeNull();
+        var result = CreateTestProvider().TestCheckScopes(required, grantedScopes);
+
+        result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void CheckScopes_ShouldBeCaseInsensitive()
     {
         var required = new[] { "READ", "Write" };
         var granted = new[] { "read", "WRITE" };
 
-        var exception = Record.Exception(() => CreateTestProvider().TestCheckScopes(required, granted));
-        
-        exception.ShouldBeNull();
+        var result = CreateTestProvider().TestCheckScopes(required, granted);
+
+        result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Test]
     public void MakeId_ShouldGenerateStringOfCorrectLength()
     {
         var result = CreateTestProvider().TestMakeId(10);
@@ -68,7 +76,7 @@ public class SocialProviderBaseTests : ProviderTestBase
         result.Length.ShouldBe(10);
     }
 
-    [Fact]
+    [Test]
     public void MakeId_ShouldGenerateAlphanumericString()
     {
         var result = CreateTestProvider().TestMakeId(20);
@@ -76,7 +84,7 @@ public class SocialProviderBaseTests : ProviderTestBase
         result.ShouldAllBe(c => char.IsLetterOrDigit(c));
     }
 
-    [Fact]
+    [Test]
     public void MakeId_ShouldGenerateDifferentValues()
     {
         var results = new HashSet<string>();
@@ -90,13 +98,13 @@ public class SocialProviderBaseTests : ProviderTestBase
 
     private TestSocialProvider CreateTestProvider()
     {
-        return new TestSocialProvider(HttpClient, LoggerMock.Object);
+        return new TestSocialProvider(HttpClient, _loggerMock.Object);
     }
 }
 
 public class TestSocialProvider : SocialProviderBase
 {
-    public TestSocialProvider(HttpClient httpClient, ILogger logger) 
+    public TestSocialProvider(HttpClient httpClient, ILogger<SocialProviderBase> logger) 
         : base(httpClient, logger)
     {
     }
@@ -107,31 +115,31 @@ public class TestSocialProvider : SocialProviderBase
 
     public override int MaxLength(object? additionalSettings = null) => 1000;
 
-    public override Task<PostResponse[]> PostAsync(
+    public override Task<Result<PostResponse[], AeroError>> PostAsync(
         string id, string accessToken, List<PostDetails> posts, 
         Integration integration, CancellationToken cancellationToken = default)
-        => Task.FromResult(Array.Empty<PostResponse>());
+        => Task.FromResult<Result<PostResponse[], AeroError>>(Array.Empty<PostResponse>());
 
-    public override Task<GenerateAuthUrlResponse> GenerateAuthUrlAsync(
+    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
-        => Task.FromResult(new GenerateAuthUrlResponse());
+        => Task.FromResult<Result<GenerateAuthUrlResponse, AeroError>>(new GenerateAuthUrlResponse());
 
-    public override Task<AuthTokenDetails> AuthenticateAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
-        => Task.FromResult(new AuthTokenDetails());
+        => Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails());
 
-    public override Task<AuthTokenDetails> RefreshTokenAsync(
+    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
-        => Task.FromResult(new AuthTokenDetails());
+        => Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails());
 
-    public void TestCheckScopes(string[] required, string[] granted)
+    public Result<NoneType, AeroError> TestCheckScopes(string[] required, string[] granted)
         => CheckScopes(required, granted);
 
-    public void TestCheckScopes(string[] required, string grantedScopes)
+    public Result<NoneType, AeroError> TestCheckScopes(string[] required, string grantedScopes)
         => CheckScopes(required, grantedScopes);
 
     public string TestMakeId(int length) => MakeId(length);

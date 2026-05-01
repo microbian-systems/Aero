@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Storage;
+namespace Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 /// <summary>
 /// A file-based storage backend with asynchronous I/O operations.

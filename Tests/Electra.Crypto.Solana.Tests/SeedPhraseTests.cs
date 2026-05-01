@@ -1,9 +1,9 @@
+﻿using TUnit.Core;
 using FluentAssertions;
 using LanguageExt;
 using NSubstitute;
 using Solnet.Extensions;
 using Solnet.Rpc;
-using Xunit;
 
 namespace Electra.Crypto.Solana.Tests;
 
@@ -20,7 +20,7 @@ public class SeedPhraseTests
         _mockTokenAssetService = Substitute.For<ITokenAssetService>();
     }
 
-    [Fact]
+    [Test]
     public void SolanaWallet_CreateWithSeed_Should_Return_12_Word_Seed_Phrase_By_Default()
     {
         // Arrange
@@ -42,7 +42,7 @@ public class SeedPhraseTests
         });
     }
 
-    [Fact]
+    [Test]
     public void SolanaWallet_CreateWithSeed_Should_Return_24_Word_Seed_Phrase_When_Requested()
     {
         // Arrange
@@ -64,7 +64,7 @@ public class SeedPhraseTests
         });
     }
 
-    [Fact]
+    [Test]
     public void BurnerWallet_CreateWithSeed_Should_Return_12_Word_Seed_Phrase_By_Default()
     {
         // Arrange
@@ -86,7 +86,7 @@ public class SeedPhraseTests
         });
     }
 
-    [Fact]
+    [Test]
     public void BurnerWallet_CreateWithSeed_Should_Return_24_Word_Seed_Phrase_When_Requested()
     {
         // Arrange
@@ -108,7 +108,7 @@ public class SeedPhraseTests
         });
     }
 
-    [Fact]
+    [Test]
     public async Task SolanaWalletManager_CreateWalletWithSeedAsync_Should_Return_12_Word_Seed_Phrase_By_Default()
     {
         // Arrange
@@ -135,7 +135,7 @@ public class SeedPhraseTests
         retrievedWallet.IsSome.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task SolanaWalletManager_CreateWalletWithSeedAsync_Should_Return_24_Word_Seed_Phrase_When_Requested()
     {
         // Arrange
@@ -162,7 +162,7 @@ public class SeedPhraseTests
         retrievedWallet.IsSome.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task SolanaWalletManager_CreateBurnerWalletWithSeedAsync_Should_Return_12_Word_Seed_Phrase_By_Default()
     {
         // Arrange
@@ -189,7 +189,7 @@ public class SeedPhraseTests
         retrievedWallet.IsSome.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task SolanaWalletManager_CreateBurnerWalletWithSeedAsync_Should_Return_24_Word_Seed_Phrase_When_Requested()
     {
         // Arrange
@@ -216,7 +216,7 @@ public class SeedPhraseTests
         retrievedWallet.IsSome.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task SolanaWalletManager_CreateWalletWithSeedAsync_Should_Return_None_For_Duplicate_Name()
     {
         // Arrange
@@ -235,7 +235,7 @@ public class SeedPhraseTests
         secondResult.IsNone.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public async Task SolanaWalletManager_CreateBurnerWalletWithSeedAsync_Should_Generate_Unique_Name_When_None_Provided()
     {
         // Arrange
@@ -256,7 +256,7 @@ public class SeedPhraseTests
         });
     }
 
-    [Fact]
+    [Test]
     public void SeedPhrase_Words_Should_Be_Valid_BIP39_Words()
     {
         // Arrange
@@ -282,9 +282,9 @@ public class SeedPhraseTests
         });
     }
 
-    [Theory]
-    [InlineData(true, 24)]
-    [InlineData(false, 12)]
+    [Test]
+    [Arguments(true, 24)]
+    [Arguments(false, 12)]
     public async Task CreateWalletWithSeed_Methods_Should_Respect_Word_Count_Parameter(bool use24Words, int expectedCount)
     {
         // Arrange
@@ -302,5 +302,5 @@ public class SeedPhraseTests
 
         burnerResult.IsSome.Should().BeTrue();
         burnerResult.IfSome(tuple => tuple.seedPhrase.Length.Should().Be(expectedCount));
-    }
+}
 }

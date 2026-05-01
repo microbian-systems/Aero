@@ -1,8 +1,8 @@
 using System.Runtime.InteropServices;
-using Aero.DataStructures.Trees.Persistence.Nodes;
-using Aero.DataStructures.Trees.Persistence.Storage;
+using Aero.Core.DataStructures.Trees.Persistence.Nodes;
+using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
-namespace Aero.DataStructures.Trees.Persistence.Readers;
+namespace Aero.Core.DataStructures.Trees.Persistence.Readers;
 
 /// <summary>
 /// Encapsulates the node read/write strategy for persistent B+ trees.

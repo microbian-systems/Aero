@@ -1,3 +1,5 @@
+using Aero.Core;
+
 namespace Aero.Services;
 
 
@@ -19,7 +21,7 @@ public class AeroJwtValidationService(
         return Convert.ToBase64String(randomNumber);
     }
 
-    public string GenerateToken<T>(T user, IEnumerable<Claim> roles) where T : IdentityUser
+    public string GenerateToken<T>(T user, IEnumerable<Claim> roles) where T : AeroUser
     {
         var claims = new ClaimsIdentity(new Claim[]
         {

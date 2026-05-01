@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Footers;
 using Bunit;
 using Aero.MerakiUI.Footers;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Footers;
 
 public class FooterTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void SimpleFooter_ShouldRenderCorrectStructure()
     {
         var cut = Render<SimpleFooter>(parameters => parameters
@@ -19,5 +20,5 @@ public class FooterTests : BunitContext
         
         // Verify Child Content
         Assert.Contains("Links", cut.Markup);
-    }
+}
 }

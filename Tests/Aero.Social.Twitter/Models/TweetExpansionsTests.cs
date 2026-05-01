@@ -1,11 +1,13 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class TweetExpansionsTests
 {
-    [Fact]
-    public void Tweet_WithAuthorExpansion_ReturnsCorrectAuthor()
+    [Test]
+    public async Task Tweet_WithAuthorExpansion_ReturnsCorrectAuthor()
     {
         // Arrange
         var user = new User { Id = "123", Username = "testuser", Name = "Test User" };
@@ -17,10 +19,10 @@ public class TweetExpansionsTests
 
         // Assert
         Assert.NotNull(author);
-        Assert.Equal("testuser", author.Username);
+        await Assert.That(author.Username).IsEqualTo("testuser");
     }
 
-    [Fact]
+    [Test]
     public void Tweet_WithNullIncludes_ReturnsNullAuthor()
     {
         // Arrange
@@ -34,7 +36,7 @@ public class TweetExpansionsTests
         Assert.Null(author);
     }
 
-    [Fact]
+    [Test]
     public void Tweet_WithEmptyUsersList_ReturnsNullAuthor()
     {
         // Arrange
@@ -48,8 +50,8 @@ public class TweetExpansionsTests
         Assert.Null(author);
     }
 
-    [Fact]
-    public void Tweet_WithReferencedTweetsExpansion_ReturnsReferencedTweets()
+    [Test]
+    public async Task Tweet_WithReferencedTweetsExpansion_ReturnsReferencedTweets()
     {
         // Arrange
         var referencedTweet = new Tweet { Id = "456", Text = "Original tweet" };
@@ -61,11 +63,11 @@ public class TweetExpansionsTests
 
         // Assert
         Assert.NotNull(found);
-        Assert.Equal("Original tweet", found.Text);
+        await Assert.That(found.Text).IsEqualTo("Original tweet");
     }
 
-    [Fact]
-    public void Tweet_WithMediaExpansion_ReturnsMediaObjects()
+    [Test]
+    public async Task Tweet_WithMediaExpansion_ReturnsMediaObjects()
     {
         // Arrange
         var media = new Media { MediaKey = "media_1", Type = "photo", Url = "https://example.com/image.jpg" };
@@ -77,10 +79,10 @@ public class TweetExpansionsTests
 
         // Assert
         Assert.NotNull(found);
-        Assert.Equal("photo", found.Type);
+        await Assert.That(found.Type).IsEqualTo("photo");
     }
 
-    [Fact]
+    [Test]
     public void Tweet_WithNullAuthorId_ReturnsNullAuthor()
     {
         // Arrange
@@ -95,8 +97,8 @@ public class TweetExpansionsTests
         Assert.Null(author);
     }
 
-    [Fact]
-    public void TweetResponse_WithIncludes_ProvidesAccessToExpansions()
+    [Test]
+    public async Task TweetResponse_WithIncludes_ProvidesAccessToExpansions()
     {
         // Arrange
         var user = new User { Id = "123", Username = "testuser", Name = "Test User" };
@@ -112,6 +114,6 @@ public class TweetExpansionsTests
 
         // Assert
         Assert.NotNull(author);
-        Assert.Equal("testuser", author.Username);
-    }
+        await Assert.That(author.Username).IsEqualTo("testuser");
+}
 }

@@ -1,12 +1,14 @@
+﻿using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class TweetResponseTests
 {
-    [Fact]
-    public void TweetResponse_Deserialization_WithSingleTweet_PopulatesCorrectly()
+    [Test]
+    public async Task TweetResponse_Deserialization_WithSingleTweet_PopulatesCorrectly()
     {
         // Arrange
         var json = @"{
@@ -31,15 +33,15 @@ public class TweetResponseTests
         // Assert
         Assert.NotNull(response);
         Assert.NotNull(response.Data);
-        Assert.Single(response.Data);
-        Assert.Equal("1234567890", response.Data[0].Id);
-        Assert.Equal("Hello, World!", response.Data[0].Text);
+        await Assert.That(response.Data).HasSingleItem();
+        await Assert.That(response.Data[0].Id).IsEqualTo("1234567890");
+        await Assert.That(response.Data[0].Text).IsEqualTo("Hello, World!");
         Assert.NotNull(response.Meta);
-        Assert.Equal(1, response.Meta.ResultCount);
+        await Assert.That(response.Meta.ResultCount).IsEqualTo(1);
     }
 
-    [Fact]
-    public void TweetResponse_Deserialization_WithMultipleTweets_PopulatesCorrectly()
+    [Test]
+    public async Task TweetResponse_Deserialization_WithMultipleTweets_PopulatesCorrectly()
     {
         // Arrange
         var json = @"{
@@ -69,13 +71,13 @@ public class TweetResponseTests
         // Assert
         Assert.NotNull(response);
         Assert.NotNull(response.Data);
-        Assert.Equal(2, response.Data.Count);
+        await Assert.That(response.Data.Count).IsEqualTo(2);
         Assert.NotNull(response.Meta);
-        Assert.Equal("next_page_token", response.Meta.NextToken);
+        await Assert.That(response.Meta.NextToken).IsEqualTo("next_page_token");
     }
 
-    [Fact]
-    public void TweetResponse_Deserialization_WithPaginationTokens_PopulatesCorrectly()
+    [Test]
+    public async Task TweetResponse_Deserialization_WithPaginationTokens_PopulatesCorrectly()
     {
         // Arrange
         var json = @"{
@@ -93,7 +95,7 @@ public class TweetResponseTests
         // Assert
         Assert.NotNull(response);
         Assert.NotNull(response.Meta);
-        Assert.Equal("b26v89c19zqg8o3f", response.Meta.NextToken);
-        Assert.Equal("a12v78c18ypf7n2e", response.Meta.PreviousToken);
-    }
+        await Assert.That(response.Meta.NextToken).IsEqualTo("b26v89c19zqg8o3f");
+        await Assert.That(response.Meta.PreviousToken).IsEqualTo("a12v78c18ypf7n2e");
+}
 }

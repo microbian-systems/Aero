@@ -1,4 +1,4 @@
-﻿namespace Aero.Common.Web.Models;
+﻿namespace Aero.Web.Models;
 
 
 public interface IWebResponseModel 

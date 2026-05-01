@@ -2,7 +2,7 @@ using Aero.Marten;
 using JasperFx;
 using Marten;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class MartenExtensions
 {

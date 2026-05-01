@@ -1,9 +1,12 @@
+﻿using TUnit.Core;
 using System.Net;
 using Shouldly;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
-public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFactory>
+[ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
+public class RegistrationControllerIntegrationTests
 {
     private readonly HttpClient _client;
     private readonly TestWebAppFactory _factory;
@@ -14,7 +17,7 @@ public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFa
         _client = factory.CreateClient();
     }
 
-    [Fact]
+    [Test]
     public async Task GetRegistration_ShouldReturnSuccessStatusCode()
     {
         // Act
@@ -24,7 +27,7 @@ public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFa
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Fact]
+    [Test]
     public async Task PostRegistration_ShouldReturnMethodNotAllowed_WhenNoData()
     {
         // Arrange
@@ -38,10 +41,10 @@ public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFa
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound, HttpStatusCode.BadRequest);
     }
 
-    [Theory]
-    [InlineData("/Registration/index")]
-    [InlineData("/Registration/create")]
-    [InlineData("/Registration/options")]
+    [Test]
+    [Arguments("/Registration/index")]
+    [Arguments("/Registration/create")]
+    [Arguments("/Registration/options")]
     public async Task RegistrationEndpoints_ShouldReturnValidResponse(string endpoint)
     {
         // Act
@@ -52,10 +55,10 @@ public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFa
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
-    [Theory]
-    [InlineData("PUT")]
-    [InlineData("PATCH")]
-    [InlineData("DELETE")]
+    [Test]
+    [Arguments("PUT")]
+    [Arguments("PATCH")]
+    [Arguments("DELETE")]
     public async Task Registration_ShouldNotAllowInvalidMethods(string httpMethod)
     {
         // Arrange
@@ -66,5 +69,5 @@ public class RegistrationControllerIntegrationTests : IClassFixture<TestWebAppFa
 
         // Assert
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
-    }
+}
 }

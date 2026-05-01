@@ -1,3 +1,6 @@
+using Aero.Core;
+using System.Security.Cryptography;
+
 namespace Aero.Auth.Services;
 
 /// <summary>
@@ -42,6 +45,8 @@ public class JwtTokenService : IJwtTokenService
     public async Task<string> GenerateAccessTokenAsync(
         long userId,
         string email,
+        IEnumerable<string>? roles = null,
+        IEnumerable<Claim>? extraClaims = null,
         CancellationToken cancellationToken = default)
     {
         var signingCredentials = await _signingKeyStore.GetSigningCredentialsAsync(cancellationToken);
@@ -49,10 +54,23 @@ public class JwtTokenService : IJwtTokenService
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new(JwtRegisteredClaimNames.Email, email),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Email, email),
+            new(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Snowflake.NewId().ToString()),
         };
+
+        if (roles != null)
+        {
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+        }
+
+        if (extraClaims != null)
+        {
+            claims.AddRange(extraClaims);
+        }
 
         var token = new JwtSecurityToken(
             issuer: _config["Auth:Jwt:Issuer"] ?? "Aero",
@@ -103,7 +121,8 @@ public class JwtTokenService : IJwtTokenService
 
             if (validatedToken is JwtSecurityToken jwtToken)
             {
-                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == 
+                  Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Sub)?.Value;
                 _logger.LogDebug("Validated access token for user {UserId}", userId);
             }
 
@@ -119,5 +138,24 @@ public class JwtTokenService : IJwtTokenService
             _logger.LogError(ex, "Unexpected error validating token");
             return (false, null);
         }
+    }
+
+    /// <summary>
+    /// Generates a long-lived refresh token.
+    /// </summary>
+    /// <param name="lifetime">The lifetime of the refresh token.</param>
+    /// <returns>A refresh token result containing the raw token and its hash.</returns>
+    public RefreshTokenResult GenerateRefreshToken(TimeSpan lifetime)
+    {
+        var bytes = RandomNumberGenerator.GetBytes(64);
+        var token = Convert.ToBase64String(bytes);
+
+        var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(token));
+        var hash = Convert.ToHexString(hashBytes);
+
+        return new RefreshTokenResult(
+            token,
+            hash,
+            DateTimeOffset.UtcNow.Add(lifetime));
     }
 }

@@ -1,4 +1,5 @@
-﻿using Electra.Core.Algorithms;
+﻿using TUnit.Core;
+using Electra.Core.Algorithms;
 using Electra.Core.Encryption;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ public class EncryptingSecretManagerTests
         return secretManager;
     }
     
-    [Fact]
+    [Test]
     public void CreateFragments_WithStringInput_EncryptsFragments()
     {
         // Arrange
@@ -63,7 +64,7 @@ public class EncryptingSecretManagerTests
     }
     
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithByteArrayInput_EncryptsFragments()
     {
         // Arrange
@@ -81,7 +82,7 @@ public class EncryptingSecretManagerTests
         Assert.Equal(3, result.Length);
     }
 
-    [Fact]
+    [Test]
     public void ComputeFragments_DecryptsFragments()
     {
         // Arrange
@@ -101,7 +102,7 @@ public class EncryptingSecretManagerTests
         Assert.Equal(secretBytes, result);
     }
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithNullString_ThrowsArgumentException()
     {
         // Arrange
@@ -119,7 +120,7 @@ public class EncryptingSecretManagerTests
             .WithMessage("Value cannot be null. (Parameter 'secret')");
     }
 
-    // [Fact]
+    // [Test]
     // public void CreateFragments_WithNullByteArray_ReturnsEmptyArray()
     // {
     //     // Arrange
@@ -137,7 +138,7 @@ public class EncryptingSecretManagerTests
     //
     // }
 
-    // [Fact]
+    // [Test]
     // public void CreateFragments_WithNullString_Exception_ThrowsArgumentNullException()
     // {
     //     // Arrange
@@ -153,7 +154,7 @@ public class EncryptingSecretManagerTests
     //         .WithMessage("Value cannot be null. (Parameter 'secret')");
     // }
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithNullByteArray_ThrowsArgumentException()
     {
         // Arrange
@@ -168,7 +169,7 @@ public class EncryptingSecretManagerTests
             .WithMessage("Value cannot be null. (Parameter 'secret')");
     }
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithEmptyByteArray_ThrowsArgumentException()
     {
         // Arrange
@@ -183,7 +184,7 @@ public class EncryptingSecretManagerTests
         results.Should().BeEmpty();
     }
 
-    [Fact]
+    [Test]
     public void CreateFragments_WithZeroLengthFragments_ReturnsEmptyArray()
     {
         // Arrange
@@ -198,5 +199,5 @@ public class EncryptingSecretManagerTests
 
         // Assert
         result.Should().BeEmpty();
-    }
+}
 }

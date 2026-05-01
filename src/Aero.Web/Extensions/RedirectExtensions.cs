@@ -1,6 +1,6 @@
-namespace Aero.Common.Web.Extensions;
-
 using Microsoft.AspNetCore.Routing;
+
+namespace Aero.Web.Extensions;
 
 public static class EndpointExtensions
 {

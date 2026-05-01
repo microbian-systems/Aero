@@ -8,7 +8,7 @@ public interface IReadonlyRepositorySyncOption<T, TKey>
     where T : IEntity<TKey> 
     where TKey : IEquatable<TKey>
 {
-    public IEnumerable<T> GetAll();
+    public IEnumerable<T> GetAll(int page=1, int num=10);
     public Option<T> FindById(TKey id);
     public IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
 }
@@ -16,12 +16,18 @@ public interface IReadonlyRepositorySyncOption<T, TKey>
 public interface IReadonlyRepositoryAsyncOption<T, TKey> where T 
     : IEntity<TKey> where TKey : IEquatable<TKey>
 {
-    public Task<IEnumerable<T>> GetAllAsync();
+    public Task<IEnumerable<T>> GetAllAsync(int page=1, int num=10, CancellationToken ct = default);
 
-    public Task<Option<T>> FindByIdAsync(TKey id);
+    public Task<Option<T>> FindByIdAsync(TKey id, CancellationToken ct = default);
 
     // read here: https://stackoverflow.com/questions/793571/why-would-you-use-expressionfunct-rather-than-funct
-    public Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+    public Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
+
+    public Task<IEnumerable<T>> FindAsync(
+        Expression<Func<T, bool>> predicate,
+        int page = 1,
+        int pageSize = 10,
+        CancellationToken ct = default);
 }
 
 public interface IReadOnlyRepositoryOption<T, TKey>
@@ -39,11 +45,11 @@ public interface IWriteOnlyRepositorySyncOption<T, TKey> where T : IEntity<TKey>
 
 public interface IWriteOnlyRepositoryAsyncOption<T, TKey> where T : IEntity<TKey> where TKey : IEquatable<TKey>
 {
-    public Task<T> InsertAsync(T entity);
-    public Task<T> UpdateAsync(T entity);
-    public Task<T> UpsertAsync(T entity);
-    public Task<bool> DeleteAsync(TKey id);
-    public Task<bool> DeleteAsync(T entity);
+    public Task<T> InsertAsync(T entity, CancellationToken ct = default);
+    public Task<T> UpdateAsync(T entity, CancellationToken ct = default);
+    public Task<T> UpsertAsync(T entity, CancellationToken ct = default);
+    public Task<bool> DeleteAsync(TKey id, CancellationToken ct = default);
+    public Task<bool> DeleteAsync(T entity, CancellationToken ct = default);
 }
 
 public interface IWriteOnlyRepositoryOption<T, TKey>
@@ -73,27 +79,31 @@ public abstract class GenericRepositoryOption<T, TKey>(ILogger log)
     where T : IEntity<TKey>, new()
     where TKey : IEquatable<TKey>
 {
-    protected readonly ILogger log = log;
 
-    public virtual IEnumerable<T> GetAll() => GetAllAsync().GetAwaiter().GetResult();
+    public virtual IEnumerable<T> GetAll(int page=1, int num=10) => GetAllAsync().GetAwaiter().GetResult();
 
-   public abstract Task<long> CountAsync();
+   public abstract Task<long> CountAsync(CancellationToken ct = default);
 
-    public abstract Task<bool> ExistsAsync(TKey id);
+    public abstract Task<bool> ExistsAsync(TKey id, CancellationToken ct = default);
 
-    public abstract Task<IEnumerable<T>> GetAllAsync();
-    public abstract Task<Option<T>> GetByIdAsync(TKey id);
+    public abstract Task<IEnumerable<T>> GetAllAsync(int page=1, int num=10, CancellationToken ct = default);
 
-    public abstract Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<TKey> ids);
+    public abstract Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<TKey> ids, CancellationToken ct = default);
 
     public virtual Option<T> FindById(TKey id) => FindByIdAsync(id).GetAwaiter().GetResult();
 
     public virtual IEnumerable<T> Find(Expression<Func<T, bool>> predicate) =>
-        FindAsync(predicate).GetAwaiter().GetResult();
+        FindAsync(predicate, default(CancellationToken)).GetAwaiter().GetResult();
 
-    public abstract Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+    public abstract Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default);
 
-    public abstract Task<Option<T>> FindByIdAsync(TKey id);
+    public abstract Task<IEnumerable<T>> FindAsync(
+        Expression<Func<T, bool>> predicate,
+        int page = 1,
+        int pageSize = 10,
+        CancellationToken ct = default);
+
+    public abstract Task<Option<T>> FindByIdAsync(TKey id, CancellationToken ct = default);
 
     // todo - add overloaded method with IEnumerable<> parameter to all insert/update/delete method
     public virtual T Insert(T entity) => InsertAsync(entity).GetAwaiter().GetResult();
@@ -106,13 +116,13 @@ public abstract class GenericRepositoryOption<T, TKey>(ILogger log)
 
     public virtual bool Delete(T entity) => DeleteAsync(entity).GetAwaiter().GetResult();
 
-    public abstract Task<T> InsertAsync(T entity);
+    public abstract Task<T> InsertAsync(T entity, CancellationToken ct = default);
 
-    public abstract Task<T> UpdateAsync(T entity);
+    public abstract Task<T> UpdateAsync(T entity, CancellationToken ct = default);
 
-    public abstract Task<T> UpsertAsync(T entity);
+    public abstract Task<T> UpsertAsync(T entity, CancellationToken ct = default);
 
-    public abstract Task<bool> DeleteAsync(TKey id);
+    public abstract Task<bool> DeleteAsync(TKey id, CancellationToken ct = default);
 
-    public abstract Task<bool> DeleteAsync(T entity);
+    public abstract Task<bool> DeleteAsync(T entity, CancellationToken ct = default);
 }

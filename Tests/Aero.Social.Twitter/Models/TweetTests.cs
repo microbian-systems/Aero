@@ -1,12 +1,14 @@
+﻿using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class TweetTests
 {
-    [Fact]
-    public void Tweet_ShouldHaveRequiredProperties()
+    [Test]
+    public async Task Tweet_ShouldHaveRequiredProperties()
     {
         // Arrange & Act
         var tweet = new Tweet
@@ -20,11 +22,11 @@ public class TweetTests
         // Assert
         Assert.NotNull(tweet.Id);
         Assert.NotNull(tweet.Text);
-        Assert.NotEqual(default(DateTimeOffset), tweet.CreatedAt);
+        await Assert.That(tweet.CreatedAt).IsNotEqualTo(default(DateTimeOffset));
     }
 
-    [Fact]
-    public void Tweet_Serialization_ShouldIncludeAllProperties()
+    [Test]
+    public async Task Tweet_Serialization_ShouldIncludeAllProperties()
     {
         // Arrange
         var createdAt = DateTimeOffset.Parse("2024-01-15T10:30:00+00:00");
@@ -47,13 +49,13 @@ public class TweetTests
         var json = JsonSerializer.Serialize(tweet);
 
         // Assert
-        Assert.Contains("1234567890", json);
-        Assert.Contains("Hello, Twitter!", json);
-        Assert.Contains("9876543210", json);
+        await Assert.That(json).Contains("1234567890");
+        await Assert.That(json).Contains("Hello, Twitter!");
+        await Assert.That(json).Contains("9876543210");
     }
 
-    [Fact]
-    public void Tweet_Deserialization_ShouldParseAllProperties()
+    [Test]
+    public async Task Tweet_Deserialization_ShouldParseAllProperties()
     {
         // Arrange
         var json = @"{
@@ -74,18 +76,18 @@ public class TweetTests
 
         // Assert
         Assert.NotNull(tweet);
-        Assert.Equal("1234567890", tweet.Id);
-        Assert.Equal("Hello, Twitter!", tweet.Text);
-        Assert.Equal("9876543210", tweet.AuthorId);
+        await Assert.That(tweet.Id).IsEqualTo("1234567890");
+        await Assert.That(tweet.Text).IsEqualTo("Hello, Twitter!");
+        await Assert.That(tweet.AuthorId).IsEqualTo("9876543210");
         Assert.NotNull(tweet.PublicMetrics);
-        Assert.Equal(10, tweet.PublicMetrics.RetweetCount);
-        Assert.Equal(5, tweet.PublicMetrics.ReplyCount);
-        Assert.Equal(50, tweet.PublicMetrics.LikeCount);
-        Assert.Equal(2, tweet.PublicMetrics.QuoteCount);
+        await Assert.That(tweet.PublicMetrics.RetweetCount).IsEqualTo(10);
+        await Assert.That(tweet.PublicMetrics.ReplyCount).IsEqualTo(5);
+        await Assert.That(tweet.PublicMetrics.LikeCount).IsEqualTo(50);
+        await Assert.That(tweet.PublicMetrics.QuoteCount).IsEqualTo(2);
     }
 
-    [Fact]
-    public void Tweet_Deserialization_ShouldHandleNullableFields()
+    [Test]
+    public async Task Tweet_Deserialization_ShouldHandleNullableFields()
     {
         // Arrange
         var json = @"{
@@ -99,8 +101,8 @@ public class TweetTests
 
         // Assert
         Assert.NotNull(tweet);
-        Assert.Equal("1234567890", tweet.Id);
+        await Assert.That(tweet.Id).IsEqualTo("1234567890");
         Assert.Null(tweet.AuthorId);
         Assert.Null(tweet.PublicMetrics);
-    }
+}
 }

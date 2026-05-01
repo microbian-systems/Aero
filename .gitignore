@@ -13,13 +13,14 @@ Microbians.Mobile.zip
 .frolic*.json
 .vs/
 .bevel/
-
+openobserve_data/
 
 # User-specific files
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
+*.lscache
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

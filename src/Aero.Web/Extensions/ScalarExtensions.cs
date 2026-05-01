@@ -1,6 +1,6 @@
 using Scalar.AspNetCore;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class ScalarUIExtensions
 {

@@ -11,3 +11,5 @@ global using System.Text.Json.Serialization;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using Microsoft.Extensions.Logging;
+
+global using static Aero.Core.Railway.Prelude;

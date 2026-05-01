@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Wal;
+namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
 public interface IWalIndex
 {

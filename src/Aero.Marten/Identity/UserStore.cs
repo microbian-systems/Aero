@@ -3,7 +3,7 @@ using Aero.Core.Identity;
 using Aero.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Aero.MartenDB.Identity;
+namespace Aero.Marten.Identity;
 
 public class UserStore<TUser, TRole>(IDocumentSession session) :
     IUserStore<TUser>,

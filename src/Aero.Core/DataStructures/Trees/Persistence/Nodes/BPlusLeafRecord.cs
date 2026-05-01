@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Aero.DataStructures.Trees.Persistence.Nodes;
+namespace Aero.Core.DataStructures.Trees.Persistence.Nodes;
 
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct BPlusLeafRecord<TKey, TValue>

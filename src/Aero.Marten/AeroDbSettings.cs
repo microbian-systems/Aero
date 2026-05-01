@@ -1,4 +1,4 @@
-namespace Aero.MartenDB;
+namespace Aero.Marten;
 
 /// <summary>
 /// Configuration settings for AeroDB persistence

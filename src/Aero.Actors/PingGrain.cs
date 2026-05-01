@@ -1,14 +1,14 @@
 ﻿
+using Aero.Actors.Abstractions;
 using Aero.Core;
+using Orleans.Concurrency;
 
 namespace Aero.Actors;
 
-public interface IPingGrain
-{
-    Task Ping();
-}
 
-public class PingGrain(ILogger<PingGrain> log, IGrainFactory grainFactory) : AeroGrain(log), IPingGrain
+[StatelessWorker]
+public class PingGrain(IGrainFactory grainFactory, ILogger<PingGrain> log) 
+    : AeroActor(log), IPingGrain
 {
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
@@ -22,19 +22,18 @@ public class PingGrain(ILogger<PingGrain> log, IGrainFactory grainFactory) : Aer
         await base.OnDeactivateAsync(reason, cancellationToken);
     }
 
-    public async Task Ping()
+    public async Task<Message> Ping()
     {
-        log.LogInformation("Ping received.");
+        var activity = Span.StartActivity("PingGrain.Ping");
+        log.LogInformation("ping received.");
         var id = Snowflake.NewId();
-        // Create a message to send
-        var message = new Message(id, "ping!");
 
-        // Get a reference to the PongGrain using GrainFactory
-        var pongGrain = grainFactory.GetGrain<IPongGrain>(Guid.NewGuid());
+        activity?.SetTag("message.id", id.ToString());
 
-        // Send the message to PongGrain
-        await pongGrain.Pong(message);
+        var pong = grainFactory.GetGrain<IPongGrain>(id, "pong");
+        var message = new Message(id, "pong!");
 
-        log.LogInformation("Ping sent to PongGrain.");
+        log.LogInformation("sending pong response");
+        return message;
     }
 }

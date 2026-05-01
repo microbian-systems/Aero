@@ -1,7 +1,7 @@
 using Aero.Core.Identity;
 using Microsoft.AspNetCore.Identity;
 
-namespace Aero.MartenDB.Identity;
+namespace Aero.Marten.Identity;
 
 /// <summary>
 /// AeroDB store for roles.

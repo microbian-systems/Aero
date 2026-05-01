@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,8 @@ namespace Aero.DataStructures.Tests;
 
 public class RTreeTests
 {
-    [Fact(Skip = "R-Tree insert is not fully implemented")]
+    [Test]
+    [Skip("R-Tree insert is not fully implemented")]
     public void Insert_And_Search_Success()
     {
         // Arrange
@@ -23,5 +25,5 @@ public class RTreeTests
         found.Count().ShouldBe(2);
         found.ShouldContain(p => p.X == 1 && p.Y == 1);
         found.ShouldContain(p => p.X == 5 && p.Y == 5);
-    }
+}
 }

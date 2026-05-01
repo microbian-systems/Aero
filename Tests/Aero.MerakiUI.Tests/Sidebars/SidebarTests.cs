@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Sidebars;
 using Bunit;
 using Aero.MerakiUI.Sidebars;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Sidebars;
 
 public class SidebarTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void SimpleSidebar_ShouldRenderCorrectStructure()
     {
         var cut = Render<SimpleSidebar>(parameters => parameters
@@ -19,5 +20,5 @@ public class SidebarTests : BunitContext
         
         // Verify Child Content
         Assert.Contains("Links", cut.Markup);
-    }
+}
 }

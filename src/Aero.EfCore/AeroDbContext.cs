@@ -13,7 +13,7 @@ public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(
     public DbSet<ApiClaimsModel> ApiClaims { get; set; }
     public DbSet<CityModel> Cities { get; set; }
     public DbSet<CountryModel> Countries { get; set; }
-    public DbSet<AeroUserProfile> UserProfiles { get; set; }
+    public DbSet<StateModel> States { get; set; }
     //public DbSet<UserPasskeys> UserPasskeys { get; set; }
 
     // Authentication token management
@@ -24,47 +24,11 @@ public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(
     {
         base.OnModelCreating(builder);
 
-        //ConfigureIdentityTables(builder);
         ConfigureDecimalPrecision(builder);
         ModelApiAuth(builder);
-        //ModelUserProfile(builder);
         ConfigureAuthenticationTokens(builder);
     }
 
-    //private void ConfigureIdentityTables(ModelBuilder builder)
-    //{
-    // builder.Entity<AeroUser>(entity =>
-    // {
-    //     entity.ToTable("Users", schema: Schemas.Auth);
-    //     
-    //     // Auditing - use ValueGeneratedOnAdd for server-side defaults
-    //     entity.Property(x => x.CreatedOn).ValueGeneratedOnAdd();
-    //     entity.Property(x => x.ModifiedOn).ValueGeneratedOnAdd();
-    //     entity.HasIndex(x => x.CreatedOn);
-    //     entity.HasIndex(x => x.ModifiedOn);
-    //     entity.HasIndex(x => x.CreatedBy);
-    //     entity.HasIndex(x => x.ModifiedBy);
-    //     
-    //     // Profile relationship - ONLY CONFIGURE ONCE
-    //     // entity.HasOne(x => x.Profile)
-    //     //     .WithOne()
-    //     //     .HasForeignKey<AeroUserProfile>(x => x.Userid)
-    //     //     .OnDelete(DeleteBehavior.Cascade);
-    //     
-    //     entity.HasIndex(i => i.UserProfileId).IsUnique();
-    // });
-    //
-    // builder.Entity<AeroRole>(entity =>
-    // {
-    //     entity.ToTable("Roles", schema: Schemas.Auth);
-    // });
-    //
-    // builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles", schema: Schemas.Auth);
-    // builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", schema: Schemas.Auth);
-    // builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", schema: Schemas.Auth);
-    // builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", schema: Schemas.Auth);
-    // builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", schema: Schemas.Auth);
-    //}
 
     private void ConfigureDecimalPrecision(ModelBuilder builder)
     {
@@ -76,60 +40,53 @@ public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(
         }
     }
 
-    //     protected virtual void ModelUserProfile(ModelBuilder builder)
-    // {
-    //     builder.Entity<AeroUserProfile>(entity =>
-    //     {
-    //         entity.ToTable("UserProfiles", schema: Schemas.Users);
-    //         // entity.HasOne<AeroUser>()
-    //         //     .WithOne(x => x.Profile)
-    //         //     .HasForeignKey<AeroUserProfile>(x => x.Userid)
-    //         //     .OnDelete(DeleteBehavior.Cascade);
-    //         entity.HasIndex(x => x.Userid).IsUnique();
-    //         entity.Property(x => x.CreatedOn)
-    //             .ValueGeneratedOnAdd();
-    //
-    //         entity.Property(x => x.ModifiedOn)
-    //             .ValueGeneratedOnAdd();
-    //
-    //         entity.HasIndex(x => x.CreatedOn);
-    //         entity.HasIndex(x => x.ModifiedOn);
-    //         entity.HasIndex(x => x.CreatedBy);
-    //         entity.HasIndex(x => x.ModifiedBy);
-    //     });
-    // }
 
     protected void ModelApiAuth(ModelBuilder builder)
     {
-        builder.Entity<ApiAccountModel>(entity =>
+
+        builder.Entity<ApiAccountModel>()
+            .ToTable("ApiAccounts", schema: Schemas.Aero);
+        builder.Entity<ApiAccountModel>()
+            .HasKey(i => i.Id);
+        builder.Entity<ApiAccountModel>()
+            .HasIndex(i => i.ApiKey, "ix_apikey")
+            .IsUnique();
+        builder.Entity<ApiAccountModel>()
+            .HasIndex(i => i.Email);
+        builder.Entity<ApiAccountModel>()
+            .HasIndex(i => i.Enabled);
+        builder.Entity<ApiAccountModel>()
+            .HasIndex(i => i.CreatedOn);
+        builder.Entity<ApiAccountModel>()
+            .HasIndex(i => i.ModifiedOn);
+
+        builder.Entity<ApiClaimsModel>()
+            .HasIndex(i => i.ClaimKey);
+        builder.Entity<ApiClaimsModel>()
+            .HasIndex(i => i.ClaimValue);
+
+        builder.Entity<ApiAccountModel>()
+            .HasMany<ApiClaimsModel>()
+            .WithOne();
+
+        builder.Entity<ApiClaimsModel>()
+            .ToTable("ApiClaims", schema: Schemas.Aero)
+            .HasKey(pk => pk.Id);
+        builder.Entity<ApiClaimsModel>()
+            .HasOne<ApiAccountModel>()
+            .WithMany(m => m.Claims)
+            .HasForeignKey(m => m.AccountId);
+
+        builder.Entity<ApiAccountModel>(e =>
         {
-            entity.ToTable("ApiAccounts", schema: Schemas.Aero);
-            entity.HasIndex(i => i.ApiKey, "ix_apikey")
-                .IsUnique();
-            entity.Property(x => x.CreatedOn)
-                .ValueGeneratedOnAdd();
-
-            entity.Property(x => x.ModifiedOn)
-                .ValueGeneratedOnAdd();
-
-            entity.HasIndex(x => x.CreatedOn);
-            entity.HasIndex(x => x.ModifiedOn);
-            entity.HasIndex(x => x.CreatedBy);
-            entity.HasIndex(x => x.ModifiedBy);
-
-            entity.HasMany<ApiClaimsModel>()
-                .WithOne();
+            e.Property(rt => rt.CreatedOn).ValueGeneratedOnAdd();
+            e.Property(rt => rt.ModifiedOn).ValueGeneratedOnAddOrUpdate();
         });
 
-        builder.Entity<ApiClaimsModel>(entity =>
-        { // todo - verify ApiClaimsModel requires an int pkey - we should keep consistent and inherit from EntityBase<long>
-            entity.ToTable("ApiClaims", schema: Schemas.Aero);
-            entity.HasIndex(i => i.ClaimKey);
-            entity.HasIndex(i => i.ClaimValue);
-            entity.HasOne<ApiAccountModel>()
-                .WithMany(m => m.Claims)
-                .HasForeignKey(m => m.AccountId);
-
+        builder.Entity<ApiClaimsModel>(e =>
+        {
+            e.Property(rt => rt.CreatedOn).ValueGeneratedOnAdd();
+            e.Property(rt => rt.ModifiedOn).ValueGeneratedOnAddOrUpdate();
         });
     }
 
@@ -145,6 +102,8 @@ public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(
             entity.HasIndex(rt => rt.ExpiresAt);
             entity.HasIndex(rt => rt.RevokedAt);
             entity.Property(rt => rt.CreatedOn).ValueGeneratedOnAdd();
+            entity.Property(rt => rt.ModifiedOn).ValueGeneratedOnAddOrUpdate();
+
         });
 
         // JWT signing keys for key rotation
@@ -156,6 +115,7 @@ public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(
             // Unique constraint: only one key can be current
             entity.HasIndex(jsk => jsk.IsCurrentSigningKey).IsUnique();
             entity.Property(jsk => jsk.CreatedOn).ValueGeneratedOnAdd();
+            entity.Property(jsk => jsk.ModifiedOn).ValueGeneratedOnAddOrUpdate();
         });
     }
 
@@ -182,3 +142,40 @@ public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(
         }
     }
 }
+
+
+
+//private void ConfigureIdentityTables(ModelBuilder builder)
+//{
+// builder.Entity<AeroUser>(entity =>
+// {
+//     entity.ToTable("Users", schema: Schemas.Auth);
+//     
+//     // Auditing - use ValueGeneratedOnAdd for server-side defaults
+//     entity.Property(x => x.CreatedOn).ValueGeneratedOnAdd();
+//     entity.Property(x => x.ModifiedOn).ValueGeneratedOnAdd();
+//     entity.HasIndex(x => x.CreatedOn);
+//     entity.HasIndex(x => x.ModifiedOn);
+//     entity.HasIndex(x => x.CreatedBy);
+//     entity.HasIndex(x => x.ModifiedBy);
+//     
+//     // Profile relationship - ONLY CONFIGURE ONCE
+//     // entity.HasOne(x => x.Profile)
+//     //     .WithOne()
+//     //     .HasForeignKey<AeroUserProfile>(x => x.Userid)
+//     //     .OnDelete(DeleteBehavior.Cascade);
+//     
+//     entity.HasIndex(i => i.UserProfileId).IsUnique();
+// });
+//
+// builder.Entity<AeroRole>(entity =>
+// {
+//     entity.ToTable("Roles", schema: Schemas.Auth);
+// });
+//
+// builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles", schema: Schemas.Auth);
+// builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", schema: Schemas.Auth);
+// builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", schema: Schemas.Auth);
+// builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", schema: Schemas.Auth);
+// builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", schema: Schemas.Auth);
+//}

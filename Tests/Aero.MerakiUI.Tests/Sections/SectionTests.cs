@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Sections;
 using Bunit;
 using Aero.MerakiUI.Sections;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Sections;
 
 public class SectionTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void PricingSection_ShouldRenderCorrectStructure()
     {
         var cut = Render<PricingSection>(parameters => parameters
@@ -19,5 +20,5 @@ public class SectionTests : BunitContext
         // Verify at least one pricing card exists
         var cards = cut.FindAll("div.flex.flex-col");
         Assert.True(cards.Count > 0);
-    }
+}
 }

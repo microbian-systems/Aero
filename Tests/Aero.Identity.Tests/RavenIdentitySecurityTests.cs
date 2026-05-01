@@ -1,10 +1,11 @@
+﻿using TUnit.Core;
 namespace Aero.Identity.Tests;
 
 public class AeroIdentitySecurityTests
 {
     // These tests are commented out because AeroIdentitySecurity is currently commented out in the source.
     /*
-    [Fact]
+    [Test]
     public async Task SignIn_ReturnsSucceeded_WhenSignInSucceeds()
     {
         // Arrange
@@ -28,7 +29,7 @@ public class AeroIdentitySecurityTests
         Assert.Equal(LoginResult.Succeeded, result);
     }
 
-    [Fact]
+    [Test]
     public async Task SignIn_ReturnsLocked_WhenLockedOut()
     {
         // Arrange
@@ -52,7 +53,7 @@ public class AeroIdentitySecurityTests
         Assert.Equal(LoginResult.Locked, result);
     }
 
-    [Fact]
+    [Test]
     public async Task SignIn_ReturnsFailed_WhenSignInFails()
     {
         // Arrange
@@ -76,7 +77,7 @@ public class AeroIdentitySecurityTests
         Assert.Equal(LoginResult.Failed, result);
     }
 
-    [Fact]
+    [Test]
     public async Task SignOut_CallsSignInManagerSignOut()
     {
         // Arrange

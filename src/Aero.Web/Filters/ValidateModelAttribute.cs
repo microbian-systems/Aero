@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Aero.Common.Web.Filters;
+namespace Aero.Web.Filters;
 
 /// <summary>
 /// Introduces Model state auto validation to reduce code duplication

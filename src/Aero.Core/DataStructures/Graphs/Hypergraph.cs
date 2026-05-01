@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Graphs;
+namespace Aero.Core.DataStructures.Graphs;
 
 /// <summary>
 /// Represents a hypergraph where edges (hyperedges) can connect any number of vertices,

@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
@@ -5,7 +6,7 @@ namespace Aero.DataStructures.Tests;
 
 public class AvlTreeTests
 {
-    [Fact]
+    [Test]
     public void Insert_And_Balance_Test()
     {
         // Arrange
@@ -20,5 +21,5 @@ public class AvlTreeTests
         avl.Root.Value.ShouldBe(20);
         ((AvlTreeNode<int>)avl.Root.Left).Value.ShouldBe(10);
         ((AvlTreeNode<int>)avl.Root.Right).Value.ShouldBe(30);
-    }
+}
 }

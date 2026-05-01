@@ -5,6 +5,8 @@ namespace Aero.Models.Entities;
 
 public class CityModel : Entity<int>
 {
+    [JsonPropertyName("state_id")]
+    public long StateId { get; set; }
     [JsonPropertyName("fips")]
     [MaxLength(128)]
     public string FIPS { get; set; }    

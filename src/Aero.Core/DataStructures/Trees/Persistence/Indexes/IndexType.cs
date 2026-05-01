@@ -1,4 +1,4 @@
-namespace Aero.DataStructures.Trees.Persistence.Indexes;
+namespace Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
 public enum IndexType : byte
 {

@@ -1,6 +1,9 @@
+﻿using TUnit.Core;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -21,7 +24,7 @@ public class BlueskyProviderTests : ProviderTestBase
         return new BlueskyProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -32,7 +35,7 @@ public class BlueskyProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn300()
     {
         var provider = CreateProvider();
@@ -40,18 +43,20 @@ public class BlueskyProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(300);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnEmptyUrl()
     {
         var provider = CreateProvider();
         
-        var result = await provider.GenerateAuthUrlAsync();
-        
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
+
         result.Url.ShouldBeEmpty();
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateAsync_ShouldReturnTokenDetails()
     {
         var authBody = new
@@ -77,15 +82,16 @@ public class BlueskyProviderTests : ProviderTestBase
         var parameters = new AuthenticateParams(authBodyBase64, "");
         
         var result = await provider.AuthenticateAsync(parameters);
-        
-        result.AccessToken.ShouldBe("access_jwt_token");
-        result.Id.ShouldBe("did:plc:abc123");
-        result.Name.ShouldBe("Test User");
-        result.Username.ShouldBe("testuser.bsky.social");
+
+        var value = ((Result<AuthTokenDetails, AeroError>.Ok)result).Value;
+        value.AccessToken.ShouldBe("access_jwt_token");
+        value.Id.ShouldBe("did:plc:abc123");
+        value.Name.ShouldBe("Test User");
+        value.Username.ShouldBe("testuser.bsky.social");
     }
 
-    [Fact]
-    public async Task AuthenticateAsync_WithInvalidCredentials_ShouldThrowException()
+    [Test]
+    public async Task AuthenticateAsync_WithInvalidCredentials_ShouldReturnFailure()
     {
         var authBody = new
         {
@@ -102,6 +108,8 @@ public class BlueskyProviderTests : ProviderTestBase
         var provider = CreateProvider();
         var parameters = new AuthenticateParams(authBodyBase64, "");
         
-        await Should.ThrowAsync<BadBodyException>(() => provider.AuthenticateAsync(parameters));
-    }
+        var result = await provider.AuthenticateAsync(parameters);
+
+        result.IsFailure.ShouldBeTrue();
+}
 }

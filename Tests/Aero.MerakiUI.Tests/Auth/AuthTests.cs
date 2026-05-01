@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Auth;
 using Bunit;
 using Aero.MerakiUI.Auth;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Auth;
 
 public class AuthTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void SignInCard_ShouldRenderTitle()
     {
         var cut = Render<SignInCard>(parameters => parameters
@@ -16,7 +17,7 @@ public class AuthTests : BunitContext
         Assert.Contains("Login Now", cut.Markup);
     }
 
-    [Fact]
+    [Test]
     public void SignUpCard_ShouldRenderSignInUrl()
     {
         var cut = Render<SignUpCard>(parameters => parameters
@@ -24,5 +25,5 @@ public class AuthTests : BunitContext
         );
 
         Assert.Contains("href=\"/login\"", cut.Markup);
-    }
+}
 }

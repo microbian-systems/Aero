@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Aero.DataStructures.Trees.Persistence.Documents;
+namespace Aero.Core.DataStructures.Trees.Persistence.Documents;
 
 public interface IDocumentCollection<TDocument> where TDocument : class
 {

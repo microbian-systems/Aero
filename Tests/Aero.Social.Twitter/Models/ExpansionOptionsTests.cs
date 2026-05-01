@@ -1,11 +1,13 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class ExpansionOptionsTests
 {
-    [Fact]
-    public void ExpansionOptions_ToApiString_WithNone_ReturnsEmptyString()
+    [Test]
+    public async Task ExpansionOptions_ToApiString_WithNone_ReturnsEmptyString()
     {
         // Arrange
         var expansions = ExpansionOptions.None;
@@ -14,28 +16,28 @@ public class ExpansionOptionsTests
         var result = expansions.ToApiString();
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        await Assert.That(result).IsEqualTo(string.Empty);
     }
 
-    [Theory]
-    [InlineData(ExpansionOptions.AuthorId, "author_id")]
-    [InlineData(ExpansionOptions.ReferencedTweetsId, "referenced_tweets.id")]
-    [InlineData(ExpansionOptions.ReferencedTweetsIdAuthorId, "referenced_tweets.id.author_id")]
-    [InlineData(ExpansionOptions.AttachmentsMediaKeys, "attachments.media_keys")]
-    [InlineData(ExpansionOptions.AttachmentsPollIds, "attachments.poll_ids")]
-    [InlineData(ExpansionOptions.EntitiesMentionsUsername, "entities.mentions.username")]
-    [InlineData(ExpansionOptions.EntitiesNoteMentionsUsername, "entities.note.mentions.username")]
-    public void ExpansionOptions_ToApiString_IndividualOptions_ReturnCorrectValues(ExpansionOptions expansion, string expected)
+    [Test]
+    [Arguments(ExpansionOptions.AuthorId, "author_id")]
+    [Arguments(ExpansionOptions.ReferencedTweetsId, "referenced_tweets.id")]
+    [Arguments(ExpansionOptions.ReferencedTweetsIdAuthorId, "referenced_tweets.id.author_id")]
+    [Arguments(ExpansionOptions.AttachmentsMediaKeys, "attachments.media_keys")]
+    [Arguments(ExpansionOptions.AttachmentsPollIds, "attachments.poll_ids")]
+    [Arguments(ExpansionOptions.EntitiesMentionsUsername, "entities.mentions.username")]
+    [Arguments(ExpansionOptions.EntitiesNoteMentionsUsername, "entities.note.mentions.username")]
+    public async Task ExpansionOptions_ToApiString_IndividualOptions_ReturnCorrectValues(ExpansionOptions expansion, string expected)
     {
         // Act
         var result = expansion.ToApiString();
 
         // Assert
-        Assert.Equal(expected, result);
+        await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Fact]
-    public void ExpansionOptions_ToApiString_WithMultipleOptions_ReturnsCommaSeparatedString()
+    [Test]
+    public async Task ExpansionOptions_ToApiString_WithMultipleOptions_ReturnsCommaSeparatedString()
     {
         // Arrange
         var expansions = ExpansionOptions.AuthorId | ExpansionOptions.AttachmentsMediaKeys;
@@ -44,13 +46,13 @@ public class ExpansionOptionsTests
         var result = expansions.ToApiString();
 
         // Assert
-        Assert.Contains("author_id", result);
-        Assert.Contains("attachments.media_keys", result);
-        Assert.Contains(",", result);
+        await Assert.That(result).Contains("author_id");
+        await Assert.That(result).Contains("attachments.media_keys");
+        await Assert.That(result).Contains(",");
     }
 
-    [Fact]
-    public void ExpansionOptions_ToApiString_WithAllOptions_ReturnsAllExpansionNames()
+    [Test]
+    public async Task ExpansionOptions_ToApiString_WithAllOptions_ReturnsAllExpansionNames()
     {
         // Arrange
         var expansions = ExpansionOptions.All;
@@ -59,17 +61,17 @@ public class ExpansionOptionsTests
         var result = expansions.ToApiString();
 
         // Assert
-        Assert.Contains("author_id", result);
-        Assert.Contains("referenced_tweets.id", result);
-        Assert.Contains("referenced_tweets.id.author_id", result);
-        Assert.Contains("attachments.media_keys", result);
-        Assert.Contains("attachments.poll_ids", result);
-        Assert.Contains("entities.mentions.username", result);
-        Assert.Contains("entities.note.mentions.username", result);
+        await Assert.That(result).Contains("author_id");
+        await Assert.That(result).Contains("referenced_tweets.id");
+        await Assert.That(result).Contains("referenced_tweets.id.author_id");
+        await Assert.That(result).Contains("attachments.media_keys");
+        await Assert.That(result).Contains("attachments.poll_ids");
+        await Assert.That(result).Contains("entities.mentions.username");
+        await Assert.That(result).Contains("entities.note.mentions.username");
     }
 
-    [Fact]
-    public void ExpansionOptions_ToApiString_WithComplexCombination_ReturnsCorrectString()
+    [Test]
+    public async Task ExpansionOptions_ToApiString_WithComplexCombination_ReturnsCorrectString()
     {
         // Arrange
         var expansions = ExpansionOptions.AuthorId | ExpansionOptions.ReferencedTweetsId | ExpansionOptions.AttachmentsMediaKeys;
@@ -78,8 +80,8 @@ public class ExpansionOptionsTests
         var result = expansions.ToApiString();
 
         // Assert
-        Assert.Contains("author_id", result);
-        Assert.Contains("referenced_tweets.id", result);
-        Assert.Contains("attachments.media_keys", result);
-    }
+        await Assert.That(result).Contains("author_id");
+        await Assert.That(result).Contains("referenced_tweets.id");
+        await Assert.That(result).Contains("attachments.media_keys");
+}
 }

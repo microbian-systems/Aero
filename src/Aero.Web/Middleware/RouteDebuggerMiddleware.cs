@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace Aero.Common.Web.Middleware;
+namespace Aero.Web.Middleware;
 
 public static class RouteDebuggerMiddlewareExtensions
 {

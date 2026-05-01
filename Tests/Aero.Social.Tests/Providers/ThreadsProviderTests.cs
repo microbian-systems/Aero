@@ -1,4 +1,7 @@
+﻿using TUnit.Core;
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -21,7 +24,7 @@ public class ThreadsProviderTests : ProviderTestBase
         return new ThreadsProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -31,7 +34,7 @@ public class ThreadsProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(2);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn500()
     {
         var provider = CreateProvider();
@@ -39,17 +42,19 @@ public class ThreadsProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(500);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
 
-        var result = await provider.GenerateAuthUrlAsync();
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
 
         result.Url.ShouldContain("threads.net/oauth/authorize");
         result.Url.ShouldContain("client_id=test_app_id");
         result.Url.ShouldContain("redirect_uri=");
         result.Url.ShouldContain("scope=");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

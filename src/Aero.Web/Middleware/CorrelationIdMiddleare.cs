@@ -1,7 +1,4 @@
-namespace Aero.Common.Web.Middleware;
-
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+namespace Aero.Web.Middleware;
 
 public class CorrelationIdMiddleware(RequestDelegate next, ILogger<CorrelationIdMiddleware> logger)
 {

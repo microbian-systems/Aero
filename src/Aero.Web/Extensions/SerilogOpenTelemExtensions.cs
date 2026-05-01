@@ -5,7 +5,7 @@ using Serilog.Enrichers.Span;
 using Serilog.Exceptions;
 using Serilog.Sinks.OpenTelemetry;
 
-namespace Aero.Common.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 public static class SerilogExtensions
 {

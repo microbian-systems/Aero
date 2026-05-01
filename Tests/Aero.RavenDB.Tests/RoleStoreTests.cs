@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using System.Security.Claims;
 using Aero.Core.Identity;
 using Aero.MartenDB.Identity;
@@ -21,7 +22,7 @@ public class RoleStoreTests : RavenDbTestBase
         _roleStore = new RoleStore<AeroRole>(DocumentStore.LightweightSession(), _options);
     }
 
-    [Fact]
+    [Test]
     public async Task CreateAsync_Should_Create_Role()
     {
         // Arrange
@@ -39,7 +40,7 @@ public class RoleStoreTests : RavenDbTestBase
         savedRole.Name.ShouldBe("Admin");
     }
 
-    [Fact]
+    [Test]
     public async Task FindByNameAsync_Should_Return_Role()
     {
         // Arrange
@@ -54,7 +55,7 @@ public class RoleStoreTests : RavenDbTestBase
         foundRole.Name.ShouldBe("Manager");
     }
 
-    [Fact]
+    [Test]
     public async Task UpdateAsync_Should_Update_Role_Properties()
     {
         // Arrange
@@ -73,7 +74,7 @@ public class RoleStoreTests : RavenDbTestBase
         updatedRole.Name.ShouldBe("NewRole");
     }
 
-    [Fact]
+    [Test]
     public async Task DeleteAsync_Should_Remove_Role()
     {
         // Arrange
@@ -91,7 +92,7 @@ public class RoleStoreTests : RavenDbTestBase
         deletedRole.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public async Task AddClaimAsync_Should_Add_Claim_To_Role()
     {
         // Arrange
@@ -106,5 +107,5 @@ public class RoleStoreTests : RavenDbTestBase
         using var session = DocumentStore.LightweightSession();
         var updatedRole = await session.LoadAsync<AeroRole>(role.Id);
         updatedRole.Claims.ShouldContain(c => c.ClaimType == "Permission" && c.ClaimValue == "ViewReports");
-    }
+}
 }

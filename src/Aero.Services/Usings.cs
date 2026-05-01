@@ -13,8 +13,6 @@ global using System.Threading.Tasks;
 global using System.Web;
 global using FluentEmail.Core;
 global using JasperFx.Core;
-global using Aero.Common;
-global using Aero.Common.Extensions;
 global using Aero.Core.Identity;
 global using Aero.Models;
 global using Aero.Models.ViewModels;

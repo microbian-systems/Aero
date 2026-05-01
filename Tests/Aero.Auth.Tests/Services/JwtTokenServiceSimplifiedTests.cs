@@ -1,8 +1,10 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Aero.Auth.Services;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests.Services;
 
@@ -25,7 +27,7 @@ public class JwtTokenServiceSimplifiedTests
 
     //#region Configuration Tests
 
-    [Fact]
+    [Test]
     public void Constructor_WithValidConfig_ShouldSetAccessTokenLifetime()
     {
         // Arrange
@@ -43,7 +45,7 @@ public class JwtTokenServiceSimplifiedTests
         service.AccessTokenLifetime.ShouldBe(600);
     }
 
-    [Fact]
+    [Test]
     public void Constructor_WithoutAccessTokenConfig_ShouldUseDefault()
     {
         // Arrange
@@ -56,7 +58,7 @@ public class JwtTokenServiceSimplifiedTests
         service.AccessTokenLifetime.ShouldBe(300);
     }
 
-    [Fact]
+    [Test]
     public void Constructor_WithMultipleInstances_ShouldEachHaveOwnConfig()
     {
         // Arrange
@@ -79,20 +81,20 @@ public class JwtTokenServiceSimplifiedTests
 
     //#region Error Handling Tests
 
-    [Fact]
+    [Test]
     public async Task GenerateAccessToken_WithNullKeyStore_ShouldThrowNullReferenceException()
     {
         // Arrange
         var service = new JwtTokenService(null!, _mockLogger, _mockConfig);
 
         // Act
-        Func<Task> act = async () => await service.GenerateAccessTokenAsync("user-123", "test@example.com");
+        Func<Task> act = async () => await service.GenerateAccessTokenAsync(12345, "test@example.com");
 
         // Assert
         act.ShouldThrow<NullReferenceException>();
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAccessToken_WithKeyStoreThrowing_ShouldPropagateException()
     {
         // Arrange
@@ -102,7 +104,7 @@ public class JwtTokenServiceSimplifiedTests
                 new InvalidOperationException("No signing key")));
 
         // Act
-        Func<Task> act = async () => await service.GenerateAccessTokenAsync("user-123", "test@example.com");
+        Func<Task> act = async () => await service.GenerateAccessTokenAsync(12345, "test@example.com");
 
         // Assert
         act.ShouldThrow<InvalidOperationException>();
@@ -112,7 +114,7 @@ public class JwtTokenServiceSimplifiedTests
 
     //#region Dependency Injection Tests
 
-    [Fact]
+    [Test]
     public void ServiceImplementsInterface_ShouldBeRegistrable()
     {
         // Arrange & Act
@@ -127,11 +129,11 @@ public class JwtTokenServiceSimplifiedTests
 
     //#region Configuration Value Tests
 
-    [Theory]
-    [InlineData("100")]
-    [InlineData("300")]
-    [InlineData("600")]
-    [InlineData("900")]
+    [Test]
+    [Arguments("100")]
+    [Arguments("300")]
+    [Arguments("600")]
+    [Arguments("900")]
     public void AccessTokenLifetime_WithVariousConfigs_ShouldReturnCorrectValue(string configValue)
     {
         // Arrange
@@ -148,7 +150,7 @@ public class JwtTokenServiceSimplifiedTests
 
         // Assert
         lifetime.ShouldBe(int.Parse(configValue));
-    }
+}
 
     //#endregion
 }

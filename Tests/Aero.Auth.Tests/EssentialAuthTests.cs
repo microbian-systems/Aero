@@ -1,7 +1,9 @@
+﻿using TUnit.Core;
 using System.Net;
 using System.Text;
 using System.Text.Json;
 using Shouldly;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
@@ -9,7 +11,8 @@ namespace Aero.Auth.Tests;
 /// Essential authentication tests focusing on core registration and login functionality
 /// Tests both traditional email/password and passkey authentication flows
 /// </summary>
-public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
+[ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
+public class EssentialAuthTests
 {
     private readonly HttpClient _client;
 
@@ -20,7 +23,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
 
     //#region Registration Tests
 
-    [Fact]
+    [Test]
     public async Task Registration_ShouldRejectInvalidEmail()
     {
         // Arrange
@@ -34,7 +37,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Fact]
+    [Test]
     public async Task Registration_ShouldRejectWeakPassword()
     {
         // Arrange
@@ -52,7 +55,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
 
     //#region Login Tests
 
-    [Fact]
+    [Test]
     public async Task Login_ShouldRejectInvalidCredentials()
     {
         // Arrange
@@ -66,7 +69,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Fact]
+    [Test]
     public async Task Login_ShouldRejectMalformedEmail()
     {
         // Arrange
@@ -84,7 +87,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
 
     //#region Token Exchange Tests
 
-    [Fact]
+    [Test]
     public async Task TokenExchange_ShouldRejectUnsupportedGrantType()
     {
         // Arrange
@@ -102,7 +105,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Fact]
+    [Test]
     public async Task TokenExchange_ShouldRejectInvalidPasswordFlow()
     {
         // Arrange
@@ -124,7 +127,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
 
     //#region Passkey/WebAuthn Tests
 
-    [Fact]
+    [Test]
     public async Task Passwordless_ShouldBeAccessible()
     {
         // Act
@@ -134,7 +137,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Fact]
+    [Test]
     public async Task Usernameless_ShouldBeAccessible()
     {
         // Act
@@ -144,7 +147,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Fact]
+    [Test]
     public async Task PasswordlessAuth_ShouldHandleEmptyRequest()
     {
         // Arrange
@@ -165,7 +168,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
 
     //#region Account Management Tests
 
-    [Fact]
+    [Test]
     public async Task AccountList_ShouldRequireAuthentication()
     {
         // Act
@@ -175,7 +178,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Fact]
+    [Test]
     public async Task Logout_ShouldRequireAntiForgeryToken()
     {
         // Arrange
@@ -192,7 +195,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
 
     //#region Security Tests
 
-    [Fact]
+    [Test]
     public async Task UserInfo_ShouldRequireAuthentication()
     {
         // Act
@@ -202,7 +205,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Fact]
+    [Test]
     public async Task TokenRevocation_ShouldHandleInvalidToken()
     {
         // Arrange
@@ -218,7 +221,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         response.StatusCode.ShouldBe(HttpStatusCode.OK); // Per OAuth 2.0 spec
     }
 
-    [Fact]
+    [Test]
     public async Task RegistrationEndpoint_ShouldRejectNonPostMethods()
     {
         // Arrange
@@ -231,7 +234,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
         response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    [Fact]
+    [Test]
     public async Task LoginEndpoint_ShouldRejectNonPostMethods()
     {
         // Arrange
@@ -242,7 +245,7 @@ public class EssentialAuthTests : IClassFixture<TestWebAppFactory>
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
-    }
+}
 
     //#endregion
 }

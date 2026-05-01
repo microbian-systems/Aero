@@ -1,4 +1,7 @@
+﻿using TUnit.Core;
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -21,7 +24,7 @@ public class FacebookProviderTests : ProviderTestBase
         return new FacebookProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -32,7 +35,7 @@ public class FacebookProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(100);
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn63206()
     {
         var provider = CreateProvider();
@@ -40,13 +43,15 @@ public class FacebookProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(63206);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
         
-        var result = await provider.GenerateAuthUrlAsync();
-        
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
+
         result.Url.ShouldContain("facebook.com/v20.0/dialog/oauth");
         result.Url.ShouldContain("client_id=test_app_id");
         result.Url.ShouldContain("redirect_uri=");
@@ -55,14 +60,15 @@ public class FacebookProviderTests : ProviderTestBase
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Test]
     public async Task RefreshTokenAsync_ShouldReturnEmptyToken()
     {
         var provider = CreateProvider();
         
         var result = await provider.RefreshTokenAsync("any_refresh_token");
-        
-        result.AccessToken.ShouldBeEmpty();
-        result.RefreshToken.ShouldBeEmpty();
-    }
+
+        var value = ((Result<AuthTokenDetails, AeroError>.Ok)result).Value;
+        value.AccessToken.ShouldBeEmpty();
+        value.RefreshToken.ShouldBeEmpty();
+}
 }

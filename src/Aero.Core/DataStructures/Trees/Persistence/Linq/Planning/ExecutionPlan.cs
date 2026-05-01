@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using Aero.DataStructures.Trees.Persistence.Documents;
-using Aero.DataStructures.Trees.Persistence.Indexes;
-using Aero.DataStructures.Trees.Persistence.Linq.Translation;
+using Aero.Core.DataStructures.Trees.Persistence.Documents;
+using Aero.Core.DataStructures.Trees.Persistence.Indexes;
+using Aero.Core.DataStructures.Trees.Persistence.Linq.Translation;
 
-namespace Aero.DataStructures.Trees.Persistence.Linq.Planning;
+namespace Aero.Core.DataStructures.Trees.Persistence.Linq.Planning;
 
 public abstract class ExecutionPlan<TDocument>
     where TDocument : class

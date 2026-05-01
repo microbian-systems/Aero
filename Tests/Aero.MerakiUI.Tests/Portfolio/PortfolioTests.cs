@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Portfolio;
 using Bunit;
 using Aero.MerakiUI.Portfolio;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Portfolio;
 
 public class PortfolioTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void PortfolioCard_ShouldRenderTitle()
     {
         var cut = Render<PortfolioCard>(parameters => parameters
@@ -14,5 +15,5 @@ public class PortfolioTests : BunitContext
         );
 
         Assert.Contains("Project X", cut.Markup);
-    }
+}
 }

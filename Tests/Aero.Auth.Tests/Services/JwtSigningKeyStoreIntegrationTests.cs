@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Shouldly;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -5,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using NSubstitute;
 using Aero.Auth.Services;
 using Aero.Models.Entities;
+using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests.Services;
 
@@ -27,7 +29,7 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetCurrentSigningKey Tests
 
-    [Fact]
+    [Test]
     public void GetCurrentSigningKeyAsync_WithValidKey_ShouldReturnSecurityKey()
     {
         // Arrange
@@ -49,7 +51,7 @@ public class JwtSigningKeyStoreIntegrationTests
         store.GetCurrentSigningKeyAsync().Result.ShouldNotBeNull();
     }
 
-    [Fact]
+    [Test]
     public async Task GetCurrentSigningKeyAsync_WithNullKey_ShouldThrowInvalidOperationException()
     {
         // Arrange
@@ -69,7 +71,7 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetCurrentKeyId Tests
 
-    [Fact]
+    [Test]
     public async Task GetCurrentKeyIdAsync_WithValidKey_ShouldReturnKeyId()
     {
         // Arrange
@@ -94,7 +96,7 @@ public class JwtSigningKeyStoreIntegrationTests
         result.ShouldBe(expectedKeyId);
     }
 
-    [Fact]
+    [Test]
     public async Task GetCurrentKeyIdAsync_ShouldCacheResult()
     {
         // Arrange
@@ -126,7 +128,7 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetValidationKeys Tests
 
-    [Fact]
+    [Test]
     public async Task GetValidationKeysAsync_WithMultipleKeys_ShouldReturnAllKeys()
     {
         // Arrange
@@ -162,7 +164,7 @@ public class JwtSigningKeyStoreIntegrationTests
         result.ShouldBeOfType<SymmetricSecurityKey>();
     }
 
-    [Fact]
+    [Test]
     public async Task GetValidationKeysAsync_ShouldCacheResults()
     {
         // Arrange
@@ -195,7 +197,7 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region RotateSigningKey Tests
 
-    [Fact]
+    [Test]
     public async Task RotateSigningKeyAsync_ShouldCreateNewKey()
     {
         // Arrange
@@ -220,7 +222,7 @@ public class JwtSigningKeyStoreIntegrationTests
         await _mockPersistence.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
-    [Fact]
+    [Test]
     public async Task RotateSigningKeyAsync_ShouldInvalidateCache()
     {
         // Arrange
@@ -251,7 +253,7 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region RevokeKey Tests
 
-    [Fact]
+    [Test]
     public async Task RevokeKeyAsync_WithValidKeyId_ShouldRevokeKey()
     {
         // Arrange
@@ -273,7 +275,7 @@ public class JwtSigningKeyStoreIntegrationTests
         await _mockPersistence.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
-    [Fact]
+    [Test]
     public async Task RevokeKeyAsync_WithNullKeyId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -286,7 +288,7 @@ public class JwtSigningKeyStoreIntegrationTests
         act.ShouldThrow<ArgumentException>();
     }
 
-    [Fact]
+    [Test]
     public async Task RevokeKeyAsync_WithEmptyKeyId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -303,7 +305,7 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetKeyById Tests
 
-    [Fact]
+    [Test]
     public async Task GetKeyByIdAsync_WithValidKeyId_ShouldReturnKey()
     {
         // Arrange
@@ -329,7 +331,7 @@ public class JwtSigningKeyStoreIntegrationTests
         result.ShouldBeOfType<SymmetricSecurityKey>();
     }
 
-    [Fact]
+    [Test]
     public async Task GetKeyByIdAsync_WithInvalidKeyId_ShouldReturnNull()
     {
         // Arrange
@@ -345,7 +347,7 @@ public class JwtSigningKeyStoreIntegrationTests
         result.ShouldBeNull();
     }
 
-    [Fact]
+    [Test]
     public async Task GetKeyByIdAsync_WithNullKeyId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -362,7 +364,7 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetSigningCredentials Tests
 
-    [Fact]
+    [Test]
     public async Task GetSigningCredentialsAsync_WithValidKey_ShouldReturnCredentials()
     {
         // Arrange
@@ -386,7 +388,7 @@ public class JwtSigningKeyStoreIntegrationTests
         credentials.ShouldNotBeNull();
         credentials.Key.ShouldNotBeNull();
         credentials.Algorithm.ShouldBe("HS256");
-    }
+}
 
     //#endregion
 }

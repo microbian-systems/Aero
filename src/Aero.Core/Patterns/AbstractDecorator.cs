@@ -1,5 +1,5 @@
 
-namespace Aero.Common.Patterns;
+namespace Aero.Core.Patterns;
 
 public abstract class AbstractDecorator(ILogger log) : IDecorator
 {

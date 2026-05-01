@@ -1,25 +1,27 @@
+﻿using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
 public class UserPublicMetricsTests
 {
-    [Fact]
-    public void UserPublicMetrics_DefaultValues_AreZero()
+    [Test]
+    public async Task UserPublicMetrics_DefaultValues_AreZero()
     {
         // Arrange & Act
         var metrics = new UserPublicMetrics();
 
         // Assert
-        Assert.Equal(0, metrics.FollowersCount);
-        Assert.Equal(0, metrics.FollowingCount);
-        Assert.Equal(0, metrics.TweetCount);
-        Assert.Equal(0, metrics.ListedCount);
+        await Assert.That(metrics.FollowersCount).IsEqualTo(0);
+        await Assert.That(metrics.FollowingCount).IsEqualTo(0);
+        await Assert.That(metrics.TweetCount).IsEqualTo(0);
+        await Assert.That(metrics.ListedCount).IsEqualTo(0);
     }
 
-    [Fact]
-    public void UserPublicMetrics_Serialization_ReturnsCorrectJson()
+    [Test]
+    public async Task UserPublicMetrics_Serialization_ReturnsCorrectJson()
     {
         // Arrange
         var metrics = new UserPublicMetrics
@@ -34,14 +36,14 @@ public class UserPublicMetricsTests
         var json = JsonSerializer.Serialize(metrics);
 
         // Assert
-        Assert.Contains("\"followers_count\":1000", json);
-        Assert.Contains("\"following_count\":500", json);
-        Assert.Contains("\"tweet_count\":250", json);
-        Assert.Contains("\"listed_count\":50", json);
+        await Assert.That(json).Contains("\"followers_count\":1000");
+        await Assert.That(json).Contains("\"following_count\":500");
+        await Assert.That(json).Contains("\"tweet_count\":250");
+        await Assert.That(json).Contains("\"listed_count\":50");
     }
 
-    [Fact]
-    public void UserPublicMetrics_Deserialization_PopulatesCorrectly()
+    [Test]
+    public async Task UserPublicMetrics_Deserialization_PopulatesCorrectly()
     {
         // Arrange
         var json = @"{
@@ -56,14 +58,14 @@ public class UserPublicMetricsTests
 
         // Assert
         Assert.NotNull(metrics);
-        Assert.Equal(1000, metrics.FollowersCount);
-        Assert.Equal(500, metrics.FollowingCount);
-        Assert.Equal(250, metrics.TweetCount);
-        Assert.Equal(50, metrics.ListedCount);
+        await Assert.That(metrics.FollowersCount).IsEqualTo(1000);
+        await Assert.That(metrics.FollowingCount).IsEqualTo(500);
+        await Assert.That(metrics.TweetCount).IsEqualTo(250);
+        await Assert.That(metrics.ListedCount).IsEqualTo(50);
     }
 
-    [Fact]
-    public void UserPublicMetrics_Deserialization_WithPartialData_PopulatesCorrectly()
+    [Test]
+    public async Task UserPublicMetrics_Deserialization_WithPartialData_PopulatesCorrectly()
     {
         // Arrange
         var json = @"{
@@ -76,14 +78,14 @@ public class UserPublicMetricsTests
 
         // Assert
         Assert.NotNull(metrics);
-        Assert.Equal(100, metrics.FollowersCount);
-        Assert.Equal(0, metrics.FollowingCount);
-        Assert.Equal(25, metrics.TweetCount);
-        Assert.Equal(0, metrics.ListedCount);
+        await Assert.That(metrics.FollowersCount).IsEqualTo(100);
+        await Assert.That(metrics.FollowingCount).IsEqualTo(0);
+        await Assert.That(metrics.TweetCount).IsEqualTo(25);
+        await Assert.That(metrics.ListedCount).IsEqualTo(0);
     }
 
-    [Fact]
-    public void UserPublicMetrics_Deserialization_WithZeroValues_HandlesCorrectly()
+    [Test]
+    public async Task UserPublicMetrics_Deserialization_WithZeroValues_HandlesCorrectly()
     {
         // Arrange
         var json = @"{
@@ -98,9 +100,9 @@ public class UserPublicMetricsTests
 
         // Assert
         Assert.NotNull(metrics);
-        Assert.Equal(0, metrics.FollowersCount);
-        Assert.Equal(0, metrics.FollowingCount);
-        Assert.Equal(0, metrics.TweetCount);
-        Assert.Equal(0, metrics.ListedCount);
-    }
+        await Assert.That(metrics.FollowersCount).IsEqualTo(0);
+        await Assert.That(metrics.FollowingCount).IsEqualTo(0);
+        await Assert.That(metrics.TweetCount).IsEqualTo(0);
+        await Assert.That(metrics.ListedCount).IsEqualTo(0);
+}
 }

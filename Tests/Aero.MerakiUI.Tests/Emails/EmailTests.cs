@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Emails;
 using Bunit;
 using Aero.MerakiUI.Emails;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Emails;
 
 public class EmailTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void EmailVerification_ShouldRenderCode()
     {
         var cut = Render<EmailVerification>(parameters => parameters
@@ -17,5 +18,5 @@ public class EmailTests : BunitContext
         Assert.Contains("2", cut.Markup);
         Assert.Contains("3", cut.Markup);
         Assert.Contains("4", cut.Markup);
-    }
+}
 }

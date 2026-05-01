@@ -1,4 +1,7 @@
+﻿using TUnit.Core;
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -19,7 +22,7 @@ public class TelegramProviderTests : ProviderTestBase
         return new TelegramProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -30,11 +33,11 @@ public class TelegramProviderTests : ProviderTestBase
         provider.OneTimeToken.ShouldBeFalse();
     }
 
-    [Fact]
+    [Test]
     public void MaxLength_ShouldReturn4096()
     {
         var provider = CreateProvider();
         
         provider.MaxLength().ShouldBe(4096);
-    }
+}
 }

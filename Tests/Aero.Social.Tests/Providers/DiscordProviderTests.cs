@@ -1,4 +1,7 @@
+﻿using TUnit.Core;
 using System.Net;
+using Aero.Core;
+using Aero.Core.Railway;
 using Aero.Social.Abstractions;
 using Aero.Social.Models;
 using Aero.Social.Providers;
@@ -21,37 +24,39 @@ public class DiscordProviderTests : ProviderTestBase
         return new DiscordProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Fact]
+    [Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
         
         provider.Identifier.ShouldBe("discord");
         provider.Name.ShouldBe("Discord");
-        provider.Scopes.ShouldBe(new[] { "identify", "guilds" });
-        provider.Editor.ShouldBe(EditorType.Markdown);
+        provider.Scopes.ShouldBe(new[] { "identify", "email", "guilds", "webhook.incoming" });
+        provider.Editor.ShouldBe(EditorType.Discord);
         provider.MaxConcurrentJobs.ShouldBe(5);
     }
 
-    [Fact]
-    public void MaxLength_ShouldReturn1980()
+    [Test]
+    public void MaxLength_ShouldReturn2000()
     {
         var provider = CreateProvider();
         
-        provider.MaxLength().ShouldBe(1980);
+        provider.MaxLength().ShouldBe(2000);
     }
 
-    [Fact]
+    [Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
         
-        var result = await provider.GenerateAuthUrlAsync();
-        
+        var authResult = await provider.GenerateAuthUrlAsync();
+        authResult.IsSuccess.ShouldBeTrue();
+        var result = ((Result<GenerateAuthUrlResponse, AeroError>.Ok)authResult).Value;
+
         result.Url.ShouldContain("discord.com/oauth2/authorize");
         result.Url.ShouldContain("client_id=test_client_id");
         result.Url.ShouldContain("redirect_uri=");
         result.Url.ShouldContain("scope=bot+identify+guilds");
         result.State.ShouldNotBeNullOrEmpty();
-    }
+}
 }

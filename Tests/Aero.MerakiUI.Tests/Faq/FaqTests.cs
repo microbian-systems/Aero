@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Faq;
 using Bunit;
 using Aero.MerakiUI.Faq;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Faq;
 
 public class FaqTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void FaqAccordion_ShouldRenderTitle()
     {
         var cut = Render<FaqAccordion>(parameters => parameters
@@ -16,7 +17,7 @@ public class FaqTests : BunitContext
         Assert.Contains("Help Center", cut.Markup);
     }
 
-    [Fact]
+    [Test]
     public void FaqItem_ShouldRenderQuestion()
     {
         var cut = Render<FaqItem>(parameters => parameters
@@ -26,5 +27,5 @@ public class FaqTests : BunitContext
 
         Assert.Contains("Is it free?", cut.Markup);
         Assert.Contains("Yes, absolutely.", cut.Markup);
-    }
+}
 }

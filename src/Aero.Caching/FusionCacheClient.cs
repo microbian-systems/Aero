@@ -1,6 +1,8 @@
 
 using Aero.Core.Railway;
+using Microsoft.Extensions.Caching.Distributed;
 using ZiggyCreatures.Caching.Fusion;
+using static Aero.Core.Railway.Prelude;
 
 namespace Aero.Caching;
 
@@ -12,6 +14,11 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
     private readonly IFusionCache cache = cache;
     public override void Delete(string key)
         => DeleteAsync(key).GetAwaiter().GetResult();
+
+    public override async Task DeleteAsync(string key)
+    {
+        await cache.RemoveAsync(key);
+    }
 
     public override async Task SetAsync<T>(string key, IEnumerable<T> value, TimeSpan? absoluteExpiration = null)
     {
@@ -95,7 +102,7 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         // FusionCache doesn't have native hash support
         // This is a limitation - we can't efficiently get all hash fields without maintaining metadata
         log.LogWarning("HashGetAllAsync is not efficiently supported by FusionCache. Consider using Redis for hash operations.");
-        return Prelude.None;
+        return None;
     }
 
     public override bool HashSet<T>(string key, string field, T value)
@@ -118,30 +125,25 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         // FusionCache doesn't have native hash support
         // This is a limitation - we can't efficiently get all hash fields without maintaining metadata
         log.LogWarning("HashGetAll is not efficiently supported by FusionCache. Consider using Redis for hash operations.");
-        return Prelude.None;
-    }
-
-    public override async Task DeleteAsync(string key)
-    {
-        await cache.RemoveAsync(key);
+        return None;
     }
 
     public override Option<T> Get<T>(string key)
     {
         var res = cache.TryGet<T>(key);
-        return res.HasValue ? Prelude.Some(res.Value) : Prelude.None;
+        return res.HasValue ? Some(res.Value) : None;
     }
 
     public override async Task<Option<T>> GetOrSetAsync<T>(string key, Func<Task<T>> factory, TimeSpan? absoluteExpiration = null)
     {
-        var result = await cache.GetOrSetAsync<T>(key, 
+        var result = await cache.GetOrSetAsync<T>(key,
             async ct => await factory(), // Wrap the factory to accept CancellationToken
-            opts => 
+            opts =>
             {
                 opts.Duration = absoluteExpiration ?? TimeSpan.FromMinutes(5);
             });
 
-        return result != null ? Prelude.Some(result) : Prelude.None;
+        return result != null ? Some(result) : None;
     }
 
     public override bool KeyExists(string key)
@@ -153,16 +155,16 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
     public override async Task<Option<T>> GetAsync<T>(string key)
     {
         var res = await cache.TryGetAsync<T>(key);
-        return res.HasValue ? Prelude.Some(res.Value) : Prelude.None;
+        return res.HasValue ? Some(res.Value) : None;
     }
 
     public override Option<T> GetOrSet<T>(string key, Func<T> factory, TimeSpan? absoluteExpiration = null)
     {
-        var result = cache.GetOrSet<T>(key, ct => factory(), opts => 
+        var result = cache.GetOrSet<T>(key, ct => factory(), opts =>
         {
             opts.Duration = absoluteExpiration ?? TimeSpan.FromMinutes(5);
         });
 
-        return result != null ? Prelude.Some(result) : Prelude.None;
+        return result != null ? Some(result) : None;
     }
-    }
+}

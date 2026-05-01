@@ -1,18 +1,20 @@
+﻿using TUnit.Core;
 using Aero.Social.Twitter.Client.Authentication;
 using Aero.Social.Twitter.Client.Configuration;
+using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Authentication;
 
 public class OAuth2AuthenticationProviderTests
 {
-    [Fact]
+    [Test]
     public void Constructor_ShouldThrowOnNullOptions()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => new OAuth2AuthenticationProvider(null!));
     }
 
-    [Fact]
+    [Test]
     public void Constructor_ShouldThrowOnMissingBearerToken()
     {
         // Arrange
@@ -22,7 +24,7 @@ public class OAuth2AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth2AuthenticationProvider(options));
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateRequestAsync_ShouldAddBearerToken()
     {
         // Arrange
@@ -38,11 +40,11 @@ public class OAuth2AuthenticationProviderTests
 
         // Assert
         Assert.NotNull(request.Headers.Authorization);
-        Assert.Equal("Bearer", request.Headers.Authorization.Scheme);
-        Assert.Equal("test_bearer_token_123", request.Headers.Authorization.Parameter);
+        await Assert.That(request.Headers.Authorization.Scheme).IsEqualTo("Bearer");
+        await Assert.That(request.Headers.Authorization.Parameter).IsEqualTo("test_bearer_token_123");
     }
 
-    [Fact]
+    [Test]
     public async Task AuthenticateRequestAsync_ShouldThrowOnNullRequest()
     {
         // Arrange
@@ -54,5 +56,5 @@ public class OAuth2AuthenticationProviderTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(() => provider.AuthenticateRequestAsync(null!, CancellationToken.None));
-    }
+}
 }

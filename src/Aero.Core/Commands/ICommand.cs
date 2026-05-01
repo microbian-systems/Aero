@@ -1,4 +1,4 @@
-﻿namespace Aero.Common.Commands;
+﻿namespace Aero.Core.Commands;
 // todo - replace these commands with MediatR
 // public interface ICommand
 // {

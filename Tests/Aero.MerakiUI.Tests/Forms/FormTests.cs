@@ -1,3 +1,4 @@
+﻿using TUnit.Core;
 using Aero.MerakiUI.Forms;
 using Bunit;
 using Aero.MerakiUI.Forms;
@@ -6,7 +7,7 @@ namespace Aero.MerakiUI.Tests.Forms;
 
 public class FormTests : BunitContext
 {
-    [Fact]
+    [Test]
     public void ContactForm_ShouldRenderCorrectStructure()
     {
         var cut = Render<ContactForm>(parameters => parameters
@@ -24,5 +25,5 @@ public class FormTests : BunitContext
         // Verify Submit Button
         var button = cut.Find("button");
         Assert.NotNull(button);
-    }
+}
 }
