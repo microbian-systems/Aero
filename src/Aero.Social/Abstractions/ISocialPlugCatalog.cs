@@ -1,13 +1,12 @@
-using System.Reflection;
 using Aero.Social.Plugs;
 
 namespace Aero.Social.Abstractions;
 
 /// <summary>
-/// Provides pre-resolved plug metadata for social providers,
-/// eliminating runtime method scanning for discovery.
-/// The production implementation is source-generated from
-/// <c>[Plug]</c> and <c>[PostPlug]</c> attributes.
+/// Provides pre-resolved plug metadata for social providers.
+/// The production implementation uses provider-declared plugs via
+/// <see cref="SocialProviderBase.GetDeclaredPlugs"/> instead of
+/// runtime reflection or assembly scanning.
 /// </summary>
 public interface ISocialPlugCatalog
 {
@@ -23,14 +22,21 @@ public interface ISocialPlugCatalog
 }
 
 /// <summary>
-/// Information about a discovered plug.
+/// Information about a declared plug.
 /// </summary>
+/// <remarks>
+/// Plugs are declared by providers via <see cref="SocialProviderBase.GetDeclaredPlugs"/>
+/// rather than discovered via runtime attribute reflection. The <see cref="Execute"/>
+/// delegate is called directly instead of using <c>MethodInfo.Invoke()</c>.
+/// </remarks>
 public class PlugInfo
 {
     /// <summary>
-    /// Gets or sets the method info for the plug.
+    /// Gets or sets the delegate to invoke when this plug executes.
+    /// Called with the execution context and cancellation token.
+    /// Returns the execution result.
     /// </summary>
-    public MethodInfo Method { get; set; } = null!;
+    public Func<PlugExecutionContext, CancellationToken, Task<PlugExecutionResult>>? Execute { get; set; }
 
     /// <summary>
     /// Gets or sets the plug attribute (for regular plugs).

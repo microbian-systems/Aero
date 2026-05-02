@@ -1,4 +1,3 @@
-using System.Reflection;
 using Aero.Social.Abstractions;
 
 namespace Aero.Social.Plugs;
@@ -9,16 +8,16 @@ namespace Aero.Social.Plugs;
 public interface IPlugExecutor
 {
     /// <summary>
-    /// Executes a plug method with the given context and parameters
+    /// Executes a plug by calling its delegate with the given context and parameters.
     /// </summary>
-    /// <param name="plugMethod">The method info of the plug to execute</param>
-    /// <param name="provider">The provider instance containing the plug method</param>
-    /// <param name="context">The execution context for the plug</param>
-    /// <param name="fieldValues">The field values configured for this plug</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>The result of the plug execution</returns>
+    /// <param name="plugExecute">The delegate to invoke, or null if not set.</param>
+    /// <param name="provider">The provider instance (for logging/context).</param>
+    /// <param name="context">The execution context for the plug.</param>
+    /// <param name="fieldValues">The field values configured for this plug.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The result of the plug execution.</returns>
     Task<PlugExecutionResult> ExecuteAsync(
-        MethodInfo plugMethod,
+        Func<PlugExecutionContext, CancellationToken, Task<PlugExecutionResult>>? plugExecute,
         ISocialProvider provider,
         PlugExecutionContext context,
         Dictionary<string, object>? fieldValues = null,

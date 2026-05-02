@@ -1,4 +1,3 @@
-using System.Reflection;
 using Aero.Core;
 using Aero.Core.Http;
 using Aero.Core.Railway;
@@ -348,65 +347,31 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
     //#region Plug Support
 
     /// <summary>
-    /// Gets or sets the optional plug catalog. When set by the host application,
-    /// <see cref="DiscoverPlugs"/> and <see cref="GetPlug"/> use the catalog
-    /// (typically source-generated) instead of runtime reflection.
+    /// When overridden by a provider, returns the plugs this provider declares.
+    /// Each <see cref="PlugInfo"/> should have its <see cref="PlugInfo.Execute"/>
+    /// delegate set. This replaces the old reflection-based discovery path.
     /// </summary>
-    public static ISocialPlugCatalog? PlugCatalog { get; set; }
+    /// <returns>An enumerable of plug information for each declared plug.</returns>
+    protected virtual IEnumerable<PlugInfo> GetDeclaredPlugs()
+    {
+        yield break;
+    }
 
     /// <summary>
-    /// Discovers all plug methods defined in this provider.
-    /// Uses the source-generated <see cref="PlugCatalog"/> when available;
-    /// falls back to runtime reflection for legacy/test scenarios.
+    /// Discovers all plugs defined in this provider.
+    /// Delegates to <see cref="GetDeclaredPlugs"/> which each provider
+    /// implements directly — no runtime reflection or catalog lookup.
     /// </summary>
     /// <returns>An enumerable of plug information for each discovered plug.</returns>
-    public virtual IEnumerable<PlugInfo> DiscoverPlugs()
+    public IEnumerable<PlugInfo> DiscoverPlugs()
     {
-        if (PlugCatalog != null)
-        {
-            return PlugCatalog.GetPlugs(GetType());
-        }
-
-        return DiscoverPlugsReflection();
+        return GetDeclaredPlugs();
     }
 
     /// <summary>
-    /// Legacy reflection-based plug discovery. Used when no
-    /// <see cref="PlugCatalog"/> has been registered.
-    /// </summary>
-    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    protected IEnumerable<PlugInfo> DiscoverPlugsReflection()
-    {
-        var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
-
-        foreach (var method in methods)
-        {
-            var plugAttr = method.GetCustomAttribute<PlugAttribute>();
-            if (plugAttr != null)
-            {
-                yield return new PlugInfo
-                {
-                    Method = method,
-                    Attribute = plugAttr,
-                    IsPostPlug = false
-                };
-            }
-
-            var postPlugAttr = method.GetCustomAttribute<PostPlugAttribute>();
-            if (postPlugAttr != null)
-            {
-                yield return new PlugInfo
-                {
-                    Method = method,
-                    PostPlugAttribute = postPlugAttr,
-                    IsPostPlug = true
-                };
-            }
-        }
-    }
-
-    /// <summary>
-    /// Executes a plug method with the given context and executor.
+    /// Executes a plug with the given context and executor.
+    /// Calls the <see cref="PlugInfo.Execute"/> delegate directly —
+    /// no <c>MethodInfo.Invoke()</c>.
     /// </summary>
     /// <param name="plug">The plug to execute.</param>
     /// <param name="executor">The plug executor.</param>
@@ -442,7 +407,7 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
 
         try
         {
-            return await executor.ExecuteAsync(plug.Method, this, context, fieldValues, cancellationToken);
+            return await executor.ExecuteAsync(plug.Execute, this, context, fieldValues, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -451,18 +416,13 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
     }
 
     /// <summary>
-    /// Gets a plug by its identifier.
+    /// Gets a plug by its identifier from the declared plugs.
     /// </summary>
     /// <param name="identifier">The plug identifier to find.</param>
     /// <returns>The plug information, or null if not found.</returns>
-    public virtual PlugInfo? GetPlug(string identifier)
+    public PlugInfo? GetPlug(string identifier)
     {
-        if (PlugCatalog != null)
-        {
-            return PlugCatalog.GetPlug(GetType(), identifier);
-        }
-
-        return DiscoverPlugsReflection().FirstOrDefault(p =>
+        return GetDeclaredPlugs().FirstOrDefault(p =>
             (p.IsPostPlug && p.PostPlugAttribute?.Identifier == identifier) ||
             (!p.IsPostPlug && p.Attribute?.Identifier == identifier));
     }
