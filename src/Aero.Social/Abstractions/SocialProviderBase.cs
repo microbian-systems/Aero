@@ -348,10 +348,34 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
     //#region Plug Support
 
     /// <summary>
-    /// Discovers all plug methods defined in this provider using reflection.
+    /// Gets or sets the optional plug catalog. When set by the host application,
+    /// <see cref="DiscoverPlugs"/> and <see cref="GetPlug"/> use the catalog
+    /// (typically source-generated) instead of runtime reflection.
+    /// </summary>
+    public static ISocialPlugCatalog? PlugCatalog { get; set; }
+
+    /// <summary>
+    /// Discovers all plug methods defined in this provider.
+    /// Uses the source-generated <see cref="PlugCatalog"/> when available;
+    /// falls back to runtime reflection for legacy/test scenarios.
     /// </summary>
     /// <returns>An enumerable of plug information for each discovered plug.</returns>
     public virtual IEnumerable<PlugInfo> DiscoverPlugs()
+    {
+        if (PlugCatalog != null)
+        {
+            return PlugCatalog.GetPlugs(GetType());
+        }
+
+        return DiscoverPlugsReflection();
+    }
+
+    /// <summary>
+    /// Legacy reflection-based plug discovery. Used when no
+    /// <see cref="PlugCatalog"/> has been registered.
+    /// </summary>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+    protected IEnumerable<PlugInfo> DiscoverPlugsReflection()
     {
         var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
 
@@ -433,56 +457,14 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
     /// <returns>The plug information, or null if not found.</returns>
     public virtual PlugInfo? GetPlug(string identifier)
     {
-        return DiscoverPlugs().FirstOrDefault(p =>
+        if (PlugCatalog != null)
+        {
+            return PlugCatalog.GetPlug(GetType(), identifier);
+        }
+
+        return DiscoverPlugsReflection().FirstOrDefault(p =>
             (p.IsPostPlug && p.PostPlugAttribute?.Identifier == identifier) ||
             (!p.IsPostPlug && p.Attribute?.Identifier == identifier));
-    }
-
-    /// <summary>
-    /// Information about a discovered plug.
-    /// </summary>
-    public class PlugInfo
-    {
-        /// <summary>
-        /// Gets or sets the method info for the plug.
-        /// </summary>
-        public MethodInfo Method { get; set; } = null!;
-
-        /// <summary>
-        /// Gets or sets the plug attribute (for regular plugs).
-        /// </summary>
-        public PlugAttribute? Attribute { get; set; }
-
-        /// <summary>
-        /// Gets or sets the post plug attribute (for post-processing plugs).
-        /// </summary>
-        public PostPlugAttribute? PostPlugAttribute { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this is a post-processing plug.
-        /// </summary>
-        public bool IsPostPlug { get; set; }
-
-        /// <summary>
-        /// Gets the identifier for this plug.
-        /// </summary>
-        public string Identifier => IsPostPlug
-            ? PostPlugAttribute?.Identifier ?? string.Empty
-            : Attribute?.Identifier ?? string.Empty;
-
-        /// <summary>
-        /// Gets the title for this plug.
-        /// </summary>
-        public string Title => IsPostPlug
-            ? PostPlugAttribute?.Title ?? string.Empty
-            : Attribute?.Title ?? string.Empty;
-
-        /// <summary>
-        /// Gets the description for this plug.
-        /// </summary>
-        public string Description => IsPostPlug
-            ? PostPlugAttribute?.Description ?? string.Empty
-            : Attribute?.Description ?? string.Empty;
     }
 
     //#endregion
