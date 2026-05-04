@@ -38,12 +38,14 @@ public sealed class PexelsService : IPexelsService, IDisposable
 
     // ─── Photos ──────────────────────────────────────────────
 
-    public async Task<IReadOnlyList<PexelsPhoto>> SearchPhotosAsync(string query, int count = 5, CancellationToken ct = default)
+    public async Task<IReadOnlyList<PexelsPhoto>> SearchPhotosAsync(string query, int count = 5, string? orientation = null, CancellationToken ct = default)
     {
         if (!EnsureApiKey()) return [];
 
         var sw = Stopwatch.StartNew();
         var url = $"{PhotosBase}search?query={Uri.EscapeDataString(query)}&per_page={Math.Clamp(count, 1, 80)}";
+        if (!string.IsNullOrEmpty(orientation))
+            url += $"&orientation={orientation}";
 
         try
         {

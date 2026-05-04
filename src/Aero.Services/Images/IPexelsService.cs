@@ -10,7 +10,11 @@ public interface IPexelsService
     /// <summary>
     /// Search for photos matching a query.
     /// </summary>
-    Task<IReadOnlyList<PexelsPhoto>> SearchPhotosAsync(string query, int count = 5, CancellationToken ct = default);
+    /// <param name="query">Search keywords.</param>
+    /// <param name="count">Number of results (max 80).</param>
+    /// <param name="orientation">Optional orientation filter: "landscape", "portrait", or "square".</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<IReadOnlyList<PexelsPhoto>> SearchPhotosAsync(string query, int count = 5, string? orientation = null, CancellationToken ct = default);
 
     /// <summary>
     /// Get a single photo by its Pexels ID.
