@@ -65,7 +65,6 @@ public abstract class AeroModuleBase : IAeroModule, IConfigureMarten, IDisposabl
     /// <inheritdoc/>
     public virtual Task RunAsync(IServiceProvider sp) => Task.CompletedTask;
 
-
     // todo - impl IAsyncDisposable pattern for modules
     public virtual void Dispose(bool disposing)
     {

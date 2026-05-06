@@ -17,7 +17,8 @@ public static class MartenExtensions
             {
                 opts.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
             }
-        });
+        })
+        .UseLightweightSessions();
 
         services.AddScoped<IDynamicMartenRepository, DynamicMartinRepository>();
         services.AddScoped(typeof(IGenericMartenRepository<>), typeof(GenericMartenRepository<>));

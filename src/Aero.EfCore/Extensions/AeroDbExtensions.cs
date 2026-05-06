@@ -72,7 +72,8 @@ public static class AeroDbExtensions
                     // enable automatic schema creation for development
                     if (env.IsDevelopment())
                         opts.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
-                });
+                })
+            .UseLightweightSessions();
 
         // todo - rename this project from EfCore to Data and move Marten stuff in same project 
         services.AddScoped<IAeroDb, AeroDb>();
