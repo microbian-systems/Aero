@@ -28,7 +28,7 @@ public static class AeroDbExtensions
 
         services.AddDbContextPool<AeroDbContext>(o =>
                 o.UseNpgsql(connString,
-                    x => x.MigrationsHistoryTable("__aeroMigrations", Schemas.Aero)
+                    x => x.MigrationsHistoryTable(Schemas.MigrationTableName, Schemas.Aero)
                         .MigrationsAssembly(migrationAssembly)))
             //.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
             ;
