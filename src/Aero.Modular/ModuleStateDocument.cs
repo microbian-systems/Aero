@@ -1,3 +1,4 @@
+using Aero.Core;
 using Aero.Core.Entities;
 using System.Reflection.Metadata;
 
@@ -6,7 +7,7 @@ namespace Aero.Modular;
 /// <summary>
 /// Document representing the persisted state of a module.
 /// </summary>
-public sealed class ModuleDocument : Entity<string>
+public sealed class ModuleDocument : Entity
 {
     /// <summary>
     /// Creates a new module state document from a module descriptor.
@@ -14,7 +15,7 @@ public sealed class ModuleDocument : Entity<string>
     public static ModuleDocument FromDescriptor(ModuleDescriptor descriptor, bool isBuiltIn = false)
         => new()
         {
-            Id = $"{ModuleIdPrefix}{descriptor.Name}",
+            Id = Snowflake.NewId(),
             Name = descriptor.Name,
             Version = descriptor.Version,
             Author = descriptor.Author,
@@ -27,14 +28,6 @@ public sealed class ModuleDocument : Entity<string>
             Dependencies = descriptor.Dependencies.ToList(),
             IsBuiltIn = isBuiltIn
         };
-
-    public const string ModuleIdPrefix = "module:";
-
-    /// <summary>
-    /// Gets the Marten identity string for this document.
-    /// Format: "module:{Name}"
-    /// </summary>
-    public new string Id { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the name of the module.
