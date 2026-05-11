@@ -25,7 +25,8 @@ public static class AeroDbExtensions
             .Assembly
             .GetName().Name;
 
-        var connString = config.GetConnectionString("aero");
+        // todo - store common connection string name in a constant somewhere and reference it here and in appsettings
+        var connString = config.GetConnectionString(Schemas.Aero);
 
 
         services.AddDbContextPool<AeroDbContext>(o =>
@@ -42,41 +43,6 @@ public static class AeroDbExtensions
         // services.AddScoped(typeof(IGenericEntityFrameworkRepository<,>), typeof(GenericEntityFrameworkRepository<,>));
         services.AddScoped<IAiUsageLogRepository, AiUsageLogsRepository>();
         services.AddScoped<IApiAuthRepository, ApiAuthRepository>();
-
-
-        // var store = DocumentStore.For(c =>
-        // {
-        //     c.DatabaseSchemaName = Schemas.Aero;
-        //     c.Connection(connString!);
-        // });
-
-        // todo - move this to the application/client level - anything that needs IDocumentSession can get it via DI
-        // and instantiation at this level is too low.  There are other indexes this library is not aware of that need to be added
-        services.AddMarten(opts =>
-                {
-                    opts.Connection(connString!);
-                    opts.DatabaseSchemaName = Schemas.Aero;
-                    opts.Events.StreamIdentity = StreamIdentity.AsString;
-
-                    opts.UseSystemTextJsonForSerialization(configure: o =>
-                    {
-                        // Required for [JsonDerivedType] / [JsonPolymorphic] with PostgreSQL jsonb.
-                        // jsonb doesn't guarantee property order, so the type discriminator (e.g. $blockType)
-                        // can appear at any position in the JSON object. Without this, STJ throws:
-                        // "must specify a type discriminator" on deserialization.
-                        o.AllowOutOfOrderMetadataProperties = true;
-                    });
-                    opts.Schema.For<AeroRole>().Identity(x => x.Id);
-                    opts.Schema.For<AeroUser>().Identity(x => x.Id);
-
-                    if(UpdateMartenOptions is not null)
-                        UpdateMartenOptions(opts);
-
-                    // enable automatic schema creation for development
-                    if (env.IsDevelopment())
-                        opts.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
-                })
-            .UseLightweightSessions();
 
         // todo - rename this project from EfCore to Data and move Marten stuff in same project 
         services.AddScoped<IAeroDb, AeroDb>();
