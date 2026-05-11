@@ -1,6 +1,8 @@
 using Aero.Marten;
 using JasperFx;
+using JasperFx.Events;
 using Marten;
+using Marten.Events;
 
 namespace Aero.Web.Extensions;
 
@@ -13,6 +15,7 @@ public static class MartenExtensions
         var marten = services.AddMarten(opts =>
         {
             opts.Connection(connString);
+            opts.Events.StreamIdentity = StreamIdentity.AsString;
             if (host.IsDevelopment())
             {
                 opts.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;

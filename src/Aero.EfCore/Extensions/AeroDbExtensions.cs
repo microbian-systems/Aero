@@ -2,7 +2,9 @@ using Aero.Core.Data;
 using Aero.Core.Identity;
 using Aero.Marten;
 using JasperFx;
+using JasperFx.Events;
 using Marten;
+using Marten.Events;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -54,6 +56,7 @@ public static class AeroDbExtensions
                 {
                     opts.Connection(connString!);
                     opts.DatabaseSchemaName = Schemas.Aero;
+                    opts.Events.StreamIdentity = StreamIdentity.AsString;
 
                     opts.UseSystemTextJsonForSerialization(configure: o =>
                     {
