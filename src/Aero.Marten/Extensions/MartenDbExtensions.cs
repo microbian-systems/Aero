@@ -60,7 +60,9 @@ public static class MartenDbExtensions
             if(UpdateMartenOptions is not null)
                 UpdateMartenOptions(opts);
         })
-        .UseLightweightSessions();
+        .UseLightweightSessions()
+        //.IntegrateWithWolverine()
+        ;
 
         services.AddScoped<IDynamicMartenRepository, DynamicMartinRepository>();
         //services.AddScoped(typeof(IGenericMartenRepository<>), typeof(GenericMartenRepository<>));
