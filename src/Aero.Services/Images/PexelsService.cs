@@ -42,6 +42,12 @@ public sealed class PexelsService : IPexelsService, IDisposable
     {
         if (!EnsureApiKey()) return [];
 
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            _log.LogWarning("Pexels: SearchPhotos skipped — query is null or empty");
+            return [];
+        }
+
         var sw = Stopwatch.StartNew();
         var url = $"{PhotosBase}search?query={Uri.EscapeDataString(query)}&per_page={Math.Clamp(count, 1, 80)}";
         if (!string.IsNullOrEmpty(orientation))
@@ -92,6 +98,12 @@ public sealed class PexelsService : IPexelsService, IDisposable
     public async Task<IReadOnlyList<PexelsVideo>> SearchVideosAsync(string query, int count = 5, CancellationToken ct = default)
     {
         if (!EnsureApiKey()) return [];
+
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            _log.LogWarning("Pexels: SearchVideos skipped — query is null or empty");
+            return [];
+        }
 
         var sw = Stopwatch.StartNew();
         var url = $"{VideosBase}search?query={Uri.EscapeDataString(query)}&per_page={Math.Clamp(count, 1, 80)}";
