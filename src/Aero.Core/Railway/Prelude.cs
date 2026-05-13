@@ -123,4 +123,14 @@ public static class Prelude
     public static Result<TValue, TError> Fail<TValue, TError>(TError error)
         where TError : AeroError => 
         new Result<TValue, TError>.Failure(error);
+
+    // Todo - finish implementing prelude methods for default Result<T> with AeroError as the error type. This will be a common case and
+    // having these factory methods can improve readability and reduce boilerplate when working with Result<T> where the error type is always AeroError.
+
+    // Default Result<T> (AeroError)
+    //public static Result<TValue> Ok<TValue>(TValue value) =>
+    //    new Result<TValue, AeroEr>.Ok(value);
+
+    //public static Result<TValue> Fail<TValue>(AeroError error) =>
+    //    new Result<TValue>.Failure(error);
 }

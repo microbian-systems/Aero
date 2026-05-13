@@ -1,5 +1,9 @@
 namespace Aero.Core.Railway;
 
+
+/// <inheritdoc />
+public record Result<T> : Result<T, AeroError>;
+
 /// <summary>
 /// Represents a computation that can either succeed with a value or fail with an error.
 /// </summary>
