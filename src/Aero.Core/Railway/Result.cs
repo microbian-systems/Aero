@@ -2,7 +2,24 @@ namespace Aero.Core.Railway;
 
 
 /// <inheritdoc />
-public record Result<T> : Result<T, AeroError>;
+/// <summary>
+/// A default <see cref="Result{T, TError}"/> with <see cref="AeroError"/> as the error type.
+/// </summary>
+/// <typeparam name="T">The type of the success value.</typeparam>
+public record Result<T> : Result<T, AeroError>
+{
+    /// <summary>
+    /// Represents a successful result with a value of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <param name="Value">The success value.</param>
+    public new sealed record Ok(T Value) : Result<T>;
+
+    /// <summary>
+    /// Represents a failed result with an <see cref="AeroError"/>.
+    /// </summary>
+    /// <param name="Error">The error value.</param>
+    public new sealed record Failure(AeroError Error) : Result<T>;
+}
 
 /// <summary>
 /// Represents a computation that can either succeed with a value or fail with an error.
