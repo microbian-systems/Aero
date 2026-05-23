@@ -1,5 +1,3 @@
-using System.Security.Claims;
-
 namespace Aero.Auth.Services;
 
 public sealed record RefreshTokenResult(

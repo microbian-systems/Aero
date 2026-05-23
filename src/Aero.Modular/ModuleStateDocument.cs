@@ -1,6 +1,5 @@
 using Aero.Core;
 using Aero.Core.Entities;
-using System.Reflection.Metadata;
 
 namespace Aero.Modular;
 

@@ -1,4 +1,3 @@
-using OpenTelemetry.Resources;
 using System.Diagnostics;
 
 namespace Aero.Actors;

@@ -1,6 +1,4 @@
-﻿using Aero.Core.Helpers;
-
-namespace Aero.Marten.Extensions;
+﻿namespace Aero.Marten.Extensions;
 
 public static class MartenUtilityExtensions
 {

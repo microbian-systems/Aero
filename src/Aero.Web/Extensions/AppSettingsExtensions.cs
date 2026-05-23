@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Aero.Web.Extensions;
+﻿namespace Aero.Web.Extensions;
 
 public static class AppSettingsExtensions
 {

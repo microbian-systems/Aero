@@ -1,5 +1,3 @@
-using Ganss.Xss;
-
 namespace Aero.Core.Security;
 
 public sealed class HtmlSanitizer : IHtmlSanitizer

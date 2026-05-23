@@ -1,8 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Aero.Auth.Jwt;
-using Aero.Core.Extensions;
-using Microsoft.IdentityModel.Tokens;
+﻿using Aero.Core.Extensions;
 
 namespace Aero.Auth.Jwt;
 
