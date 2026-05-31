@@ -15,7 +15,7 @@ public sealed class TornadoAiChatClientFactory(
 {
     private static bool _tornadoConfigured;
 
-    public Task<Result<IChatClient, AeroError>> CreateAsync(
+    public Task<Result<IChatClient>> CreateAsync(
         AiRuntimeSettings settings,
         CancellationToken cancellationToken = default)
     {
@@ -23,29 +23,30 @@ public sealed class TornadoAiChatClientFactory(
 
         if (!settings.Enabled)
         {
-            return Task.FromResult<Result<IChatClient, AeroError>>(AeroError.ConfigurationError("AI provider is disabled."));
+            return Task.FromResult<Result<IChatClient>>(AeroError.ConfigurationError("AI provider is disabled."));
         }
 
         if (!settings.SupportsContentEnhancement)
         {
-            return Task.FromResult<Result<IChatClient, AeroError>>(AeroError.ConfigurationError("Selected AI provider cannot enhance content."));
+            return Task.FromResult<Result<IChatClient>>(AeroError.ConfigurationError("Selected AI provider cannot enhance content."));
         }
 
         if (string.IsNullOrWhiteSpace(settings.Model))
         {
-            return Task.FromResult<Result<IChatClient, AeroError>>(AeroError.ConfigurationError("AI model is not configured."));
+            return Task.FromResult<Result<IChatClient>>(AeroError.ConfigurationError("AI model is not configured."));
         }
 
         try
         {
             var api = CreateTornadoApi(settings);
             IChatClient client = api.AsChatClient(new ChatModel(settings.Model));
-            return Task.FromResult<Result<IChatClient, AeroError>>(new Result<IChatClient, AeroError>.Ok(client));
+            return Task.FromResult<Result<IChatClient>>(new Result<IChatClient>.Ok(client));
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to create AI chat client for provider {ProviderId}.", settings.ProviderId);
-            return Task.FromResult<Result<IChatClient, AeroError>>(AeroError.ConfigurationError("AI provider could not be initialized."));
+            return Task.FromResult<Result<IChatClient>>(
+                AeroError.ConfigurationError($"AI provider could not be initialized: {ex.Message}"));
         }
     }
 
@@ -63,7 +64,16 @@ public sealed class TornadoAiChatClientFactory(
     {
         if (!string.IsNullOrWhiteSpace(settings.Endpoint))
         {
-            return new TornadoApi(new Uri(settings.Endpoint, UriKind.Absolute));
+            // Use 3-arg constructor with LLmProviders.OpenAi so Tornado constructs the
+            // standard OpenAI-compatible URL: {baseUri}/v1/chat/completions.
+            // Strip trailing /v1 to avoid double-pathing (e.g. /zen/v1/v1/chat/completions).
+            var baseUri = settings.Endpoint.TrimEnd('/');
+            if (baseUri.EndsWith("/v1"))
+            {
+                baseUri = baseUri[..^3];
+            }
+
+            return new TornadoApi(new Uri(baseUri, UriKind.Absolute), null, LLmProviders.OpenAi);
         }
 
         if (string.IsNullOrWhiteSpace(settings.ApiKey))
