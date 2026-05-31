@@ -73,7 +73,7 @@ public sealed class TornadoAiChatClientFactory(
                 baseUri = baseUri[..^3];
             }
 
-            return new TornadoApi(new Uri(baseUri, UriKind.Absolute), null, LLmProviders.OpenAi);
+            return new TornadoApi(new Uri(baseUri, UriKind.Absolute), settings.ApiKey, LLmProviders.OpenAi);
         }
 
         if (string.IsNullOrWhiteSpace(settings.ApiKey))
