@@ -52,8 +52,8 @@ public static class DefaultAiProviderProfiles
                 "OpenCode",
                 "OpenCode",
                 AiProviderKind.OpenCode,
-                Get(configuration, "Ai:Providers:OpenCode:Model", "gpt-4o-mini"),
-                defaultEndpoint: Get(configuration, "Ai:Providers:OpenCode:Endpoint", "http://localhost:3000/v1"),
+                Get(configuration, "Ai:Providers:OpenCode:Model", "deepseek-v4-flash"),
+                defaultEndpoint: Get(configuration, "Ai:Providers:OpenCode:Endpoint", "https://opencode.ai/zen/go"),
                 supportsContentEnhancement: true)
         ];
     }
