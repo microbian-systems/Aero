@@ -1,4 +1,3 @@
-using System.Reflection;
 using Aero.Social.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +10,7 @@ public class PlugExecutor(ILogger<PlugExecutor>? logger = null) : IPlugExecutor
 {
     /// <inheritdoc />
     public async Task<PlugExecutionResult> ExecuteAsync(
-        MethodInfo plugMethod,
+        Func<PlugExecutionContext, CancellationToken, Task<PlugExecutionResult>>? plugExecute,
         ISocialProvider provider,
         PlugExecutionContext context,
         Dictionary<string, object>? fieldValues = null,
@@ -20,48 +19,19 @@ public class PlugExecutor(ILogger<PlugExecutor>? logger = null) : IPlugExecutor
         try
         {
             logger?.LogInformation(
-                "Executing plug {PlugIdentifier} on provider {ProviderIdentifier}",
-                plugMethod.Name,
+                "Executing plug on provider {ProviderIdentifier}",
                 provider.Identifier);
 
-            // Prepare method parameters
-            var parameters = PrepareMethodParameters(plugMethod, context, fieldValues);
-
-            // Invoke the method
-            var result = plugMethod.Invoke(provider, parameters);
-
-            // Handle async methods
-            if (result is Task task)
+            if (plugExecute is null)
             {
-                await task.ConfigureAwait(false);
-
-                // Extract result from Task<T>
-                var resultProperty = task.GetType().GetProperty("Result");
-                var taskResult = resultProperty?.GetValue(task);
-
-                return PlugExecutionResult.SuccessResult(taskResult);
+                return PlugExecutionResult.FailedResult("Plug has no execute delegate assigned.");
             }
 
-            return PlugExecutionResult.SuccessResult(result);
-        }
-        catch (TargetInvocationException tie) when (tie.InnerException != null)
-        {
-            logger?.LogError(
-                tie.InnerException,
-                "Plug {PlugIdentifier} threw an exception",
-                plugMethod.Name);
-
-            return PlugExecutionResult.FailedResult(
-                tie.InnerException.Message,
-                tie.InnerException);
+            return await plugExecute(context, cancellationToken);
         }
         catch (Exception ex)
         {
-            logger?.LogError(
-                ex,
-                "Failed to execute plug {PlugIdentifier}",
-                plugMethod.Name);
-
+            logger?.LogError(ex, "Failed to execute plug on provider {ProviderIdentifier}", provider.Identifier);
             return PlugExecutionResult.FailedResult(ex.Message, ex);
         }
     }
@@ -168,70 +138,4 @@ public class PlugExecutor(ILogger<PlugExecutor>? logger = null) : IPlugExecutor
         }
 
         return true;
-    }
-
-    /// <summary>
-    /// Prepares the parameters for invoking a plug method
-    /// </summary>
-    private object?[] PrepareMethodParameters(
-        MethodInfo method,
-        PlugExecutionContext context,
-        Dictionary<string, object>? fieldValues)
-    {
-        var parameters = method.GetParameters();
-        var args = new object?[parameters.Length];
-
-        for (int i = 0; i < parameters.Length; i++)
-        {
-            var param = parameters[i];
-            var paramName = param.Name;
-
-            if (paramName == null) continue;
-
-            // Try to get value from field values first
-            if (fieldValues?.TryGetValue(paramName, out var fieldValue) == true)
-            {
-                args[i] = ConvertValue(fieldValue, param.ParameterType);
-            }
-            // Then try context data
-            else if (context.Data.TryGetValue(paramName, out var contextValue))
-            {
-                args[i] = ConvertValue(contextValue, param.ParameterType);
-            }
-            // Use default value if parameter is optional
-            else if (param.HasDefaultValue)
-            {
-                args[i] = param.DefaultValue;
-            }
-            // Handle cancellation token
-            else if (param.ParameterType == typeof(CancellationToken))
-            {
-                args[i] = CancellationToken.None;
-            }
-            else
-            {
-                args[i] = null;
-            }
-        }
-
-        return args;
-    }
-
-    /// <summary>
-    /// Converts a value to the target type
-    /// </summary>
-    private object? ConvertValue(object? value, Type targetType)
-    {
-        if (value == null) return null;
-
-        // Handle nullable types
-        var underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
-
-        if (underlyingType.IsEnum && value is string strValue)
-        {
-            return Enum.Parse(underlyingType, strValue, ignoreCase: true);
-        }
-
-        return Convert.ChangeType(value, underlyingType);
-    }
-}
+    }}

@@ -1,11 +1,9 @@
-using System.Reflection;
 using Aero.Core;
 using Aero.Core.Http;
 using Aero.Core.Railway;
 using Aero.Social.Models;
 using Aero.Social.Plugs;
 using Microsoft.Extensions.Logging;
-using Aero.Social.Abstractions;
 
 namespace Aero.Social.Abstractions;
 
@@ -348,41 +346,31 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
     //#region Plug Support
 
     /// <summary>
-    /// Discovers all plug methods defined in this provider using reflection.
+    /// When overridden by a provider, returns the plugs this provider declares.
+    /// Each <see cref="PlugInfo"/> should have its <see cref="PlugInfo.Execute"/>
+    /// delegate set. This replaces the old reflection-based discovery path.
     /// </summary>
-    /// <returns>An enumerable of plug information for each discovered plug.</returns>
-    public virtual IEnumerable<PlugInfo> DiscoverPlugs()
+    /// <returns>An enumerable of plug information for each declared plug.</returns>
+    protected virtual IEnumerable<PlugInfo> GetDeclaredPlugs()
     {
-        var methods = GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
-
-        foreach (var method in methods)
-        {
-            var plugAttr = method.GetCustomAttribute<PlugAttribute>();
-            if (plugAttr != null)
-            {
-                yield return new PlugInfo
-                {
-                    Method = method,
-                    Attribute = plugAttr,
-                    IsPostPlug = false
-                };
-            }
-
-            var postPlugAttr = method.GetCustomAttribute<PostPlugAttribute>();
-            if (postPlugAttr != null)
-            {
-                yield return new PlugInfo
-                {
-                    Method = method,
-                    PostPlugAttribute = postPlugAttr,
-                    IsPostPlug = true
-                };
-            }
-        }
+        yield break;
     }
 
     /// <summary>
-    /// Executes a plug method with the given context and executor.
+    /// Discovers all plugs defined in this provider.
+    /// Delegates to <see cref="GetDeclaredPlugs"/> which each provider
+    /// implements directly — no runtime reflection or catalog lookup.
+    /// </summary>
+    /// <returns>An enumerable of plug information for each discovered plug.</returns>
+    public IEnumerable<PlugInfo> DiscoverPlugs()
+    {
+        return GetDeclaredPlugs();
+    }
+
+    /// <summary>
+    /// Executes a plug with the given context and executor.
+    /// Calls the <see cref="PlugInfo.Execute"/> delegate directly —
+    /// no <c>MethodInfo.Invoke()</c>.
     /// </summary>
     /// <param name="plug">The plug to execute.</param>
     /// <param name="executor">The plug executor.</param>
@@ -418,7 +406,7 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
 
         try
         {
-            return await executor.ExecuteAsync(plug.Method, this, context, fieldValues, cancellationToken);
+            return await executor.ExecuteAsync(plug.Execute, this, context, fieldValues, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -427,62 +415,15 @@ public abstract class SocialProviderBase : HttpClientBase, ISocialProvider
     }
 
     /// <summary>
-    /// Gets a plug by its identifier.
+    /// Gets a plug by its identifier from the declared plugs.
     /// </summary>
     /// <param name="identifier">The plug identifier to find.</param>
     /// <returns>The plug information, or null if not found.</returns>
-    public virtual PlugInfo? GetPlug(string identifier)
+    public PlugInfo? GetPlug(string identifier)
     {
-        return DiscoverPlugs().FirstOrDefault(p =>
+        return GetDeclaredPlugs().FirstOrDefault(p =>
             (p.IsPostPlug && p.PostPlugAttribute?.Identifier == identifier) ||
             (!p.IsPostPlug && p.Attribute?.Identifier == identifier));
-    }
-
-    /// <summary>
-    /// Information about a discovered plug.
-    /// </summary>
-    public class PlugInfo
-    {
-        /// <summary>
-        /// Gets or sets the method info for the plug.
-        /// </summary>
-        public MethodInfo Method { get; set; } = null!;
-
-        /// <summary>
-        /// Gets or sets the plug attribute (for regular plugs).
-        /// </summary>
-        public PlugAttribute? Attribute { get; set; }
-
-        /// <summary>
-        /// Gets or sets the post plug attribute (for post-processing plugs).
-        /// </summary>
-        public PostPlugAttribute? PostPlugAttribute { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this is a post-processing plug.
-        /// </summary>
-        public bool IsPostPlug { get; set; }
-
-        /// <summary>
-        /// Gets the identifier for this plug.
-        /// </summary>
-        public string Identifier => IsPostPlug
-            ? PostPlugAttribute?.Identifier ?? string.Empty
-            : Attribute?.Identifier ?? string.Empty;
-
-        /// <summary>
-        /// Gets the title for this plug.
-        /// </summary>
-        public string Title => IsPostPlug
-            ? PostPlugAttribute?.Title ?? string.Empty
-            : Attribute?.Title ?? string.Empty;
-
-        /// <summary>
-        /// Gets the description for this plug.
-        /// </summary>
-        public string Description => IsPostPlug
-            ? PostPlugAttribute?.Description ?? string.Empty
-            : Attribute?.Description ?? string.Empty;
     }
 
     //#endregion

@@ -1,6 +1,4 @@
-﻿using Aero.Auth.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace Aero.Auth.Jwt;
 

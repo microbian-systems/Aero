@@ -9,7 +9,7 @@ namespace Aero.Marten.Extensions;
 /// <summary>
 /// Extends <see cref="IdentityBuilder"/> so that AeroDB services can be registered through it.
 /// </summary>
-public static class IdentityBuilderExtensions
+public static class MartenIdentityExtensions
 {
 	/// <summary>
 	/// Registers a AeroDB as the user store.

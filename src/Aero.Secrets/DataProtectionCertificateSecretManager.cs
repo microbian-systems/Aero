@@ -2,7 +2,6 @@ using System.Security.Cryptography.X509Certificates;
 using Aero.Secrets.Models;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
-using System.IO;
 
 namespace Aero.Secrets;
 

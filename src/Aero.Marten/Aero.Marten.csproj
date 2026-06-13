@@ -30,6 +30,7 @@
   <ItemGroup>
     <PackageReference Include="Throw" />
     <PackageReference Include="ThrowGuard" />
+    <PackageReference Include="WolverineFx.Marten" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,3 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
 namespace Aero.Modular;
 
 /// <summary>
@@ -122,9 +118,21 @@ public interface IDashboardWidget { }
 public interface IContentPart { }
 
 /// <summary>
-/// Marker interface for field editors.
+/// Defines a field editor for content types in the admin UI.
+/// Implementations provide the metadata needed to render and normalize
+/// editor values for a specific field type (e.g. "text", "image", "reference").
 /// </summary>
-public interface IFieldEditor { }
+public interface IFieldEditor
+{
+    /// <summary>The field type alias this editor handles (e.g. "text", "image", "reference").</summary>
+    string FieldType { get; }
+
+    /// <summary>The Blazor component name used in the admin UI (e.g. "aero-textbox").</summary>
+    string EditorComponent { get; }
+
+    /// <summary>Normalizes a raw editor value before storage.</summary>
+    object? Normalize(object? value);
+}
 
 /// <summary>
 /// Marker interface for search indexers.

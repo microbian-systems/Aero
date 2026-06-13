@@ -1,31 +1,35 @@
-using Ganss.Xss;
+using System.Text.RegularExpressions;
 
 namespace Aero.Core.Security;
 
 public sealed class HtmlSanitizer : IHtmlSanitizer
 {
-    private readonly Ganss.Xss.HtmlSanitizer sanitizer;
+    private static readonly Regex ScriptTag =
+        new(@"<script[^>]*>.*?</script>",
+            RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
 
-    public HtmlSanitizer()
-    {
-        sanitizer = new Ganss.Xss.HtmlSanitizer();
-        sanitizer.AllowedTags.Remove("script");
-        sanitizer.AllowedTags.Remove("style");
-        sanitizer.AllowedSchemes.Remove("javascript");
+    private static readonly Regex JavascriptScheme =
+        new(@"\bjavascript\s*:",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        foreach (var attribute in sanitizer.AllowedAttributes.Where(static attribute => attribute.StartsWith("on", StringComparison.OrdinalIgnoreCase)).ToArray())
-        {
-            sanitizer.AllowedAttributes.Remove(attribute);
-        }
-    }
+    private static readonly Regex OnEventDoubleQuoted =
+        new(@"\son\w+\s*=\s*""[^""]*""",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private static readonly Regex OnEventSingleQuoted =
+        new(@"\son\w+\s*=\s*'[^']*'",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     public string Sanitize(string? html)
     {
         if (string.IsNullOrWhiteSpace(html))
-        {
             return string.Empty;
-        }
 
-        return sanitizer.Sanitize(html);
+        html = ScriptTag.Replace(html, "");
+        html = JavascriptScheme.Replace(html, "blocked:");
+        html = OnEventDoubleQuoted.Replace(html, "");
+        html = OnEventSingleQuoted.Replace(html, "");
+
+        return html;
     }
 }

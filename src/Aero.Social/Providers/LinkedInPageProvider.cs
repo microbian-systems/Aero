@@ -829,19 +829,57 @@ public class LinkedInPageProvider(
 
     //#endregion
 
-    //#region Plug Examples
+    //#region Plug Declarations
 
     /// <summary>
-    /// Auto-reposts a post when it reaches a certain number of likes
+    /// Declares the plugs for this provider.
+    /// Each plug defines its schedule, fields, and execute delegate.
     /// </summary>
-    [PostPlug(
-        identifier: "auto-repost-post",
-        title: "Auto Repost Post",
-        description: "Automatically reposts when the post reaches a specified number of likes",
-        runEveryMilliseconds: 21600000, // 6 hours
-        totalRuns: 10)]
-    [PlugField("minLikes", "number", "10", "Minimum number of likes before reposting")]
-    [PlugField("message", "string", "Check out this popular post!", "Message to include with the repost")]
+    protected override IEnumerable<PlugInfo> GetDeclaredPlugs()
+    {
+        yield return new PlugInfo
+        {
+            IsPostPlug = true,
+            PostPlugAttribute = new PostPlugAttribute(
+                identifier: "auto-repost-post",
+                title: "Auto Repost Post",
+                description: "Automatically reposts when the post reaches a specified number of likes",
+                runEveryMilliseconds: 21600000,
+                totalRuns: 10)
+                .AddField(new PlugField("minLikes", "number", "Minimum number of likes before reposting")),
+            Execute = async (ctx, ct) =>
+            {
+                var minLikes = ctx.Data.TryGetValue("minLikes", out var likes) ? Convert.ToInt32(likes) : 10;
+                await AutoRepostPost(
+                    ctx.PostId ?? "", ctx.AccessToken, minLikes,
+                    ctx.Data.GetValueOrDefault("message", "Check out this popular post!")?.ToString() ?? "",
+                    ct);
+                return PlugExecutionResult.SuccessResult();
+            }
+        };
+
+        yield return new PlugInfo
+        {
+            IsPostPlug = true,
+            PostPlugAttribute = new PostPlugAttribute(
+                identifier: "auto-plug-post",
+                title: "Auto Plug Post",
+                description: "Automatically adds a promotional comment when the post reaches a specified number of likes",
+                runEveryMilliseconds: 21600000,
+                totalRuns: 5)
+                .AddField(new PlugField("minLikes", "number", "Minimum number of likes before adding the comment")),
+            Execute = async (ctx, ct) =>
+            {
+                var minLikes = ctx.Data.TryGetValue("minLikes", out var likes) ? Convert.ToInt32(likes) : 50;
+                await AutoPlugPost(
+                    ctx.PostId ?? "", ctx.AccessToken, minLikes,
+                    ctx.Data.GetValueOrDefault("comment", "Thanks for the engagement!")?.ToString() ?? "",
+                    ct);
+                return PlugExecutionResult.SuccessResult();
+            }
+        };
+    }
+
     public async Task AutoRepostPost(
         string postId,
         string accessToken,
@@ -909,14 +947,6 @@ public class LinkedInPageProvider(
     /// <summary>
     /// Auto-adds a comment when a post reaches a certain number of likes
     /// </summary>
-    [PostPlug(
-        identifier: "auto-plug-post",
-        title: "Auto Plug Post",
-        description: "Automatically adds a promotional comment when the post reaches a specified number of likes",
-        runEveryMilliseconds: 21600000, // 6 hours
-        totalRuns: 5)]
-    [PlugField("minLikes", "number", "50", "Minimum number of likes before adding the comment")]
-    [PlugField("comment", "string", "Thanks for the engagement! Follow for more content.", "Comment text to add")]
     public async Task AutoPlugPost(
         string postId,
         string accessToken,

@@ -2,10 +2,13 @@ namespace Aero.Core.Ai;
 
 public enum AiProvider
 {
-    Groq,       // Free
-    Gemini,     // Free
-    DeepSeek,   // Very cheap
-    OpenAI,     // User's key
     Anthropic,  // User's key
-    Local       // Ollama
+    DeepSeek,   // Very cheap
+    Fireworks,  // Free
+    Gemini,     // Free
+    Groq,       // Free
+    OpenAI,     // User's key
+    OpenCode,   // User's key
+    OpenRouter, // User's key
+    Local       // Ollama / LM Studio
 }
