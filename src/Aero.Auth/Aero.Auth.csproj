@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Aero Authentication Services</Description>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
     <Title>Aero.Auth</Title>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <OutputType>Library</OutputType>

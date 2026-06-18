@@ -21,8 +21,7 @@
         <RepositoryType>git</RepositoryType>
 
         <!-- Optional: Automatically creates a package on every build -->
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    </PropertyGroup>
+</PropertyGroup>
     
     <ItemGroup>
       <ProjectReference Include="..\Aero.Marten\Aero.Marten.csproj" />

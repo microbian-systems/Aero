@@ -7,7 +7,7 @@
     <PackageProjectUrl>http://Aero.pro</PackageProjectUrl>
     <RepositoryUrl>http://github.com/Aero</RepositoryUrl>
     <PackageTags>Aero, web, asp.net core, .net, Aero</PackageTags>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
