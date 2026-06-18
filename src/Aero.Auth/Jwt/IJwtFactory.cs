@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-namespace Aero.Auth.Jwt;
+﻿namespace Aero.Auth.Jwt;
 
 public record JwtResponseModel
 {

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>Marten Persistence for the Aero Web Platform</Title>
     <Description>Core components for the Aero web application platform</Description>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup>
@@ -25,11 +25,11 @@
     <RepositoryType>git</RepositoryType>
 
     <!-- Optional: Automatically creates a package on every build -->
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
+</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Throw" />
     <PackageReference Include="ThrowGuard" />
+    <PackageReference Include="WolverineFx.Marten" />
   </ItemGroup>
 
   <ItemGroup>

@@ -123,4 +123,28 @@ public static class Prelude
     public static Result<TValue, TError> Fail<TValue, TError>(TError error)
         where TError : AeroError => 
         new Result<TValue, TError>.Failure(error);
+
+    /// <summary>
+    /// Creates a default <see cref="Result{T}"/> representing success with the specified value.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the success value.</typeparam>
+    /// <param name="value">The success value.</param>
+    /// <returns>A Result.Ok containing the value, with <see cref="AeroError"/> as the error type.</returns>
+    /// <remarks>
+    /// This is the default Result factory for the most common case where the error type is always <see cref="AeroError"/>.
+    /// </remarks>
+    public static Result<TValue> Ok<TValue>(TValue value) =>
+        new Result<TValue>.Ok(value);
+
+    /// <summary>
+    /// Creates a default <see cref="Result{T}"/> representing failure with the specified error.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the success value (for type inference).</typeparam>
+    /// <param name="error">The error value.</param>
+    /// <returns>A Result.Failure containing the error, with <see cref="AeroError"/> as the error type.</returns>
+    /// <remarks>
+    /// This is the default Result factory for the most common case where the error type is always <see cref="AeroError"/>.
+    /// </remarks>
+    public static Result<TValue> Fail<TValue>(AeroError error) =>
+        new Result<TValue>.Failure(error);
 }

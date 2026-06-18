@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Title>Core Package for the Aero Web Platform</Title>
     <Description>Core components for the Aero web application platform</Description>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -26,8 +26,7 @@
     <RepositoryType>git</RepositoryType>
 
     <!-- Optional: Automatically creates a package on every build -->
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
+</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="FlakeId" />
 		<PackageReference Include="Microsoft.Extensions.Identity.Core" />
@@ -56,7 +55,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlSanitizer" />
     <PackageReference Include="System.Configuration.ConfigurationManager" />
     <PackageReference Include="WindowsAzure.Storage" />
   </ItemGroup>

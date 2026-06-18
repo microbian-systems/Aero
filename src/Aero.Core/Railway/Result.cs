@@ -1,5 +1,41 @@
 namespace Aero.Core.Railway;
 
+
+/// <inheritdoc />
+/// <summary>
+/// A default <see cref="Result{T, TError}"/> with <see cref="AeroError"/> as the error type.
+/// </summary>
+/// <typeparam name="T">The type of the success value.</typeparam>
+public record Result<T> : Result<T, AeroError>
+{
+    /// <summary>
+    /// Represents a successful result with a value of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <param name="Value">The success value.</param>
+    public new sealed record Ok(T Value) : Result<T>;
+
+    /// <summary>
+    /// Represents a failed result with an <see cref="AeroError"/>.
+    /// </summary>
+    /// <param name="Error">The error value.</param>
+    public new sealed record Failure(AeroError Error) : Result<T>;
+
+    public static implicit operator Result<T>(T value) => new Ok(value);
+    public static implicit operator Result<T>(AeroError error) => new Failure(error);
+
+    public static Result<T> From(Result<T, AeroError> result)
+    {
+        return result switch
+        {
+            Result<T>.Ok ok => ok,
+            Result<T>.Failure failure => failure,
+            Result<T, AeroError>.Ok(var value) => new Ok(value),
+            Result<T, AeroError>.Failure(var error) => new Failure(error),
+            _ => new Failure(AeroError.CreateError("Unknown result state."))
+        };
+    }
+}
+
 /// <summary>
 /// Represents a computation that can either succeed with a value or fail with an error.
 /// </summary>

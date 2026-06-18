@@ -54,6 +54,12 @@ using Aero.Core;
 public static partial class ResultExtensions
 {
     /// <summary>
+    /// Converts the legacy two-parameter AeroError result into the default <see cref="Result{T}"/> shape.
+    /// </summary>
+    public static Result<TValue> ToDefaultResult<TValue>(this Result<TValue, AeroError> result) =>
+        Result<TValue>.From(result);
+
+    /// <summary>
     /// Gets a value indicating whether the Result is Ok.
     /// </summary>
     public static bool IsSuccess<TValue, TError>(this Result<TValue, TError> r) where TError : AeroError => r is Result<TValue, TError>.Ok;

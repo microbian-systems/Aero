@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace Aero.Core.Http;
 
 public sealed class AeroHttpLoggingHandler : DelegatingHandler

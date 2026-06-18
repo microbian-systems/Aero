@@ -25,3 +25,4 @@ public abstract record AeroEventMessage<T> : AeroEventMessageBase
     public required T Payload;
 }
 
+public abstract record AeroEvent(string message);

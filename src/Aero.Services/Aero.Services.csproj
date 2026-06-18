@@ -1,32 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- <PropertyGroup> -->
-  <!--   <Title>Common services for the Aero application Platform</Title> -->
-  <!--   <Description>Core components for the Aero application platform</Description> -->
-  <!--   <IsPackable>false</IsPackable> -->
-  <!--   <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects> -->
-  <!-- </PropertyGroup> -->
+  
+  
+  
+  
+  
+  
   <PropertyGroup>
-    <!-- The unique ID for your package on NuGet.org -->
+    
     <PackageId>Aero.Services</PackageId>
 
-    <!-- Increment this version every time you push a new update -->
+    
     <Version>0.0.5-alpha</Version>
 
-    <!-- Your name or organization -->
+    
     <Authors>Microbians</Authors>
 
-    <!-- A brief description shown in the NuGet gallery -->
+    
     <Description>A lightweight library for making it easier to build .net applications</Description>
 
-    <!-- Optional: High-quality metadata for better discoverability -->
+    
     <PackageTags>aero;utils;netcore</PackageTags>
     <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
     <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
-    <!-- Optional: Automatically creates a package on every build -->
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="IdentityService.cs" />
