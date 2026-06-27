@@ -1,8 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>Aero.Modular</PackageId>
+    <Version>0.0.6-alpha</Version>
+    <Authors>Microbians</Authors>
+    <Title>Modular extensions for the Aero Web Platform</Title>
+    <Description>Modular architecture support for the Aero platform</Description>
+    <PackageTags>aero;modular</PackageTags>
+    <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>aero-logo-new.png</PackageIcon>
+    <IsPackable>true</IsPackable>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Marten" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\aero-logo-new.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
