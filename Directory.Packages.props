@@ -25,6 +25,7 @@
     <PackageVersion Include="LlmTornado.Toolkit" Version="1.3.12" />
     <PackageVersion Include="LlmTornado.VectorDatabases" Version="1.0.0" />
     <PackageVersion Include="LlmTornado.VectorDatabases.PgVector" Version="1.0.0" />
+
     <PackageVersion Include="MailKit" Version="4.15.1" />
     <PackageVersion Include="Markdig" Version="1.1.1" />
     <PackageVersion Include="Marten" Version="8.37.1" />

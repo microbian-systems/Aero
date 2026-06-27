@@ -1,12 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
+    <PackageId>Aero.Auth</PackageId>
+    <Version>0.0.6-alpha</Version>
+    <Authors>Microbians</Authors>
     <Description>Aero Authentication Services</Description>
     <IsPackable>true</IsPackable>
     <Title>Aero.Auth</Title>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <OutputType>Library</OutputType>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <PackageTags>aero;auth;security</PackageTags>
+    <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>aero-logo-new.png</PackageIcon>
   </PropertyGroup>
 
 
@@ -28,4 +36,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\assets\aero-logo-new.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>

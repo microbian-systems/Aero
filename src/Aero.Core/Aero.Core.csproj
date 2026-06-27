@@ -11,7 +11,7 @@
     <PackageId>Aero.Core</PackageId>
 
     <!-- Increment this version every time you push a new update -->
-    <Version>0.0.5-alpha</Version>
+    <Version>0.0.6-alpha</Version>
 
     <!-- Your name or organization -->
     <Authors>Microbians</Authors>
@@ -24,6 +24,7 @@
     <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
     <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageIcon>aero-logo-new.png</PackageIcon>
 
     <!-- Optional: Automatically creates a package on every build -->
 </PropertyGroup>
@@ -57,5 +58,8 @@
   <ItemGroup>
     <PackageReference Include="System.Configuration.ConfigurationManager" />
     <PackageReference Include="WindowsAzure.Storage" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\aero-logo-new.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
