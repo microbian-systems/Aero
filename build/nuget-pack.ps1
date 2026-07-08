@@ -5,27 +5,41 @@
 .DESCRIPTION
     Builds all library projects in Release mode and produces .nupkg files
     in the build/nupkgs/ directory. Skips Aero.Cloudflare (EXE) and test projects.
+.PARAMETER VersionPrefix
+    Override the version prefix (e.g. "1.0.0"). When set, overrides the
+    VersionPrefix in Directory.Build.props. Used by the release workflow
+    to set the version from the git tag.
 .PARAMETER VersionSuffix
-    Optional SemVer 2.0 suffix (e.g. "alpha.1", "rc.1").
+    Optional SemVer 2.0 suffix (e.g. "alpha.1", "rc.1", "preview").
     When set, packages are versioned as <base-version>-<suffix>.
     Default: "alpha" (produces 0.0.5-alpha).
+    Ignored when -Stable is used.
+.PARAMETER Stable
+    Produces stable (release) packages with no suffix.
+    Overrides both -VersionSuffix and the default VersionSuffix in
+    Directory.Build.props, producing e.g. 0.0.5 instead of 0.0.5-alpha.
 .PARAMETER OutputDir
     Output directory for nupkg files. Default: build/nupkgs.
 .PARAMETER Configuration
     Build configuration. Default: Release.
 .EXAMPLE
+    # Preview: produces 0.0.5-alpha
     ./build/nuget-pack.ps1
-    Packs all libraries with version 0.0.5-alpha.
 
-    ./build/nuget-pack.ps1 -VersionSuffix "alpha.42"
-    Packs with version 0.0.5-alpha.42.
+    # Preview with custom suffix: produces 0.0.5-rc.1
+    ./build/nuget-pack.ps1 -VersionSuffix "rc.1"
 
-    ./build/nuget-pack.ps1 -VersionSuffix "" -Configuration Debug
-    Packs with version 0.0.5 (no suffix, Debug config).
+    # Stable release: produces 0.0.5
+    ./build/nuget-pack.ps1 -Stable
+
+    # Tag-based release: overrides version from git tag
+    ./build/nuget-pack.ps1 -Stable -VersionPrefix "1.2.0"
 #>
 
 param(
+    [string]$VersionPrefix = "",
     [string]$VersionSuffix = "alpha",
+    [switch]$Stable,
     [string]$OutputDir = "",
     [string]$Configuration = "Release"
 )
@@ -37,9 +51,24 @@ Write-Host "=== Aero NuGet Pack Script ===" -ForegroundColor Cyan
 Write-Host "Repo:     $RepoRoot" -ForegroundColor Gray
 Write-Host "Output:   $OutputDir" -ForegroundColor Gray
 Write-Host "Config:   $Configuration" -ForegroundColor Gray
-Write-Host "Suffix:   $($VersionSuffix -replace '^', '-' -replace '^-$', '(none)')" -ForegroundColor Gray
 
-# Ensure output directory exists
+$versionArgs = @()
+if ($VersionPrefix) {
+    Write-Host "Prefix:   $VersionPrefix (override from tag)" -ForegroundColor Green
+    $versionArgs += "-p:VersionPrefix=$VersionPrefix"
+}
+if ($Stable) {
+    Write-Host "Version:  stable (no suffix)" -ForegroundColor Green
+    $versionArgs += "-p:VersionSuffix="  # Override Directory.Build.props to empty
+} else {
+    Write-Host "Suffix:   $VersionSuffix" -ForegroundColor Gray
+    if ($VersionSuffix) {
+        $versionArgs += "-p:VersionSuffix=$VersionSuffix"
+    }
+}
+
+# Ensure output directory exists (fresh each run)
+Remove-Item -Recurse -Force $OutputDir -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 
 # Libraries to pack (excluding Aero.Cloudflare - EXE, and test projects)
@@ -64,11 +93,6 @@ $libProjects = @(
     "$RepoRoot/src/Aero.Auth"
     "$RepoRoot/src/Aero.MerakiUI"
 )
-
-$versionArgs = @()
-if ($VersionSuffix) {
-    $versionArgs += "-p:VersionSuffix=$VersionSuffix"
-}
 
 $failed = @()
 

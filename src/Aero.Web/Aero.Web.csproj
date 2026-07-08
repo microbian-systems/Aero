@@ -11,9 +11,7 @@
     <PackageId>Aero.Web</PackageId>
 
     <!-- Increment this version every time you push a new update -->
-    <Version>0.0.5-alpha</Version>
-
-    <!-- Your name or organization -->
+<!-- Your name or organization -->
     <Authors>Microbians</Authors>
 
     <!-- A brief description shown in the NuGet gallery -->

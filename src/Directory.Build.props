@@ -14,15 +14,17 @@
     </PropertyGroup>
 
     <PropertyGroup Label="Package information">
-        <Version>0.0.5-alpha</Version>
+        <VersionPrefix>0.0.6</VersionPrefix>
+        <VersionSuffix>alpha</VersionSuffix>
         <Authors>Troy Robinson, et al</Authors>
         <Company>Microbians</Company>
         <Copyright>Copyright (c) 2023-2026 Microbians</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageTags>asp.net efcore Aero</PackageTags>
-<!--        <PackageIcon>../../assets/Aero2.png</PackageIcon>-->
+        <PackageIcon>aero-logo-new.png</PackageIcon>
         <PackageProjectUrl>https://github.com/microbian-systems/Aero</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/microbian-systems/Aero</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -31,4 +33,9 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)../assets/aero-logo-new.png" Pack="true" PackagePath="\" />
+        <None Include="$(MSBuildThisFileDirectory)../README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 </Project>

@@ -9,12 +9,7 @@
   <PropertyGroup>
     
     <PackageId>Aero.Services</PackageId>
-
-    
-    <Version>0.0.5-alpha</Version>
-
-    
-    <Authors>Microbians</Authors>
+<Authors>Microbians</Authors>
 
     
     <Description>A lightweight library for making it easier to build .net applications</Description>

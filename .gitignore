@@ -344,3 +344,5 @@ ASALocalRun/
 key-5df2dcac-d8dd-4cdd-8243-b9d9fc806dd5.xml
 *.map
 piranha.db
+
+build/nupkgs/
