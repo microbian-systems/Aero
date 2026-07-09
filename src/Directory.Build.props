@@ -21,7 +21,8 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageTags>asp.net efcore Aero</PackageTags>
-<!--        <PackageIcon>../../assets/Aero2.png</PackageIcon>-->
+        <PackageIcon>aero-logo-new.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageProjectUrl>https://github.com/microbian-systems/Aero</PackageProjectUrl>
         <RepositoryUrl>https://github.com/microbian-systems/Aero</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -31,4 +32,9 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)../assets/aero-logo-new.png" Pack="true" PackagePath="\" />
+        <None Include="$(MSBuildThisFileDirectory)../README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 </Project>
