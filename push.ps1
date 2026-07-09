@@ -1,8 +1,10 @@
 #!/usr/bin/env pwsh
 
-if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
+$apiKey = $env:GITHUB_API_KEY_Aero2 ?? $env:NUGET_API_KEY
+if ([string]::IsNullOrWhiteSpace($apiKey)) {
     Write-Host "NUGET_API_KEY environment variable is not set." -ForegroundColor Red
-    Write-Host "Set it with: `$env:NUGET_API_KEY = 'your-key-here'" -ForegroundColor Yellow
+    Write-Host "Set: `$env:GITHUB_API_KEY_Aero2 = 'your-Aero2-key'" -ForegroundColor Yellow
+    Write-Host "Or:  `$env:NUGET_API_KEY = 'your-key-here'" -ForegroundColor Yellow
     exit 1
 }
 

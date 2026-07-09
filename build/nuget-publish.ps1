@@ -7,9 +7,11 @@ if (-not $nupkgs) {
     exit 1
 }
 
-if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) {
-    Write-Host "NUGET_API_KEY is empty or not set." -ForegroundColor Red
-    Write-Host "Set it with: `$env:NUGET_API_KEY = 'your-key-here'" -ForegroundColor Yellow
+$apiKey = $env:GITHUB_API_KEY_Aero2 ?? $env:NUGET_API_KEY
+if ([string]::IsNullOrWhiteSpace($apiKey)) {
+    Write-Host "No API key found." -ForegroundColor Red
+    Write-Host "Set: `$env:GITHUB_API_KEY_Aero2 = 'your-Aero2-key'" -ForegroundColor Yellow
+    Write-Host "Or:  `$env:NUGET_API_KEY = 'your-key-here'" -ForegroundColor Yellow
     exit 1
 }
 
@@ -17,7 +19,7 @@ Write-Host "Pushing $($nupkgs.Count) packages to nuget.org..." -ForegroundColor 
 $failed = 0
 foreach ($nupkg in $nupkgs) {
     Write-Host "  $($nupkg.Name)..." -ForegroundColor Gray
-    dotnet nuget push $nupkg.FullName --source https://api.nuget.org/v3/index.json --api-key "$env:NUGET_API_KEY" --skip-duplicate
+    dotnet nuget push $nupkg.FullName --source https://api.nuget.org/v3/index.json --api-key "$apiKey" --skip-duplicate
     if ($LASTEXITCODE -ne 0) {
         Write-Host "  FAILED: $($nupkg.Name)" -ForegroundColor Red
         $failed++
@@ -30,7 +32,7 @@ if ($snupkgs) {
     Write-Host "Pushing $($snupkgs.Count) symbol packages..." -ForegroundColor Cyan
     foreach ($snupkg in $snupkgs) {
         Write-Host "  $($snupkg.Name)..." -ForegroundColor Gray
-        dotnet nuget push $snupkg.FullName --source https://api.nuget.org/v3/index.json --api-key "$env:NUGET_API_KEY" --skip-duplicate
+        dotnet nuget push $snupkg.FullName --source https://api.nuget.org/v3/index.json --api-key "$apiKey" --skip-duplicate
         if ($LASTEXITCODE -ne 0) {
             Write-Host "  FAILED: $($snupkg.Name)" -ForegroundColor Red
             $failed++
