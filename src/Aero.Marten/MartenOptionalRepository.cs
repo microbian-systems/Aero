@@ -72,7 +72,7 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
     public override async Task<bool> ExistsAsync(long id, CancellationToken ct = default)
     {
         var exists = await session.Query<T>()
-            .AnyAsync(e => e.Id == id, token: ct);
+            .Where(e => e.Id == id).AnyAsync(ct);
         return exists;
     }
 

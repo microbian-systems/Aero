@@ -14,9 +14,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Marten" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
