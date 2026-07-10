@@ -441,7 +441,7 @@ analyzers/dotnet/cs/Aero.Cms.SourceGenerators.dll
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.*" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Pack the source generator DLL into the analyzers/dotnet/cs folder -->
@@ -534,7 +534,7 @@ The NeoUI pattern uses a `$(UsePackageReferences)` MSBuild property to switch be
   <ProjectReference Include="..\NeoUI.Blazor.Primitives\..." />
 </ItemGroup>
 <ItemGroup Condition="'$(UsePackageReferences)' == 'true'">
-  <PackageReference Include="NeoUI.Blazor.Primitives" Version="4.0.2" />
+  <PackageReference Include="NeoUI.Blazor.Primitives" Version="4.0.8" />
 </ItemGroup>
 ```
 
@@ -1378,7 +1378,7 @@ Package metadata (Version, Authors, License, etc.) is inherited from `Directory.
     <NoWarn>$(NoWarn);RS2008</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.*" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(OutputPath)\$(AssemblyName).dll"
