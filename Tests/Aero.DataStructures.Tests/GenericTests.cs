@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.DataStructures.Graphs;
 using Shouldly;
 using System.Threading.Tasks;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for GenericTests.
+/// </summary>
 public class GenericTests
 {
-    [Test]
+        /// <summary>
+    /// Graph_BFS_Test method.
+    /// </summary>
+[Test]
     public void Graph_BFS_Test()
     {
         var graph = new Graph<string>();
@@ -26,7 +32,10 @@ public class GenericTests
         bfs.OrderBy(x => x).ShouldBe(new[] { "A", "B", "C", "D", "E" }.OrderBy(x => x));
     }
 
-            [Test]
+                        /// <summary>
+            /// AddEdge_ShouldAddVertices_WhenTheyDoNotExist method.
+            /// </summary>
+[Test]
         public void AddEdge_ShouldAddVertices_WhenTheyDoNotExist()
         {
             // Arrange
@@ -42,7 +51,10 @@ public class GenericTests
             matrix.GetLength(1).ShouldBe(2);
         }
 
-        [Test]
+                /// <summary>
+        /// Bfs_ShouldTraverseInLevelOrder_SortedAlphabetically method.
+        /// </summary>
+[Test]
         public void Bfs_ShouldTraverseInLevelOrder_SortedAlphabetically()
         {
             // Arrange
@@ -71,7 +83,10 @@ public class GenericTests
             result.ShouldBe(new[] { "A", "B", "C", "D", "E" }, ignoreOrder: true);
         }
 
-        [Test]
+                /// <summary>
+        /// Bfs_ShouldHandleDisconnectedGraph_ByIgnoringUnreachableNodes method.
+        /// </summary>
+[Test]
         public void Bfs_ShouldHandleDisconnectedGraph_ByIgnoringUnreachableNodes()
         {
             // Arrange
@@ -89,7 +104,10 @@ public class GenericTests
             result.ShouldNotContain("Y");
         }
 
-        [Test]
+                /// <summary>
+        /// Dfs_ShouldTraverseDeep_AndRespectAlphabeticalOrder method.
+        /// </summary>
+[Test]
         public void Dfs_ShouldTraverseDeep_AndRespectAlphabeticalOrder()
         {
             // Arrange
@@ -122,7 +140,10 @@ public class GenericTests
             result.OrderBy(x => x).ShouldBe(valid.OrderBy(x => x));
 }
 
-        [Test]
+                /// <summary>
+        /// Dijkstra_ShouldFindCheapestPath_NotFewestEdges method.
+        /// </summary>
+[Test]
         public void Dijkstra_ShouldFindCheapestPath_NotFewestEdges()
         {
             // Arrange
@@ -146,7 +167,10 @@ public class GenericTests
             distances["End"].ShouldBe(30);
         }
 
-        [Test]
+                /// <summary>
+        /// Dijkstra_ShouldReturnIntMax_ForUnreachableNodes method.
+        /// </summary>
+[Test]
         public void Dijkstra_ShouldReturnIntMax_ForUnreachableNodes()
         {
             // Arrange
@@ -162,7 +186,10 @@ public class GenericTests
             distances["C"].ShouldBe(int.MaxValue);
         }
 
-        [Test]
+                /// <summary>
+        /// GetAdjacencyMatrix_ShouldCorrectlyMapWeights method.
+        /// </summary>
+[Test]
         public void GetAdjacencyMatrix_ShouldCorrectlyMapWeights()
         {
             // Arrange
@@ -193,7 +220,10 @@ public class GenericTests
             matrix[0, 2].ShouldBeNull();
         }
         
-        [Test]
+                /// <summary>
+        /// Graph_ShouldHandleIntegerVertices method.
+        /// </summary>
+[Test]
         public void Graph_ShouldHandleIntegerVertices()
         {
             // Arrange
@@ -227,7 +257,10 @@ public class GenericTests
     //     Assert.Equal(new[] { "A", "C", "E", "D", "B" }, dfs);
     // }
 
-    [Test]
+        /// <summary>
+    /// Graph_Dijkstra_Test method.
+    /// </summary>
+[Test]
     public async Task Graph_Dijkstra_Test()
     {
         var graph = new Graph<string>();
@@ -250,7 +283,10 @@ public class GenericTests
         await Assert.That(dijkstra["E"]).IsEqualTo(2);
     }
 
-    [Test]
+        /// <summary>
+    /// Graph_GetAdjacencyMatrix_Test method.
+    /// </summary>
+[Test]
     public async Task Graph_GetAdjacencyMatrix_Test()
     {
         var graph = new Graph<string>();

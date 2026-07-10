@@ -6,13 +6,6 @@
         <ImplicitUsings>true</ImplicitUsings>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <NoWarn>1701;1702;1591;</NoWarn>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <NoWarn>1701;1702;1591;</NoWarn>
-    </PropertyGroup>
-
     <PropertyGroup Label="Package information">
         <Version>0.0.9.1-alpha</Version>
         <Authors>Troy Robinson, et al</Authors>

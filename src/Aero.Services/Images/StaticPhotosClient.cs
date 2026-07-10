@@ -77,7 +77,10 @@ public class StaticPhotosClient(HttpClient httpClient) : IStaticPhotosClient
 {
     private readonly Random _random = new();
 
-    public string GetPhotoUrl(string category = "blurred", string size = "640x360", int? index = null)
+        /// <summary>
+    /// GetPhotoUrl method.
+    /// </summary>
+public string GetPhotoUrl(string category = "blurred", string size = "640x360", int? index = null)
     {
         // the number at the end is any number from 1 to 100000
         var id = index ?? _random.Next(1, 100_001);

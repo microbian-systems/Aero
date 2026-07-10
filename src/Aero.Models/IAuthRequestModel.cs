@@ -1,14 +1,26 @@
-﻿namespace Aero.Models;
+namespace Aero.Models;
 
+/// <summary>
+/// Defines an interface for IAuthRequestModel.
+/// </summary>
 public interface IAuthRequestModel
 {
-    [JsonPropertyName("id")]
+        /// <summary>
+    /// Gets or sets the Id.
+    /// </summary>
+[JsonPropertyName("id")]
     string Id { get; init; }
 }
 
+/// <summary>
+/// Defines an interface for IApiKeyAuthRequestModel.
+/// </summary>
 public interface IApiKeyAuthRequestModel : IAuthRequestModel
 {
-    [JsonPropertyName("api_key")]
+        /// <summary>
+    /// Gets or sets the Api Key.
+    /// </summary>
+[JsonPropertyName("api_key")]
     string ApiKey
     {
         get => Id;
@@ -16,15 +28,24 @@ public interface IApiKeyAuthRequestModel : IAuthRequestModel
     }
 }
 
+/// <summary>
+/// Defines an interface for IBasicAuthRequestModel.
+/// </summary>
 public interface IBasicAuthRequestModel : IAuthRequestModel
 {
-    [JsonPropertyName("username")]
+        /// <summary>
+    /// Gets or sets the Username.
+    /// </summary>
+[JsonPropertyName("username")]
     public string Username
     {
         get => Id;
         init => Id = value;
     }
     
-    [JsonPropertyName("password")]
+        /// <summary>
+    /// Gets or sets the Password.
+    /// </summary>
+[JsonPropertyName("password")]
     public string Password { get; init; }
 }

@@ -3,9 +3,15 @@ using Aero.Core.Commands;
 
 namespace Aero.Core.Decorators;
 
+/// <summary>
+/// Represents a class for TimingCommandDecorator.
+/// </summary>
 public class TimingCommandDecorator(IAsyncCommand decorated, ILogger log) : IAsyncCommand
 {
-    public async Task ExecuteAsync()
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task ExecuteAsync()
     {
         log.LogInformation($"entered Timing decorator");
         var sw = new Stopwatch();
@@ -16,9 +22,15 @@ public class TimingCommandDecorator(IAsyncCommand decorated, ILogger log) : IAsy
     }
 }
 
+/// <summary>
+/// Represents a class for TimingCommandDecorator.
+/// </summary>
 public class TimingCommandDecorator<TCommand>(IAsyncCommand<TCommand> decorated, ILogger log) : IAsyncCommand<TCommand>
 {
-    public async Task ExecuteAsync(TCommand param)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task ExecuteAsync(TCommand param)
     {
         var sw = new Stopwatch();
         sw.Start();
@@ -28,10 +40,16 @@ public class TimingCommandDecorator<TCommand>(IAsyncCommand<TCommand> decorated,
     }
 }
 
+/// <summary>
+/// Represents a class for TimingCommandDecorator.
+/// </summary>
 public class TimingCommandDecorator<TCommand, TReturn>(IAsyncCommand<TCommand, TReturn> decorated, ILogger log)
     : IAsyncCommand<TCommand, TReturn>
 {
-    public async Task<TReturn> ExecuteAsync(TCommand param)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task<TReturn> ExecuteAsync(TCommand param)
     {
         var sw = new Stopwatch();
         sw.Start();

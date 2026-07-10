@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
 using Microsoft.Extensions.Logging;
@@ -7,9 +7,15 @@ using NSubstitute;
 
 namespace Aero.Social.Twitter.Clients;
 
+/// <summary>
+/// Represents a class for TwitterClientLoggingTests.
+/// </summary>
 public class TwitterClientLoggingTests
 {
-    [Test]
+        /// <summary>
+    /// Constructor_WithLogger_ShouldAcceptNullLogger method.
+    /// </summary>
+[Test]
     public void Constructor_WithLogger_ShouldAcceptNullLogger()
     {
         // Arrange
@@ -26,7 +32,10 @@ public class TwitterClientLoggingTests
         Assert.NotNull(client);
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithLogger_ShouldAcceptLogger method.
+    /// </summary>
+[Test]
     public void Constructor_WithLogger_ShouldAcceptLogger()
     {
         // Arrange
@@ -44,7 +53,10 @@ public class TwitterClientLoggingTests
         Assert.NotNull(client);
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithLogger_ShouldLogInitialization method.
+    /// </summary>
+[Test]
     public void Constructor_WithLogger_ShouldLogInitialization()
     {
         // Arrange
@@ -67,7 +79,10 @@ public class TwitterClientLoggingTests
             Arg.Any<System.Func<object, System.Exception?, string>>());
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithLogger_ShouldLogOAuth2ProviderSelection method.
+    /// </summary>
+[Test]
     public void Constructor_WithLogger_ShouldLogOAuth2ProviderSelection()
     {
         // Arrange

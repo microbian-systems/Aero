@@ -7,10 +7,16 @@ using Microsoft.Extensions.Hosting;
 
 namespace Aero.EfCore.Extensions;
 
+/// <summary>
+/// Represents a class for AeroDbExtensions.
+/// </summary>
 public static class AeroDbExtensions
 {
 
-    public static IServiceCollection AddAeroDataLayer(
+        /// <summary>
+    /// AddAeroDataLayer method.
+    /// </summary>
+public static IServiceCollection AddAeroDataLayer(
         this IServiceCollection services, 
         IConfiguration config, 
         IHostEnvironment env,

@@ -4,6 +4,9 @@ using Aero.Core.DataStructures.Trees.Persistence.Serialization;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Documents;
 
+/// <summary>
+/// Represents a class for DocumentCollectionBuilder.
+/// </summary>
 public sealed class DocumentCollectionBuilder<TDocument>
     where TDocument : class
 {
@@ -11,14 +14,20 @@ public sealed class DocumentCollectionBuilder<TDocument>
     private Func<TDocument, Guid>? _idExtractor;
     private IDocumentSerializer<TDocument>? _serializer;
 
-    public DocumentCollectionBuilder<TDocument> HasPrimaryKey(
+        /// <summary>
+    /// HasPrimaryKey method.
+    /// </summary>
+public DocumentCollectionBuilder<TDocument> HasPrimaryKey(
         Expression<Func<TDocument, Guid>> keySelector)
     {
         _idExtractor = keySelector.Compile();
         return this;
     }
 
-    public DocumentCollectionBuilder<TDocument> HasIndex<TField>(
+        /// <summary>
+    /// HasIndex method.
+    /// </summary>
+public DocumentCollectionBuilder<TDocument> HasIndex<TField>(
         Expression<Func<TDocument, TField>> fieldSelector,
         Action<IndexOptions>? configure = null)
         where TField : unmanaged, IComparable<TField>
@@ -42,14 +51,20 @@ public sealed class DocumentCollectionBuilder<TDocument>
         throw new NotImplementedException("Tree creation requires storage backend. Use the DI extensions.");
     }
 
-    public DocumentCollectionBuilder<TDocument> UseSerializer(
+        /// <summary>
+    /// UseSerializer method.
+    /// </summary>
+public DocumentCollectionBuilder<TDocument> UseSerializer(
         IDocumentSerializer<TDocument> serializer)
     {
         _serializer = serializer;
         return this;
     }
 
-    public IDocumentCollection<TDocument> Build()
+        /// <summary>
+    /// Build method.
+    /// </summary>
+public IDocumentCollection<TDocument> Build()
     {
         if (_idExtractor is null)
             throw new InvalidOperationException("Primary key must be configured via HasPrimaryKey.");
@@ -68,9 +83,21 @@ public sealed class DocumentCollectionBuilder<TDocument>
         ((MemberExpression)expr.Body).Member.Name;
 }
 
+/// <summary>
+/// Represents a class for IndexOptions.
+/// </summary>
 public sealed class IndexOptions
 {
-    public string? Name { get; set; }
-    public bool IsUnique { get; set; }
-    public bool IsDescending { get; set; }
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public string? Name { get; set; }
+        /// <summary>
+    /// Gets or sets the Is Unique.
+    /// </summary>
+public bool IsUnique { get; set; }
+        /// <summary>
+    /// Gets or sets the Is Descending.
+    /// </summary>
+public bool IsDescending { get; set; }
 }

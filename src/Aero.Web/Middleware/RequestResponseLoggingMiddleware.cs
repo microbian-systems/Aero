@@ -1,13 +1,19 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Aero.Web.Middleware;
 
+/// <summary>
+/// Represents a class for RequestResponseLoggingMiddleware.
+/// </summary>
 public class RequestResponseLoggingMiddleware(
     RequestDelegate next,
     ILogger<RequestResponseLoggingMiddleware> log)
 {
-    public async Task InvokeAsync(HttpContext context)
+        /// <summary>
+    /// InvokeAsync method.
+    /// </summary>
+public async Task InvokeAsync(HttpContext context)
     {
         var stopwatch = Stopwatch.StartNew();
         var method = context.Request.Method;
@@ -39,9 +45,15 @@ public class RequestResponseLoggingMiddleware(
     }
 }
 
+/// <summary>
+/// Represents a class for RequestResponseLoggingMiddlewareExtensions.
+/// </summary>
 public static class RequestResponseLoggingMiddlewareExtensions
 {
-    public static IApplicationBuilder UseRequestResponseLogging(this IApplicationBuilder app)
+        /// <summary>
+    /// UseRequestResponseLogging method.
+    /// </summary>
+public static IApplicationBuilder UseRequestResponseLogging(this IApplicationBuilder app)
     {
         app.UseMiddleware<RequestResponseLoggingMiddleware>();
         return app;

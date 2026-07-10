@@ -20,10 +20,19 @@ public record Result<T> : Result<T, AeroError>
     /// <param name="Error">The error value.</param>
     public new sealed record Failure(AeroError Error) : Result<T>;
 
-    public static implicit operator Result<T>(T value) => new Ok(value);
-    public static implicit operator Result<T>(AeroError error) => new Failure(error);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator Result<T>(T value) => new Ok(value);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator Result<T>(AeroError error) => new Failure(error);
 
-    public static Result<T> From(Result<T, AeroError> result)
+        /// <summary>
+    /// From method.
+    /// </summary>
+public static Result<T> From(Result<T, AeroError> result)
     {
         return result switch
         {
@@ -45,14 +54,32 @@ public abstract record Result<T, TError>
     where TError : AeroError
 {
     //private Result() { } // Prevent external inheritance for exhaustiveness
-    public sealed record Ok(T Value) : Result<T, TError>;
-    public sealed record Failure(TError Error) : Result<T, TError>;
+        /// <summary>
+    /// Represents a record for Ok.
+    /// </summary>
+public sealed record Ok(T Value) : Result<T, TError>;
+        /// <summary>
+    /// Represents a record for Failure.
+    /// </summary>
+public sealed record Failure(TError Error) : Result<T, TError>;
 
-    public bool IsSuccess => this is Ok;
-    public bool IsFailure => this is Failure;
+        /// <summary>
+    /// Gets or sets the Is Success.
+    /// </summary>
+public bool IsSuccess => this is Ok;
+        /// <summary>
+    /// Gets or sets the Is Failure.
+    /// </summary>
+public bool IsFailure => this is Failure;
 
-    public static implicit operator Result<T, TError>(T value) => new Ok(value);
-    public static implicit operator Result<T, TError>(TError error) => new Failure(error);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator Result<T, TError>(T value) => new Ok(value);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator Result<T, TError>(TError error) => new Failure(error);
 
     //public static explicit operator T(Result<T, TError> result) =>
     //    result switch
@@ -68,7 +95,10 @@ public abstract record Result<T, TError>
     //        Ok(var value) => throw new InvalidCastException($"Result was Ok: {value}"),
     //    };
 
-    public override string ToString()
+        /// <summary>
+    /// ToString method.
+    /// </summary>
+public override string ToString()
     {
         return this switch
         {
@@ -87,8 +117,14 @@ public abstract record Option<T>
 {
     private Option() { } // Prevent external inheritance
 
-    public sealed record Some(T Value) : Option<T>;
-    public sealed record None : Option<T>;
+        /// <summary>
+    /// Represents a record for Some.
+    /// </summary>
+public sealed record Some(T Value) : Option<T>;
+        /// <summary>
+    /// Represents a record for None.
+    /// </summary>
+public sealed record None : Option<T>;
 
     /// <summary>
     /// Gets a value indicating whether this Option contains a value (Some case).

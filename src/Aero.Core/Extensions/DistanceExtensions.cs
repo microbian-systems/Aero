@@ -1,8 +1,14 @@
-﻿namespace Aero.Core.Extensions;
+namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for DistanceExtensions.
+/// </summary>
 public static class DistanceExtensions
 {
-    public static double FormatKilometres(this double kilometres)
+        /// <summary>
+    /// FormatKilometres method.
+    /// </summary>
+public static double FormatKilometres(this double kilometres)
     {
         var roundedToTwoDecimalPlaces = kilometres.RoundToTwoDecimalPlaces();
 
@@ -14,7 +20,10 @@ public static class DistanceExtensions
         return roundedUpOrDown;
     }
 
-    public static double KilometresToMetres(this double kilometres)
+        /// <summary>
+    /// KilometresToMetres method.
+    /// </summary>
+public static double KilometresToMetres(this double kilometres)
     {
         var result = (1000D * kilometres);
         var roundedToTwoDecimalPlaces = result.RoundToTwoDecimalPlaces();
@@ -27,7 +36,10 @@ public static class DistanceExtensions
         return roundedUpOrDown;
     }
 
-    public static double KilometresToMiles(this double kilometres)
+        /// <summary>
+    /// KilometresToMiles method.
+    /// </summary>
+public static double KilometresToMiles(this double kilometres)
     {
         var result = (kilometres / 1.609344);
         var roundedToTwoDecimalPlaces = result.RoundToTwoDecimalPlaces();
@@ -40,7 +52,10 @@ public static class DistanceExtensions
         return roundedUpOrDown;
     }
 
-    public static double MetersToMiles(this double meters)
+        /// <summary>
+    /// MetersToMiles method.
+    /// </summary>
+public static double MetersToMiles(this double meters)
     {
         var result = (meters * 0.000621371);
         var roundedToTwoDecimalPlaces = result.RoundToTwoDecimalPlaces();

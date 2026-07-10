@@ -2,12 +2,21 @@ using ZiggyCreatures.Caching.Fusion;
 
 namespace Aero.Caching.Extensions;
 
+/// <summary>
+/// Represents a class for FusionCacheExtensions.
+/// </summary>
 public static class FusionCacheExtensions
 {
-    public static int Add<T>(this IFusionCache cache, string key, IDictionary<string, T> value, CacheOptions opts)
+        /// <summary>
+    /// Add method.
+    /// </summary>
+public static int Add<T>(this IFusionCache cache, string key, IDictionary<string, T> value, CacheOptions opts)
         => AddAsync(cache, key, value, opts).GetAwaiter().GetResult();
 
-    public static async Task<int> AddAsync<T>(this IFusionCache cache, string key, IDictionary<string, T> value,
+        /// <summary>
+    /// AddAsync method.
+    /// </summary>
+public static async Task<int> AddAsync<T>(this IFusionCache cache, string key, IDictionary<string, T> value,
         CacheOptions opts)
     {
         foreach (var item in value)
@@ -16,7 +25,10 @@ public static class FusionCacheExtensions
         return value.Count;
     }
 
-    public static int AddItems<T>(this IFusionCache cache,
+        /// <summary>
+    /// AddItems method.
+    /// </summary>
+public static int AddItems<T>(this IFusionCache cache,
         IEnumerable<(string key, T value, TimeSpan? expiration)> items) =>
         AddItemsAsync(cache, items).GetAwaiter().GetResult();
 
@@ -42,73 +54,121 @@ public static class FusionCacheExtensions
         return items.Count();
     }
 
-    public static bool AddDictionary<T>(this IFusionCache cache, string key, IDictionary<string, T> dict,
+        /// <summary>
+    /// AddDictionary method.
+    /// </summary>
+public static bool AddDictionary<T>(this IFusionCache cache, string key, IDictionary<string, T> dict,
         CacheOptions opts)
     {
         var ret = cache.Add(key, dict, opts);
         return true;
     }
 
-    public static bool AddDictionary<T>(this IFusionCache cache, CacheEntry<IDictionary<string, T>> entry)
+        /// <summary>
+    /// AddDictionary method.
+    /// </summary>
+public static bool AddDictionary<T>(this IFusionCache cache, CacheEntry<IDictionary<string, T>> entry)
         => AddDictionary<T>(cache, entry.Key, entry.Value, entry.Options);
 
-    public static async Task<bool> AddDictionaryAsync<T>(this IFusionCache cache, string key,
+        /// <summary>
+    /// AddDictionaryAsync method.
+    /// </summary>
+public static async Task<bool> AddDictionaryAsync<T>(this IFusionCache cache, string key,
         IDictionary<string, T> dict, CacheOptions opts)
     {
         var ret = await cache.AddAsync(key, dict, opts);
         return true;
     }
 
-    public static async Task<bool> AddDictionaryAsync<T>(this IFusionCache cache,
+        /// <summary>
+    /// AddDictionaryAsync method.
+    /// </summary>
+public static async Task<bool> AddDictionaryAsync<T>(this IFusionCache cache,
         CacheEntry<IDictionary<string, T>> entry)
         => await AddDictionaryAsync<T>(cache, entry.Key, entry.Value, entry.Options);
 
 
-    public static IDictionary<string, T> GetDictionary<T>(this IFusionCache cache, string key)
+        /// <summary>
+    /// GetDictionary method.
+    /// </summary>
+public static IDictionary<string, T> GetDictionary<T>(this IFusionCache cache, string key)
         => cache.GetDictionaryAsync<T>(key).GetAwaiter().GetResult();
 
-    public static async Task<IDictionary<string, T>> GetDictionaryAsync<T>(this IFusionCache cache, string key)
+        /// <summary>
+    /// GetDictionaryAsync method.
+    /// </summary>
+public static async Task<IDictionary<string, T>> GetDictionaryAsync<T>(this IFusionCache cache, string key)
     {
         var result = await cache.GetOrDefaultAsync<IDictionary<string, T>>(key);
         return result;
     }
 
-    public static int AddCollection<T>(this IFusionCache cache, string key, IEnumerable<T> items,
+        /// <summary>
+    /// AddCollection method.
+    /// </summary>
+public static int AddCollection<T>(this IFusionCache cache, string key, IEnumerable<T> items,
         CacheOptions opts = null)
     {
         cache.SetAsync(key, items, opts?.Expiry ?? TimeSpan.FromMinutes(15)).GetAwaiter().GetResult();
         return items?.Count() ?? 0;
     }
 
-    public static int AddCollection<T>(this IFusionCache cache, CacheEntry<ICollection<T>> entry)
+        /// <summary>
+    /// AddCollection method.
+    /// </summary>
+public static int AddCollection<T>(this IFusionCache cache, CacheEntry<ICollection<T>> entry)
         => AddCollection<T>(cache, entry.Key, entry.Value, entry.Options);
 
-    public static async Task<int> AddCollectionAsync<T>(this IFusionCache cache, string key, IEnumerable<T> items,
+        /// <summary>
+    /// AddCollectionAsync method.
+    /// </summary>
+public static async Task<int> AddCollectionAsync<T>(this IFusionCache cache, string key, IEnumerable<T> items,
         CacheOptions opts)
     {
         await cache.SetAsync(key, items, opts.Expiry);
         return items.Count();
     }
 
-    public static async Task<int> AddCollectionAsync<T>(this IFusionCache cache, CacheEntry<ICollection<T>> entry)
+        /// <summary>
+    /// AddCollectionAsync method.
+    /// </summary>
+public static async Task<int> AddCollectionAsync<T>(this IFusionCache cache, CacheEntry<ICollection<T>> entry)
         => await AddCollectionAsync(cache, entry.Key, entry.Value, entry.Options);
 
-    public static ICollection<T> GetCollection<T>(this IFusionCache cache, string key)
+        /// <summary>
+    /// GetCollection method.
+    /// </summary>
+public static ICollection<T> GetCollection<T>(this IFusionCache cache, string key)
         => cache.GetCollectionAsync<T>(key).GetAwaiter().GetResult();
 
-    public static async Task<ICollection<T>> GetCollectionAsync<T>(this IFusionCache cache, string key)
+        /// <summary>
+    /// GetCollectionAsync method.
+    /// </summary>
+public static async Task<ICollection<T>> GetCollectionAsync<T>(this IFusionCache cache, string key)
         => (await cache.GetOrDefaultAsync<ICollection<T>>(key));
 
-    public static T GetTuple<T>(this IFusionCache cache, string key)
+        /// <summary>
+    /// GetTuple method.
+    /// </summary>
+public static T GetTuple<T>(this IFusionCache cache, string key)
         => cache.GetTupleAsync<T>(key).GetAwaiter().GetResult();
 
-    public static async Task<T> GetTupleAsync<T>(this IFusionCache cache, string key)
+        /// <summary>
+    /// GetTupleAsync method.
+    /// </summary>
+public static async Task<T> GetTupleAsync<T>(this IFusionCache cache, string key)
         => (await cache.GetOrDefaultAsync<T>(key));
 
-    public static bool TryGetItem<T>(this IFusionCache cache, string key, out T value)
+        /// <summary>
+    /// TryGetItem method.
+    /// </summary>
+public static bool TryGetItem<T>(this IFusionCache cache, string key, out T value)
         => cache.TryGetItemAsync(key, out value).GetAwaiter().GetResult();
 
-    public static Task<bool> TryGetItemAsync<T>(this IFusionCache cache, string key, out T value)
+        /// <summary>
+    /// TryGetItemAsync method.
+    /// </summary>
+public static Task<bool> TryGetItemAsync<T>(this IFusionCache cache, string key, out T value)
     {
         var item = cache.GetOrDefaultAsync<T>(key).GetAwaiter().GetResult();
 
@@ -122,10 +182,16 @@ public static class FusionCacheExtensions
         return Task.FromResult(false);
     }
 
-    public static T GetOrCreate<T>(this IFusionCache cache, string key, Func<T> createItem, CacheOptions opts = null)
+        /// <summary>
+    /// GetOrCreate method.
+    /// </summary>
+public static T GetOrCreate<T>(this IFusionCache cache, string key, Func<T> createItem, CacheOptions opts = null)
         => cache.GetOrCreateAsync(key, createItem, opts).GetAwaiter().GetResult();
 
-    public static async Task<T> GetOrCreateAsync<T>(this IFusionCache cache, string key, Func<T> create,
+        /// <summary>
+    /// GetOrCreateAsync method.
+    /// </summary>
+public static async Task<T> GetOrCreateAsync<T>(this IFusionCache cache, string key, Func<T> create,
         CacheOptions opts = null)
     {
         var result = await cache.GetOrDefaultAsync<T>(key);
@@ -141,10 +207,16 @@ public static class FusionCacheExtensions
         return item;
     }
 
-    public static bool ContainsKey(this IFusionCache cache, string key) =>
+        /// <summary>
+    /// ContainsKey method.
+    /// </summary>
+public static bool ContainsKey(this IFusionCache cache, string key) =>
         cache.ContainsKeyAsync(key).GetAwaiter().GetResult();
 
-    public static async Task<bool> ContainsKeyAsync(this IFusionCache cache, string key)
+        /// <summary>
+    /// ContainsKeyAsync method.
+    /// </summary>
+public static async Task<bool> ContainsKeyAsync(this IFusionCache cache, string key)
     {
         var item = await cache.GetOrDefaultAsync<object>(key);
         return item != null;

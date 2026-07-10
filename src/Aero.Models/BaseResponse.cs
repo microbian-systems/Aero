@@ -2,14 +2,23 @@ namespace Aero.Models;
 
 
 // todo - consider replacing webresponse with fluentresults or DotNext Result<> class
+/// <summary>
+/// Represents a class for WebResponse.
+/// </summary>
 public class WebResponse : BaseResponse<object>
 {
 }
 
+/// <summary>
+/// Represents a class for WebResponse.
+/// </summary>
 public class WebResponse<T> : BaseResponse<T>
 {
 }
 
+/// <summary>
+/// Represents a class for BaseResponse.
+/// </summary>
 public abstract class BaseResponse<T>
 {
     /// <summary>

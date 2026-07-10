@@ -4,9 +4,15 @@ using Microsoft.Extensions.Options;
 
 namespace Aero.Core;
 
+/// <summary>
+/// Represents a class for EncryptionExtensions.
+/// </summary>
 public static class EncryptionExtensions
 {
-    public static IServiceCollection AddEncryptionServices(this IServiceCollection services)
+        /// <summary>
+    /// AddEncryptionServices method.
+    /// </summary>
+public static IServiceCollection AddEncryptionServices(this IServiceCollection services)
     {
         services.AddTransient<IEncryptor, Aes256Encryptor>(sp =>
         {

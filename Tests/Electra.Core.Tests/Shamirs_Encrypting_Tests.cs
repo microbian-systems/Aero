@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Electra.Core.Algorithms;
 using Electra.Core.Encryption;
 using System.Security.Cryptography;
@@ -6,6 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Electra.Core.Tests;
 
+/// <summary>
+/// Represents a class for EncryptingSecretManagerTests.
+/// </summary>
 public class EncryptingSecretManagerTests
 {
     private const string secret = "beer | 麦酒 (ばくしゅ | пиво | ビール | 酒 | 啤酒";
@@ -41,7 +44,10 @@ public class EncryptingSecretManagerTests
         return secretManager;
     }
     
-    [Test]
+        /// <summary>
+    /// CreateFragments_WithStringInput_EncryptsFragments method.
+    /// </summary>
+[Test]
     public void CreateFragments_WithStringInput_EncryptsFragments()
     {
         // Arrange
@@ -64,7 +70,10 @@ public class EncryptingSecretManagerTests
     }
     
 
-    [Test]
+        /// <summary>
+    /// CreateFragments_WithByteArrayInput_EncryptsFragments method.
+    /// </summary>
+[Test]
     public void CreateFragments_WithByteArrayInput_EncryptsFragments()
     {
         // Arrange
@@ -82,7 +91,10 @@ public class EncryptingSecretManagerTests
         Assert.Equal(3, result.Length);
     }
 
-    [Test]
+        /// <summary>
+    /// ComputeFragments_DecryptsFragments method.
+    /// </summary>
+[Test]
     public void ComputeFragments_DecryptsFragments()
     {
         // Arrange
@@ -102,7 +114,10 @@ public class EncryptingSecretManagerTests
         Assert.Equal(secretBytes, result);
     }
 
-    [Test]
+        /// <summary>
+    /// CreateFragments_WithNullString_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public void CreateFragments_WithNullString_ThrowsArgumentException()
     {
         // Arrange
@@ -154,7 +169,10 @@ public class EncryptingSecretManagerTests
     //         .WithMessage("Value cannot be null. (Parameter 'secret')");
     // }
 
-    [Test]
+        /// <summary>
+    /// CreateFragments_WithNullByteArray_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public void CreateFragments_WithNullByteArray_ThrowsArgumentException()
     {
         // Arrange
@@ -169,7 +187,10 @@ public class EncryptingSecretManagerTests
             .WithMessage("Value cannot be null. (Parameter 'secret')");
     }
 
-    [Test]
+        /// <summary>
+    /// CreateFragments_WithEmptyByteArray_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public void CreateFragments_WithEmptyByteArray_ThrowsArgumentException()
     {
         // Arrange
@@ -184,7 +205,10 @@ public class EncryptingSecretManagerTests
         results.Should().BeEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// CreateFragments_WithZeroLengthFragments_ReturnsEmptyArray method.
+    /// </summary>
+[Test]
     public void CreateFragments_WithZeroLengthFragments_ReturnsEmptyArray()
     {
         // Arrange

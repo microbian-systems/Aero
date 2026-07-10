@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -7,6 +7,9 @@ using Humanizer;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for DirectedGraphTests.
+/// </summary>
 public class DirectedGraphTests
 {
     private readonly Faker _faker = new();
@@ -14,7 +17,10 @@ public class DirectedGraphTests
 
     //#region Vertex Tests
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldIncreaseVertexCount method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldIncreaseVertexCount()
     {
         var graph = new DirectedGraph<string>();
@@ -25,7 +31,10 @@ public class DirectedGraphTests
         graph.VertexCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldReturnTrue_WhenVertexIsNew method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldReturnTrue_WhenVertexIsNew()
     {
         var graph = new DirectedGraph<int>();
@@ -36,7 +45,10 @@ public class DirectedGraphTests
         result.ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldReturnFalse_WhenAlreadyExists method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldReturnFalse_WhenAlreadyExists()
     {
         var graph = new DirectedGraph<string>();
@@ -48,7 +60,10 @@ public class DirectedGraphTests
         result.ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldInitializeEmptyEdgeLists method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldInitializeEmptyEdgeLists()
     {
         var graph = new DirectedGraph<string>();
@@ -64,7 +79,10 @@ public class DirectedGraphTests
 
     //#region Edge Tests
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldIncreaseEdgeCount method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldIncreaseEdgeCount()
     {
         var graph = new DirectedGraph<string>();
@@ -76,7 +94,10 @@ public class DirectedGraphTests
         graph.EdgeCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldCreateOneWayConnection method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldCreateOneWayConnection()
     {
         var graph = new DirectedGraph<string>();
@@ -86,7 +107,10 @@ public class DirectedGraphTests
         graph.ContainsEdge("B", "A").ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldAutoAddVertices method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldAutoAddVertices()
     {
         var graph = new DirectedGraph<int>();
@@ -98,7 +122,10 @@ public class DirectedGraphTests
         graph.VertexCount.ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldAllowReverseEdge method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldAllowReverseEdge()
     {
         var graph = new DirectedGraph<string>();
@@ -111,7 +138,10 @@ public class DirectedGraphTests
         graph.ContainsEdge("B", "A").ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldNotDuplicate method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldNotDuplicate()
     {
         var graph = new DirectedGraph<string>();
@@ -126,7 +156,10 @@ public class DirectedGraphTests
 
     //#region Degree Tests
 
-    [Test]
+        /// <summary>
+    /// GetOutDegree_ShouldReturnCorrectValue method.
+    /// </summary>
+[Test]
     public void GetOutDegree_ShouldReturnCorrectValue()
     {
         var graph = new DirectedGraph<string>();
@@ -137,7 +170,10 @@ public class DirectedGraphTests
         graph.GetOutDegree("center").ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// GetInDegree_ShouldReturnCorrectValue method.
+    /// </summary>
+[Test]
     public void GetInDegree_ShouldReturnCorrectValue()
     {
         var graph = new DirectedGraph<string>();
@@ -148,7 +184,10 @@ public class DirectedGraphTests
         graph.GetInDegree("center").ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// Degree_ShouldHandleBothInAndOut method.
+    /// </summary>
+[Test]
     public void Degree_ShouldHandleBothInAndOut()
     {
         var graph = new DirectedGraph<string>();
@@ -163,7 +202,10 @@ public class DirectedGraphTests
 
     //#region Neighbor Tests
 
-    [Test]
+        /// <summary>
+    /// GetOutNeighbors_ShouldReturnCorrectVertices method.
+    /// </summary>
+[Test]
     public void GetOutNeighbors_ShouldReturnCorrectVertices()
     {
         var graph = new DirectedGraph<string>();
@@ -175,7 +217,10 @@ public class DirectedGraphTests
         neighbors.ShouldBe(new[] { "B", "C" }, ignoreOrder: true);
     }
 
-    [Test]
+        /// <summary>
+    /// GetInNeighbors_ShouldReturnCorrectVertices method.
+    /// </summary>
+[Test]
     public void GetInNeighbors_ShouldReturnCorrectVertices()
     {
         var graph = new DirectedGraph<string>();
@@ -191,7 +236,10 @@ public class DirectedGraphTests
 
     //#region Remove Tests
 
-    [Test]
+        /// <summary>
+    /// RemoveVertex_ShouldRemoveOutgoingEdges method.
+    /// </summary>
+[Test]
     public void RemoveVertex_ShouldRemoveOutgoingEdges()
     {
         var graph = new DirectedGraph<string>();
@@ -204,7 +252,10 @@ public class DirectedGraphTests
         graph.ContainsVertex("keep").ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// RemoveVertex_ShouldRemoveIncomingEdges method.
+    /// </summary>
+[Test]
     public void RemoveVertex_ShouldRemoveIncomingEdges()
     {
         var graph = new DirectedGraph<string>();
@@ -215,7 +266,10 @@ public class DirectedGraphTests
         graph.ContainsEdge("keep", "remove").ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// RemoveEdge_ShouldOnlyRemoveSpecifiedDirection method.
+    /// </summary>
+[Test]
     public void RemoveEdge_ShouldOnlyRemoveSpecifiedDirection()
     {
         var graph = new DirectedGraph<string>();
@@ -232,7 +286,10 @@ public class DirectedGraphTests
 
     //#region Traversal Tests
 
-    [Test]
+        /// <summary>
+    /// BreadthFirstSearch_ShouldFollowOutgoingEdges method.
+    /// </summary>
+[Test]
     public void BreadthFirstSearch_ShouldFollowOutgoingEdges()
     {
         var graph = new DirectedGraph<string>();
@@ -246,7 +303,10 @@ public class DirectedGraphTests
         result.ShouldBe(new[] { "B", "C", "D", "A" }, ignoreOrder: true);
     }
 
-    [Test]
+        /// <summary>
+    /// DepthFirstSearch_ShouldFollowOutgoingEdges method.
+    /// </summary>
+[Test]
     public void DepthFirstSearch_ShouldFollowOutgoingEdges()
     {
         var graph = new DirectedGraph<string>();
@@ -260,7 +320,10 @@ public class DirectedGraphTests
         result.Count().ShouldBe(4);
     }
 
-    [Test]
+        /// <summary>
+    /// Traversal_ShouldNotFollowIncomingEdges method.
+    /// </summary>
+[Test]
     public void Traversal_ShouldNotFollowIncomingEdges()
     {
         var graph = new DirectedGraph<string>();
@@ -276,7 +339,10 @@ public class DirectedGraphTests
 
     //#region Topological Sort Tests
 
-    [Test]
+        /// <summary>
+    /// TopologicalSort_ShouldReturnValidOrder method.
+    /// </summary>
+[Test]
     public void TopologicalSort_ShouldReturnValidOrder()
     {
         var graph = new DirectedGraph<string>();
@@ -289,7 +355,10 @@ public class DirectedGraphTests
         result.IndexOf("test").ShouldBeLessThan(result.IndexOf("deploy"));
     }
 
-    [Test]
+        /// <summary>
+    /// TopologicalSort_ShouldReturnEmpty_WhenCycleExists method.
+    /// </summary>
+[Test]
     public void TopologicalSort_ShouldReturnEmpty_WhenCycleExists()
     {
         var graph = new DirectedGraph<string>();
@@ -302,7 +371,10 @@ public class DirectedGraphTests
         result.ShouldBeEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// TopologicalSort_ShouldHandleDiamondDependency method.
+    /// </summary>
+[Test]
     public void TopologicalSort_ShouldHandleDiamondDependency()
     {
         var graph = new DirectedGraph<string>();
@@ -323,7 +395,10 @@ public class DirectedGraphTests
 
     //#region Cycle Detection Tests
 
-    [Test]
+        /// <summary>
+    /// HasCycle_ShouldReturnTrue_WhenCycleExists method.
+    /// </summary>
+[Test]
     public void HasCycle_ShouldReturnTrue_WhenCycleExists()
     {
         var graph = new DirectedGraph<string>();
@@ -334,7 +409,10 @@ public class DirectedGraphTests
         graph.HasCycle().ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// HasCycle_ShouldReturnFalse_WhenNoCycle method.
+    /// </summary>
+[Test]
     public void HasCycle_ShouldReturnFalse_WhenNoCycle()
     {
         var graph = new DirectedGraph<string>();
@@ -344,7 +422,10 @@ public class DirectedGraphTests
         graph.HasCycle().ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// HasCycle_ShouldDetectSelfLoop method.
+    /// </summary>
+[Test]
     public void HasCycle_ShouldDetectSelfLoop()
     {
         var graph = new DirectedGraph<string>();
@@ -357,7 +438,10 @@ public class DirectedGraphTests
 
     //#region Reachability Tests
 
-    [Test]
+        /// <summary>
+    /// GetReachableVertices_ShouldReturnAllReachable method.
+    /// </summary>
+[Test]
     public void GetReachableVertices_ShouldReturnAllReachable()
     {
         var graph = new DirectedGraph<string>();
@@ -376,7 +460,10 @@ public class DirectedGraphTests
 
     //#region Strongly Connected Components Tests
 
-    [Test]
+        /// <summary>
+    /// GetStronglyConnectedComponents_ShouldIdentifyScc method.
+    /// </summary>
+[Test]
     public void GetStronglyConnectedComponents_ShouldIdentifyScc()
     {
         var graph = new DirectedGraph<string>();
@@ -396,7 +483,10 @@ public class DirectedGraphTests
 
     //#region Clear Tests
 
-    [Test]
+        /// <summary>
+    /// Clear_ShouldResetGraph method.
+    /// </summary>
+[Test]
     public void Clear_ShouldResetGraph()
     {
         var graph = new DirectedGraph<int>();

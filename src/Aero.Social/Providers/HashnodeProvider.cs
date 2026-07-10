@@ -10,6 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for HashnodeProvider.
+/// </summary>
 public class HashnodeProvider(
     HttpClient httpClient,
     IConfiguration configuration,
@@ -18,15 +21,36 @@ public class HashnodeProvider(
 {
     private const string GraphQLEndpoint = "https://gql.hashnode.com";
 
-    public override string Identifier => "hashnode";
-    public override string Name => "Hashnode";
-    public override string[] Scopes => Array.Empty<string>();
-    public override int MaxConcurrentJobs => 3;
-    public override EditorType Editor => EditorType.Markdown;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "hashnode";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Hashnode";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => Array.Empty<string>();
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 3;
+        /// <summary>
+    /// Gets or sets the Editor.
+    /// </summary>
+public override EditorType Editor => EditorType.Markdown;
 
-    public override int MaxLength(object? additionalSettings = null) => 10000;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 10000;
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -39,7 +63,10 @@ public class HashnodeProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -84,7 +111,10 @@ public class HashnodeProvider(
             });
     }
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -100,7 +130,10 @@ public class HashnodeProvider(
         });
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -172,7 +205,10 @@ public class HashnodeProvider(
             });
     }
 
-    public async Task<Result<List<HashnodePublication>, AeroError>> GetPublicationsAsync(string accessToken, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetPublicationsAsync method.
+    /// </summary>
+public async Task<Result<List<HashnodePublication>, AeroError>> GetPublicationsAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var query = @"
             query {
@@ -233,101 +269,170 @@ public class HashnodeProvider(
 
     private class HashnodeAuthBody
     {
-        [JsonPropertyName("apiKey")]
+                /// <summary>
+        /// Gets or sets the Api Key.
+        /// </summary>
+[JsonPropertyName("apiKey")]
         public string ApiKey { get; set; } = string.Empty;
     }
 
     private class GraphQLResponse<T>
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public T Data { get; set; } = default!;
     }
 
     private class HashnodeMeResponse
     {
-        [JsonPropertyName("me")]
+                /// <summary>
+        /// Gets or sets the Me.
+        /// </summary>
+[JsonPropertyName("me")]
         public HashnodeMe Me { get; set; } = new();
     }
 
     private class HashnodeMe
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string? Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
 
-        [JsonPropertyName("profilePicture")]
+                /// <summary>
+        /// Gets or sets the Profile Picture.
+        /// </summary>
+[JsonPropertyName("profilePicture")]
         public string? ProfilePicture { get; set; }
     }
 
     private class HashnodePublishResponse
     {
-        [JsonPropertyName("publishPost")]
+                /// <summary>
+        /// Gets or sets the Publish Post.
+        /// </summary>
+[JsonPropertyName("publishPost")]
         public HashnodePublishPost PublishPost { get; set; } = new();
     }
 
     private class HashnodePublishPost
     {
-        [JsonPropertyName("post")]
+                /// <summary>
+        /// Gets or sets the Post.
+        /// </summary>
+[JsonPropertyName("post")]
         public HashnodePost Post { get; set; } = new();
     }
 
     private class HashnodePost
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string? Id { get; set; }
 
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string? Url { get; set; }
     }
 
     private class HashnodePublicationsResponse
     {
-        [JsonPropertyName("me")]
+                /// <summary>
+        /// Gets or sets the Me.
+        /// </summary>
+[JsonPropertyName("me")]
         public HashnodeMePublications Me { get; set; } = new();
     }
 
     private class HashnodeMePublications
     {
-        [JsonPropertyName("publications")]
+                /// <summary>
+        /// Gets or sets the Publications.
+        /// </summary>
+[JsonPropertyName("publications")]
         public HashnodePublications Publications { get; set; } = new();
     }
 
     private class HashnodePublications
     {
-        [JsonPropertyName("edges")]
+                /// <summary>
+        /// Gets or sets the Edges.
+        /// </summary>
+[JsonPropertyName("edges")]
         public List<HashnodePublicationEdge> Edges { get; set; } = new();
     }
 
     private class HashnodePublicationEdge
     {
-        [JsonPropertyName("node")]
+                /// <summary>
+        /// Gets or sets the Node.
+        /// </summary>
+[JsonPropertyName("node")]
         public HashnodePublicationNode Node { get; set; } = new();
     }
 
     private class HashnodePublicationNode
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string? Id { get; set; }
 
-        [JsonPropertyName("title")]
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+[JsonPropertyName("title")]
         public string? Title { get; set; }
     }
 
-    public class HashnodeTag
+        /// <summary>
+    /// Represents a class for HashnodeTag.
+    /// </summary>
+public class HashnodeTag
     {
-        public string Value { get; set; } = string.Empty;
-        public string Label { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Value.
+        /// </summary>
+public string Value { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Label.
+        /// </summary>
+public string Label { get; set; } = string.Empty;
     }
 
-    public class HashnodePublication
+        /// <summary>
+    /// Represents a class for HashnodePublication.
+    /// </summary>
+public class HashnodePublication
     {
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
     }
 
     //#endregion

@@ -1,13 +1,19 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
 namespace Aero.Services.Mail;
 
+/// <summary>
+/// Represents a class for SendGridMailer.
+/// </summary>
 public class SendGridMailer(IConfiguration config, ILogger<SendGridMailer> log) : IEmailSender
 {
-    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        /// <summary>
+    /// SendEmailAsync method.
+    /// </summary>
+public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
         log.LogInformation($"sending contactus email to {email} via send grid");
         var apiKey = config.GetSection("AppSettings:SendGrid:Key").Value;

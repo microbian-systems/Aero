@@ -3,9 +3,15 @@ using Microsoft.AspNetCore.Antiforgery;
 namespace Aero.Web.Middleware;
 
 // todo - verify the XssExtensions are obsoleted by asp.net core antiforgery options
+/// <summary>
+/// Represents a class for WebSecurityExtensions.
+/// </summary>
 public static class WebSecurityExtensions
 {
-    public static IServiceCollection ConfigureAntiForgeryOptions(this IServiceCollection services)
+        /// <summary>
+    /// ConfigureAntiForgeryOptions method.
+    /// </summary>
+public static IServiceCollection ConfigureAntiForgeryOptions(this IServiceCollection services)
     {
         services.Configure<AntiforgeryOptions>(opts =>
         {
@@ -17,13 +23,19 @@ public static class WebSecurityExtensions
         return services;
     }
 
-    public static IApplicationBuilder UseServerHardening(this IApplicationBuilder app)
+        /// <summary>
+    /// UseServerHardening method.
+    /// </summary>
+public static IApplicationBuilder UseServerHardening(this IApplicationBuilder app)
     {
         // todo - add
         return app;
     }
 
-    [Obsolete("Use ConfigureAntiForgeryOptions instead", true)]
+        /// <summary>
+    /// UseXssMiddleware method.
+    /// </summary>
+[Obsolete("Use ConfigureAntiForgeryOptions instead", true)]
     public static void UseXssMiddleware(this IApplicationBuilder app, bool allowFrames = true,
         bool enableContentSecurityPolity = true)
     {

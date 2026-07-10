@@ -5,30 +5,45 @@ using Aero.Core.DataStructures.Trees.Persistence.Trees;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.DI;
 
+/// <summary>
+/// Represents a class for TreeFactory.
+/// </summary>
 public static class TreeFactory
 {
-    public static IPriorityTree<T> CreateMinHeap<T>(IStorageBackend storage)
+        /// <summary>
+    /// CreateMinHeap method.
+    /// </summary>
+public static IPriorityTree<T> CreateMinHeap<T>(IStorageBackend storage)
         where T : unmanaged, IComparable<T>
     {
         var serializer = new PrimitiveSerializer<T>();
         return new PersistentMinHeap<T>(storage, serializer);
     }
 
-    public static IPriorityTree<T> CreateMaxHeap<T>(IStorageBackend storage)
+        /// <summary>
+    /// CreateMaxHeap method.
+    /// </summary>
+public static IPriorityTree<T> CreateMaxHeap<T>(IStorageBackend storage)
         where T : unmanaged, IComparable<T>
     {
         var serializer = new PrimitiveSerializer<T>();
         return new PersistentMaxHeap<T>(storage, serializer);
     }
 
-    public static IDoubleEndedPriorityTree<T> CreateMinMaxHeap<T>(IStorageBackend storage)
+        /// <summary>
+    /// CreateMinMaxHeap method.
+    /// </summary>
+public static IDoubleEndedPriorityTree<T> CreateMinMaxHeap<T>(IStorageBackend storage)
         where T : unmanaged, IComparable<T>
     {
         var serializer = new PrimitiveSerializer<T>();
         return new PersistentMinMaxHeap<T>(storage, serializer);
     }
 
-    public static IOrderedTree<TKey> CreateBPlusTree<TKey, TValue>(IStorageBackend storage)
+        /// <summary>
+    /// CreateBPlusTree method.
+    /// </summary>
+public static IOrderedTree<TKey> CreateBPlusTree<TKey, TValue>(IStorageBackend storage)
         where TKey : unmanaged, IComparable<TKey>
         where TValue : unmanaged
     {

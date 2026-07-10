@@ -1,23 +1,32 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Shouldly;
 using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
+/// <summary>
+/// Represents a class for UsernamelessControllerIntegrationTests.
+/// </summary>
 [ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
 public class UsernamelessControllerIntegrationTests
 {
     private readonly HttpClient _client;
     private readonly TestWebAppFactory _factory;
 
-    public UsernamelessControllerIntegrationTests(TestWebAppFactory factory)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="UsernamelessControllerIntegrationTests"/> class.
+    /// </summary>
+public UsernamelessControllerIntegrationTests(TestWebAppFactory factory)
     {
         _factory = factory;
         _client = factory.CreateClient();
     }
 
-    [Test]
+        /// <summary>
+    /// GetUsernameless_ShouldReturnSuccessStatusCode method.
+    /// </summary>
+[Test]
     public async Task GetUsernameless_ShouldReturnSuccessStatusCode()
     {
         // Act
@@ -27,7 +36,10 @@ public class UsernamelessControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// GetUsernamelessIndex_ShouldReturnSuccessStatusCode method.
+    /// </summary>
+[Test]
     public async Task GetUsernamelessIndex_ShouldReturnSuccessStatusCode()
     {
         // Act
@@ -37,7 +49,10 @@ public class UsernamelessControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// UsernamelessEndpoints_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     [Arguments("/Usernameless/authenticate")]
     [Arguments("/Usernameless/options")]
     [Arguments("/Usernameless/assertion")]
@@ -51,7 +66,10 @@ public class UsernamelessControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized, HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostUsernamelessAuthenticate_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     public async Task PostUsernamelessAuthenticate_ShouldReturnValidResponse()
     {
         // Arrange
@@ -64,7 +82,10 @@ public class UsernamelessControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// Usernameless_ShouldNotAllowInvalidMethods method.
+    /// </summary>
+[Test]
     [Arguments("PUT")]
     [Arguments("PATCH")]
     [Arguments("DELETE")]
@@ -80,7 +101,10 @@ public class UsernamelessControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// UsernamelessController_ShouldHandleWebAuthnRequests method.
+    /// </summary>
+[Test]
     public async Task UsernamelessController_ShouldHandleWebAuthnRequests()
     {
         // Arrange
@@ -94,7 +118,10 @@ public class UsernamelessControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// UsernamelessController_ShouldSupportDiscoverable_Credentials method.
+    /// </summary>
+[Test]
     public async Task UsernamelessController_ShouldSupportDiscoverable_Credentials()
     {
         // Arrange - Test discoverable credentials specific to usernameless flow

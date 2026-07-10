@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for TweetExpansionsTests.
+/// </summary>
 public class TweetExpansionsTests
 {
-    [Test]
+        /// <summary>
+    /// Tweet_WithAuthorExpansion_ReturnsCorrectAuthor method.
+    /// </summary>
+[Test]
     public async Task Tweet_WithAuthorExpansion_ReturnsCorrectAuthor()
     {
         // Arrange
@@ -22,7 +28,10 @@ public class TweetExpansionsTests
         await Assert.That(author.Username).IsEqualTo("testuser");
     }
 
-    [Test]
+        /// <summary>
+    /// Tweet_WithNullIncludes_ReturnsNullAuthor method.
+    /// </summary>
+[Test]
     public void Tweet_WithNullIncludes_ReturnsNullAuthor()
     {
         // Arrange
@@ -36,7 +45,10 @@ public class TweetExpansionsTests
         Assert.Null(author);
     }
 
-    [Test]
+        /// <summary>
+    /// Tweet_WithEmptyUsersList_ReturnsNullAuthor method.
+    /// </summary>
+[Test]
     public void Tweet_WithEmptyUsersList_ReturnsNullAuthor()
     {
         // Arrange
@@ -50,7 +62,10 @@ public class TweetExpansionsTests
         Assert.Null(author);
     }
 
-    [Test]
+        /// <summary>
+    /// Tweet_WithReferencedTweetsExpansion_ReturnsReferencedTweets method.
+    /// </summary>
+[Test]
     public async Task Tweet_WithReferencedTweetsExpansion_ReturnsReferencedTweets()
     {
         // Arrange
@@ -66,7 +81,10 @@ public class TweetExpansionsTests
         await Assert.That(found.Text).IsEqualTo("Original tweet");
     }
 
-    [Test]
+        /// <summary>
+    /// Tweet_WithMediaExpansion_ReturnsMediaObjects method.
+    /// </summary>
+[Test]
     public async Task Tweet_WithMediaExpansion_ReturnsMediaObjects()
     {
         // Arrange
@@ -82,7 +100,10 @@ public class TweetExpansionsTests
         await Assert.That(found.Type).IsEqualTo("photo");
     }
 
-    [Test]
+        /// <summary>
+    /// Tweet_WithNullAuthorId_ReturnsNullAuthor method.
+    /// </summary>
+[Test]
     public void Tweet_WithNullAuthorId_ReturnsNullAuthor()
     {
         // Arrange
@@ -97,7 +118,10 @@ public class TweetExpansionsTests
         Assert.Null(author);
     }
 
-    [Test]
+        /// <summary>
+    /// TweetResponse_WithIncludes_ProvidesAccessToExpansions method.
+    /// </summary>
+[Test]
     public async Task TweetResponse_WithIncludes_ProvidesAccessToExpansions()
     {
         // Arrange

@@ -2,12 +2,21 @@ using Microsoft.AspNetCore.Components;
 
 namespace Aero.MerakiUI.Tooltips;
 
+/// <summary>
+/// Represents a class for Tooltip.
+/// </summary>
 public partial class Tooltip : MerakiComponentBase
 {
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Text.
+    /// </summary>
+[Parameter]
     public string Text { get; set; } = "Tooltip text";
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Position.
+    /// </summary>
+[Parameter]
     public TooltipPosition Position { get; set; } = TooltipPosition.Top;
 
     private string GetPositionClass() => Position switch
@@ -20,6 +29,9 @@ public partial class Tooltip : MerakiComponentBase
     };
 }
 
+/// <summary>
+/// Defines an enumeration for TooltipPosition.
+/// </summary>
 public enum TooltipPosition
 {
     Top,

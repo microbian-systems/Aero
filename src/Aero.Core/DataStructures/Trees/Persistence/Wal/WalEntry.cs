@@ -1,15 +1,39 @@
 namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
+/// <summary>
+/// Represents a class for WalEntry.
+/// </summary>
 public sealed class WalEntry
 {
-    public WalEntryHeader Header;
+        /// <summary>
+    /// Header.
+    /// </summary>
+public WalEntryHeader Header;
 
-    public ReadOnlyMemory<byte> BeforeImage;
+        /// <summary>
+    /// BeforeImage.
+    /// </summary>
+public ReadOnlyMemory<byte> BeforeImage;
 
-    public ReadOnlyMemory<byte> AfterImage;
+        /// <summary>
+    /// AfterImage.
+    /// </summary>
+public ReadOnlyMemory<byte> AfterImage;
 
-    public bool IsCommitted => Header.Type == WalEntryType.Commit;
-    public bool IsAborted => Header.Type == WalEntryType.Abort;
-    public bool IsWrite => Header.Type == WalEntryType.Write;
-    public bool IsCheckpoint => Header.Type == WalEntryType.Checkpoint;
+        /// <summary>
+    /// Gets or sets the Is Committed.
+    /// </summary>
+public bool IsCommitted => Header.Type == WalEntryType.Commit;
+        /// <summary>
+    /// Gets or sets the Is Aborted.
+    /// </summary>
+public bool IsAborted => Header.Type == WalEntryType.Abort;
+        /// <summary>
+    /// Gets or sets the Is Write.
+    /// </summary>
+public bool IsWrite => Header.Type == WalEntryType.Write;
+        /// <summary>
+    /// Gets or sets the Is Checkpoint.
+    /// </summary>
+public bool IsCheckpoint => Header.Type == WalEntryType.Checkpoint;
 }

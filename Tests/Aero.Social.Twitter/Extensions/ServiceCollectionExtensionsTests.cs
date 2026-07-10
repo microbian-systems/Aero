@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
 using Aero.Social.Twitter.Client.Extensions;
@@ -7,9 +7,15 @@ using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Extensions;
 
+/// <summary>
+/// Represents a class for ServiceCollectionExtensionsTests.
+/// </summary>
 public class ServiceCollectionExtensionsTests
 {
-    [Test]
+        /// <summary>
+    /// AddTwitterClient_ShouldRegisterServices method.
+    /// </summary>
+[Test]
     public async Task AddTwitterClient_ShouldRegisterServices()
     {
         // Arrange
@@ -28,7 +34,10 @@ public class ServiceCollectionExtensionsTests
         await Assert.That(client).IsTypeOf<TwitterClient>();
     }
 
-    [Test]
+        /// <summary>
+    /// AddTwitterClient_ShouldConfigureOptions method.
+    /// </summary>
+[Test]
     public async Task AddTwitterClient_ShouldConfigureOptions()
     {
         // Arrange

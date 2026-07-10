@@ -7,9 +7,15 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 namespace Aero.Web.Extensions;
 
 // FluentEmail - https://github.com/lukencode/FluentEmail
+/// <summary>
+/// Represents a class for FluentEmailExtensions.
+/// </summary>
 public static class FluentEmailExtensions
 {
-    public static IServiceCollection AddEmailServies(this IServiceCollection services, IConfiguration config,
+        /// <summary>
+    /// AddEmailServies method.
+    /// </summary>
+public static IServiceCollection AddEmailServies(this IServiceCollection services, IConfiguration config,
         IWebHostEnvironment env)
     {
         var smtpOpts = new SmtpEmailOptions();
@@ -30,7 +36,10 @@ public static class FluentEmailExtensions
         return services;
     }
 
-    public static IServiceCollection AddAspNetEmailSender(this IServiceCollection services)
+        /// <summary>
+    /// AddAspNetEmailSender method.
+    /// </summary>
+public static IServiceCollection AddAspNetEmailSender(this IServiceCollection services)
     {
         var sp = services.BuildServiceProvider();
         var opts = sp.GetRequiredService<IOptionsMonitor<SmtpEmailOptions>>();
@@ -40,7 +49,10 @@ public static class FluentEmailExtensions
         return services;
     }
 
-    public static IServiceCollection AddMailtrapMailer(this IServiceCollection services, IConfiguration config)
+        /// <summary>
+    /// AddMailtrapMailer method.
+    /// </summary>
+public static IServiceCollection AddMailtrapMailer(this IServiceCollection services, IConfiguration config)
     {
         var opts = GetEmailOptions(services, config);
         services.AddFluentEmail(opts.SenderEmail) // todo - get value from appsettings
@@ -50,7 +62,10 @@ public static class FluentEmailExtensions
         return services;
     }
 
-    public static IServiceCollection AddFluentSmtpEmailSender(this IServiceCollection services, IConfiguration config)
+        /// <summary>
+    /// AddFluentSmtpEmailSender method.
+    /// </summary>
+public static IServiceCollection AddFluentSmtpEmailSender(this IServiceCollection services, IConfiguration config)
     {
         var opts = GetEmailOptions(services, config);
         services.AddFluentEmail(opts.SenderEmail)

@@ -5,11 +5,17 @@ using System.Runtime.InteropServices;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
+/// <summary>
+/// Represents a class for WalFile.
+/// </summary>
 public sealed class WalFile : IWalWriter, IWalReader
 {
     private const uint MagicNumber = 0x57414C21;
     private const int FormatVersion = 1;
-    public const int HeaderSize = 24;
+        /// <summary>
+    /// HeaderSize.
+    /// </summary>
+public const int HeaderSize = 24;
 
     private const int HeaderMagicOffset = 0;
     private const int HeaderVersionOffset = 4;
@@ -27,11 +33,23 @@ public sealed class WalFile : IWalWriter, IWalReader
 
     private readonly WalIndex _index = new();
 
-    public Lsn NextLsn => _nextLsn;
-    public long FileSize => _fileSize;
-    public Lsn LastCheckpointLsn => _lastCheckpointLsn;
+        /// <summary>
+    /// Gets or sets the Next Lsn.
+    /// </summary>
+public Lsn NextLsn => _nextLsn;
+        /// <summary>
+    /// Gets or sets the File Size.
+    /// </summary>
+public long FileSize => _fileSize;
+        /// <summary>
+    /// Gets or sets the Last Checkpoint Lsn.
+    /// </summary>
+public Lsn LastCheckpointLsn => _lastCheckpointLsn;
 
-    public WalFile(string path)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="WalFile"/> class.
+    /// </summary>
+public WalFile(string path)
     {
         _path = path ?? throw new ArgumentNullException(nameof(path));
         Initialize();
@@ -148,7 +166,10 @@ public sealed class WalFile : IWalWriter, IWalReader
         }
     }
 
-    public async ValueTask<Lsn> AppendAsync(WalEntry entry, CancellationToken ct = default)
+        /// <summary>
+    /// AppendAsync method.
+    /// </summary>
+public async ValueTask<Lsn> AppendAsync(WalEntry entry, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -202,7 +223,10 @@ public sealed class WalFile : IWalWriter, IWalReader
         }
     }
 
-    public async ValueTask FlushAsync(CancellationToken ct = default)
+        /// <summary>
+    /// FlushAsync method.
+    /// </summary>
+public async ValueTask FlushAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -219,7 +243,10 @@ public sealed class WalFile : IWalWriter, IWalReader
         }
     }
 
-    public async IAsyncEnumerable<WalEntry> ReadFromAsync(
+        /// <summary>
+    /// ReadFromAsync method.
+    /// </summary>
+public async IAsyncEnumerable<WalEntry> ReadFromAsync(
         Lsn startLsn,
         [EnumeratorCancellation] CancellationToken ct = default)
     {
@@ -299,12 +326,18 @@ public sealed class WalFile : IWalWriter, IWalReader
         }
     }
 
-    public IAsyncEnumerable<WalEntry> ReadAllAsync(CancellationToken ct = default)
+        /// <summary>
+    /// ReadAllAsync method.
+    /// </summary>
+public IAsyncEnumerable<WalEntry> ReadAllAsync(CancellationToken ct = default)
     {
         return ReadFromAsync(Lsn.MinValue, ct);
     }
 
-    public async ValueTask TruncateBeforeAsync(Lsn checkpointLsn, CancellationToken ct = default)
+        /// <summary>
+    /// TruncateBeforeAsync method.
+    /// </summary>
+public async ValueTask TruncateBeforeAsync(Lsn checkpointLsn, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -400,7 +433,10 @@ public sealed class WalFile : IWalWriter, IWalReader
         return ~crc;
     }
 
-    public async ValueTask DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public async ValueTask DisposeAsync()
     {
         if (_disposed)
             return;
@@ -433,10 +469,19 @@ public sealed class WalFile : IWalWriter, IWalReader
         private Lsn _minLsn = Lsn.Zero;
         private Lsn _maxLsn = Lsn.Zero;
 
-        public Lsn MinLsn => _minLsn;
-        public Lsn MaxLsn => _maxLsn;
+                /// <summary>
+        /// Gets or sets the Min Lsn.
+        /// </summary>
+public Lsn MinLsn => _minLsn;
+                /// <summary>
+        /// Gets or sets the Max Lsn.
+        /// </summary>
+public Lsn MaxLsn => _maxLsn;
 
-        public void Record(Lsn lsn, long fileOffset)
+                /// <summary>
+        /// Record method.
+        /// </summary>
+public void Record(Lsn lsn, long fileOffset)
         {
             _offsets[lsn.Value] = fileOffset;
 
@@ -447,12 +492,18 @@ public sealed class WalFile : IWalWriter, IWalReader
                 _maxLsn = lsn;
         }
 
-        public bool TryGetOffset(Lsn lsn, out long fileOffset)
+                /// <summary>
+        /// TryGetOffset method.
+        /// </summary>
+public bool TryGetOffset(Lsn lsn, out long fileOffset)
         {
             return _offsets.TryGetValue(lsn.Value, out fileOffset);
         }
 
-        public void TruncateBefore(Lsn lsn)
+                /// <summary>
+        /// TruncateBefore method.
+        /// </summary>
+public void TruncateBefore(Lsn lsn)
         {
             var toRemove = new List<ulong>();
 

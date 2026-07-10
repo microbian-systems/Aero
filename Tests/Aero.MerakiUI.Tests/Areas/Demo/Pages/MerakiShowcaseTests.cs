@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Areas.Demo.Pages;
 using Bunit;
 using Aero.MerakiUI.Areas.Demo.Pages;
 
 namespace Aero.MerakiUI.Tests.Areas.Demo.Pages;
 
+/// <summary>
+/// Represents a class for MerakiShowcaseTests.
+/// </summary>
 public class MerakiShowcaseTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// MerakiShowcase_ShouldRenderMainSections method.
+    /// </summary>
+[Test]
     public void MerakiShowcase_ShouldRenderMainSections()
     {
         var cut = Render<MerakiShowcase>();

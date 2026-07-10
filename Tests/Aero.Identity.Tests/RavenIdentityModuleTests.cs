@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Cms;
 using Aero.Cms.Manager;
 
 namespace Aero.Identity.Tests;
 
+/// <summary>
+/// Represents a class for AeroIdentityModuleTests.
+/// </summary>
 public class AeroIdentityModuleTests
 {
-    [Test]
+        /// <summary>
+    /// Init_RegistersPermissions method.
+    /// </summary>
+[Test]
     public void Init_RegistersPermissions()
     {
         // Arrange
@@ -20,7 +26,10 @@ public class AeroIdentityModuleTests
         Assert.Contains(App.Permissions["Manager"], p => p.Name == Permissions.Roles);
     }
 
-    [Test]
+        /// <summary>
+    /// Init_AddsMenuItems method.
+    /// </summary>
+[Test]
     public void Init_AddsMenuItems()
     {
         // Arrange

@@ -1,5 +1,8 @@
 namespace Aero.Auth.Services;
 
+/// <summary>
+/// Represents a record for RefreshTokenResult.
+/// </summary>
 public sealed record RefreshTokenResult(
     string Token,
     string TokenHash,

@@ -2,15 +2,27 @@ using Microsoft.AspNetCore.Components;
 
 namespace Aero.MerakiUI.Alerts;
 
+/// <summary>
+/// Represents a class for Alert.
+/// </summary>
 public partial class Alert : MerakiComponentBase
 {
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Type.
+    /// </summary>
+[Parameter]
     public AlertType Type { get; set; } = AlertType.Info;
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Title.
+    /// </summary>
+[Parameter]
     public string? Title { get; set; }
 
-    protected string TypeColorClass => Type switch
+        /// <summary>
+    /// Gets or sets the Type Color Class.
+    /// </summary>
+protected string TypeColorClass => Type switch
     {
         AlertType.Success => "bg-emerald-500",
         AlertType.Info => "bg-blue-500",
@@ -19,7 +31,10 @@ public partial class Alert : MerakiComponentBase
         _ => "bg-blue-500"
     };
 
-    protected string TitleColorClass => Type switch
+        /// <summary>
+    /// Gets or sets the Title Color Class.
+    /// </summary>
+protected string TitleColorClass => Type switch
     {
         AlertType.Success => "text-emerald-500 dark:text-emerald-400",
         AlertType.Info => "text-blue-500 dark:text-blue-400",

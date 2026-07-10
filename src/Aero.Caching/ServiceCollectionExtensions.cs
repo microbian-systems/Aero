@@ -1,5 +1,8 @@
-﻿namespace Aero.Caching;
+namespace Aero.Caching;
 
+/// <summary>
+/// Represents a class for ServiceCollectionExtensions.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
     // public static IServiceCollection AddRedisCacheClient(this IServiceCollection services, Action<RedisCacheOptions> configure)

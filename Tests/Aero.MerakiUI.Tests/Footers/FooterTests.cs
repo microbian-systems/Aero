@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Footers;
 using Bunit;
 using Aero.MerakiUI.Footers;
 
 namespace Aero.MerakiUI.Tests.Footers;
 
+/// <summary>
+/// Represents a class for FooterTests.
+/// </summary>
 public class FooterTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// SimpleFooter_ShouldRenderCorrectStructure method.
+    /// </summary>
+[Test]
     public void SimpleFooter_ShouldRenderCorrectStructure()
     {
         var cut = Render<SimpleFooter>(parameters => parameters

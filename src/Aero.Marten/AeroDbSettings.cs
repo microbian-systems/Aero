@@ -5,7 +5,10 @@ namespace Aero.Marten;
 /// </summary>
 public class AeroDbSettings
 {
-    public const string SectionName = "AeroDb";
+        /// <summary>
+    /// SectionName.
+    /// </summary>
+public const string SectionName = "AeroDb";
 
     // todo - configure postgres to make use of an embedded server
     // https://github.com/mysticmind/mysticmind-postgresembed

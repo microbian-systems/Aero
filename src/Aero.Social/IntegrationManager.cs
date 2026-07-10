@@ -4,18 +4,27 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Aero.Social;
 
+/// <summary>
+/// Represents a class for IntegrationManager.
+/// </summary>
 public class IntegrationManager
 {
     private readonly Dictionary<string, ISocialProvider> _providers;
     private readonly IServiceProvider _serviceProvider;
 
-    public IntegrationManager(IServiceProvider serviceProvider, IEnumerable<ISocialProvider> providers)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="IntegrationManager"/> class.
+    /// </summary>
+public IntegrationManager(IServiceProvider serviceProvider, IEnumerable<ISocialProvider> providers)
     {
         _serviceProvider = serviceProvider;
         _providers = providers.ToDictionary(p => p.Identifier, p => p, StringComparer.OrdinalIgnoreCase);
     }
 
-    public ISocialProvider GetSocialIntegration(string identifier)
+        /// <summary>
+    /// GetSocialIntegration method.
+    /// </summary>
+public ISocialProvider GetSocialIntegration(string identifier)
     {
         if (_providers.TryGetValue(identifier, out var provider))
         {
@@ -25,12 +34,18 @@ public class IntegrationManager
         throw new KeyNotFoundException($"Social provider '{identifier}' not found");
     }
 
-    public IEnumerable<string> GetAllowedSocialIntegrations()
+        /// <summary>
+    /// GetAllowedSocialIntegrations method.
+    /// </summary>
+public IEnumerable<string> GetAllowedSocialIntegrations()
     {
         return _providers.Keys;
     }
 
-    public async Task<List<ProviderInfo>> GetAllIntegrationsAsync()
+        /// <summary>
+    /// GetAllIntegrationsAsync method.
+    /// </summary>
+public async Task<List<ProviderInfo>> GetAllIntegrationsAsync()
     {
         var result = new List<ProviderInfo>();
 
@@ -53,7 +68,10 @@ public class IntegrationManager
         return result;
     }
 
-    public Dictionary<string, List<ToolInfo>> GetAllTools()
+        /// <summary>
+    /// GetAllTools method.
+    /// </summary>
+public Dictionary<string, List<ToolInfo>> GetAllTools()
     {
         return _providers.Values.ToDictionary(
             p => p.Identifier,
@@ -61,7 +79,10 @@ public class IntegrationManager
         );
     }
 
-    public Dictionary<string, string> GetAllRulesDescriptions()
+        /// <summary>
+    /// GetAllRulesDescriptions method.
+    /// </summary>
+public Dictionary<string, string> GetAllRulesDescriptions()
     {
         return _providers.Values.ToDictionary(
             p => p.Identifier,
@@ -70,36 +91,96 @@ public class IntegrationManager
     }
 }
 
+/// <summary>
+/// Represents a record for ProviderInfo.
+/// </summary>
 public record ProviderInfo
 {
-    public string Name { get; init; } = string.Empty;
-    public string Identifier { get; init; } = string.Empty;
-    public string? Tooltip { get; init; }
-    public string Editor { get; init; } = "normal";
-    public bool IsExternal { get; init; }
-    public bool IsWeb3 { get; init; }
-    public List<CustomField>? CustomFields { get; init; }
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public string Name { get; init; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public string Identifier { get; init; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Tooltip.
+    /// </summary>
+public string? Tooltip { get; init; }
+        /// <summary>
+    /// Gets or sets the Editor.
+    /// </summary>
+public string Editor { get; init; } = "normal";
+        /// <summary>
+    /// Gets or sets the Is External.
+    /// </summary>
+public bool IsExternal { get; init; }
+        /// <summary>
+    /// Gets or sets the Is Web3.
+    /// </summary>
+public bool IsWeb3 { get; init; }
+        /// <summary>
+    /// Gets or sets the Custom Fields.
+    /// </summary>
+public List<CustomField>? CustomFields { get; init; }
 }
 
+/// <summary>
+/// Represents a record for CustomField.
+/// </summary>
 public record CustomField
 {
-    public string Key { get; init; } = string.Empty;
-    public string Label { get; init; } = string.Empty;
-    public string? DefaultValue { get; init; }
-    public string Validation { get; init; } = string.Empty;
-    public string Type { get; init; } = "text";
+        /// <summary>
+    /// Gets or sets the Key.
+    /// </summary>
+public string Key { get; init; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Label.
+    /// </summary>
+public string Label { get; init; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Default Value.
+    /// </summary>
+public string? DefaultValue { get; init; }
+        /// <summary>
+    /// Gets or sets the Validation.
+    /// </summary>
+public string Validation { get; init; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Type.
+    /// </summary>
+public string Type { get; init; } = "text";
 }
 
+/// <summary>
+/// Represents a record for ToolInfo.
+/// </summary>
 public record ToolInfo
 {
-    public string Description { get; init; } = string.Empty;
-    public object DataSchema { get; init; } = new();
-    public string MethodName { get; init; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Description.
+    /// </summary>
+public string Description { get; init; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Data Schema.
+    /// </summary>
+public object DataSchema { get; init; } = new();
+        /// <summary>
+    /// Gets or sets the Method Name.
+    /// </summary>
+public string MethodName { get; init; } = string.Empty;
 }
 
+/// <summary>
+/// Represents a class for SocialProviderExtensions.
+/// </summary>
 public static class SocialProviderExtensions
 {
-    public static IServiceCollection AddSocialProviders(this IServiceCollection services)
+        /// <summary>
+    /// AddSocialProviders method.
+    /// </summary>
+public static IServiceCollection AddSocialProviders(this IServiceCollection services)
     {
         services.AddScoped<IntegrationManager>();
         

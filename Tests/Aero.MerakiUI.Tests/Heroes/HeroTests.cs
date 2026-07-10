@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Heroes;
 using Bunit;
 using Aero.MerakiUI.Heroes;
 
 namespace Aero.MerakiUI.Tests.Heroes;
 
+/// <summary>
+/// Represents a class for HeroTests.
+/// </summary>
 public class HeroTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// HeroWithImage_ShouldRenderCorrectStructure method.
+    /// </summary>
+[Test]
     public void HeroWithImage_ShouldRenderCorrectStructure()
     {
         var cut = Render<HeroWithImage>(parameters => parameters
@@ -25,7 +31,10 @@ public class HeroTests : BunitContext
         Assert.Equal("https://example.com/hero.jpg", img.GetAttribute("src"));
     }
 
-    [Test]
+        /// <summary>
+    /// HeroWithForm_ShouldRenderCorrectStructure method.
+    /// </summary>
+[Test]
     public void HeroWithForm_ShouldRenderCorrectStructure()
     {
         var cut = Render<HeroWithForm>(parameters => parameters

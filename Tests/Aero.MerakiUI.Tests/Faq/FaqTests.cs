@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Faq;
 using Bunit;
 using Aero.MerakiUI.Faq;
 
 namespace Aero.MerakiUI.Tests.Faq;
 
+/// <summary>
+/// Represents a class for FaqTests.
+/// </summary>
 public class FaqTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// FaqAccordion_ShouldRenderTitle method.
+    /// </summary>
+[Test]
     public void FaqAccordion_ShouldRenderTitle()
     {
         var cut = Render<FaqAccordion>(parameters => parameters
@@ -17,7 +23,10 @@ public class FaqTests : BunitContext
         Assert.Contains("Help Center", cut.Markup);
     }
 
-    [Test]
+        /// <summary>
+    /// FaqItem_ShouldRenderQuestion method.
+    /// </summary>
+[Test]
     public void FaqItem_ShouldRenderQuestion()
     {
         var cut = Render<FaqItem>(parameters => parameters

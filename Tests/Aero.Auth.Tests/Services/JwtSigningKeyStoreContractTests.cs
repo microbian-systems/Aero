@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -18,7 +18,10 @@ public class JwtSigningKeyStoreContractTests
     private readonly ILogger<JwtSigningKeyStore> _mockLogger;
     private readonly IJwtSigningKeyPersistence _mockPersistence;
 
-    public JwtSigningKeyStoreContractTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="JwtSigningKeyStoreContractTests"/> class.
+    /// </summary>
+public JwtSigningKeyStoreContractTests()
     {
         _memoryCache = new MemoryCache(new MemoryCacheOptions());
         _mockLogger = Substitute.For<ILogger<JwtSigningKeyStore>>();
@@ -27,7 +30,10 @@ public class JwtSigningKeyStoreContractTests
 
     //#region Interface Contract Tests
 
-    [Test]
+        /// <summary>
+    /// JwtSigningKeyStore_ImplementsInterface method.
+    /// </summary>
+[Test]
     public void JwtSigningKeyStore_ImplementsInterface()
     {
         // Arrange & Act
@@ -38,7 +44,10 @@ public class JwtSigningKeyStoreContractTests
         store.ShouldBeAssignableTo<IJwtSigningKeyStore>();
     }
 
-    [Test]
+        /// <summary>
+    /// IJwtSigningKeyStore_HasRequiredMethods method.
+    /// </summary>
+[Test]
     public void IJwtSigningKeyStore_HasRequiredMethods()
     {
         // Arrange
@@ -57,7 +66,10 @@ public class JwtSigningKeyStoreContractTests
         methods.ShouldContain(m => m.Name == "GetKeyByIdAsync");
     }
 
-    [Test]
+        /// <summary>
+    /// GetSigningCredentials_ShouldReturnCorrectType method.
+    /// </summary>
+[Test]
     public void GetSigningCredentials_ShouldReturnCorrectType()
     {
         // Act
@@ -73,7 +85,10 @@ public class JwtSigningKeyStoreContractTests
 
     //#region Cache Behavior Tests
 
-    [Test]
+        /// <summary>
+    /// MemoryCache_CanStoreAndRetrieveValues method.
+    /// </summary>
+[Test]
     public void MemoryCache_CanStoreAndRetrieveValues()
     {
         // Arrange
@@ -89,7 +104,10 @@ public class JwtSigningKeyStoreContractTests
         value.ShouldBe(cacheValue);
     }
 
-    [Test]
+        /// <summary>
+    /// MemoryCache_CanRemoveValues method.
+    /// </summary>
+[Test]
     public void MemoryCache_CanRemoveValues()
     {
         // Arrange
@@ -108,7 +126,10 @@ public class JwtSigningKeyStoreContractTests
 
     //#region Dependency Injection Tests
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithValidDependencies_ShouldNotThrow method.
+    /// </summary>
+[Test]
     public void Constructor_WithValidDependencies_ShouldNotThrow()
     {
         // Act
@@ -118,7 +139,10 @@ public class JwtSigningKeyStoreContractTests
         act.ShouldNotThrow();
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithNullPersistence_ShouldThrowArgumentNullException method.
+    /// </summary>
+[Test]
     public void Constructor_WithNullPersistence_ShouldThrowArgumentNullException()
     {
         // Act
@@ -128,7 +152,10 @@ public class JwtSigningKeyStoreContractTests
         act.ShouldThrow<ArgumentNullException>();
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithNullLogger_ShouldThrowArgumentNullException method.
+    /// </summary>
+[Test]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
     {
         // Act
@@ -138,7 +165,10 @@ public class JwtSigningKeyStoreContractTests
         act.ShouldThrow<ArgumentNullException>();
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithNullCache_ShouldThrowArgumentNullException method.
+    /// </summary>
+[Test]
     public void Constructor_WithNullCache_ShouldThrowArgumentNullException()
     {
         // Act
@@ -152,7 +182,10 @@ public class JwtSigningKeyStoreContractTests
 
     //#region Algorithm Tests
 
-    [Test]
+        /// <summary>
+    /// SigningKey_ShouldUseHmacSha256Algorithm method.
+    /// </summary>
+[Test]
     public void SigningKey_ShouldUseHmacSha256Algorithm()
     {
         // Act

@@ -1,4 +1,4 @@
-﻿using Aero.Auth.Services;
+using Aero.Auth.Services;
 using Aero.Core.Identity;
 using Aero.Marten.Extensions;
 using Aero.Marten.Services;
@@ -12,10 +12,16 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for SocialLoginExtensions.
+/// </summary>
 public static class SocialLoginExtensions
 {
     // todo - merged two files into this one - the following method is basic but may work. compare to simliar methods below
-    public static AuthenticationBuilder AddSocialLogins(this IServiceCollection services)
+        /// <summary>
+    /// AddSocialLogins method.
+    /// </summary>
+public static AuthenticationBuilder AddSocialLogins(this IServiceCollection services)
     {
         var sp = services.BuildServiceProvider(); 
         var config = sp.GetRequiredService<IConfiguration>();

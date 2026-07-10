@@ -1,21 +1,33 @@
-﻿using Aero.Core.Data;
+using Aero.Core.Data;
 using ILogger = Serilog.ILogger;
 
 namespace Aero.EfCore;
 
 // todo - impl complete logging
+/// <summary>
+/// Represents a class for EfStoredProcRepository.
+/// </summary>
 public class EfStoredProcRepository(DbContext ctx, ILogger log) : IStoredProcRepository
 {
-    protected DbContext db = ctx ?? throw new ArgumentNullException($"Database Context parameter was null inside {nameof(EfStoredProcRepository)}");
+        /// <summary>
+    /// db.
+    /// </summary>
+protected DbContext db = ctx ?? throw new ArgumentNullException($"Database Context parameter was null inside {nameof(EfStoredProcRepository)}");
 
-    public void ExecStoredProc(string name, params object[] parameters)
+        /// <summary>
+    /// ExecStoredProc method.
+    /// </summary>
+public void ExecStoredProc(string name, params object[] parameters)
     {
         var result = ExecStoredProc<object>(name, parameters);
     }
 
 
     // todo - find alternative to SqlQuery Async
-    public object ExecStoredProc<U>(string name, params object[] parameters)
+        /// <summary>
+    /// ExecStoredProc method.
+    /// </summary>
+public object ExecStoredProc<U>(string name, params object[] parameters)
     {
         if (db == null)
             throw new ArgumentNullException($"database context cannot be null");
@@ -29,14 +41,20 @@ public class EfStoredProcRepository(DbContext ctx, ILogger log) : IStoredProcRep
         return result;
     }
 
-    public async Task ExecStoredProcAsync(string name, params object[] parameters)
+        /// <summary>
+    /// ExecStoredProcAsync method.
+    /// </summary>
+public async Task ExecStoredProcAsync(string name, params object[] parameters)
     {
         var result = await ExecStoredProcAsync<object>(name, parameters);
     }
 
 
     // todo - find alternative to SqlQuery Async
-    public async Task<object> ExecStoredProcAsync<U>(string name, params object[] parameters)
+        /// <summary>
+    /// ExecStoredProcAsync method.
+    /// </summary>
+public async Task<object> ExecStoredProcAsync<U>(string name, params object[] parameters)
     {
         if (db == null)
             throw new ArgumentNullException($"database context cannot be null");

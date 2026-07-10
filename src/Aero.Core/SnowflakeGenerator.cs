@@ -10,8 +10,14 @@ namespace Aero.Core;
 public static class Snowflake
 {
     // todo - figure out how to set the machine id at runtime (use asynclocks (dotnext) and redis/garnet for scaleout situations)
-    public static int MachineId { get; private set; } = RandomNumberGenerator.GetInt32(1, 1024);
-    public static void SetMachineId(int machineId) => MachineId = machineId;
+        /// <summary>
+    /// Gets or sets the Machine Id.
+    /// </summary>
+public static int MachineId { get; private set; } = RandomNumberGenerator.GetInt32(1, 1024);
+        /// <summary>
+    /// SetMachineId method.
+    /// </summary>
+public static void SetMachineId(int machineId) => MachineId = machineId;
 
     static Snowflake()
     {

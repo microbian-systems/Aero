@@ -8,7 +8,10 @@ namespace Aero.Core.Commands;
 /// <remarks>compatible with orleans serialization</remarks>
 public interface IAsyncCommand 
 {
-    Task ExecuteAsync();
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+Task ExecuteAsync();
 }
 
 /// <summary>
@@ -18,7 +21,10 @@ public interface IAsyncCommand
 /// <remarks>compatible with orleans serialization</remarks>
 public interface IAsyncCommand<in T> 
 {
-    Task ExecuteAsync(T parameter);
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+Task ExecuteAsync(T parameter);
 }
 
 /// <summary>
@@ -29,7 +35,10 @@ public interface IAsyncCommand<in T>
 /// <remarks>compatible with orleans serialization</remarks>
 public interface IAsyncCommand<in T, TReturn> 
 {
-    Task<TReturn> ExecuteAsync(T parameter);
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+Task<TReturn> ExecuteAsync(T parameter);
 }
 
 // public interface ICommand<in T>
@@ -45,5 +54,8 @@ public interface IAsyncCommand<in T, TReturn>
 /// <remarks>compatible with orleans serialization</remarks>
 public interface ICommand<in T, out TReturn> 
 {
-    TReturn Execute(T param);
+        /// <summary>
+    /// Execute method.
+    /// </summary>
+TReturn Execute(T param);
 }

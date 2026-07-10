@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Breadcrumbs;
 using Bunit;
 using Aero.MerakiUI.Breadcrumbs;
 
 namespace Aero.MerakiUI.Tests.Breadcrumbs;
 
+/// <summary>
+/// Represents a class for BreadcrumbTests.
+/// </summary>
 public class BreadcrumbTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// Breadcrumb_ShouldRenderItems method.
+    /// </summary>
+[Test]
     public void Breadcrumb_ShouldRenderItems()
     {
         var cut = Render<Breadcrumb>(parameters => parameters

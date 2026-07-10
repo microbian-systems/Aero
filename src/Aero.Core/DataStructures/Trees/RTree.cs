@@ -7,10 +7,16 @@ public class RTree
 {
     private readonly int _maxChildren;
     private readonly int _minChildren;
-    public RTreeNode Root { get; private set; }
+        /// <summary>
+    /// Gets or sets the Root.
+    /// </summary>
+public RTreeNode Root { get; private set; }
     private readonly List<RTreeNode> _deletedNodes = new();
 
-    public RTree(int maxChildren = 4)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="RTree"/> class.
+    /// </summary>
+public RTree(int maxChildren = 4)
     {
         if (maxChildren < 2)
             throw new ArgumentException("maxChildren must be at least 2", nameof(maxChildren));
@@ -19,7 +25,10 @@ public class RTree
         Root = new RTreeNode(); // IsLeaf is computed as Children.Count == 0
     }
 
-    public void Insert(Point point)
+        /// <summary>
+    /// Insert method.
+    /// </summary>
+public void Insert(Point point)
     {
         var leaf = ChooseLeaf(Root, point);
         leaf.Points.Add(point);
@@ -35,7 +44,10 @@ public class RTree
         }
     }
 
-    public void Delete(Point point)
+        /// <summary>
+    /// Delete method.
+    /// </summary>
+public void Delete(Point point)
     {
         var leaf = FindLeaf(Root, point);
         if (leaf == null) return;

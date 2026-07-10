@@ -270,64 +270,106 @@ public class DevToProvider(
 
     private class DevToAuthBody
     {
-        [JsonPropertyName("apiKey")]
+                /// <summary>
+        /// Gets or sets the Api Key.
+        /// </summary>
+[JsonPropertyName("apiKey")]
         public string ApiKey { get; set; } = string.Empty;
     }
 
     private class DevToUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
 
-        [JsonPropertyName("profile_image")]
+                /// <summary>
+        /// Gets or sets the Profile Image.
+        /// </summary>
+[JsonPropertyName("profile_image")]
         public string? ProfileImage { get; set; }
     }
 
     private class DevToArticleResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string? Url { get; set; }
     }
 
     private class DevToTagResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
     }
 
     private class DevToArticleItem
     {
-        [JsonPropertyName("organization")]
+                /// <summary>
+        /// Gets or sets the Organization.
+        /// </summary>
+[JsonPropertyName("organization")]
         public DevToOrganizationRef? Organization { get; set; }
     }
 
     private class DevToOrganizationRef
     {
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
     }
 
     private class DevToOrganizationResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
     }
 

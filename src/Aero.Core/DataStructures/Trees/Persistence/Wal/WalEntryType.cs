@@ -1,5 +1,8 @@
 namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
+/// <summary>
+/// Defines an enumeration for WalEntryType.
+/// </summary>
 public enum WalEntryType : byte
 {
     Begin = 0x01,

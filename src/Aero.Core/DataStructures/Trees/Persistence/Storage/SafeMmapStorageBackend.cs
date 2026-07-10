@@ -53,12 +53,27 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
     private readonly object _resizeLock = new();
     private bool _disposed;
 
-    public int PageSize => _pageSize;
-    public long PageCount => _allocatedPages;
-    public long CapacityInPages => _capacityInPages;
-    public long FreePageCount => _freePages.Count;
+        /// <summary>
+    /// Gets or sets the Page Size.
+    /// </summary>
+public int PageSize => _pageSize;
+        /// <summary>
+    /// Gets or sets the Page Count.
+    /// </summary>
+public long PageCount => _allocatedPages;
+        /// <summary>
+    /// Gets or sets the Capacity In Pages.
+    /// </summary>
+public long CapacityInPages => _capacityInPages;
+        /// <summary>
+    /// Gets or sets the Free Page Count.
+    /// </summary>
+public long FreePageCount => _freePages.Count;
 
-    public SafeMmapStorageBackend(string path, long initialCapacityBytes = 0, int pageSize = 4096)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="SafeMmapStorageBackend"/> class.
+    /// </summary>
+public SafeMmapStorageBackend(string path, long initialCapacityBytes = 0, int pageSize = 4096)
     {
         if (string.IsNullOrEmpty(path))
             throw new ArgumentException("Path cannot be null or empty.", nameof(path));
@@ -196,7 +211,10 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
         _accessor.WriteArray(0, headerSpan.ToArray(), 0, _pageSize);
     }
 
-    public ValueTask<Memory<byte>> ReadPageAsync(long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// ReadPageAsync method.
+    /// </summary>
+public ValueTask<Memory<byte>> ReadPageAsync(long pageId, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -212,7 +230,10 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
         return ValueTask.FromResult<Memory<byte>>(span.ToArray());
     }
 
-    public ValueTask WritePageAsync(long pageId, ReadOnlyMemory<byte> data, CancellationToken ct = default)
+        /// <summary>
+    /// WritePageAsync method.
+    /// </summary>
+public ValueTask WritePageAsync(long pageId, ReadOnlyMemory<byte> data, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -228,7 +249,10 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask<long> AllocatePageAsync(CancellationToken ct = default)
+        /// <summary>
+    /// AllocatePageAsync method.
+    /// </summary>
+public ValueTask<long> AllocatePageAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -279,7 +303,10 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
         InitializeMemoryMappedFile();
     }
 
-    public ValueTask FreePageAsync(long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// FreePageAsync method.
+    /// </summary>
+public ValueTask FreePageAsync(long pageId, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -304,7 +331,10 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask FlushAsync(CancellationToken ct = default)
+        /// <summary>
+    /// FlushAsync method.
+    /// </summary>
+public ValueTask FlushAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         SaveHeader();
@@ -312,7 +342,10 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask<PageMetadata> GetPageMetadataAsync(long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// GetPageMetadataAsync method.
+    /// </summary>
+public ValueTask<PageMetadata> GetPageMetadataAsync(long pageId, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -322,7 +355,10 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
         return new ValueTask<PageMetadata>(meta);
     }
 
-    public ValueTask UpdatePageMetadataAsync(
+        /// <summary>
+    /// UpdatePageMetadataAsync method.
+    /// </summary>
+public ValueTask UpdatePageMetadataAsync(
         long pageId,
         int liveDelta,
         int deadDelta,
@@ -343,7 +379,10 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
         return ValueTask.CompletedTask;
     }
 
-    public async IAsyncEnumerable<PageMetadata> GetFragmentedPagesAsync(
+        /// <summary>
+    /// GetFragmentedPagesAsync method.
+    /// </summary>
+public async IAsyncEnumerable<PageMetadata> GetFragmentedPagesAsync(
         double fragmentationThreshold,
         [EnumeratorCancellation] CancellationToken ct = default)
     {
@@ -360,7 +399,10 @@ public sealed class SafeMmapStorageBackend : IStorageBackend
         }
     }
 
-    public ValueTask DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public ValueTask DisposeAsync()
     {
         if (!_disposed)
         {

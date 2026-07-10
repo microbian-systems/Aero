@@ -2,21 +2,39 @@ using Microsoft.AspNetCore.Components;
 
 namespace Aero.MerakiUI.Testimonials;
 
+/// <summary>
+/// Represents a class for TestimonialCard.
+/// </summary>
 public partial class TestimonialCard : MerakiComponentBase
 {
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Content.
+    /// </summary>
+[Parameter]
     public string Content { get; set; } = "Lorem ipsum dolor sit amet...";
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Author Name.
+    /// </summary>
+[Parameter]
     public string AuthorName { get; set; } = "Author Name";
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Author Role.
+    /// </summary>
+[Parameter]
     public string AuthorRole { get; set; } = "Job Role";
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Author Image Url.
+    /// </summary>
+[Parameter]
     public string AuthorImageUrl { get; set; } = "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80";
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Is Primary.
+    /// </summary>
+[Parameter]
     public bool IsPrimary { get; set; } = false;
 
     private string GetBackgroundClass() => IsPrimary ? "bg-blue-500 dark:bg-blue-600" : "";

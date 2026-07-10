@@ -7,6 +7,9 @@ using Aero.Auth.Tests.WebHost;
 
 namespace Aero.Auth.Tests;
 
+/// <summary>
+/// Represents a class for TestWebAppFactory.
+/// </summary>
 public class TestWebAppFactory : WebApplicationFactory<Program>
 {
     private static readonly IDocumentStore _sharedStore;
@@ -22,7 +25,10 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
         });
     }
 
-    protected override IHost CreateHost(IHostBuilder builder)
+        /// <summary>
+    /// CreateHost method.
+    /// </summary>
+protected override IHost CreateHost(IHostBuilder builder)
     {
         // Clean the database
         _sharedStore.Advanced.Clean.DeleteAllDocumentsAsync().GetAwaiter().GetResult();
@@ -36,7 +42,10 @@ public class TestWebAppFactory : WebApplicationFactory<Program>
         return base.CreateHost(builder);
     }
 
-    protected override void Dispose(bool disposing)
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+protected override void Dispose(bool disposing)
     {
         // Don't dispose shared store
         base.Dispose(disposing);

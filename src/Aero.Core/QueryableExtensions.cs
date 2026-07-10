@@ -1,8 +1,14 @@
-﻿namespace Aero.Core;
+namespace Aero.Core;
 
+/// <summary>
+/// Represents a class for QueryableExtensions.
+/// </summary>
 public static class QueryableExtensions
 {
-    public static Task<PaginatedResult<T>> ToPaginatedListAsync<T>(this IQueryable<T> source, int pageNumber, int pageSize) where T : class
+        /// <summary>
+    /// ToPaginatedListAsync method.
+    /// </summary>
+public static Task<PaginatedResult<T>> ToPaginatedListAsync<T>(this IQueryable<T> source, int pageNumber, int pageSize) where T : class
     {
         if (source == null) 
             throw new ArgumentNullException();
@@ -22,22 +28,55 @@ public static class QueryableExtensions
     }
 }
     
+/// <summary>
+/// Represents a class for PaginatedResult.
+/// </summary>
 public class PaginatedResult<T> //: Result
 {
-    public PaginatedResult() { }
-    public PaginatedResult(List<T> data)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="PaginatedResult"/> class.
+    /// </summary>
+public PaginatedResult() { }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="PaginatedResult"/> class.
+    /// </summary>
+public PaginatedResult(List<T> data)
     {
         Data = data;
     }
 
-    public IEnumerable<T> Data { get; set; } = new List<T>();
-    public bool Succeeded { get; set; }
-    public int CurrentPage { get; set; }
-    public int TotalPages { get; set; }
-    public int TotalCount { get; set; }
-    public int PageSize { get; set; }
-    public bool HasPreviousPage => CurrentPage > 1;
-    public bool HasNextPage => CurrentPage < TotalPages;
+        /// <summary>
+    /// Gets or sets the Data.
+    /// </summary>
+public IEnumerable<T> Data { get; set; } = new List<T>();
+        /// <summary>
+    /// Gets or sets the Succeeded.
+    /// </summary>
+public bool Succeeded { get; set; }
+        /// <summary>
+    /// Gets or sets the Current Page.
+    /// </summary>
+public int CurrentPage { get; set; }
+        /// <summary>
+    /// Gets or sets the Total Pages.
+    /// </summary>
+public int TotalPages { get; set; }
+        /// <summary>
+    /// Gets or sets the Total Count.
+    /// </summary>
+public int TotalCount { get; set; }
+        /// <summary>
+    /// Gets or sets the Page Size.
+    /// </summary>
+public int PageSize { get; set; }
+        /// <summary>
+    /// Gets or sets the Has Previous Page.
+    /// </summary>
+public bool HasPreviousPage => CurrentPage > 1;
+        /// <summary>
+    /// Gets or sets the Has Next Page.
+    /// </summary>
+public bool HasNextPage => CurrentPage < TotalPages;
 
     internal PaginatedResult(bool succeeded, IEnumerable<T> data = default, IEnumerable<string> messages = null, int count = 0, int page = 1, int pageSize = 10)
     {
@@ -49,12 +88,18 @@ public class PaginatedResult<T> //: Result
         TotalCount = count;
     }
         
-    public static PaginatedResult<T> Failure(IEnumerable<string> messages)
+        /// <summary>
+    /// Failure method.
+    /// </summary>
+public static PaginatedResult<T> Failure(IEnumerable<string> messages)
     {
         return new PaginatedResult<T>(false, default, messages);
     }
 
-    public static PaginatedResult<T> Success(IEnumerable<T> data, int count, int page, int pageSize)
+        /// <summary>
+    /// Success method.
+    /// </summary>
+public static PaginatedResult<T> Success(IEnumerable<T> data, int count, int page, int pageSize)
     {
         return new PaginatedResult<T>(true, data, null, count, page, pageSize);
     }

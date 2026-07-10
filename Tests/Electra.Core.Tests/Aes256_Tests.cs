@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Security.Cryptography;
 using Electra.Core.Encryption;
 
 namespace Electra.Core.Tests;
 
+/// <summary>
+/// Represents a class for Aes256_Tests.
+/// </summary>
 public class Aes256_Tests
 {
-    [Test]
+        /// <summary>
+    /// Encrypt_String_Success method.
+    /// </summary>
+[Test]
     public void Encrypt_String_Success()
     {
         var key = new byte[32]; // AES-256 requires a 32-byte key (256 bits)
@@ -26,7 +32,10 @@ public class Aes256_Tests
         encryptedText.Should().NotBeEquivalentTo(plainText);
     }
 
-    [Test]
+        /// <summary>
+    /// To_Base64_Should_Not_Be_Unencrypted_Success method.
+    /// </summary>
+[Test]
     public void To_Base64_Should_Not_Be_Unencrypted_Success()
     {
         // Example usage:
@@ -51,7 +60,10 @@ public class Aes256_Tests
         base64Decoded.Should().NotBeEquivalentTo(plainText);
     }
 
-    [Test]
+        /// <summary>
+    /// Decrypt_String_Success method.
+    /// </summary>
+[Test]
     public void Decrypt_String_Success()
     {
         // Example usage:

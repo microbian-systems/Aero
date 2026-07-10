@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.RateLimit;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.RateLimit;
 
+/// <summary>
+/// Represents a class for RateLimitInfoTests.
+/// </summary>
 public class RateLimitInfoTests
 {
-    [Test]
+        /// <summary>
+    /// IsRateLimited_RemainingIsZero_ReturnsTrue method.
+    /// </summary>
+[Test]
     public async Task IsRateLimited_RemainingIsZero_ReturnsTrue()
     {
         // Arrange
@@ -21,7 +27,10 @@ public class RateLimitInfoTests
         await Assert.That(info.IsRateLimited).IsTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// IsRateLimited_RemainingIsGreaterThanZero_ReturnsFalse method.
+    /// </summary>
+[Test]
     public async Task IsRateLimited_RemainingIsGreaterThanZero_ReturnsFalse()
     {
         // Arrange
@@ -36,7 +45,10 @@ public class RateLimitInfoTests
         await Assert.That(info.IsRateLimited).IsFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// IsApproachingLimit_VariousScenarios_ReturnsExpectedResult method.
+    /// </summary>
+[Test]
     [Arguments(100, 20, false)]  // 80% consumed, above 20% threshold
     [Arguments(100, 19, true)]   // 81% consumed, below 20% threshold
     [Arguments(100, 10, true)]   // 90% consumed
@@ -55,7 +67,10 @@ public class RateLimitInfoTests
         await Assert.That(info.IsApproachingLimit).IsEqualTo(expected);
     }
 
-    [Test]
+        /// <summary>
+    /// PercentConsumed_VariousScenarios_ReturnsExpectedPercentage method.
+    /// </summary>
+[Test]
     [Arguments(100, 50, 50)]   // 50% consumed
     [Arguments(100, 0, 100)]   // 100% consumed
     [Arguments(100, 100, 0)]   // 0% consumed
@@ -74,7 +89,10 @@ public class RateLimitInfoTests
         await Assert.That(info.PercentConsumed).IsEqualTo(expected);
     }
 
-    [Test]
+        /// <summary>
+    /// ResetTime_ValidTimestamp_ReturnsCorrectDateTimeOffset method.
+    /// </summary>
+[Test]
     public async Task ResetTime_ValidTimestamp_ReturnsCorrectDateTimeOffset()
     {
         // Arrange
@@ -91,7 +109,10 @@ public class RateLimitInfoTests
         await Assert.That(resetTime.ToUnixTimeSeconds()).IsEqualTo(futureTime.ToUnixTimeSeconds());
     }
 
-    [Test]
+        /// <summary>
+    /// TimeUntilReset_FutureResetTime_ReturnsPositiveTimeSpan method.
+    /// </summary>
+[Test]
     public async Task TimeUntilReset_FutureResetTime_ReturnsPositiveTimeSpan()
     {
         // Arrange
@@ -108,7 +129,10 @@ public class RateLimitInfoTests
         await Assert.That(timeUntilReset.TotalMinutes < 16).IsTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// TimeUntilReset_PastResetTime_ReturnsZero method.
+    /// </summary>
+[Test]
     public async Task TimeUntilReset_PastResetTime_ReturnsZero()
     {
         // Arrange
@@ -124,7 +148,10 @@ public class RateLimitInfoTests
         await Assert.That(timeUntilReset).IsEqualTo(TimeSpan.Zero);
     }
 
-    [Test]
+        /// <summary>
+    /// Properties_CanBeSetAndRetrieved method.
+    /// </summary>
+[Test]
     public async Task Properties_CanBeSetAndRetrieved()
     {
         // Arrange

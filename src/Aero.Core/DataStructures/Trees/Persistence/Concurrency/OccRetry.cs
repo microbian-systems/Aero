@@ -2,15 +2,27 @@ using Aero.Core.DataStructures.Trees.Persistence.Wal;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Concurrency;
 
+/// <summary>
+/// Represents a class for MaxRetriesExceededException.
+/// </summary>
 public sealed class MaxRetriesExceededException(int maxRetries)
     : Exception($"Operation failed after {maxRetries} attempts due to conflicts.")
 {
-    public int MaxRetries { get; } = maxRetries;
+        /// <summary>
+    /// Gets or sets the Max Retries.
+    /// </summary>
+public int MaxRetries { get; } = maxRetries;
 }
 
+/// <summary>
+/// Represents a class for OccRetry.
+/// </summary>
 public static class OccRetry
 {
-    public static async ValueTask<T> ExecuteAsync<T>(
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public static async ValueTask<T> ExecuteAsync<T>(
         IWalStorageBackend backend,
         Func<ITransactionContext, ValueTask<T>> operation,
         int maxRetries = 5,
@@ -34,7 +46,10 @@ public static class OccRetry
         throw new MaxRetriesExceededException(maxRetries);
     }
 
-    public static async ValueTask ExecuteAsync(
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public static async ValueTask ExecuteAsync(
         IWalStorageBackend backend,
         Func<ITransactionContext, ValueTask> operation,
         int maxRetries = 5,

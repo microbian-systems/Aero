@@ -6,8 +6,14 @@ namespace Aero.Core.Http;
 /// </summary>
 public sealed class NoopSiteContext : ISiteContext
 {
-    public long SiteId => 0;
-    public long TenantId => 0;
+        /// <summary>
+    /// Gets or sets the Site Id.
+    /// </summary>
+public long SiteId => 0;
+        /// <summary>
+    /// Gets or sets the Tenant Id.
+    /// </summary>
+public long TenantId => 0;
 }
 
 /// <summary>
@@ -16,6 +22,12 @@ public sealed class NoopSiteContext : ISiteContext
 /// </summary>
 public sealed class SeedSiteContext(long siteId, long tenantId = 0) : ISiteContext
 {
-    public long SiteId { get; } = siteId;
-    public long TenantId { get; } = tenantId;
+        /// <summary>
+    /// Gets or sets the Site Id.
+    /// </summary>
+public long SiteId { get; } = siteId;
+        /// <summary>
+    /// Gets or sets the Tenant Id.
+    /// </summary>
+public long TenantId { get; } = tenantId;
 }

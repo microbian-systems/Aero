@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Providers;
 
+/// <summary>
+/// Represents a class for DribbbleProviderTests.
+/// </summary>
 public class DribbbleProviderTests : ProviderTestBase
 {
     private readonly Mock<ILogger<DribbbleProvider>> _loggerMock = new();
@@ -24,7 +27,10 @@ public class DribbbleProviderTests : ProviderTestBase
         return new DribbbleProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Test]
+        /// <summary>
+    /// Provider_ShouldHaveCorrectIdentifier method.
+    /// </summary>
+[Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -34,7 +40,10 @@ public class DribbbleProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxLength_ShouldReturn40000 method.
+    /// </summary>
+[Test]
     public void MaxLength_ShouldReturn40000()
     {
         var provider = CreateProvider();
@@ -42,7 +51,10 @@ public class DribbbleProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(40000);
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_ShouldReturnValidUrl method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();

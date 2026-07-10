@@ -1,15 +1,24 @@
 namespace Aero.Core.Http;
 
+/// <summary>
+/// Represents a class for TenantIdHandler.
+/// </summary>
 public sealed class TenantIdHandler : DelegatingHandler
 {
     private readonly ISiteContext _siteContext;
 
-    public TenantIdHandler(ISiteContext siteContext)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="TenantIdHandler"/> class.
+    /// </summary>
+public TenantIdHandler(ISiteContext siteContext)
     {
         _siteContext = siteContext;
     }
 
-    protected override Task<HttpResponseMessage> SendAsync(
+        /// <summary>
+    /// SendAsync method.
+    /// </summary>
+protected override Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {

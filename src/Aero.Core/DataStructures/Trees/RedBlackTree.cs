@@ -1,10 +1,19 @@
 namespace Aero.Core.DataStructures.Trees;
 
+/// <summary>
+/// Represents a class for RedBlackTree.
+/// </summary>
 public class RedBlackTree<T> : ITree<T> where T : IComparable<T>
 {
-    public RedBlackTreeNode<T> Root { get; private set; }
+        /// <summary>
+    /// Gets or sets the Root.
+    /// </summary>
+public RedBlackTreeNode<T> Root { get; private set; }
 
-    public void Insert(T value)
+        /// <summary>
+    /// Insert method.
+    /// </summary>
+public void Insert(T value)
     {
         Root = Insert(Root, value);
         Root.Color = NodeColor.Black;
@@ -37,7 +46,10 @@ public class RedBlackTree<T> : ITree<T> where T : IComparable<T>
         return node;
     }
 
-    public void Delete(T value)
+        /// <summary>
+    /// Delete method.
+    /// </summary>
+public void Delete(T value)
     {
         if (Root == null) return;
 
@@ -150,7 +162,10 @@ public class RedBlackTree<T> : ITree<T> where T : IComparable<T>
         return node;
     }
 
-    public ITreeNode<T> Find(T value)
+        /// <summary>
+    /// Find method.
+    /// </summary>
+public ITreeNode<T> Find(T value)
     {
         return Find(Root, value);
     }

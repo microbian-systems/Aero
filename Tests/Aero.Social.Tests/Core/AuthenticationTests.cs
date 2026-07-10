@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Core;
 using Aero.Core.Railway;
 using System.Net;
@@ -10,11 +10,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Core;
 
+/// <summary>
+/// Represents a class for AuthenticationTests.
+/// </summary>
 public class AuthenticationTests : ProviderTestBase
 {
     private readonly Mock<ILogger<SocialProviderBase>> _loggerMock = new();
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_ShouldReturnValidUrl method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
@@ -31,7 +37,10 @@ public class AuthenticationTests : ProviderTestBase
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateAsync_ShouldExchangeCodeForToken method.
+    /// </summary>
+[Test]
     public async Task AuthenticateAsync_ShouldExchangeCodeForToken()
     {
         HttpHandler.WhenPost("*token*")
@@ -53,7 +62,10 @@ public class AuthenticationTests : ProviderTestBase
         value.Name.ShouldBe("Test User");
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateAsync_OnError_ShouldThrowException method.
+    /// </summary>
+[Test]
     public async Task AuthenticateAsync_OnError_ShouldThrowException()
     {
         HttpHandler.WhenPost("*token*")
@@ -68,7 +80,10 @@ public class AuthenticationTests : ProviderTestBase
         result.IsFailure.ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// RefreshTokenAsync_ShouldReturnNewToken method.
+    /// </summary>
+[Test]
     public async Task RefreshTokenAsync_ShouldReturnNewToken()
     {
         HttpHandler.WhenPost("*token*")
@@ -84,7 +99,10 @@ public class AuthenticationTests : ProviderTestBase
         value.RefreshToken.ShouldBe("new_refresh_token");
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateAsync_WithPKCE_ShouldIncludeCodeVerifier method.
+    /// </summary>
+[Test]
     public async Task AuthenticateAsync_WithPKCE_ShouldIncludeCodeVerifier()
     {
         var receivedContent = "";
@@ -116,7 +134,10 @@ public class AuthenticationTests : ProviderTestBase
         receivedContent.ShouldContain("code_verifier=my_code_verifier");
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_WithClientInformation_ShouldUseCustomSettings method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_WithClientInformation_ShouldUseCustomSettings()
     {
         var provider = new TestOAuth2Provider(HttpClient, _loggerMock.Object, ConfigurationMock.Object);
@@ -134,34 +155,67 @@ public class AuthenticationTests : ProviderTestBase
     }
 }
 
+/// <summary>
+/// Represents a class for TestOAuth2Provider.
+/// </summary>
 public class TestOAuth2Provider : SocialProviderBase
 {
     private readonly IConfiguration _configuration;
 
-    public TestOAuth2Provider(HttpClient httpClient, ILogger<SocialProviderBase> logger, IConfiguration configuration) 
+        /// <summary>
+    /// Initializes a new instance of the <see cref="TestOAuth2Provider"/> class.
+    /// </summary>
+public TestOAuth2Provider(HttpClient httpClient, ILogger<SocialProviderBase> logger, IConfiguration configuration) 
         : base(httpClient, logger)
     {
         _configuration = configuration;
     }
 
-    public override string Identifier => "test-oauth2";
-    public override string Name => "Test OAuth2 Provider";
-    public override string[] Scopes => new[] { "read", "write" };
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "test-oauth2";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Test OAuth2 Provider";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[] { "read", "write" };
 
-    public override int MaxLength(object? additionalSettings = null) => 1000;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 1000;
 
-    protected string GetClientId() => _configuration["TEST_CLIENT_ID"] ?? "default_client_id";
-    protected string GetClientSecret() => _configuration["TEST_CLIENT_SECRET"] ?? "default_secret";
-    protected string GetRedirectUri() => _configuration["TEST_REDIRECT_URI"] ?? "https://localhost/callback";
+        /// <summary>
+    /// GetClientId method.
+    /// </summary>
+protected string GetClientId() => _configuration["TEST_CLIENT_ID"] ?? "default_client_id";
+        /// <summary>
+    /// GetClientSecret method.
+    /// </summary>
+protected string GetClientSecret() => _configuration["TEST_CLIENT_SECRET"] ?? "default_secret";
+        /// <summary>
+    /// GetRedirectUri method.
+    /// </summary>
+protected string GetRedirectUri() => _configuration["TEST_REDIRECT_URI"] ?? "https://localhost/callback";
 
-    public override Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override Task<Result<PostResponse[], AeroError>> PostAsync(
         string id, string accessToken, List<PostDetails> posts, 
         Integration integration, CancellationToken cancellationToken = default)
     {
         return Task.FromResult<Result<PostResponse[], AeroError>>(Array.Empty<PostResponse>());
     }
 
-    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -184,7 +238,10 @@ public class TestOAuth2Provider : SocialProviderBase
         });
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -233,7 +290,10 @@ public class TestOAuth2Provider : SocialProviderBase
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -262,15 +322,30 @@ public class TestOAuth2Provider : SocialProviderBase
 
     private class TokenResponse
     {
-        public string access_token { get; set; } = "";
-        public string? refresh_token { get; set; }
-        public int expires_in { get; set; }
+                /// <summary>
+        /// Gets or sets the access_token.
+        /// </summary>
+public string access_token { get; set; } = "";
+                /// <summary>
+        /// Gets or sets the refresh_token.
+        /// </summary>
+public string? refresh_token { get; set; }
+                /// <summary>
+        /// Gets or sets the expires_in.
+        /// </summary>
+public int expires_in { get; set; }
     }
 
     private class UserResponse
     {
-        public string id { get; set; } = "";
-        public string? name { get; set;
+                /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+public string id { get; set; } = "";
+                /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+public string? name { get; set;
 }
     }
 }

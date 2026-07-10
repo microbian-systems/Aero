@@ -1,13 +1,19 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 namespace Aero.Web.Middleware;
 
+/// <summary>
+/// Represents a class for Custom404Handler.
+/// </summary>
 public class Custom404Handler
 {
     private readonly RequestDelegate next;
     private readonly Regex apiRegex;
 
-    public Custom404Handler(RequestDelegate next)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="Custom404Handler"/> class.
+    /// </summary>
+public Custom404Handler(RequestDelegate next)
     {
         this.next = next;
 
@@ -16,7 +22,10 @@ public class Custom404Handler
         apiRegex = new Regex(apiPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
     }
 
-    public async Task InvokeAsync(HttpContext context)
+        /// <summary>
+    /// InvokeAsync method.
+    /// </summary>
+public async Task InvokeAsync(HttpContext context)
     {
         await next(context);
 
@@ -39,9 +48,15 @@ public class Custom404Handler
     }
 }
 
+/// <summary>
+/// Represents a class for Custom404Extensions.
+/// </summary>
 public static class Custom404Extensions
 {
-    public static IApplicationBuilder UseCustom404Handler(this IApplicationBuilder builder)
+        /// <summary>
+    /// UseCustom404Handler method.
+    /// </summary>
+public static IApplicationBuilder UseCustom404Handler(this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<Custom404Handler>();
     }

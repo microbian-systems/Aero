@@ -4,11 +4,23 @@ using System.Xml.Schema;
 
 namespace Aero.Core.Xml;
 
+/// <summary>
+/// Represents a class for XsdSchemaValidator.
+/// </summary>
 public class XsdSchemaValidator
 {
-    public List<XmlSchema> Schemas { get; set; } = new();
-    public List<String> Errors { get; protected set; } = new();
-    public List<String> Warnings { get; protected set; } = new();
+        /// <summary>
+    /// Gets or sets the Schemas.
+    /// </summary>
+public List<XmlSchema> Schemas { get; set; } = new();
+        /// <summary>
+    /// Gets or sets the Errors.
+    /// </summary>
+public List<String> Errors { get; protected set; } = new();
+        /// <summary>
+    /// Gets or sets the Warnings.
+    /// </summary>
+public List<String> Warnings { get; protected set; } = new();
 
     /// <summary>
     /// Add a schema to be used during the validation of the XML document
@@ -39,7 +51,10 @@ public class XsdSchemaValidator
         return isValid;
     }
 
-    public async Task<bool> AddSchema(Uri uri)
+        /// <summary>
+    /// AddSchema method.
+    /// </summary>
+public async Task<bool> AddSchema(Uri uri)
     {
         ResetErrorsAndWarnings();
         var isValid = false;
@@ -62,7 +77,10 @@ public class XsdSchemaValidator
         return isValid;
     }
 
-    protected void ResetErrorsAndWarnings()
+        /// <summary>
+    /// ResetErrorsAndWarnings method.
+    /// </summary>
+protected void ResetErrorsAndWarnings()
     {
         Errors.Clear();
         Warnings.Clear();
@@ -257,7 +275,10 @@ public class XsdSchemaValidator
         return !Errors.Any() && !Warnings.Any();
     }
 
-    protected virtual void ValidationEventHandler(object sender, ValidationEventArgs e)
+        /// <summary>
+    /// ValidationEventHandler method.
+    /// </summary>
+protected virtual void ValidationEventHandler(object sender, ValidationEventArgs e)
     {
         switch (e.Severity)
         {

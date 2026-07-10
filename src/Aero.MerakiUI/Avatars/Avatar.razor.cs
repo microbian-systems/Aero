@@ -2,33 +2,63 @@ using Microsoft.AspNetCore.Components;
 
 namespace Aero.MerakiUI.Avatars;
 
+/// <summary>
+/// Represents a class for Avatar.
+/// </summary>
 public partial class Avatar : MerakiComponentBase
 {
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Src.
+    /// </summary>
+[Parameter]
     public string Src { get; set; } = "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&h=764&q=100";
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Alt.
+    /// </summary>
+[Parameter]
     public string Alt { get; set; } = "Avatar";
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Size.
+    /// </summary>
+[Parameter]
     public AvatarSize Size { get; set; } = AvatarSize.Md;
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Shape.
+    /// </summary>
+[Parameter]
     public AvatarShape Shape { get; set; } = AvatarShape.Circle;
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Has Border.
+    /// </summary>
+[Parameter]
     public bool HasBorder { get; set; } = false;
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Show Status.
+    /// </summary>
+[Parameter]
     public bool ShowStatus { get; set; } = false;
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Status Color.
+    /// </summary>
+[Parameter]
     public string StatusColor { get; set; } = "bg-emerald-500";
 
-    [CascadingParameter(Name = "IsGrouped")]
+        /// <summary>
+    /// Gets or sets the Is Grouped.
+    /// </summary>
+[CascadingParameter(Name = "IsGrouped")]
     public bool IsGrouped { get; set; }
 
-    [CascadingParameter(Name = "GroupSize")]
+        /// <summary>
+    /// Gets or sets the Group Size Cascaded.
+    /// </summary>
+[CascadingParameter(Name = "GroupSize")]
     public AvatarSize? GroupSizeCascaded { get; set; }
 
     private string GetSizeClass()
@@ -90,6 +120,9 @@ public partial class Avatar : MerakiComponentBase
     private string GetStatusColorClass() => StatusColor;
 }
 
+/// <summary>
+/// Defines an enumeration for AvatarSize.
+/// </summary>
 public enum AvatarSize
 {
     Xs,
@@ -100,6 +133,9 @@ public enum AvatarSize
     TwoXl
 }
 
+/// <summary>
+/// Defines an enumeration for AvatarShape.
+/// </summary>
 public enum AvatarShape
 {
     Circle,

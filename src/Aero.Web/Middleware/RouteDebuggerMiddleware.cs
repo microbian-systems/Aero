@@ -1,18 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Aero.Web.Middleware;
 
+/// <summary>
+/// Represents a class for RouteDebuggerMiddlewareExtensions.
+/// </summary>
 public static class RouteDebuggerMiddlewareExtensions
 {
-    public static IApplicationBuilder UseRouteDebugger(this IApplicationBuilder builder)
+        /// <summary>
+    /// UseRouteDebugger method.
+    /// </summary>
+public static IApplicationBuilder UseRouteDebugger(this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<RouteDebuggerMiddleware>();
     }
 }
 
+/// <summary>
+/// Represents a class for RouteDebuggerMiddleware.
+/// </summary>
 public class RouteDebuggerMiddleware(RequestDelegate next)
 {
-    public async Task Invoke(HttpContext context, IActionDescriptorCollectionProvider provider)
+        /// <summary>
+    /// Invoke method.
+    /// </summary>
+public async Task Invoke(HttpContext context, IActionDescriptorCollectionProvider provider)
     {
         if (context.Request.Path == "/route-debugger")
         {

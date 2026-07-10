@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Forms;
 using Bunit;
 using Aero.MerakiUI.Forms;
 
 namespace Aero.MerakiUI.Tests.Forms;
 
+/// <summary>
+/// Represents a class for FormTests.
+/// </summary>
 public class FormTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// ContactForm_ShouldRenderCorrectStructure method.
+    /// </summary>
+[Test]
     public void ContactForm_ShouldRenderCorrectStructure()
     {
         var cut = Render<ContactForm>(parameters => parameters

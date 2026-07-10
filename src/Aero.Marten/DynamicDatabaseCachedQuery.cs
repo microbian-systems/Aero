@@ -2,11 +2,17 @@ using Aero.Caching;
 
 namespace Aero.Marten;
 
+/// <summary>
+/// Represents a class for DynamicDbCachedQuery.
+/// </summary>
 public class DynamicDbCachedQuery<T>(ICacheService cache, IDynamicDatabaseQuery<T> query, ILogger<DynamicDbCachedQuery<T>> log)
     : IDynamicDbCachedQuery<T>
     where T : class, IEntity<Guid>
 {
-    public async Task<IEnumerable<T>> ExecuteAsync(Expression<Func<T, bool>> parameter)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task<IEnumerable<T>> ExecuteAsync(Expression<Func<T, bool>> parameter)
     {
         log.LogInformation("attempting to retrieved cached query....");
         var key = parameter.ToString();

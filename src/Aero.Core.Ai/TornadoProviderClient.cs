@@ -6,5 +6,8 @@ namespace Aero.Core.Ai;
 /// </summary>
 public sealed class TornadoProviderClient(HttpClient httpClient)
 {
-    public HttpClient HttpClient => httpClient;
+        /// <summary>
+    /// Gets or sets the Http Client.
+    /// </summary>
+public HttpClient HttpClient => httpClient;
 }

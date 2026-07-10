@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Sections;
 using Bunit;
 using Aero.MerakiUI.Sections;
 
 namespace Aero.MerakiUI.Tests.Sections;
 
+/// <summary>
+/// Represents a class for SectionTests.
+/// </summary>
 public class SectionTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// PricingSection_ShouldRenderCorrectStructure method.
+    /// </summary>
+[Test]
     public void PricingSection_ShouldRenderCorrectStructure()
     {
         var cut = Render<PricingSection>(parameters => parameters

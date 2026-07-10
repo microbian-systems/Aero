@@ -1,8 +1,14 @@
-﻿namespace Aero.Web.Extensions;
+namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for AppSettingsExtensions.
+/// </summary>
 public static class AppSettingsExtensions
 {
-    public static WebApplicationBuilder AddAppSettings<T>(this WebApplicationBuilder builder)
+        /// <summary>
+    /// AddAppSettings method.
+    /// </summary>
+public static WebApplicationBuilder AddAppSettings<T>(this WebApplicationBuilder builder)
         where T : class
     {
         var env = builder.Environment;

@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Auth.Services;
 using Aero.Common.Web.Infrastructure;
 using FluentAssertions;
@@ -6,9 +6,15 @@ using Microsoft.Extensions.Options;
 using NSubstitute;
 namespace Aero.Auth.Tests.Services;
 
+/// <summary>
+/// Represents a class for DefaultApiKeyFactoryTests.
+/// </summary>
 public class DefaultApiKeyFactoryTests
 {
-    [Test]
+        /// <summary>
+    /// GenerateApiKey_Should_Respect_Length_And_Prefix method.
+    /// </summary>
+[Test]
     public async Task GenerateApiKey_Should_Respect_Length_And_Prefix()
     {
         // Arrange
@@ -31,7 +37,10 @@ public class DefaultApiKeyFactoryTests
         key!.Length.Should().Be(32);
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateApiKey_Should_Be_Unique method.
+    /// </summary>
+[Test]
     public async Task GenerateApiKey_Should_Be_Unique()
     {
         // Arrange

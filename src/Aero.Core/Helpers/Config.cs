@@ -1,22 +1,37 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 using ILogger = Serilog.ILogger;
 
 namespace Aero.Core.Helpers;
 
+/// <summary>
+/// Represents a class for Config.
+/// </summary>
 public static class Config
 {
-    public static string GetSetting(string key) => ConfigurationManager.AppSettings[key];
+        /// <summary>
+    /// GetSetting method.
+    /// </summary>
+public static string GetSetting(string key) => ConfigurationManager.AppSettings[key];
 
-    public static string GetConnString(string key) =>
+        /// <summary>
+    /// GetConnString method.
+    /// </summary>
+public static string GetConnString(string key) =>
         ConfigurationManager.ConnectionStrings[key]?.ConnectionString;
 
-    public static string GetStorageConnectionString()
+        /// <summary>
+    /// GetStorageConnectionString method.
+    /// </summary>
+public static string GetStorageConnectionString()
     {
         return GetSetting("blobStorage");
     }
 
-    public static T GetJobCommand<T>(ILogger log = null) //where T : IJobModel
+        /// <summary>
+    /// GetJobCommand method.
+    /// </summary>
+public static T GetJobCommand<T>(ILogger log = null) //where T : IJobModel
     {
         var config = GetSetting("job"); // todo - check for null on config and do something...
         log?.Information($"config: {config}");
@@ -29,5 +44,8 @@ public static class Config
     }
 
     // todo - wire method up to use the Azure KeyVault client
-    public static string GetFromAzureVault(string key) => GetSetting(key);
+        /// <summary>
+    /// GetFromAzureVault method.
+    /// </summary>
+public static string GetFromAzureVault(string key) => GetSetting(key);
 }

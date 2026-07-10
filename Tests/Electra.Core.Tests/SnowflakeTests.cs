@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Collections.Generic;
 using FluentAssertions;
 
 namespace Electra.Core.Tests;
 
+/// <summary>
+/// Represents a class for SnowflakeTests.
+/// </summary>
 public class SnowflakeTests
 {
-    [Test]
+        /// <summary>
+    /// NewId_ShouldGenerateUniqueIds method.
+    /// </summary>
+[Test]
     public void NewId_ShouldGenerateUniqueIds()
     {
         // Arrange

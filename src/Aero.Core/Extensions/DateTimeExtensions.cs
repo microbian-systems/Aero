@@ -1,5 +1,8 @@
-﻿namespace Aero.Core.Extensions;
+namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for DateTimeExtensions.
+/// </summary>
 public static class DateTimeExtensions
 {
     //public static double ToUnixEpochExpiration(this DateTime src)

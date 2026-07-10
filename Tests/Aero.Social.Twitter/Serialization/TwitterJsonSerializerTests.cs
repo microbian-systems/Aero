@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Serialization;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Serialization;
 
+/// <summary>
+/// Represents a class for TwitterJsonSerializerTests.
+/// </summary>
 public class TwitterJsonSerializerTests
 {
-    [Test]
+        /// <summary>
+    /// Deserialize_ShouldParseValidJson method.
+    /// </summary>
+[Test]
     public async Task Deserialize_ShouldParseValidJson()
     {
         // Arrange
@@ -21,7 +27,10 @@ public class TwitterJsonSerializerTests
         await Assert.That(result.Text).IsEqualTo("Hello");
     }
 
-    [Test]
+        /// <summary>
+    /// Deserialize_ShouldHandleSnakeCase method.
+    /// </summary>
+[Test]
     public async Task Deserialize_ShouldHandleSnakeCase()
     {
         // Arrange
@@ -35,7 +44,10 @@ public class TwitterJsonSerializerTests
         await Assert.That(result.AuthorId).IsEqualTo("456");
     }
 
-    [Test]
+        /// <summary>
+    /// Serialize_ShouldOutputSnakeCase method.
+    /// </summary>
+[Test]
     public async Task Serialize_ShouldOutputSnakeCase()
     {
         // Arrange
@@ -55,7 +67,10 @@ public class TwitterJsonSerializerTests
         await Assert.That(json).Contains("\"author_id\"");
     }
 
-    [Test]
+        /// <summary>
+    /// Serialize_ShouldSkipNullValues method.
+    /// </summary>
+[Test]
     public async Task Serialize_ShouldSkipNullValues()
     {
         // Arrange
@@ -76,9 +91,18 @@ public class TwitterJsonSerializerTests
 
     private class TestModel
     {
-        public string? Id { get; set; }
-        public string? Text { get; set; }
-        public string? AuthorId { get; set;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string? Id { get; set; }
+                /// <summary>
+        /// Gets or sets the Text.
+        /// </summary>
+public string? Text { get; set; }
+                /// <summary>
+        /// Gets or sets the Author Id.
+        /// </summary>
+public string? AuthorId { get; set;
 }
     }
 }

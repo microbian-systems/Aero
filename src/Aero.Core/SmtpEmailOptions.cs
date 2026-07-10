@@ -1,15 +1,39 @@
 namespace Aero.Core;
 
+/// <summary>
+/// Represents a class for SmtpEmailOptions.
+/// </summary>
 public class SmtpEmailOptions : BaseOptions
 {
-    public SmtpEmailOptions()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="SmtpEmailOptions"/> class.
+    /// </summary>
+public SmtpEmailOptions()
     {
         SectionName = "SmtpEmailOptions";
     }
-    public string Host {get; set;}
-    public int Port {get; set;}
-    public bool EnableSSL {get; set;}
-    public string Username {get; set;}
-    public string Password {get; set;}
-    public string SenderEmail { get; set; }
+        /// <summary>
+    /// Gets or sets the Host.
+    /// </summary>
+public string Host {get; set;}
+        /// <summary>
+    /// Gets or sets the Port.
+    /// </summary>
+public int Port {get; set;}
+        /// <summary>
+    /// Gets or sets the Enable SSL.
+    /// </summary>
+public bool EnableSSL {get; set;}
+        /// <summary>
+    /// Gets or sets the Username.
+    /// </summary>
+public string Username {get; set;}
+        /// <summary>
+    /// Gets or sets the Password.
+    /// </summary>
+public string Password {get; set;}
+        /// <summary>
+    /// Gets or sets the Sender Email.
+    /// </summary>
+public string SenderEmail { get; set; }
 }

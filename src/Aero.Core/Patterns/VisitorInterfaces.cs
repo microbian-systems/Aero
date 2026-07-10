@@ -1,18 +1,36 @@
-﻿namespace Aero.Core.Patterns;
+namespace Aero.Core.Patterns;
 
+/// <summary>
+/// Defines an interface for IVisitable.
+/// </summary>
 public interface IVisitable
 {
-    void Accept(IVisitor visitor);
+        /// <summary>
+    /// Accept method.
+    /// </summary>
+void Accept(IVisitor visitor);
 }
 
+/// <summary>
+/// Defines an interface for IVisitable.
+/// </summary>
 public interface IVisitable<out TReturn>
 {
-    TReturn Accept(IVisitor visitor);
+        /// <summary>
+    /// Accept method.
+    /// </summary>
+TReturn Accept(IVisitor visitor);
 }
 
+/// <summary>
+/// Defines an interface for IVisitor.
+/// </summary>
 public interface IVisitor
 {
-    void Visit(object visited);
+        /// <summary>
+    /// Visit method.
+    /// </summary>
+void Visit(object visited);
 }
     
 /// <summary>
@@ -21,7 +39,10 @@ public interface IVisitor
 /// <typeparam name="T">Any type to be visited</typeparam>
 public interface IVisitor<in T> : IVisitor
 {
-    void Visit(T visited);
+        /// <summary>
+    /// Visit method.
+    /// </summary>
+void Visit(T visited);
 }
 
 /// <summary>
@@ -31,5 +52,8 @@ public interface IVisitor<in T> : IVisitor
 /// <typeparam name="TReturn">any type that is desired. (try with tuples)</typeparam>
 public interface IVisitor<in T, out TReturn> : IVisitor
 {
-    TReturn Visit(T visited);
+        /// <summary>
+    /// Visit method.
+    /// </summary>
+TReturn Visit(T visited);
 }

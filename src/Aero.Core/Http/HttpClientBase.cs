@@ -7,13 +7,28 @@ using System.Net.Mime;
 
 namespace Aero.Core.Http;
 
+/// <summary>
+/// Represents a class for HttpClientBase.
+/// </summary>
 public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> log)
 {
-    protected readonly ILogger<HttpClientBase> log = log;
-    protected readonly HttpClient client = client;
-    protected readonly string jsonMediaType = MediaTypeNames.Application.Json;
+        /// <summary>
+    /// log.
+    /// </summary>
+protected readonly ILogger<HttpClientBase> log = log;
+        /// <summary>
+    /// client.
+    /// </summary>
+protected readonly HttpClient client = client;
+        /// <summary>
+    /// jsonMediaType.
+    /// </summary>
+protected readonly string jsonMediaType = MediaTypeNames.Application.Json;
 
-    protected virtual Uri CreateUri(string url)
+        /// <summary>
+    /// CreateUri method.
+    /// </summary>
+protected virtual Uri CreateUri(string url)
     {
         if (string.IsNullOrWhiteSpace(url))
             throw new ArgumentException("Url cannot be null or empty", nameof(url));
@@ -30,20 +45,32 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         throw new UriFormatException($"Invalid URI: '{url}'");
     }
 
-    protected static string FormatUriForLog(Uri uri)
+        /// <summary>
+    /// FormatUriForLog method.
+    /// </summary>
+protected static string FormatUriForLog(Uri uri)
         => uri.IsAbsoluteUri ? uri.AbsoluteUri : uri.ToString();
 
-    public virtual async Task<Result<HttpResponseMessage, AeroError>> GetAsync(string url, CancellationToken ct = default)
+        /// <summary>
+    /// GetAsync method.
+    /// </summary>
+public virtual async Task<Result<HttpResponseMessage, AeroError>> GetAsync(string url, CancellationToken ct = default)
         => await GetAsync(CreateUri(url), ct);
 
-    public virtual async Task<Result<HttpResponseMessage, AeroError>> GetAsync(Uri uri, CancellationToken ct = default)
+        /// <summary>
+    /// GetAsync method.
+    /// </summary>
+public virtual async Task<Result<HttpResponseMessage, AeroError>> GetAsync(Uri uri, CancellationToken ct = default)
     {
         var response = await SendRequestAsync(() => client.GetAsync(uri, ct), uri, ct);
 
         return response;
     }
 
-    public virtual async Task<Result<HttpResponseMessage, AeroError>> PostAsync<T>(Uri uri, T data, CancellationToken ct = default)
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public virtual async Task<Result<HttpResponseMessage, AeroError>> PostAsync<T>(Uri uri, T data, CancellationToken ct = default)
         where T : class
     {
         var response = await SendRequestAsync(() => client.PostAsJsonAsync(uri, data, ct), uri, ct);
@@ -51,17 +78,29 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         return response;
     }
 
-    public virtual Task<Result<HttpResponseMessage, AeroError>> PostAsync<T>(string url, T data, CancellationToken ct = default)
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public virtual Task<Result<HttpResponseMessage, AeroError>> PostAsync<T>(string url, T data, CancellationToken ct = default)
         where T : class
         => PostAsync(CreateUri(url), data, ct);
 
-    public virtual Task<Result<HttpResponseMessage, AeroError>> PutAsync<T>(Uri uri, T data, CancellationToken ct = default)
+        /// <summary>
+    /// PutAsync method.
+    /// </summary>
+public virtual Task<Result<HttpResponseMessage, AeroError>> PutAsync<T>(Uri uri, T data, CancellationToken ct = default)
         => SendRequestAsync(() => client.PutAsJsonAsync(uri, data, ct), uri, ct);
 
-    public virtual Task<Result<HttpResponseMessage, AeroError>> DeleteAsync(string url, CancellationToken ct = default)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public virtual Task<Result<HttpResponseMessage, AeroError>> DeleteAsync(string url, CancellationToken ct = default)
         => DeleteAsync(CreateUri(url), ct);
 
-    public virtual async Task<Result<HttpResponseMessage, AeroError>> DeleteAsync(Uri uri, CancellationToken ct = default)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public virtual async Task<Result<HttpResponseMessage, AeroError>> DeleteAsync(Uri uri, CancellationToken ct = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, uri);
         var response = await SendRequestAsync(() => client.SendAsync(request, ct), uri, ct);
@@ -69,21 +108,33 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         return response;
     }
 
-    public virtual Task<Result<HttpResponseMessage, AeroError>> PatchAsync<T>(string url, T data, CancellationToken ct = default)
+        /// <summary>
+    /// PatchAsync method.
+    /// </summary>
+public virtual Task<Result<HttpResponseMessage, AeroError>> PatchAsync<T>(string url, T data, CancellationToken ct = default)
         where T : class 
         => PatchAsync(CreateUri(url), data, ct);
 
-    public virtual async Task<Result<HttpResponseMessage, AeroError>> PatchAsync<T>(Uri uri, T data, CancellationToken ct = default) where T : class
+        /// <summary>
+    /// PatchAsync method.
+    /// </summary>
+public virtual async Task<Result<HttpResponseMessage, AeroError>> PatchAsync<T>(Uri uri, T data, CancellationToken ct = default) where T : class
     {
         var response = await SendRequestAsync(() => client.PatchAsJsonAsync(uri, data, ct), uri, ct);
 
         return response;
     }
 
-    public virtual async Task<Result<HttpResponseMessage, AeroError>> OptionAsync(string url, CancellationToken ct = default)
+        /// <summary>
+    /// OptionAsync method.
+    /// </summary>
+public virtual async Task<Result<HttpResponseMessage, AeroError>> OptionAsync(string url, CancellationToken ct = default)
         => await OptionAsync(CreateUri(url), ct);
 
-    public virtual async Task<Result<HttpResponseMessage, AeroError>> OptionAsync(Uri url, CancellationToken ct = default)
+        /// <summary>
+    /// OptionAsync method.
+    /// </summary>
+public virtual async Task<Result<HttpResponseMessage, AeroError>> OptionAsync(Uri url, CancellationToken ct = default)
     {
 
         var request = new HttpRequestMessage(HttpMethod.Options, url);
@@ -120,7 +171,10 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         where TRequest : class
         where TResponse : class => await SendRequestAsync<TResponse>(CreateRequest(url, HttpMethod.Put, data), ct);
 
-        protected virtual async Task<Result<HttpResponseMessage, AeroError>> SendRequestAsync(HttpRequestMessage request, CancellationToken ct = default)
+                /// <summary>
+        /// SendRequestAsync method.
+        /// </summary>
+protected virtual async Task<Result<HttpResponseMessage, AeroError>> SendRequestAsync(HttpRequestMessage request, CancellationToken ct = default)
         => await SendRequestAsync(() => client.SendAsync(request, ct), request.RequestUri!, ct);
 
     /// <summary>
@@ -151,7 +205,10 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         });
     }
 
-    protected async Task<Result<HttpResponseMessage, AeroError>> SendRequestAsync(
+        /// <summary>
+    /// SendRequestAsync method.
+    /// </summary>
+protected async Task<Result<HttpResponseMessage, AeroError>> SendRequestAsync(
         Func<Task<HttpResponseMessage>> request, 
         Uri uri, CancellationToken ct)
     {
@@ -191,13 +248,22 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
     }
 
 
-    protected virtual Result<byte[], AeroError> GetBytes(string url, CancellationToken ct = default)
+        /// <summary>
+    /// GetBytes method.
+    /// </summary>
+protected virtual Result<byte[], AeroError> GetBytes(string url, CancellationToken ct = default)
         => GetBytes(CreateUri(url), ct);
 
-    protected virtual Result<byte[], AeroError> GetBytes(Uri uri, CancellationToken ct = default)
+        /// <summary>
+    /// GetBytes method.
+    /// </summary>
+protected virtual Result<byte[], AeroError> GetBytes(Uri uri, CancellationToken ct = default)
         => GetBytesAsync(uri, ct).GetAwaiter().GetResult();
 
-    protected virtual async Task<Result<byte[], AeroError>> GetBytesAsync(Uri uri, CancellationToken ct = default)
+        /// <summary>
+    /// GetBytesAsync method.
+    /// </summary>
+protected virtual async Task<Result<byte[], AeroError>> GetBytesAsync(Uri uri, CancellationToken ct = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, uri);
         request.Headers.Accept.Clear();
@@ -218,13 +284,22 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         };
     }
 
-    protected virtual Result<Stream, AeroError> GetStream(string url, CancellationToken ct = default)
+        /// <summary>
+    /// GetStream method.
+    /// </summary>
+protected virtual Result<Stream, AeroError> GetStream(string url, CancellationToken ct = default)
         => GetStream(CreateUri(url), ct);
 
-    protected virtual Result<Stream, AeroError> GetStream(Uri uri, CancellationToken ct = default)
+        /// <summary>
+    /// GetStream method.
+    /// </summary>
+protected virtual Result<Stream, AeroError> GetStream(Uri uri, CancellationToken ct = default)
         => GetStreamAsync(uri, ct).GetAwaiter().GetResult();
 
-    protected virtual async Task<Result<Stream, AeroError>> GetStreamAsync(Uri uri, CancellationToken ct = default)
+        /// <summary>
+    /// GetStreamAsync method.
+    /// </summary>
+protected virtual async Task<Result<Stream, AeroError>> GetStreamAsync(Uri uri, CancellationToken ct = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, uri);
         request.Headers.Accept.Clear();
@@ -246,7 +321,10 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
     }
 
 
-    public virtual async Task<Result<byte[]?, AeroError>> DownloadBytesAsync(Uri uri, CancellationToken ct = default)
+        /// <summary>
+    /// DownloadBytesAsync method.
+    /// </summary>
+public virtual async Task<Result<byte[]?, AeroError>> DownloadBytesAsync(Uri uri, CancellationToken ct = default)
     {
         return await GetBytesAsync(uri, ct) switch
         {
@@ -260,7 +338,10 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         };
     }
 
-    public virtual async Task<Result<Stream, AeroError>> DownloadStreamAsync(Uri uri, CancellationToken ct = default)
+        /// <summary>
+    /// DownloadStreamAsync method.
+    /// </summary>
+public virtual async Task<Result<Stream, AeroError>> DownloadStreamAsync(Uri uri, CancellationToken ct = default)
     {
         return await GetStreamAsync(uri, ct) switch
         {
@@ -275,16 +356,28 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
     }
 
 
-    protected virtual HttpRequestMessage CreateRequest(string url, HttpMethod method)
+        /// <summary>
+    /// CreateRequest method.
+    /// </summary>
+protected virtual HttpRequestMessage CreateRequest(string url, HttpMethod method)
         => CreateRequest<object>(url, method, null);
 
-    protected virtual HttpRequestMessage CreateRequest(Uri uri, HttpMethod method, CancellationToken ct = default)
+        /// <summary>
+    /// CreateRequest method.
+    /// </summary>
+protected virtual HttpRequestMessage CreateRequest(Uri uri, HttpMethod method, CancellationToken ct = default)
         => CreateRequest<object>(uri, method, null);
 
-    protected virtual HttpRequestMessage CreateRequest<T>(string url, HttpMethod method, T? data, CancellationToken ct = default)
+        /// <summary>
+    /// CreateRequest method.
+    /// </summary>
+protected virtual HttpRequestMessage CreateRequest<T>(string url, HttpMethod method, T? data, CancellationToken ct = default)
         where T : class => CreateRequest(CreateUri(url), method, data);
 
-    protected virtual HttpRequestMessage CreateRequest<T>(Uri uri, HttpMethod method, T? data)
+        /// <summary>
+    /// CreateRequest method.
+    /// </summary>
+protected virtual HttpRequestMessage CreateRequest<T>(Uri uri, HttpMethod method, T? data)
         where T : class
     {
         if (uri is null)
@@ -325,7 +418,10 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         };
     }
 
-    protected virtual JsonSerializerOptions GetDefaultSerializerOptions() =>
+        /// <summary>
+    /// GetDefaultSerializerOptions method.
+    /// </summary>
+protected virtual JsonSerializerOptions GetDefaultSerializerOptions() =>
         new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -334,10 +430,16 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
             ReferenceHandler = ReferenceHandler.IgnoreCycles
         };
 
-    protected virtual Task<T> DeserializeAsync<T>(string json, CancellationToken ct = default) where T : class
+        /// <summary>
+    /// DeserializeAsync method.
+    /// </summary>
+protected virtual Task<T> DeserializeAsync<T>(string json, CancellationToken ct = default) where T : class
         => DeserializeAsync<T>(json, GetDefaultSerializerOptions(), ct);
 
-    protected virtual async Task<T> DeserializeAsync<T>(string json, JsonSerializerOptions opts, CancellationToken ct = default)
+        /// <summary>
+    /// DeserializeAsync method.
+    /// </summary>
+protected virtual async Task<T> DeserializeAsync<T>(string json, JsonSerializerOptions opts, CancellationToken ct = default)
         where T : class
     {
         if (string.IsNullOrEmpty(json))
@@ -349,20 +451,32 @@ public abstract class HttpClientBase(HttpClient client, ILogger<HttpClientBase> 
         return await DeserializeAsync<T>(stream, opts, ct);
     }
 
-    protected virtual async Task<T> DeserializeAsync<T>(HttpResponseMessage response, CancellationToken ct = default)
+        /// <summary>
+    /// DeserializeAsync method.
+    /// </summary>
+protected virtual async Task<T> DeserializeAsync<T>(HttpResponseMessage response, CancellationToken ct = default)
         where T : class => await DeserializeAsync<T>(response, GetDefaultSerializerOptions(), ct);
 
-    protected virtual async Task<T> DeserializeAsync<T>(HttpResponseMessage response, JsonSerializerOptions opts, CancellationToken ct = default)
+        /// <summary>
+    /// DeserializeAsync method.
+    /// </summary>
+protected virtual async Task<T> DeserializeAsync<T>(HttpResponseMessage response, JsonSerializerOptions opts, CancellationToken ct = default)
         where T : class
     {
         var str = await response.Content.ReadAsStringAsync();
         return await DeserializeAsync<T>(str, opts, ct);
     }
 
-    protected virtual async Task<T> DeserializeAsync<T>(Stream stream, CancellationToken ct = default)
+        /// <summary>
+    /// DeserializeAsync method.
+    /// </summary>
+protected virtual async Task<T> DeserializeAsync<T>(Stream stream, CancellationToken ct = default)
         where T : class => await DeserializeAsync<T>(stream, GetDefaultSerializerOptions(), ct);
 
-    protected virtual async Task<T> DeserializeAsync<T>(Stream stream, JsonSerializerOptions opts, CancellationToken ct = default)
+        /// <summary>
+    /// DeserializeAsync method.
+    /// </summary>
+protected virtual async Task<T> DeserializeAsync<T>(Stream stream, JsonSerializerOptions opts, CancellationToken ct = default)
         where T : class
     {
         var result = await JsonSerializer.DeserializeAsync<T>(stream, opts, ct);

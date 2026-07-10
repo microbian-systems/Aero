@@ -5,13 +5,19 @@ namespace Aero.Core.DataStructures.Trees;
 /// </summary>
 public class SegmentTreeNodeWrapper(SegmentTreeNode node) : ITreeNode<int>
 {
-    public int Value
+        /// <summary>
+    /// Gets or sets the Value.
+    /// </summary>
+public int Value
     {
         get => node.Sum;
         set => throw new NotSupportedException("Cannot set value directly on SegmentTree node. Use Update instead.");
     }
 
-    public IEnumerable<ITreeNode<int>> Children
+        /// <summary>
+    /// Gets or sets the Children.
+    /// </summary>
+public IEnumerable<ITreeNode<int>> Children
     {
         get
         {
@@ -29,9 +35,15 @@ public class SegmentTreeNodeWrapper(SegmentTreeNode node) : ITreeNode<int>
 public class SegmentTree : ITree<int>
 {
     private readonly int[] _data;
-    public SegmentTreeNode Root { get; private set; }
+        /// <summary>
+    /// Gets or sets the Root.
+    /// </summary>
+public SegmentTreeNode Root { get; private set; }
 
-    public SegmentTree(int[] data)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="SegmentTree"/> class.
+    /// </summary>
+public SegmentTree(int[] data)
     {
         _data = data;
         Root = Build(0, _data.Length - 1);
@@ -59,7 +71,10 @@ public class SegmentTree : ITree<int>
         return node;
     }
 
-    public void Update(int index, int value)
+        /// <summary>
+    /// Update method.
+    /// </summary>
+public void Update(int index, int value)
     {
         if (index < 0 || index >= _data.Length)
             throw new ArgumentOutOfRangeException(nameof(index));
@@ -87,7 +102,10 @@ public class SegmentTree : ITree<int>
         node.Sum = (node.Left?.Sum ?? 0) + (node.Right?.Sum ?? 0);
     }
 
-    public int Query(int start, int end)
+        /// <summary>
+    /// Query method.
+    /// </summary>
+public int Query(int start, int end)
     {
         return Query(Root, start, end);
     }

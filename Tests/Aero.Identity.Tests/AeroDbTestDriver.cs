@@ -3,17 +3,29 @@ using Marten;
 
 namespace Aero.Identity.Tests;
 
+/// <summary>
+/// Represents a class for AeroDbTestDriver.
+/// </summary>
 public abstract class AeroDbTestDriver : IDisposable
 {
-    protected IDocumentStore store
+        /// <summary>
+    /// Gets or sets the store.
+    /// </summary>
+protected IDocumentStore store
     {
         get => field ?? GetDocumentStore();
         init;
     }
 
-    protected bool IsDisposed { get; private set; }
+        /// <summary>
+    /// Gets or sets the Is Disposed.
+    /// </summary>
+protected bool IsDisposed { get; private set; }
 
-    protected AeroDbTestDriver()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="AeroDbTestDriver"/> class.
+    /// </summary>
+protected AeroDbTestDriver()
     {
         store = DocumentStore.For(opts =>
         {
@@ -26,33 +38,51 @@ public abstract class AeroDbTestDriver : IDisposable
         store.Advanced.Clean.DeleteAllDocumentsAsync().GetAwaiter().GetResult();
     }
 
-    protected internal IDocumentStore GetDocumentStore(string? database = null)
+        /// <summary>
+    /// GetDocumentStore method.
+    /// </summary>
+protected internal IDocumentStore GetDocumentStore(string? database = null)
     {
         return this.store;
     }
 
-    protected virtual void PreInitialize(IDocumentStore store)
+        /// <summary>
+    /// PreInitialize method.
+    /// </summary>
+protected virtual void PreInitialize(IDocumentStore store)
     {
 
     }
 
-    protected virtual void PreConfigureDatabase(IDocumentStore store)
+        /// <summary>
+    /// PreConfigureDatabase method.
+    /// </summary>
+protected virtual void PreConfigureDatabase(IDocumentStore store)
     {
 
     }
 
-    protected virtual void SetupDatabase(IDocumentStore store)
+        /// <summary>
+    /// SetupDatabase method.
+    /// </summary>
+protected virtual void SetupDatabase(IDocumentStore store)
     {
 
     }
 
-    public void Dispose()
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
 
-    protected virtual void Dispose(bool disposing)
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+protected virtual void Dispose(bool disposing)
     {
         if (IsDisposed) return;
         if (disposing)

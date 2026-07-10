@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,7 +18,10 @@ public class JwtTokenServiceSimplifiedTests
     private readonly ILogger<JwtTokenService> _mockLogger;
     private readonly IConfiguration _mockConfig;
 
-    public JwtTokenServiceSimplifiedTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="JwtTokenServiceSimplifiedTests"/> class.
+    /// </summary>
+public JwtTokenServiceSimplifiedTests()
     {
         _mockKeyStore = Substitute.For<IJwtSigningKeyStore>();
         _mockLogger = Substitute.For<ILogger<JwtTokenService>>();
@@ -27,7 +30,10 @@ public class JwtTokenServiceSimplifiedTests
 
     //#region Configuration Tests
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithValidConfig_ShouldSetAccessTokenLifetime method.
+    /// </summary>
+[Test]
     public void Constructor_WithValidConfig_ShouldSetAccessTokenLifetime()
     {
         // Arrange
@@ -45,7 +51,10 @@ public class JwtTokenServiceSimplifiedTests
         service.AccessTokenLifetime.ShouldBe(600);
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithoutAccessTokenConfig_ShouldUseDefault method.
+    /// </summary>
+[Test]
     public void Constructor_WithoutAccessTokenConfig_ShouldUseDefault()
     {
         // Arrange
@@ -58,7 +67,10 @@ public class JwtTokenServiceSimplifiedTests
         service.AccessTokenLifetime.ShouldBe(300);
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithMultipleInstances_ShouldEachHaveOwnConfig method.
+    /// </summary>
+[Test]
     public void Constructor_WithMultipleInstances_ShouldEachHaveOwnConfig()
     {
         // Arrange
@@ -81,7 +93,10 @@ public class JwtTokenServiceSimplifiedTests
 
     //#region Error Handling Tests
 
-    [Test]
+        /// <summary>
+    /// GenerateAccessToken_WithNullKeyStore_ShouldThrowNullReferenceException method.
+    /// </summary>
+[Test]
     public async Task GenerateAccessToken_WithNullKeyStore_ShouldThrowNullReferenceException()
     {
         // Arrange
@@ -94,7 +109,10 @@ public class JwtTokenServiceSimplifiedTests
         act.ShouldThrow<NullReferenceException>();
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAccessToken_WithKeyStoreThrowing_ShouldPropagateException method.
+    /// </summary>
+[Test]
     public async Task GenerateAccessToken_WithKeyStoreThrowing_ShouldPropagateException()
     {
         // Arrange
@@ -114,7 +132,10 @@ public class JwtTokenServiceSimplifiedTests
 
     //#region Dependency Injection Tests
 
-    [Test]
+        /// <summary>
+    /// ServiceImplementsInterface_ShouldBeRegistrable method.
+    /// </summary>
+[Test]
     public void ServiceImplementsInterface_ShouldBeRegistrable()
     {
         // Arrange & Act
@@ -129,7 +150,10 @@ public class JwtTokenServiceSimplifiedTests
 
     //#region Configuration Value Tests
 
-    [Test]
+        /// <summary>
+    /// AccessTokenLifetime_WithVariousConfigs_ShouldReturnCorrectValue method.
+    /// </summary>
+[Test]
     [Arguments("100")]
     [Arguments("300")]
     [Arguments("600")]

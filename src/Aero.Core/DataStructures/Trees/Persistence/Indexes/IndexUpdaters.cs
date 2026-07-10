@@ -2,6 +2,9 @@ using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
+/// <summary>
+/// Represents a class for SecondaryIndexUpdater.
+/// </summary>
 public sealed class SecondaryIndexUpdater<TDocument, TField>(
     IOrderedKeyValueTree<CompositeKey<TField, Guid>, Guid> index,
     Func<TDocument, TField> extractor)
@@ -9,13 +12,19 @@ public sealed class SecondaryIndexUpdater<TDocument, TField>(
     where TDocument : class
     where TField : unmanaged, IComparable<TField>
 {
-    public async ValueTask OnInsertAsync(Guid id, TDocument doc, CancellationToken ct)
+        /// <summary>
+    /// OnInsertAsync method.
+    /// </summary>
+public async ValueTask OnInsertAsync(Guid id, TDocument doc, CancellationToken ct)
     {
         var key = extractor(doc);
         await index.InsertAsync(new CompositeKey<TField, Guid>(key, id), id, ct);
     }
 
-    public async ValueTask OnUpdateAsync(
+        /// <summary>
+    /// OnUpdateAsync method.
+    /// </summary>
+public async ValueTask OnUpdateAsync(
         Guid id, TDocument old, TDocument updated, CancellationToken ct)
     {
         var oldKey = extractor(old);
@@ -28,13 +37,19 @@ public sealed class SecondaryIndexUpdater<TDocument, TField>(
         await index.InsertAsync(new CompositeKey<TField, Guid>(newKey, id), id, ct);
     }
 
-    public async ValueTask OnDeleteAsync(Guid id, TDocument doc, CancellationToken ct)
+        /// <summary>
+    /// OnDeleteAsync method.
+    /// </summary>
+public async ValueTask OnDeleteAsync(Guid id, TDocument doc, CancellationToken ct)
     {
         var key = extractor(doc);
         await index.DeleteAsync(new CompositeKey<TField, Guid>(key, id), ct);
     }
 }
 
+/// <summary>
+/// Represents a class for UniqueIndexUpdater.
+/// </summary>
 public sealed class UniqueIndexUpdater<TDocument, TField>(
     IOrderedKeyValueTree<TField, Guid> index,
     Func<TDocument, TField> extractor,
@@ -43,7 +58,10 @@ public sealed class UniqueIndexUpdater<TDocument, TField>(
     where TDocument : class
     where TField : unmanaged, IComparable<TField>
 {
-    public async ValueTask OnInsertAsync(Guid id, TDocument doc, CancellationToken ct)
+        /// <summary>
+    /// OnInsertAsync method.
+    /// </summary>
+public async ValueTask OnInsertAsync(Guid id, TDocument doc, CancellationToken ct)
     {
         var key = extractor(doc);
 
@@ -53,7 +71,10 @@ public sealed class UniqueIndexUpdater<TDocument, TField>(
         await index.InsertAsync(key, id, ct);
     }
 
-    public async ValueTask OnUpdateAsync(
+        /// <summary>
+    /// OnUpdateAsync method.
+    /// </summary>
+public async ValueTask OnUpdateAsync(
         Guid id, TDocument old, TDocument updated, CancellationToken ct)
     {
         var oldKey = extractor(old);
@@ -69,16 +90,28 @@ public sealed class UniqueIndexUpdater<TDocument, TField>(
         await index.InsertAsync(newKey, id, ct);
     }
 
-    public async ValueTask OnDeleteAsync(Guid id, TDocument doc, CancellationToken ct)
+        /// <summary>
+    /// OnDeleteAsync method.
+    /// </summary>
+public async ValueTask OnDeleteAsync(Guid id, TDocument doc, CancellationToken ct)
     {
         var key = extractor(doc);
         await index.DeleteAsync(key, ct);
     }
 }
 
+/// <summary>
+/// Represents a class for UniqueConstraintViolationException.
+/// </summary>
 public sealed class UniqueConstraintViolationException(string indexName, string value)
     : Exception($"Unique index '{indexName}' already contains value '{value}'.")
 {
-    public string IndexName { get; } = indexName;
-    public string Value { get; } = value;
+        /// <summary>
+    /// Gets or sets the Index Name.
+    /// </summary>
+public string IndexName { get; } = indexName;
+        /// <summary>
+    /// Gets or sets the Value.
+    /// </summary>
+public string Value { get; } = value;
 }

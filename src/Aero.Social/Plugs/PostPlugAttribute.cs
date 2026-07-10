@@ -1,5 +1,8 @@
 namespace Aero.Social.Plugs;
 
+/// <summary>
+/// Represents a class for PostPlugAttribute.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
 public class PostPlugAttribute(
     string identifier,
@@ -9,12 +12,30 @@ public class PostPlugAttribute(
     int totalRuns = 0)
     : Attribute
 {
-    public string Identifier { get; } = identifier ?? throw new ArgumentNullException(nameof(identifier));
-    public string Title { get; } = title ?? throw new ArgumentNullException(nameof(title));
-    public string Description { get; } = description ?? throw new ArgumentNullException(nameof(description));
-    public int RunEveryMilliseconds { get; } = runEveryMilliseconds;
-    public int TotalRuns { get; } = totalRuns;
-    public List<PlugField> Fields { get; } = new();
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public string Identifier { get; } = identifier ?? throw new ArgumentNullException(nameof(identifier));
+        /// <summary>
+    /// Gets or sets the Title.
+    /// </summary>
+public string Title { get; } = title ?? throw new ArgumentNullException(nameof(title));
+        /// <summary>
+    /// Gets or sets the Description.
+    /// </summary>
+public string Description { get; } = description ?? throw new ArgumentNullException(nameof(description));
+        /// <summary>
+    /// Gets or sets the Run Every Milliseconds.
+    /// </summary>
+public int RunEveryMilliseconds { get; } = runEveryMilliseconds;
+        /// <summary>
+    /// Gets or sets the Total Runs.
+    /// </summary>
+public int TotalRuns { get; } = totalRuns;
+        /// <summary>
+    /// Gets or sets the Fields.
+    /// </summary>
+public List<PlugField> Fields { get; } = new();
 
     /// <summary>
     /// Specifies the trigger condition for the plug (e.g., "likes", "comments", "shares")
@@ -26,7 +47,10 @@ public class PostPlugAttribute(
     /// </summary>
     public int TriggerThreshold { get; set; }
 
-    public PostPlugAttribute AddField(PlugField field)
+        /// <summary>
+    /// AddField method.
+    /// </summary>
+public PostPlugAttribute AddField(PlugField field)
     {
         Fields.Add(field);
         return this;
@@ -44,8 +68,20 @@ public class PlugFieldAttribute(
     string? description = null)
     : Attribute
 {
-    public string Name { get; } = name ?? throw new ArgumentNullException(nameof(name));
-    public string Type { get; } = type ?? throw new ArgumentNullException(nameof(type));
-    public string? Placeholder { get; } = placeholder;
-    public string? Description { get; } = description;
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public string Name { get; } = name ?? throw new ArgumentNullException(nameof(name));
+        /// <summary>
+    /// Gets or sets the Type.
+    /// </summary>
+public string Type { get; } = type ?? throw new ArgumentNullException(nameof(type));
+        /// <summary>
+    /// Gets or sets the Placeholder.
+    /// </summary>
+public string? Placeholder { get; } = placeholder;
+        /// <summary>
+    /// Gets or sets the Description.
+    /// </summary>
+public string? Description { get; } = description;
 }

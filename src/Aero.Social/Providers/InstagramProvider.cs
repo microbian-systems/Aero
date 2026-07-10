@@ -9,17 +9,35 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for InstagramProvider.
+/// </summary>
 public class InstagramProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<InstagramProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "instagram";
-    public override string Name => "Instagram (Facebook Business)";
-    public override bool IsBetweenSteps => true;
-    public override string? Tooltip => "Instagram must be business and connected to a Facebook page";
-    public override string[] Scopes => new[]
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "instagram";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Instagram (Facebook Business)";
+        /// <summary>
+    /// Gets or sets the Is Between Steps.
+    /// </summary>
+public override bool IsBetweenSteps => true;
+        /// <summary>
+    /// Gets or sets the Tooltip.
+    /// </summary>
+public override string? Tooltip => "Instagram must be business and connected to a Facebook page";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[]
     {
         "instagram_basic",
         "pages_show_list",
@@ -29,11 +47,20 @@ public class InstagramProvider(
         "instagram_manage_comments",
         "instagram_manage_insights"
     };
-    public override int MaxConcurrentJobs => 200;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 200;
 
-    public override int MaxLength(object? additionalSettings = null) => 2200;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 2200;
 
-    public new ErrorHandlingResult? HandleErrors(string responseBody)
+        /// <summary>
+    /// HandleErrors method.
+    /// </summary>
+public new ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (responseBody.Contains("An unknown error occurred"))
             return new ErrorHandlingResult(ErrorHandlingType.Retry, "An unknown error occurred, please try again later");
@@ -74,7 +101,10 @@ public class InstagramProvider(
         return null;
     }
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -96,7 +126,10 @@ public class InstagramProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -127,7 +160,10 @@ public class InstagramProvider(
         };
     }
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -143,7 +179,10 @@ public class InstagramProvider(
         });
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -290,7 +329,10 @@ public class InstagramProvider(
         return permalinkResponse.Permalink ?? $"https://www.instagram.com/p/{mediaId}";
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -322,7 +364,10 @@ public class InstagramProvider(
         };
     }
 
-    public async Task<List<InstagramPage>> GetPagesAsync(string accessToken, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetPagesAsync method.
+    /// </summary>
+public async Task<List<InstagramPage>> GetPagesAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var url = $"https://graph.facebook.com/v20.0/me/accounts?fields=id,instagram_business_account,username,name,picture.type(large)&access_token={accessToken}&limit=500";
 
@@ -428,124 +473,211 @@ public class InstagramProvider(
 
     private class InstagramMediaResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class InstagramStatusResponse
     {
-        [JsonPropertyName("status_code")]
+                /// <summary>
+        /// Gets or sets the Status Code.
+        /// </summary>
+[JsonPropertyName("status_code")]
         public string? StatusCode { get; set; }
     }
 
     private class InstagramPublishResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class InstagramPermalinkResponse
     {
-        [JsonPropertyName("permalink")]
+                /// <summary>
+        /// Gets or sets the Permalink.
+        /// </summary>
+[JsonPropertyName("permalink")]
         public string? Permalink { get; set; }
     }
 
     private class InstagramCommentResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class FacebookPagesDataResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public List<FacebookPageData>? Data { get; set; }
     }
 
     private class FacebookPageData
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("instagram_business_account")]
+                /// <summary>
+        /// Gets or sets the Instagram Business Account.
+        /// </summary>
+[JsonPropertyName("instagram_business_account")]
         public InstagramBusinessAccountRef? InstagramBusinessAccount { get; set; }
     }
 
     private class InstagramBusinessAccountRef
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class InstagramBusinessData
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
 
-        [JsonPropertyName("profile_picture_url")]
+                /// <summary>
+        /// Gets or sets the Profile Picture Url.
+        /// </summary>
+[JsonPropertyName("profile_picture_url")]
         public string? ProfilePictureUrl { get; set; }
     }
 
-    public class InstagramPage
+        /// <summary>
+    /// Represents a class for InstagramPage.
+    /// </summary>
+public class InstagramPage
     {
-        public string PageId { get; set; } = string.Empty;
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
-        public string Picture { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Page Id.
+        /// </summary>
+public string PageId { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+public string Username { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+public string Picture { get; set; } = string.Empty;
     }
 
     private class FacebookPermissionsResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public List<FacebookPermission> Data { get; set; } = new();
     }
 
     private class FacebookPermission
     {
-        [JsonPropertyName("permission")]
+                /// <summary>
+        /// Gets or sets the Permission.
+        /// </summary>
+[JsonPropertyName("permission")]
         public string Permission { get; set; } = string.Empty;
 
-        [JsonPropertyName("status")]
+                /// <summary>
+        /// Gets or sets the Status.
+        /// </summary>
+[JsonPropertyName("status")]
         public string Status { get; set; } = string.Empty;
     }
 
     private class FacebookUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("picture")]
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+[JsonPropertyName("picture")]
         public FacebookPicture? Picture { get; set; }
     }
 
     private class FacebookPicture
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public FacebookPictureData? Data { get; set; }
     }
 
     private class FacebookPictureData
     {
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string? Url { get; set; }
     }
 
     private class FacebookAccessTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int? ExpiresIn { get; set; }
     }
 

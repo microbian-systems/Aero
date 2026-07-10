@@ -1,10 +1,16 @@
 namespace Aero.Web.Middleware;
 
+/// <summary>
+/// Represents a class for CorrelationIdMiddleware.
+/// </summary>
 public class CorrelationIdMiddleware(RequestDelegate next, ILogger<CorrelationIdMiddleware> logger)
 {
     private const string CorrelationHeaderName = "x-correlation-id";
 
-    public async Task Invoke(HttpContext context)
+        /// <summary>
+    /// Invoke method.
+    /// </summary>
+public async Task Invoke(HttpContext context)
     {
         // Try to get the correlation ID from the header
         var correlationId = context.Request.Headers.TryGetValue(CorrelationHeaderName, out var headerValue)

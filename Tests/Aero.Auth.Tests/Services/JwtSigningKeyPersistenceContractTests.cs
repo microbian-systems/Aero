@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using NSubstitute;
 using Aero.Auth.Services;
@@ -14,7 +14,10 @@ namespace Aero.Auth.Tests.Services;
 public class JwtSigningKeyPersistenceContractTests
 {
     //#region Interface Contract Tests
-    [Test]
+        /// <summary>
+    /// IJwtSigningKeyPersistence_HasRequiredMethods method.
+    /// </summary>
+[Test]
     public void IJwtSigningKeyPersistence_HasRequiredMethods()
     {
         // Arrange
@@ -41,7 +44,10 @@ public class JwtSigningKeyPersistenceContractTests
 
     //#region Mock Verification Tests
 
-    [Test]
+        /// <summary>
+    /// Mock_CanBeCreatedForInterface method.
+    /// </summary>
+[Test]
     public void Mock_CanBeCreatedForInterface()
     {
         // Act
@@ -52,7 +58,10 @@ public class JwtSigningKeyPersistenceContractTests
         mock.ShouldBeAssignableTo<IJwtSigningKeyPersistence>();
     }
 
-    [Test]
+        /// <summary>
+    /// Mock_GetCurrentSigningKeyAsync_CanBeConfigured method.
+    /// </summary>
+[Test]
     public async Task Mock_GetCurrentSigningKeyAsync_CanBeConfigured()
     {
         // Arrange
@@ -76,7 +85,10 @@ public class JwtSigningKeyPersistenceContractTests
         result?.KeyId.ShouldBe("key-1");
     }
 
-    [Test]
+        /// <summary>
+    /// Mock_GetValidSigningKeysAsync_CanBeConfigured method.
+    /// </summary>
+[Test]
     public async Task Mock_GetValidSigningKeysAsync_CanBeConfigured()
     {
         // Arrange
@@ -103,7 +115,10 @@ public class JwtSigningKeyPersistenceContractTests
         result.Count().ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// Mock_AddKeyAsync_CanBeConfigured method.
+    /// </summary>
+[Test]
     public async Task Mock_AddKeyAsync_CanBeConfigured()
     {
         // Arrange
@@ -124,7 +139,10 @@ public class JwtSigningKeyPersistenceContractTests
         result.ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// Mock_RevokeKeyAsync_CanBeConfigured method.
+    /// </summary>
+[Test]
     public async Task Mock_RevokeKeyAsync_CanBeConfigured()
     {
         // Arrange
@@ -143,7 +161,10 @@ public class JwtSigningKeyPersistenceContractTests
 
     //#region Return Type Tests
 
-    [Test]
+        /// <summary>
+    /// GetCurrentSigningKeyAsync_ReturnsNullableJwtSigningKey method.
+    /// </summary>
+[Test]
     public void GetCurrentSigningKeyAsync_ReturnsNullableJwtSigningKey()
     {
         // Arrange
@@ -158,7 +179,10 @@ public class JwtSigningKeyPersistenceContractTests
         returnType.Name.ShouldContain("Task");
     }
 
-    [Test]
+        /// <summary>
+    /// GetValidSigningKeysAsync_ReturnsEnumerableOfKeys method.
+    /// </summary>
+[Test]
     public void GetValidSigningKeysAsync_ReturnsEnumerableOfKeys()
     {
         // Arrange
@@ -173,7 +197,10 @@ public class JwtSigningKeyPersistenceContractTests
         returnType.Name.ShouldContain("Task");
     }
 
-    [Test]
+        /// <summary>
+    /// AddKeyAsync_ReturnsBoolean method.
+    /// </summary>
+[Test]
     public void AddKeyAsync_ReturnsBoolean()
     {
         // Arrange
@@ -192,7 +219,10 @@ public class JwtSigningKeyPersistenceContractTests
 
     //#region Parameter Validation Tests
 
-    [Test]
+        /// <summary>
+    /// GetKeyByIdAsync_HasKeyIdParameter method.
+    /// </summary>
+[Test]
     public void GetKeyByIdAsync_HasKeyIdParameter()
     {
         // Arrange
@@ -207,7 +237,10 @@ public class JwtSigningKeyPersistenceContractTests
         parameters.ShouldContain(p => p.Name == "keyId");
     }
 
-    [Test]
+        /// <summary>
+    /// AddKeyAsync_HasKeyParameter method.
+    /// </summary>
+[Test]
     public void AddKeyAsync_HasKeyParameter()
     {
         // Arrange
@@ -222,7 +255,10 @@ public class JwtSigningKeyPersistenceContractTests
         parameters.ShouldContain(p => p.Name == "key");
     }
 
-    [Test]
+        /// <summary>
+    /// RevokeKeyAsync_HasKeyIdParameter method.
+    /// </summary>
+[Test]
     public void RevokeKeyAsync_HasKeyIdParameter()
     {
         // Arrange
@@ -241,7 +277,10 @@ public class JwtSigningKeyPersistenceContractTests
 
     //#region Substitutability Tests
 
-    [Test]
+        /// <summary>
+    /// Implementations_ShouldBeSubstitutable method.
+    /// </summary>
+[Test]
     public void Implementations_ShouldBeSubstitutable()
     {
         // Arrange

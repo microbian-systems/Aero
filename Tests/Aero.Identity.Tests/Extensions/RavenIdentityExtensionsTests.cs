@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,9 +7,15 @@ using Marten;
 
 namespace Aero.Identity.Tests.Extensions;
 
+/// <summary>
+/// Represents a class for AeroIdentityExtensionsTests.
+/// </summary>
 public class AeroIdentityExtensionsTests
 {
-    [Test]
+        /// <summary>
+    /// AddAeroDbIdentity_RegistersStores method.
+    /// </summary>
+[Test]
     public void AddAeroDbIdentity_RegistersStores()
     {
         // Arrange
@@ -35,7 +41,10 @@ public class AeroIdentityExtensionsTests
         Assert.IsType<AeroRoleStore<AeroRole>>(roleStore);
     }
 
-    [Test]
+        /// <summary>
+    /// AddAeroDbIdentity_WithoutRoles_RegistersUserStoreOnly method.
+    /// </summary>
+[Test]
     public void AddAeroDbIdentity_WithoutRoles_RegistersUserStoreOnly()
     {
         // Arrange

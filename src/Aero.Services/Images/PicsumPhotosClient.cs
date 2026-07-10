@@ -2,19 +2,43 @@ using System.Net.Http.Json;
 
 namespace Aero.Services.Images;
 
+/// <summary>
+/// Represents a record for PicsumImage.
+/// </summary>
 public record PicsumImage(string Id, string Author, int Width, int Height, string Url, string DownloadUrl);
 
+/// <summary>
+/// Defines an interface for IPicsumPhotosClient.
+/// </summary>
 public interface IPicsumPhotosClient
 {
-    string GetPhotoUrl(int width, int height, string? id = null, string? seed = null, bool grayscale = false, int? blur = null);
-    string GetSquarePhotoUrl(int size, string? id = null, string? seed = null, bool grayscale = false, int? blur = null);
-    Task<IEnumerable<PicsumImage>> ListImagesAsync(int page = 1, int limit = 30);
-    Task<PicsumImage?> GetImageInfoAsync(string idOrSeed, bool isSeed = false);
+        /// <summary>
+    /// GetPhotoUrl method.
+    /// </summary>
+string GetPhotoUrl(int width, int height, string? id = null, string? seed = null, bool grayscale = false, int? blur = null);
+        /// <summary>
+    /// GetSquarePhotoUrl method.
+    /// </summary>
+string GetSquarePhotoUrl(int size, string? id = null, string? seed = null, bool grayscale = false, int? blur = null);
+        /// <summary>
+    /// ListImagesAsync method.
+    /// </summary>
+Task<IEnumerable<PicsumImage>> ListImagesAsync(int page = 1, int limit = 30);
+        /// <summary>
+    /// GetImageInfoAsync method.
+    /// </summary>
+Task<PicsumImage?> GetImageInfoAsync(string idOrSeed, bool isSeed = false);
 }
 
+/// <summary>
+/// Represents a class for PicsumPhotosClient.
+/// </summary>
 public class PicsumPhotosClient(HttpClient httpClient) : IPicsumPhotosClient
 {
-    public string GetPhotoUrl(int width, int height, string? id = null, string? seed = null, bool grayscale = false, int? blur = null)
+        /// <summary>
+    /// GetPhotoUrl method.
+    /// </summary>
+public string GetPhotoUrl(int width, int height, string? id = null, string? seed = null, bool grayscale = false, int? blur = null)
     {
         var path = "";
         if (seed != null) path = $"seed/{seed}/";
@@ -24,7 +48,10 @@ public class PicsumPhotosClient(HttpClient httpClient) : IPicsumPhotosClient
         return BuildUrl(url, grayscale, blur);
     }
 
-    public string GetSquarePhotoUrl(int size, string? id = null, string? seed = null, bool grayscale = false, int? blur = null)
+        /// <summary>
+    /// GetSquarePhotoUrl method.
+    /// </summary>
+public string GetSquarePhotoUrl(int size, string? id = null, string? seed = null, bool grayscale = false, int? blur = null)
     {
         var path = "";
         if (seed != null) path = $"seed/{seed}/";
@@ -34,12 +61,18 @@ public class PicsumPhotosClient(HttpClient httpClient) : IPicsumPhotosClient
         return BuildUrl(url, grayscale, blur);
     }
 
-    public async Task<IEnumerable<PicsumImage>> ListImagesAsync(int page = 1, int limit = 30)
+        /// <summary>
+    /// ListImagesAsync method.
+    /// </summary>
+public async Task<IEnumerable<PicsumImage>> ListImagesAsync(int page = 1, int limit = 30)
     {
         return await httpClient.GetFromJsonAsync<IEnumerable<PicsumImage>>($"v2/list?page={page}&limit={limit}") ?? Enumerable.Empty<PicsumImage>();
     }
 
-    public async Task<PicsumImage?> GetImageInfoAsync(string idOrSeed, bool isSeed = false)
+        /// <summary>
+    /// GetImageInfoAsync method.
+    /// </summary>
+public async Task<PicsumImage?> GetImageInfoAsync(string idOrSeed, bool isSeed = false)
     {
         var path = isSeed ? "seed" : "id";
         return await httpClient.GetFromJsonAsync<PicsumImage>($"{path}/{idOrSeed}/info");

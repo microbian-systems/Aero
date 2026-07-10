@@ -1,20 +1,29 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Authentication;
 using Aero.Social.Twitter.Client.Configuration;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Authentication;
 
+/// <summary>
+/// Represents a class for OAuth2AuthenticationProviderTests.
+/// </summary>
 public class OAuth2AuthenticationProviderTests
 {
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldThrowOnNullOptions method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldThrowOnNullOptions()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => new OAuth2AuthenticationProvider(null!));
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldThrowOnMissingBearerToken method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldThrowOnMissingBearerToken()
     {
         // Arrange
@@ -24,7 +33,10 @@ public class OAuth2AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth2AuthenticationProvider(options));
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateRequestAsync_ShouldAddBearerToken method.
+    /// </summary>
+[Test]
     public async Task AuthenticateRequestAsync_ShouldAddBearerToken()
     {
         // Arrange
@@ -44,7 +56,10 @@ public class OAuth2AuthenticationProviderTests
         await Assert.That(request.Headers.Authorization.Parameter).IsEqualTo("test_bearer_token_123");
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateRequestAsync_ShouldThrowOnNullRequest method.
+    /// </summary>
+[Test]
     public async Task AuthenticateRequestAsync_ShouldThrowOnNullRequest()
     {
         // Arrange

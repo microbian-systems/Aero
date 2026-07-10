@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Tabs;
 using Bunit;
 using Aero.MerakiUI.Tabs;
 
 namespace Aero.MerakiUI.Tests.Tabs;
 
+/// <summary>
+/// Represents a class for TabTests.
+/// </summary>
 public class TabTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// SimpleTabs_ShouldRenderCorrectStructure method.
+    /// </summary>
+[Test]
     public void SimpleTabs_ShouldRenderCorrectStructure()
     {
         var cut = Render<SimpleTabs>(parameters => parameters
@@ -27,7 +33,10 @@ public class TabTests : BunitContext
         Assert.Contains("Account Content", cut.Markup);
     }
 
-    [Test]
+        /// <summary>
+    /// TabWithIcons_ShouldRenderCorrectStructure method.
+    /// </summary>
+[Test]
     public void TabWithIcons_ShouldRenderCorrectStructure()
     {
         var items = new List<Aero.MerakiUI.Tabs.TabWithIcons.TabItem>

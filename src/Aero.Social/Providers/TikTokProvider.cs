@@ -9,16 +9,31 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for TikTokProvider.
+/// </summary>
 public class TikTokProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<TikTokProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "tiktok";
-    public override string Name => "TikTok";
-    public override bool ConvertToJpeg => true;
-    public override string[] Scopes => new[]
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "tiktok";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "TikTok";
+        /// <summary>
+    /// Gets or sets the Convert To Jpeg.
+    /// </summary>
+public override bool ConvertToJpeg => true;
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[]
     {
         "video.list",
         "user.info.basic",
@@ -27,11 +42,20 @@ public class TikTokProvider(
         "user.info.profile",
         "user.info.stats"
     };
-    public override int MaxConcurrentJobs => 1;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 1;
 
-    public override int MaxLength(object? additionalSettings = null) => 2000;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 2000;
 
-    protected override ErrorHandlingResult? HandleErrors(string responseBody)
+        /// <summary>
+    /// HandleErrors method.
+    /// </summary>
+protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (responseBody.Contains("access_token_invalid"))
             return new ErrorHandlingResult(ErrorHandlingType.RefreshToken, "Access token invalid, please re-authenticate your TikTok account");
@@ -72,7 +96,10 @@ public class TikTokProvider(
         return null;
     }
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -96,7 +123,10 @@ public class TikTokProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -142,7 +172,10 @@ public class TikTokProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -180,7 +213,10 @@ public class TikTokProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -372,67 +408,109 @@ public class TikTokProvider(
 
     private class TikTokTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("refresh_token")]
+                /// <summary>
+        /// Gets or sets the Refresh Token.
+        /// </summary>
+[JsonPropertyName("refresh_token")]
         public string RefreshToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string Scope { get; set; } = string.Empty;
     }
 
     private class TikTokUserInfoResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public TikTokUserData Data { get; set; } = new();
     }
 
     private class TikTokUserData
     {
-        [JsonPropertyName("user")]
+                /// <summary>
+        /// Gets or sets the User.
+        /// </summary>
+[JsonPropertyName("user")]
         public TikTokUserInfo User { get; set; } = new();
     }
 
     private class TikTokUserInfo
     {
-        [JsonPropertyName("open_id")]
+                /// <summary>
+        /// Gets or sets the Open Id.
+        /// </summary>
+[JsonPropertyName("open_id")]
         public string OpenId { get; set; } = string.Empty;
 
-        [JsonPropertyName("display_name")]
+                /// <summary>
+        /// Gets or sets the Display Name.
+        /// </summary>
+[JsonPropertyName("display_name")]
         public string DisplayName { get; set; } = string.Empty;
 
-        [JsonPropertyName("avatar_url")]
+                /// <summary>
+        /// Gets or sets the Avatar Url.
+        /// </summary>
+[JsonPropertyName("avatar_url")]
         public string? AvatarUrl { get; set; }
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
     }
 
     private class TikTokPublishResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public TikTokPublishData Data { get; set; } = new();
     }
 
     private class TikTokPublishData
     {
-        [JsonPropertyName("publish_id")]
+                /// <summary>
+        /// Gets or sets the Publish Id.
+        /// </summary>
+[JsonPropertyName("publish_id")]
         public string PublishId { get; set; } = string.Empty;
     }
 
     private class TikTokStatusResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public TikTokStatusData? Data { get; set; }
     }
 
     private class TikTokStatusData
     {
-        [JsonPropertyName("status")]
+                /// <summary>
+        /// Gets or sets the Status.
+        /// </summary>
+[JsonPropertyName("status")]
         public string? Status { get; set; }
 
-        [JsonPropertyName("publicaly_available_post_id")]
+                /// <summary>
+        /// Gets or sets the Publicaly Available Post Id.
+        /// </summary>
+[JsonPropertyName("publicaly_available_post_id")]
         public List<long>? PublicalyAvailablePostId { get; set; }
     }
 

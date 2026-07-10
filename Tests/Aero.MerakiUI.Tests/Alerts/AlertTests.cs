@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Alerts;
 using Bunit;
 using Aero.MerakiUI.Alerts;
 
 namespace Aero.MerakiUI.Tests.Alerts;
 
+/// <summary>
+/// Represents a class for AlertTests.
+/// </summary>
 public class AlertTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// SuccessAlert_ShouldRenderCorrectClasses method.
+    /// </summary>
+[Test]
     public void SuccessAlert_ShouldRenderCorrectClasses()
     {
         var cut = Render<Alert>(parameters => parameters
@@ -21,7 +27,10 @@ public class AlertTests : BunitContext
         Assert.Contains("Your account was registered!", cut.Markup);
     }
 
-    [Test]
+        /// <summary>
+    /// InfoAlert_ShouldRenderCorrectClasses method.
+    /// </summary>
+[Test]
     public void InfoAlert_ShouldRenderCorrectClasses()
     {
         var cut = Render<Alert>(parameters => parameters
@@ -35,7 +44,10 @@ public class AlertTests : BunitContext
         Assert.Contains("This is info message", cut.Markup);
     }
 
-    [Test]
+        /// <summary>
+    /// WarningAlert_ShouldRenderCorrectClasses method.
+    /// </summary>
+[Test]
     public void WarningAlert_ShouldRenderCorrectClasses()
     {
         var cut = Render<Alert>(parameters => parameters

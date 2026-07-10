@@ -15,7 +15,10 @@ public class CleanupAndRestore
 {
     // Removed the hardcoded SolutionFile constant
 
-    public static void Main(string[] args)
+        /// <summary>
+    /// Main method.
+    /// </summary>
+public static void Main(string[] args)
     {
         string currentDir = Directory.GetCurrentDirectory();
         Console.WriteLine($"Cleaning up bin and obj folders in directory: {currentDir}");

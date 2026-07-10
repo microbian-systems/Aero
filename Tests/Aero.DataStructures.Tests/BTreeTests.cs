@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for BTreeTests.
+/// </summary>
 public class BTreeTests
 {
-    [Test]
+        /// <summary>
+    /// Insert_And_Find_Success method.
+    /// </summary>
+[Test]
     public void Insert_And_Find_Success()
     {
         // Arrange
@@ -25,7 +31,10 @@ public class BTreeTests
         found.Value.ShouldBe(6);
     }
 
-    [Test]
+        /// <summary>
+    /// Delete_And_Find_Fails method.
+    /// </summary>
+[Test]
     public void Delete_And_Find_Fails()
     {
         // Arrange

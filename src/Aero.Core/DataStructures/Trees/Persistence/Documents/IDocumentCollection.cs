@@ -2,36 +2,63 @@ using System.Linq.Expressions;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Documents;
 
+/// <summary>
+/// Defines an interface for IDocumentCollection.
+/// </summary>
 public interface IDocumentCollection<TDocument> where TDocument : class
 {
-    ValueTask<Guid> InsertAsync(
+        /// <summary>
+    /// InsertAsync method.
+    /// </summary>
+ValueTask<Guid> InsertAsync(
         TDocument document,
         CancellationToken ct = default);
 
-    ValueTask<TDocument?> FindAsync(
+        /// <summary>
+    /// FindAsync method.
+    /// </summary>
+ValueTask<TDocument?> FindAsync(
         Guid id,
         CancellationToken ct = default);
 
-    ValueTask<bool> UpdateAsync(
+        /// <summary>
+    /// UpdateAsync method.
+    /// </summary>
+ValueTask<bool> UpdateAsync(
         Guid id,
         TDocument document,
         CancellationToken ct = default);
 
-    ValueTask<bool> DeleteAsync(
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+ValueTask<bool> DeleteAsync(
         Guid id,
         CancellationToken ct = default);
 
-    IQueryable<TDocument> AsQueryable();
+        /// <summary>
+    /// AsQueryable method.
+    /// </summary>
+IQueryable<TDocument> AsQueryable();
 
-    IAsyncEnumerable<TDocument> ScanIndexAsync<TField>(
+        /// <summary>
+    /// ScanIndexAsync method.
+    /// </summary>
+IAsyncEnumerable<TDocument> ScanIndexAsync<TField>(
         Expression<Func<TDocument, TField>> fieldSelector,
         TField from,
         TField to,
         CancellationToken ct = default)
         where TField : unmanaged, IComparable<TField>;
 
-    IAsyncEnumerable<TDocument> ScanAllAsync(
+        /// <summary>
+    /// ScanAllAsync method.
+    /// </summary>
+IAsyncEnumerable<TDocument> ScanAllAsync(
         CancellationToken ct = default);
 
-    long ApproximateCount { get; }
+        /// <summary>
+    /// Gets or sets the Approximate Count.
+    /// </summary>
+long ApproximateCount { get; }
 }

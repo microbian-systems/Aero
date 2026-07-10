@@ -1,17 +1,23 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Models.Entities;
 using FakeItEasy;
 using Microsoft.Extensions.Logging;
 
 namespace Aero.RavenDB.Tests;
 
+/// <summary>
+/// Represents a class for RavenDbPersistenceTests.
+/// </summary>
 public class RavenDbPersistenceTests : RavenDbTestBase
 {
     private readonly RavenDbUnitOfWork _unitOfWork;
     private readonly ILogger<RavenDbUnitOfWork> _uowLogger;
     private readonly ILoggerFactory _loggerFactory;
 
-    public RavenDbPersistenceTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="RavenDbPersistenceTests"/> class.
+    /// </summary>
+public RavenDbPersistenceTests()
     {
         _uowLogger = A.Fake<ILogger<RavenDbUnitOfWork>>();
         _loggerFactory = A.Fake<ILoggerFactory>();
@@ -20,7 +26,10 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         _unitOfWork = new RavenDbUnitOfWork(DocumentStore.LightweightSession(), _uowLogger, _loggerFactory);
     }
 
-    [Test]
+        /// <summary>
+    /// UnitOfWork_Should_Persist_User_Added_Through_Repository method.
+    /// </summary>
+[Test]
     public async Task UnitOfWork_Should_Persist_User_Added_Through_Repository()
     {
         // Arrange
@@ -47,7 +56,10 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         persistedUser.UserName.ShouldBe("uowuser");
     }
 
-    [Test]
+        /// <summary>
+    /// Repository_FindByIdAsync_Should_Return_User_In_Same_Session method.
+    /// </summary>
+[Test]
     public async Task Repository_FindByIdAsync_Should_Return_User_In_Same_Session()
     {
         // Arrange
@@ -74,7 +86,10 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         result.IfSome(u => u.Id.ShouldBe(user.Id));
     }
 
-    [Test]
+        /// <summary>
+    /// UnitOfWork_Should_Track_Multiple_Changes method.
+    /// </summary>
+[Test]
     public async Task UnitOfWork_Should_Track_Multiple_Changes()
     {
         // Arrange
@@ -95,7 +110,10 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         count.ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// Repository_DeleteAsync_Should_Work_With_UnitOfWork method.
+    /// </summary>
+[Test]
     public async Task Repository_DeleteAsync_Should_Work_With_UnitOfWork()
     {
         // Arrange
@@ -122,7 +140,10 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         persistedUser.ShouldBeNull();
     }
 
-    [Test]
+        /// <summary>
+    /// Repository_FindAsync_Should_Return_Matching_Users method.
+    /// </summary>
+[Test]
     public async Task Repository_FindAsync_Should_Return_Matching_Users()
     {
         // Arrange
@@ -140,7 +161,10 @@ public class RavenDbPersistenceTests : RavenDbTestBase
         results.First().UserName.ShouldBe("find1");
     }
 
-    [Test]
+        /// <summary>
+    /// Repository_ExistsAsync_Should_Return_True_For_Existing_User method.
+    /// </summary>
+[Test]
     public async Task Repository_ExistsAsync_Should_Return_True_For_Existing_User()
     {
         // Arrange

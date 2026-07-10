@@ -1,8 +1,14 @@
-﻿namespace Aero.Core;
+namespace Aero.Core;
 
+/// <summary>
+/// Represents a class for JobResponseExtensions.
+/// </summary>
 public static class JobResponseExtensions
 {
-    public static void Merge(this JobResponse res, JobResponse response)
+        /// <summary>
+    /// Merge method.
+    /// </summary>
+public static void Merge(this JobResponse res, JobResponse response)
     {
         res.Info.AddRange(response.Info);
         res.Errors.AddRange(response.Errors);
@@ -10,7 +16,10 @@ public static class JobResponseExtensions
         res.Message += Environment.NewLine + response.Message;
     }
 
-    public static string ToString(this JobResponse res, bool verbose = false)
+        /// <summary>
+    /// ToString method.
+    /// </summary>
+public static string ToString(this JobResponse res, bool verbose = false)
     {
         var cr = Environment.NewLine + "\t";
         var sb = new StringBuilder();

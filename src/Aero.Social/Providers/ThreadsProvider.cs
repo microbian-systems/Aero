@@ -8,26 +8,47 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for ThreadsProvider.
+/// </summary>
 public class ThreadsProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<ThreadsProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "threads";
-    public override string Name => "Threads";
-    public override string[] Scopes => new[]
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "threads";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Threads";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[]
     {
         "threads_basic",
         "threads_content_publish",
         "threads_manage_replies",
         "threads_manage_insights"
     };
-    public override int MaxConcurrentJobs => 2;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 2;
 
-    public override int MaxLength(object? additionalSettings = null) => 500;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 500;
 
-    protected override ErrorHandlingResult? HandleErrors(string responseBody)
+        /// <summary>
+    /// HandleErrors method.
+    /// </summary>
+protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (responseBody.Contains("Error validating access token"))
         {
@@ -37,7 +58,10 @@ public class ThreadsProvider(
         return null;
     }
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -60,7 +84,10 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -86,7 +113,10 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -110,7 +140,10 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -137,7 +170,10 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -167,7 +203,10 @@ public class ThreadsProvider(
         };
     }
 
-    public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
+        /// <summary>
+    /// AnalyticsAsync method.
+    /// </summary>
+public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
         string id,
         string accessToken,
         int days,
@@ -196,7 +235,10 @@ public class ThreadsProvider(
         }).ToArray() ?? Array.Empty<AnalyticsData>();
     }
 
-    public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
+        /// <summary>
+    /// PostAnalyticsAsync method.
+    /// </summary>
+public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
         string integrationId,
         string accessToken,
         string postId,
@@ -488,82 +530,136 @@ public class ThreadsProvider(
 
     private class ThreadsTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int? ExpiresIn { get; set; }
     }
 
     private class ThreadsUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
 
-        [JsonPropertyName("threads_profile_picture_url")]
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+[JsonPropertyName("threads_profile_picture_url")]
         public string? Picture { get; set; }
 
-        [JsonIgnore]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonIgnore]
         public string Name => Username;
     }
 
     private class ThreadsContentResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class ThreadsMediaStatusResponse
     {
-        [JsonPropertyName("status")]
+                /// <summary>
+        /// Gets or sets the Status.
+        /// </summary>
+[JsonPropertyName("status")]
         public string? Status { get; set; }
 
-        [JsonPropertyName("error_message")]
+                /// <summary>
+        /// Gets or sets the Error Message.
+        /// </summary>
+[JsonPropertyName("error_message")]
         public string? ErrorMessage { get; set; }
     }
 
     private class ThreadsPermalinkResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("permalink")]
+                /// <summary>
+        /// Gets or sets the Permalink.
+        /// </summary>
+[JsonPropertyName("permalink")]
         public string? Permalink { get; set; }
     }
 
     private class ThreadsInsightsResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public List<ThreadsInsightMetric>? Data { get; set; }
     }
 
     private class ThreadsInsightMetric
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("total_value")]
+                /// <summary>
+        /// Gets or sets the Total Value.
+        /// </summary>
+[JsonPropertyName("total_value")]
         public ThreadsTotalValue? TotalValue { get; set; }
 
-        [JsonPropertyName("values")]
+                /// <summary>
+        /// Gets or sets the Values.
+        /// </summary>
+[JsonPropertyName("values")]
         public List<ThreadsMetricValue>? Values { get; set; }
     }
 
     private class ThreadsTotalValue
     {
-        [JsonPropertyName("value")]
+                /// <summary>
+        /// Gets or sets the Value.
+        /// </summary>
+[JsonPropertyName("value")]
         public long? Value { get; set; }
     }
 
     private class ThreadsMetricValue
     {
-        [JsonPropertyName("value")]
+                /// <summary>
+        /// Gets or sets the Value.
+        /// </summary>
+[JsonPropertyName("value")]
         public long? Value { get; set; }
 
-        [JsonPropertyName("end_time")]
+                /// <summary>
+        /// Gets or sets the End Time.
+        /// </summary>
+[JsonPropertyName("end_time")]
         public DateTime? EndTime { get; set; }
     }
 

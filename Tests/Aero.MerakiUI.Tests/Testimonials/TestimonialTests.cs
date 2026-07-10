@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Testimonials;
 using Bunit;
 using Aero.MerakiUI.Testimonials;
 
 namespace Aero.MerakiUI.Tests.Testimonials;
 
+/// <summary>
+/// Represents a class for TestimonialTests.
+/// </summary>
 public class TestimonialTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// TestimonialCard_ShouldRenderContent method.
+    /// </summary>
+[Test]
     public void TestimonialCard_ShouldRenderContent()
     {
         var cut = Render<TestimonialCard>(parameters => parameters

@@ -3,18 +3,33 @@ using Aero.Core.Entities;
 
 namespace Aero.Models.Entities;
 
+/// <summary>
+/// Represents a class for CountryModel.
+/// </summary>
 public class CountryModel : Entity
 {
-    [JsonPropertyName("fips")]
+        /// <summary>
+    /// Gets or sets the FIPS.
+    /// </summary>
+[JsonPropertyName("fips")]
     [MaxLength(128)]
     public string FIPS { get; set; }
-    [JsonPropertyName("iso")]
+        /// <summary>
+    /// Gets or sets the ISO.
+    /// </summary>
+[JsonPropertyName("iso")]
     [MaxLength(128)]
     public string ISO { get; set; }
-    [JsonPropertyName("tld")]
+        /// <summary>
+    /// Gets or sets the TLD.
+    /// </summary>
+[JsonPropertyName("tld")]
     [MaxLength(128)]
     public string TLD { get; set; }
-    [JsonPropertyName("name")]
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+[JsonPropertyName("name")]
     [MaxLength(128)]
     public string Name { get; set; }
 }

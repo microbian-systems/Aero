@@ -5,13 +5,19 @@ namespace Aero.Core.DataStructures.Trees;
 /// </summary>
 public class KdTreeNodeWrapper(KdTreeNode node) : ITreeNode<Point>
 {
-    public Point Value
+        /// <summary>
+    /// Gets or sets the Value.
+    /// </summary>
+public Point Value
     {
         get => node.Point;
         set => throw new NotSupportedException("Cannot modify KD-Tree node value directly");
     }
 
-    public IEnumerable<ITreeNode<Point>> Children
+        /// <summary>
+    /// Gets or sets the Children.
+    /// </summary>
+public IEnumerable<ITreeNode<Point>> Children
     {
         get
         {
@@ -28,9 +34,15 @@ public class KdTreeNodeWrapper(KdTreeNode node) : ITreeNode<Point>
 /// </summary>
 public class KdTree : ITree<Point>
 {
-    public KdTreeNode Root { get; private set; }
+        /// <summary>
+    /// Gets or sets the Root.
+    /// </summary>
+public KdTreeNode Root { get; private set; }
 
-    public void Insert(Point point)
+        /// <summary>
+    /// Insert method.
+    /// </summary>
+public void Insert(Point point)
     {
         Root = Insert(Root, point, 0);
     }
@@ -55,7 +67,10 @@ public class KdTree : ITree<Point>
         return node;
     }
 
-    public IEnumerable<Point> RangeSearch(Rect range)
+        /// <summary>
+    /// RangeSearch method.
+    /// </summary>
+public IEnumerable<Point> RangeSearch(Rect range)
     {
         var result = new List<Point>();
         RangeSearch(Root, range, 0, result);
@@ -86,7 +101,10 @@ public class KdTree : ITree<Point>
         }
     }
         
-    public Point NearestNeighbor(Point target)
+        /// <summary>
+    /// NearestNeighbor method.
+    /// </summary>
+public Point NearestNeighbor(Point target)
     {
         // Simplified nearest neighbor search, not fully optimized
         return NearestNeighbor(Root, target, 0, Root)?.Point;
@@ -233,12 +251,27 @@ public class KdTree : ITree<Point>
 /// </summary>
 public class Rect(double xmin, double ymin, double xmax, double ymax)
 {
-    public double XMin { get; } = xmin;
-    public double YMin { get; } = ymin;
-    public double XMax { get; } = xmax;
-    public double YMax { get; } = ymax;
+        /// <summary>
+    /// Gets or sets the X Min.
+    /// </summary>
+public double XMin { get; } = xmin;
+        /// <summary>
+    /// Gets or sets the Y Min.
+    /// </summary>
+public double YMin { get; } = ymin;
+        /// <summary>
+    /// Gets or sets the X Max.
+    /// </summary>
+public double XMax { get; } = xmax;
+        /// <summary>
+    /// Gets or sets the Y Max.
+    /// </summary>
+public double YMax { get; } = ymax;
 
-    public bool Contains(Point p)
+        /// <summary>
+    /// Contains method.
+    /// </summary>
+public bool Contains(Point p)
     {
         return p.X >= XMin && p.X <= XMax && p.Y >= YMin && p.Y <= YMax;
     }

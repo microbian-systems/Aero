@@ -4,9 +4,15 @@ using Microsoft.Extensions.AI;
 
 namespace Aero.Core.Ai;
 
+/// <summary>
+/// Defines an interface for IAiChatClientFactory.
+/// </summary>
 public interface IAiChatClientFactory
 {
-    Task<Result<IChatClient>> CreateAsync(
+        /// <summary>
+    /// CreateAsync method.
+    /// </summary>
+Task<Result<IChatClient>> CreateAsync(
         AiRuntimeSettings settings,
         CancellationToken cancellationToken = default);
 }

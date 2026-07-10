@@ -1,10 +1,16 @@
-﻿using System.Data;
+using System.Data;
 
 namespace Aero.Core;
 
+/// <summary>
+/// Represents a class for DataHelper.
+/// </summary>
 public static class DataHelper
 {
-    public static DataTable ToDataTable<T>(this IEnumerable<T> items) where T : class, new()
+        /// <summary>
+    /// ToDataTable method.
+    /// </summary>
+public static DataTable ToDataTable<T>(this IEnumerable<T> items) where T : class, new()
     {
         var properties = typeof(T).GetProperties()
             .Where(p=>p.GetGetMethod().IsPublic && (p.GetType().IsPrimitive || typeof(string) == p.GetType())).ToList();

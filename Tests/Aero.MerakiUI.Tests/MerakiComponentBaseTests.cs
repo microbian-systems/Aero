@@ -1,10 +1,13 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 
 namespace Aero.MerakiUI.Tests;
 
+/// <summary>
+/// Represents a class for MerakiComponentBaseTests.
+/// </summary>
 public class MerakiComponentBaseTests : BunitContext
 {
     // Stub to allow test to reference the base class we expect to exist
@@ -12,7 +15,10 @@ public class MerakiComponentBaseTests : BunitContext
     {
     }
 
-    [Test]
+        /// <summary>
+    /// BaseComponent_ShouldHaveStandardParameters method.
+    /// </summary>
+[Test]
     public void BaseComponent_ShouldHaveStandardParameters()
     {
         var cut = Render<TestComponent>(parameters => parameters

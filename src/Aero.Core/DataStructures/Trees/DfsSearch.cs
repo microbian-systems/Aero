@@ -1,5 +1,8 @@
 namespace Aero.Core.DataStructures.Trees;
 
+/// <summary>
+/// Defines an enumeration for DfsTraversalOrder.
+/// </summary>
 public enum DfsTraversalOrder
 {
     Preorder,
@@ -13,7 +16,10 @@ public enum DfsTraversalOrder
 /// <typeparam name="T">The type of the values in the tree.</typeparam>
 public class DfsSearch<T>(ITree<T> tree, DfsTraversalOrder traversalOrder) : TreeSearch<T>(tree)
 {
-    public override IEnumerable<ITreeNode<T>> Search()
+        /// <summary>
+    /// Search method.
+    /// </summary>
+public override IEnumerable<ITreeNode<T>> Search()
     {
         var binaryTree = Tree as BinaryTree<T>;
         if (binaryTree == null)

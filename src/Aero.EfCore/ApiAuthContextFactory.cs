@@ -1,11 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
 namespace Aero.EfCore;
 
+/// <summary>
+/// Represents a class for ApiAuthContextFactory.
+/// </summary>
 public class ApiAuthContextFactory : IDesignTimeDbContextFactory<AeroDbContext>
 {
-    public AeroDbContext CreateDbContext(string[] args)
+        /// <summary>
+    /// CreateDbContext method.
+    /// </summary>
+public AeroDbContext CreateDbContext(string[] args)
     {
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 

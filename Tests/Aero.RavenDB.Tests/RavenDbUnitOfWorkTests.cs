@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Core;
 using Aero.Models.Entities;
 using FakeItEasy;
@@ -7,19 +7,28 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.RavenDB.Tests;
 
+/// <summary>
+/// Represents a class for RavenDbUnitOfWorkTests.
+/// </summary>
 public class RavenDbUnitOfWorkTests : RavenDbTestBase
 {
     private readonly ILogger<RavenDbUnitOfWork> _uowLogger;
     private readonly ILoggerFactory _loggerFactory;
 
-    public RavenDbUnitOfWorkTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="RavenDbUnitOfWorkTests"/> class.
+    /// </summary>
+public RavenDbUnitOfWorkTests()
     {
         _uowLogger = A.Fake<ILogger<RavenDbUnitOfWork>>();
         _loggerFactory = A.Fake<ILoggerFactory>();
         A.CallTo(() => _loggerFactory.CreateLogger(A<string>._)).Returns(A.Fake<ILogger>());
     }
 
-    [Test]
+        /// <summary>
+    /// SaveChangesAsync_Should_Return_Change_Count method.
+    /// </summary>
+[Test]
     public async Task SaveChangesAsync_Should_Return_Change_Count()
     {
         // Arrange
@@ -36,7 +45,10 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         count.ShouldBeGreaterThan(0);
     }
 
-    [Test]
+        /// <summary>
+    /// Users_Property_Should_Be_Lazy_Initialized method.
+    /// </summary>
+[Test]
     public void Users_Property_Should_Be_Lazy_Initialized()
     {
         // Arrange
@@ -53,7 +65,10 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         users1.ShouldBeSameAs(users2);
     }
 
-    [Test]
+        /// <summary>
+    /// SaveChangesAsync_Should_Handle_Exceptions method.
+    /// </summary>
+[Test]
     public async Task SaveChangesAsync_Should_Handle_Exceptions()
     {
         // Arrange
@@ -72,7 +87,10 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         // Note: Generic loggers are tricky to verify with A.CallTo, but we can verify it didn't crash.
     }
 
-    [Test]
+        /// <summary>
+    /// Find_Method_Locates_Users_Should_Success method.
+    /// </summary>
+[Test]
     public async Task Find_Method_Locates_Users_Should_Success()
     {
         var session = DocumentStore.LightweightSession();
@@ -102,7 +120,10 @@ public class RavenDbUnitOfWorkTests : RavenDbTestBase
         searchData.Count().ShouldBeGreaterThanOrEqualTo(2);
     }
 
-    [Test]
+        /// <summary>
+    /// RollbackTransactionAsync_Should_Clear_Session method.
+    /// </summary>
+[Test]
     public async Task RollbackTransactionAsync_Should_Clear_Session()
     {
         // Arrange

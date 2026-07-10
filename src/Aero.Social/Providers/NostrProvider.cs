@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for NostrProvider.
+/// </summary>
 public class NostrProvider(
     HttpClient httpClient,
     IConfiguration configuration,
@@ -27,16 +30,40 @@ public class NostrProvider(
         "wss://vault.iris.to"
     };
 
-    public override string Identifier => "nostr";
-    public override string Name => "Nostr";
-    public override string[] Scopes => Array.Empty<string>();
-    public override int MaxConcurrentJobs => 5;
-    public override bool IsWeb3 => true;
-    public override string? Tooltip => "Make sure you provide a HEX key of your Nostr private key, you can get it from websites like iris.to";
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "nostr";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Nostr";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => Array.Empty<string>();
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 5;
+        /// <summary>
+    /// Gets or sets the Is Web3.
+    /// </summary>
+public override bool IsWeb3 => true;
+        /// <summary>
+    /// Gets or sets the Tooltip.
+    /// </summary>
+public override string? Tooltip => "Make sure you provide a HEX key of your Nostr private key, you can get it from websites like iris.to";
 
-    public override int MaxLength(object? additionalSettings = null) => 100000;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 100000;
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -49,7 +76,10 @@ public class NostrProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -85,7 +115,10 @@ public class NostrProvider(
         }
     }
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -101,7 +134,10 @@ public class NostrProvider(
         });
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -140,7 +176,10 @@ public class NostrProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -334,19 +373,31 @@ public class NostrProvider(
 
     private class NostrAuthBody
     {
-        [JsonPropertyName("password")]
+                /// <summary>
+        /// Gets or sets the Password.
+        /// </summary>
+[JsonPropertyName("password")]
         public string Password { get; set; } = string.Empty;
     }
 
     private class NostrProfile
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("display_name")]
+                /// <summary>
+        /// Gets or sets the Display Name.
+        /// </summary>
+[JsonPropertyName("display_name")]
         public string? DisplayName { get; set; }
 
-        [JsonPropertyName("picture")]
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+[JsonPropertyName("picture")]
         public string? Picture { get; set; }
     }
 

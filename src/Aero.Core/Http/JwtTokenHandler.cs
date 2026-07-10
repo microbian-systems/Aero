@@ -2,16 +2,25 @@ using System.Net.Http.Headers;
 
 namespace Aero.Core.Http;
 
+/// <summary>
+/// Represents a class for JwtTokenHandler.
+/// </summary>
 public sealed class JwtTokenHandler : DelegatingHandler
 {
     private readonly ITokenProvider _tokenProvider;
 
-    public JwtTokenHandler(ITokenProvider tokenProvider)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="JwtTokenHandler"/> class.
+    /// </summary>
+public JwtTokenHandler(ITokenProvider tokenProvider)
     {
         _tokenProvider = tokenProvider;
     }
 
-    protected override async Task<HttpResponseMessage> SendAsync(
+        /// <summary>
+    /// SendAsync method.
+    /// </summary>
+protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {

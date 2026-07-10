@@ -6,5 +6,8 @@ namespace Aero.Core.Http;
 /// </summary>
 public sealed class NoopCorrelationIdAccessor : ICorrelationIdAccessor
 {
-    public string? CorrelationId => null;
+        /// <summary>
+    /// Gets or sets the Correlation Id.
+    /// </summary>
+public string? CorrelationId => null;
 }

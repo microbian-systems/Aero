@@ -1,4 +1,4 @@
-﻿using Aero.Core.Data;
+using Aero.Core.Data;
 using Aero.Core.Entities;
 using Aero.Core.Extensions;
 using System.Linq.Expressions;
@@ -6,34 +6,64 @@ using System.Linq.Expressions;
 
 namespace Aero.EfCore;
 
+/// <summary>
+/// Defines an interface for IGenericEntityFrameworkRepository.
+/// </summary>
 public interface IGenericEntityFrameworkRepository<T, TKey> : IGenericRepository<T, TKey>
     where T : IEntity<TKey>, new() where TKey : IEquatable<TKey>
 {
-    Task<List<T>> GetPaged(int page = 1, int rows = 10);
+        /// <summary>
+    /// GetPaged method.
+    /// </summary>
+Task<List<T>> GetPaged(int page = 1, int rows = 10);
 }
 
+/// <summary>
+/// Defines an interface for IGenericEntityFrameworkRepository.
+/// </summary>
 public interface IGenericEntityFrameworkRepository<T> : IGenericEntityFrameworkRepository<T, long>, IGenericRepository<T>
     where T : class, ISnowflakeEntity, new()
 { }
 
+/// <summary>
+/// Represents a class for GenericEntityFrameworkRepository.
+/// </summary>
 public class GenericEntityFrameworkRepository<T>(DbContext context, ILogger<GenericEntityFrameworkRepository<T>> log)
     : GenericEntityFrameworkRepository<T, long>(context, log), IGenericRepository<T>
     where T : class, ISnowflakeEntity, new();
 
+/// <summary>
+/// Represents a class for GenericEntityFrameworkRepository.
+/// </summary>
 public class GenericEntityFrameworkRepository<T, TKey> : GenericRepository<T, TKey>, IGenericEntityFrameworkRepository<T, TKey> where T : class, IEntity<TKey>, new() where TKey : IEquatable<TKey>
 {
-    protected readonly DbSet<T> db;
-    protected readonly DbContext context;
+        /// <summary>
+    /// db.
+    /// </summary>
+protected readonly DbSet<T> db;
+        /// <summary>
+    /// context.
+    /// </summary>
+protected readonly DbContext context;
 
-    protected GenericEntityFrameworkRepository(DbContext context, ILogger<GenericEntityFrameworkRepository<T, TKey>> log) : base(log)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="GenericEntityFrameworkRepository"/> class.
+    /// </summary>
+protected GenericEntityFrameworkRepository(DbContext context, ILogger<GenericEntityFrameworkRepository<T, TKey>> log) : base(log)
     {
         this.db = context.Set<T>();
         this.context = context;
     }
 
-    public override async Task<IEnumerable<T>> GetAllAsync() => await Task.FromResult(db.ToList());
+        /// <summary>
+    /// GetAllAsync method.
+    /// </summary>
+public override async Task<IEnumerable<T>> GetAllAsync() => await Task.FromResult(db.ToList());
 
-    public async Task<List<T>> GetPaged(int page = 1, int rows = 10)
+        /// <summary>
+    /// GetPaged method.
+    /// </summary>
+public async Task<List<T>> GetPaged(int page = 1, int rows = 10)
     {
         var skip = page <= 1
             ? 0
@@ -47,9 +77,15 @@ public class GenericEntityFrameworkRepository<T, TKey> : GenericRepository<T, TK
         return result;
     }
 
-    public override async Task<T> FindByIdAsync(TKey id) => await Task.FromResult(db.Single(x => x.Id.Equals(id)));
+        /// <summary>
+    /// FindByIdAsync method.
+    /// </summary>
+public override async Task<T> FindByIdAsync(TKey id) => await Task.FromResult(db.Single(x => x.Id.Equals(id)));
 
-    public override async Task<T> InsertAsync(T entity)
+        /// <summary>
+    /// InsertAsync method.
+    /// </summary>
+public override async Task<T> InsertAsync(T entity)
     {
         log.LogInformation($"saving entity");
         var results = await db.AddAsync(entity);
@@ -57,7 +93,10 @@ public class GenericEntityFrameworkRepository<T, TKey> : GenericRepository<T, TK
         return results.Entity;
     }
 
-    public override async Task<T> UpdateAsync(T entity)
+        /// <summary>
+    /// UpdateAsync method.
+    /// </summary>
+public override async Task<T> UpdateAsync(T entity)
     {
         log.LogInformation($"updating entity with id {entity.Id}");
         var result = db.Update(entity);
@@ -65,7 +104,10 @@ public class GenericEntityFrameworkRepository<T, TKey> : GenericRepository<T, TK
         return await Task.FromResult(result.Entity);
     }
 
-    public override async Task<T> UpsertAsync(T entity)
+        /// <summary>
+    /// UpsertAsync method.
+    /// </summary>
+public override async Task<T> UpsertAsync(T entity)
     {
         try
         {
@@ -93,13 +135,19 @@ public class GenericEntityFrameworkRepository<T, TKey> : GenericRepository<T, TK
         }
     }
 
-    public override async Task DeleteAsync(TKey id)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public override async Task DeleteAsync(TKey id)
     {
         var entity = await Task.FromResult(db.Single(x => x.Id.Equals(id)));
         await DeleteAsync(entity);
     }
 
-    public override async Task DeleteAsync(T entity)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public override async Task DeleteAsync(T entity)
     {
         await Task.CompletedTask;
         var id = entity.Id;
@@ -108,26 +156,41 @@ public class GenericEntityFrameworkRepository<T, TKey> : GenericRepository<T, TK
         log.LogInformation($"deleted entity with id {id}");
     }
 
-    public override async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        /// <summary>
+    /// FindAsync method.
+    /// </summary>
+public override async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
     {
         log.LogInformation($"quering EF store...");
         var results = db.Where(predicate); //.ToListAsync();
         return results;
     }
 
-    public override Task<long> CountAsync()
+        /// <summary>
+    /// CountAsync method.
+    /// </summary>
+public override Task<long> CountAsync()
     {
         log.LogInformation($"getting count ....");
         var count = (long)db.Count();
         return Task.FromResult(count);
     }
 
-    public override async Task<bool> ExistsAsync(TKey id) => await Task.FromResult(db.Any(x => x.Id.Equals(id)));
+        /// <summary>
+    /// ExistsAsync method.
+    /// </summary>
+public override async Task<bool> ExistsAsync(TKey id) => await Task.FromResult(db.Any(x => x.Id.Equals(id)));
 
 
-    public override async Task<T> GetByIdAsync(TKey id) => await FindByIdAsync(id);
+        /// <summary>
+    /// GetByIdAsync method.
+    /// </summary>
+public override async Task<T> GetByIdAsync(TKey id) => await FindByIdAsync(id);
 
-    public override async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<TKey> ids)
+        /// <summary>
+    /// GetByIdsAsync method.
+    /// </summary>
+public override async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<TKey> ids)
     {
         var tasks = new List<Task>();
         foreach (var id in ids)
@@ -139,6 +202,9 @@ public class GenericEntityFrameworkRepository<T, TKey> : GenericRepository<T, TK
     }
 }
 
+/// <summary>
+/// Represents a class for GenericEntityFrameworkRepository.
+/// </summary>
 public abstract class GenericEntityFrameworkRepository<T, TKey, TContext>(
     TContext context,
     ILogger<GenericEntityFrameworkRepository<T, TKey, TContext>> log)
@@ -148,14 +214,29 @@ public abstract class GenericEntityFrameworkRepository<T, TKey, TContext>(
     where TKey : IEquatable<TKey>
     where TContext : DbContext
 {
-    protected readonly DbSet<T> db = context.Set<T>();
-    protected readonly TContext context = context;
+        /// <summary>
+    /// db.
+    /// </summary>
+protected readonly DbSet<T> db = context.Set<T>();
+        /// <summary>
+    /// context.
+    /// </summary>
+protected readonly TContext context = context;
 
-    public override async Task<IEnumerable<T>> GetAllAsync() => await Task.FromResult(db.ToList());
+        /// <summary>
+    /// GetAllAsync method.
+    /// </summary>
+public override async Task<IEnumerable<T>> GetAllAsync() => await Task.FromResult(db.ToList());
 
-    public override async Task<T> FindByIdAsync(TKey id) => await Task.FromResult(db.Single(x => x.Id.Equals(id)));
+        /// <summary>
+    /// FindByIdAsync method.
+    /// </summary>
+public override async Task<T> FindByIdAsync(TKey id) => await Task.FromResult(db.Single(x => x.Id.Equals(id)));
 
-    public override async Task<T> InsertAsync(T entity)
+        /// <summary>
+    /// InsertAsync method.
+    /// </summary>
+public override async Task<T> InsertAsync(T entity)
     {
         log.LogInformation($"saving entity");
         var results = await db.AddAsync(entity);
@@ -163,7 +244,10 @@ public abstract class GenericEntityFrameworkRepository<T, TKey, TContext>(
         return results.Entity;
     }
 
-    public override async Task<T> UpdateAsync(T entity)
+        /// <summary>
+    /// UpdateAsync method.
+    /// </summary>
+public override async Task<T> UpdateAsync(T entity)
     {
         log.LogInformation($"updating entity with id {entity.Id}");
         var result = db.Update(entity);
@@ -171,7 +255,10 @@ public abstract class GenericEntityFrameworkRepository<T, TKey, TContext>(
         return await Task.FromResult(result.Entity);
     }
 
-    public override async Task<T> UpsertAsync(T entity)
+        /// <summary>
+    /// UpsertAsync method.
+    /// </summary>
+public override async Task<T> UpsertAsync(T entity)
     {
         log.LogInformation($"updating/inserting entity with id {entity.Id}");
         var exists = await Task.FromResult(db.Single(x => x.Id.Equals(entity.Id)));
@@ -180,13 +267,19 @@ public abstract class GenericEntityFrameworkRepository<T, TKey, TContext>(
         return result.Entity;
     }
 
-    public override async Task DeleteAsync(TKey id)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public override async Task DeleteAsync(TKey id)
     {
         var entity = await Task.FromResult(db.Single(x => x.Id.Equals(id)));
         await DeleteAsync(entity);
     }
 
-    public override async Task DeleteAsync(T entity)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public override async Task DeleteAsync(T entity)
     {
         await Task.Delay(0);
 
@@ -196,26 +289,41 @@ public abstract class GenericEntityFrameworkRepository<T, TKey, TContext>(
         log.LogInformation($"deleted entity with id {id}");
     }
 
-    public override async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        /// <summary>
+    /// FindAsync method.
+    /// </summary>
+public override async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
     {
         log.LogInformation($"quering EF store...");
         var results = await db.Where(predicate).ToListAsync();
         return results;
     }
 
-    public override async Task<long> CountAsync()
+        /// <summary>
+    /// CountAsync method.
+    /// </summary>
+public override async Task<long> CountAsync()
     {
         log.LogInformation($"getting count ....");
         var count = (long)db.Count();
         return await Task.FromResult(count);
     }
 
-    public override async Task<bool> ExistsAsync(TKey id) => await db.AsQueryable().AnyAsync(x => x.Id.Equals(id));
+        /// <summary>
+    /// ExistsAsync method.
+    /// </summary>
+public override async Task<bool> ExistsAsync(TKey id) => await db.AsQueryable().AnyAsync(x => x.Id.Equals(id));
 
 
-    public override async Task<T> GetByIdAsync(TKey id) => await FindByIdAsync(id);
+        /// <summary>
+    /// GetByIdAsync method.
+    /// </summary>
+public override async Task<T> GetByIdAsync(TKey id) => await FindByIdAsync(id);
 
-    public override async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<TKey> ids)
+        /// <summary>
+    /// GetByIdsAsync method.
+    /// </summary>
+public override async Task<IReadOnlyCollection<T>> GetByIdsAsync(IEnumerable<TKey> ids)
     {
         await Task.Delay(0);
         var tasks = new List<Task>();
@@ -224,7 +332,10 @@ public abstract class GenericEntityFrameworkRepository<T, TKey, TContext>(
         }
         throw new NotImplementedException();
     }
-    public async Task<List<T>> GetPaged(int page = 1, int rows = 10)
+        /// <summary>
+    /// GetPaged method.
+    /// </summary>
+public async Task<List<T>> GetPaged(int page = 1, int rows = 10)
     {
         await Task.CompletedTask;
         throw new NotImplementedException();

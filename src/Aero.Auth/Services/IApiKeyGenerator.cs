@@ -2,25 +2,43 @@ using System.Security.Cryptography;
 
 namespace Aero.Auth.Services;
 
+/// <summary>
+/// Defines an enumeration for ApiKeyEnvironment.
+/// </summary>
 public enum ApiKeyEnvironment
 {
     Test,
     Live
 }
 
+/// <summary>
+/// Represents a record for GeneratedApiKey.
+/// </summary>
 public sealed record GeneratedApiKey(
     string KeyId,
     string RawApiKey,
     string SecretHash);
 
+/// <summary>
+/// Defines an interface for IApiKeyGenerator.
+/// </summary>
 public interface IApiKeyGenerator
 {
-    GeneratedApiKey Generate(ApiKeyEnvironment environment);
+        /// <summary>
+    /// Generate method.
+    /// </summary>
+GeneratedApiKey Generate(ApiKeyEnvironment environment);
 }
 
+/// <summary>
+/// Represents a class for HashedApiKeyGenerator.
+/// </summary>
 public sealed class HashedApiKeyGenerator : IApiKeyGenerator
 {
-    public GeneratedApiKey Generate(ApiKeyEnvironment environment)
+        /// <summary>
+    /// Generate method.
+    /// </summary>
+public GeneratedApiKey Generate(ApiKeyEnvironment environment)
     {
         var prefix = environment == ApiKeyEnvironment.Live
             ? "sk_live"

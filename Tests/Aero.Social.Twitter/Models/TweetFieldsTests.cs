@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for TweetFieldsTests.
+/// </summary>
 public class TweetFieldsTests
 {
-    [Test]
+        /// <summary>
+    /// TweetFields_ToApiString_WithNone_ReturnsEmptyString method.
+    /// </summary>
+[Test]
     public async Task TweetFields_ToApiString_WithNone_ReturnsEmptyString()
     {
         // Arrange
@@ -19,7 +25,10 @@ public class TweetFieldsTests
         await Assert.That(result).IsEqualTo(string.Empty);
     }
 
-    [Test]
+        /// <summary>
+    /// TweetFields_ToApiString_IndividualFields_ReturnCorrectValues method.
+    /// </summary>
+[Test]
     [Arguments(TweetFields.AuthorId, "author_id")]
     [Arguments(TweetFields.CreatedAt, "created_at")]
     [Arguments(TweetFields.Text, "text")]
@@ -42,7 +51,10 @@ public class TweetFieldsTests
         await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Test]
+        /// <summary>
+    /// TweetFields_ToApiString_WithMultipleFields_ReturnsCommaSeparatedString method.
+    /// </summary>
+[Test]
     public async Task TweetFields_ToApiString_WithMultipleFields_ReturnsCommaSeparatedString()
     {
         // Arrange
@@ -58,7 +70,10 @@ public class TweetFieldsTests
         await Assert.That(result).Contains(",");
     }
 
-    [Test]
+        /// <summary>
+    /// TweetFields_ToApiString_WithAllFields_ReturnsAllFieldNames method.
+    /// </summary>
+[Test]
     public async Task TweetFields_ToApiString_WithAllFields_ReturnsAllFieldNames()
     {
         // Arrange
@@ -83,7 +98,10 @@ public class TweetFieldsTests
         await Assert.That(result).Contains("source");
     }
 
-    [Test]
+        /// <summary>
+    /// TweetFields_ToApiString_WithComplexCombination_ReturnsCorrectString method.
+    /// </summary>
+[Test]
     public async Task TweetFields_ToApiString_WithComplexCombination_ReturnsCorrectString()
     {
         // Arrange

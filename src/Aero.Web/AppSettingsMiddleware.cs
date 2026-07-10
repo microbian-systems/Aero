@@ -5,9 +5,15 @@ using Aero.Web.Extensions;
 
 namespace Aero.Web;
 
+/// <summary>
+/// Represents a class for AppSettingsExtensions.
+/// </summary>
 public static class AppSettingsExtensions
 {
-    public static AppSettings ConfigureAppSettings(this IServiceCollection services, IConfiguration config,
+        /// <summary>
+    /// ConfigureAppSettings method.
+    /// </summary>
+public static AppSettings ConfigureAppSettings(this IServiceCollection services, IConfiguration config,
         IWebHostEnvironment env)
     {
         var log = LoggingExtensions.GetReloadableLogger(config);

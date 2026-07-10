@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Errors;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Errors;
 
+/// <summary>
+/// Represents a class for TwitterErrorInfoTests.
+/// </summary>
 public class TwitterErrorInfoTests
 {
-    [Test]
+        /// <summary>
+    /// GetErrorTitle_KnownErrorCode_ReturnsExpectedTitle method.
+    /// </summary>
+[Test]
     [Arguments(32, "Could not authenticate you")]
     [Arguments(34, "Sorry, that page does not exist")]
     [Arguments(88, "Rate limit exceeded")]
@@ -23,7 +29,10 @@ public class TwitterErrorInfoTests
         await Assert.That(title).IsEqualTo(expectedTitle);
     }
 
-    [Test]
+        /// <summary>
+    /// GetErrorTitle_UnknownErrorCode_ReturnsUnknownError method.
+    /// </summary>
+[Test]
     public async Task GetErrorTitle_UnknownErrorCode_ReturnsUnknownError()
     {
         // Act
@@ -33,7 +42,10 @@ public class TwitterErrorInfoTests
         await Assert.That(title).IsEqualTo("Unknown Error");
     }
 
-    [Test]
+        /// <summary>
+    /// GetSuggestedAction_KnownErrorCode_ReturnsNonEmptyAction method.
+    /// </summary>
+[Test]
     [Arguments(32)]
     [Arguments(88)]
     [Arguments(144)]
@@ -47,7 +59,10 @@ public class TwitterErrorInfoTests
         await Assert.That(action).DoesNotContain("unexpected error");
     }
 
-    [Test]
+        /// <summary>
+    /// GetDocumentationUrl_KnownErrorCode_ReturnsValidUrl method.
+    /// </summary>
+[Test]
     [Arguments(32)]
     [Arguments(88)]
     [Arguments(144)]
@@ -61,7 +76,10 @@ public class TwitterErrorInfoTests
         await Assert.That(url).StartsWith("https://");
     }
 
-    [Test]
+        /// <summary>
+    /// BuildEnhancedMessage_KnownErrorCode_IncludesAllComponents method.
+    /// </summary>
+[Test]
     public async Task BuildEnhancedMessage_KnownErrorCode_IncludesAllComponents()
     {
         // Arrange
@@ -80,7 +98,10 @@ public class TwitterErrorInfoTests
         await Assert.That(message).Contains("https://");
     }
 
-    [Test]
+        /// <summary>
+    /// BuildEnhancedMessage_NullApiMessage_DoesNotIncludeApiMessage method.
+    /// </summary>
+[Test]
     public async Task BuildEnhancedMessage_NullApiMessage_DoesNotIncludeApiMessage()
     {
         // Arrange
@@ -94,7 +115,10 @@ public class TwitterErrorInfoTests
         await Assert.That(message).DoesNotContain("API Message:");
     }
 
-    [Test]
+        /// <summary>
+    /// IsClientError_VariousStatusCodes_ReturnsExpectedResult method.
+    /// </summary>
+[Test]
     [Arguments(400, true)]   // Bad Request
     [Arguments(404, true)]   // Not Found
     [Arguments(429, true)]   // Too Many Requests
@@ -111,7 +135,10 @@ public class TwitterErrorInfoTests
         await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Test]
+        /// <summary>
+    /// IsServerError_VariousStatusCodes_ReturnsExpectedResult method.
+    /// </summary>
+[Test]
     [Arguments(500, true)]   // Internal Server Error
     [Arguments(503, true)]   // Service Unavailable
     [Arguments(504, true)]   // Gateway Timeout
@@ -128,7 +155,10 @@ public class TwitterErrorInfoTests
         await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Test]
+        /// <summary>
+    /// IsRateLimitError_VariousStatusCodes_ReturnsExpectedResult method.
+    /// </summary>
+[Test]
     [Arguments(429, true)]   // Too Many Requests
     [Arguments(428, false)]  // Precondition Required
     [Arguments(430, false)]  // Unknown
@@ -142,7 +172,10 @@ public class TwitterErrorInfoTests
         await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Test]
+        /// <summary>
+    /// GetErrorInfo_KnownErrorCode_ReturnsAllComponents method.
+    /// </summary>
+[Test]
     public async Task GetErrorInfo_KnownErrorCode_ReturnsAllComponents()
     {
         // Arrange
@@ -157,7 +190,10 @@ public class TwitterErrorInfoTests
         await Assert.That(docUrl).StartsWith("https://");
     }
 
-    [Test]
+        /// <summary>
+    /// GetErrorInfo_UnknownErrorCode_ReturnsDefaultComponents method.
+    /// </summary>
+[Test]
     public async Task GetErrorInfo_UnknownErrorCode_ReturnsDefaultComponents()
     {
         // Arrange

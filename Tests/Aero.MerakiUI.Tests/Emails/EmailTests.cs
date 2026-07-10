@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Emails;
 using Bunit;
 using Aero.MerakiUI.Emails;
 
 namespace Aero.MerakiUI.Tests.Emails;
 
+/// <summary>
+/// Represents a class for EmailTests.
+/// </summary>
 public class EmailTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// EmailVerification_ShouldRenderCode method.
+    /// </summary>
+[Test]
     public void EmailVerification_ShouldRenderCode()
     {
         var cut = Render<EmailVerification>(parameters => parameters

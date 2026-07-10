@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Tables;
 using Bunit;
 using Aero.MerakiUI.Tables;
 
 namespace Aero.MerakiUI.Tests.Tables;
 
+/// <summary>
+/// Represents a class for TableTests.
+/// </summary>
 public class TableTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// SimpleTable_ShouldRenderCorrectStructure method.
+    /// </summary>
+[Test]
     public void SimpleTable_ShouldRenderCorrectStructure()
     {
         var headers = new[] { "Name", "Status", "Role" };

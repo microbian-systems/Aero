@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Inputs;
 using Bunit;
 using Aero.MerakiUI.Inputs;
 
 namespace Aero.MerakiUI.Tests.Inputs;
 
+/// <summary>
+/// Represents a class for InputTests.
+/// </summary>
 public class InputTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// TextInput_ShouldRenderCorrectClasses method.
+    /// </summary>
+[Test]
     public void TextInput_ShouldRenderCorrectClasses()
     {
         var cut = Render<TextInput>(parameters => parameters

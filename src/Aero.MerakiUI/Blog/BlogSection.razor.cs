@@ -2,18 +2,33 @@ using Microsoft.AspNetCore.Components;
 
 namespace Aero.MerakiUI.Blog;
 
+/// <summary>
+/// Represents a class for BlogSection.
+/// </summary>
 public partial class BlogSection : MerakiComponentBase
 {
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Title.
+    /// </summary>
+[Parameter]
     public string Title { get; set; } = "From the blog";
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Description.
+    /// </summary>
+[Parameter]
     public string? Description { get; set; }
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Is Centered.
+    /// </summary>
+[Parameter]
     public bool IsCentered { get; set; } = false;
 
-    [Parameter]
+        /// <summary>
+    /// Gets or sets the Columns.
+    /// </summary>
+[Parameter]
     public int Columns { get; set; } = 2;
 
     private string GetHeaderAlignmentClass() => IsCentered ? "text-center" : "";

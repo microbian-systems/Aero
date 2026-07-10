@@ -1,38 +1,107 @@
-﻿using Aero.Models;
+using Aero.Models;
 using Aero.Models.Entities;
 
 namespace Aero.Web.Services;
 
+/// <summary>
+/// Defines an interface for IApiService.
+/// </summary>
 public interface IApiService<T, TKey> //where T : IAuthRequestModel
     where TKey : IEquatable<TKey>, IComparable<TKey>
 {
-    Task<ApiAccountModel?> GetAccountById(TKey id);
-    Task<ApiAccountModel?> GetAccountByApiKey(string key);
-    Task<List<ApiAccountModel>> GetAccountsByEmail(string email);
-    Task<ApiAccountModel?> Authenticate(T model);
-    bool TryGetRefreshToken(RefreshTokenRequest request, out RefreshTokenResponse response);
-    Task<ApiAccountModel> Register(ApiRegistrationRequest request);
-    Task<ApiAccountModel> Register(ApiAccountModel model);
-    Task<ApiAccountModel> Update(ApiAccountModel model);
-    Task Revoke(string apiKey);
-    Task RevokeAll(string email);
+        /// <summary>
+    /// GetAccountById method.
+    /// </summary>
+Task<ApiAccountModel?> GetAccountById(TKey id);
+        /// <summary>
+    /// GetAccountByApiKey method.
+    /// </summary>
+Task<ApiAccountModel?> GetAccountByApiKey(string key);
+        /// <summary>
+    /// GetAccountsByEmail method.
+    /// </summary>
+Task<List<ApiAccountModel>> GetAccountsByEmail(string email);
+        /// <summary>
+    /// Authenticate method.
+    /// </summary>
+Task<ApiAccountModel?> Authenticate(T model);
+        /// <summary>
+    /// TryGetRefreshToken method.
+    /// </summary>
+bool TryGetRefreshToken(RefreshTokenRequest request, out RefreshTokenResponse response);
+        /// <summary>
+    /// Register method.
+    /// </summary>
+Task<ApiAccountModel> Register(ApiRegistrationRequest request);
+        /// <summary>
+    /// Register method.
+    /// </summary>
+Task<ApiAccountModel> Register(ApiAccountModel model);
+        /// <summary>
+    /// Update method.
+    /// </summary>
+Task<ApiAccountModel> Update(ApiAccountModel model);
+        /// <summary>
+    /// Revoke method.
+    /// </summary>
+Task Revoke(string apiKey);
+        /// <summary>
+    /// RevokeAll method.
+    /// </summary>
+Task RevokeAll(string email);
 }
 
 
+/// <summary>
+/// Represents a class for ApiServiceBase.
+/// </summary>
 public abstract class ApiServiceBase<T, TKey>(ILogger<ApiServiceBase<T, TKey>> log)
     : IApiService<T, TKey>
     where TKey : IEquatable<TKey>, IComparable<TKey>
 {
-    protected readonly ILogger<ApiServiceBase<T, TKey>> log = log;
+        /// <summary>
+    /// log.
+    /// </summary>
+protected readonly ILogger<ApiServiceBase<T, TKey>> log = log;
 
-    public abstract Task<ApiAccountModel?> GetAccountById(TKey id);
-    public abstract Task<ApiAccountModel?> GetAccountByApiKey(string key);
-    public abstract Task<List<ApiAccountModel>> GetAccountsByEmail(string email);
-    public abstract Task<ApiAccountModel?> Authenticate(T model);
-    public abstract bool TryGetRefreshToken(RefreshTokenRequest request, out RefreshTokenResponse response);
-    public abstract Task<ApiAccountModel> Register(ApiRegistrationRequest request);
-    public abstract Task<ApiAccountModel> Register(ApiAccountModel model);
-    public abstract Task<ApiAccountModel> Update(ApiAccountModel model);
-    public abstract Task Revoke(string apiKey);
-    public abstract Task RevokeAll(string email);
+        /// <summary>
+    /// GetAccountById method.
+    /// </summary>
+public abstract Task<ApiAccountModel?> GetAccountById(TKey id);
+        /// <summary>
+    /// GetAccountByApiKey method.
+    /// </summary>
+public abstract Task<ApiAccountModel?> GetAccountByApiKey(string key);
+        /// <summary>
+    /// GetAccountsByEmail method.
+    /// </summary>
+public abstract Task<List<ApiAccountModel>> GetAccountsByEmail(string email);
+        /// <summary>
+    /// Authenticate method.
+    /// </summary>
+public abstract Task<ApiAccountModel?> Authenticate(T model);
+        /// <summary>
+    /// TryGetRefreshToken method.
+    /// </summary>
+public abstract bool TryGetRefreshToken(RefreshTokenRequest request, out RefreshTokenResponse response);
+        /// <summary>
+    /// Register method.
+    /// </summary>
+public abstract Task<ApiAccountModel> Register(ApiRegistrationRequest request);
+        /// <summary>
+    /// Register method.
+    /// </summary>
+public abstract Task<ApiAccountModel> Register(ApiAccountModel model);
+        /// <summary>
+    /// Update method.
+    /// </summary>
+public abstract Task<ApiAccountModel> Update(ApiAccountModel model);
+        /// <summary>
+    /// Revoke method.
+    /// </summary>
+public abstract Task Revoke(string apiKey);
+        /// <summary>
+    /// RevokeAll method.
+    /// </summary>
+public abstract Task RevokeAll(string email);
 }

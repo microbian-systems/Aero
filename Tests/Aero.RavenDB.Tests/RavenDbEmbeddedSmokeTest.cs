@@ -1,9 +1,15 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 namespace Aero.RavenDB.Tests;
 
+/// <summary>
+/// Represents a class for RavenDbEmbeddedSmokeTest.
+/// </summary>
 public class RavenDbEmbeddedSmokeTest : RavenDbTestBase
 {
-    [Test]
+        /// <summary>
+    /// Should_Start_Embedded_RavenDB_And_Store_Document method.
+    /// </summary>
+[Test]
     public async Task Should_Start_Embedded_RavenDB_And_Store_Document()
     {
         // Arrange

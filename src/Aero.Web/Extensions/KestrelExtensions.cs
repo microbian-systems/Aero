@@ -1,11 +1,17 @@
-﻿using System.Security.Authentication;
+using System.Security.Authentication;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for KestrelExtensions.
+/// </summary>
 public static class KestrelExtensions
 {
-    public static WebApplicationBuilder ConfigureKestrel(this WebApplicationBuilder builder, int port = 80)
+        /// <summary>
+    /// ConfigureKestrel method.
+    /// </summary>
+public static WebApplicationBuilder ConfigureKestrel(this WebApplicationBuilder builder, int port = 80)
     {
         // https://learn.microsoft.com/en-us/visualstudio/containers/container-build?view=vs-2022
         // https://learn.microsoft.com/en-us/aspnet/core/security/docker-https?view=aspnetcore-7.0

@@ -7,7 +7,16 @@ namespace Aero.Models.Entities;
 /// </summary>
 public class ContactMessage : Entity
 {
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Message { get; set; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public string Name { get; set; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Email.
+    /// </summary>
+public string Email { get; set; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Message.
+    /// </summary>
+public string Message { get; set; } = string.Empty;
 }

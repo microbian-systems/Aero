@@ -1,5 +1,8 @@
 namespace Aero.Core.DataStructures.Trees;
 
+/// <summary>
+/// Defines an enumeration for HeapType.
+/// </summary>
 public enum HeapType
 {
     MinHeap,
@@ -15,21 +18,33 @@ public class BinaryHeap<T>(HeapType heapType) : IHeap<T>
 {
     private readonly List<T> _items = new();
 
-    public int Count => _items.Count;
+        /// <summary>
+    /// Gets or sets the Count.
+    /// </summary>
+public int Count => _items.Count;
 
-    public void Insert(T item)
+        /// <summary>
+    /// Insert method.
+    /// </summary>
+public void Insert(T item)
     {
         _items.Add(item);
         HeapifyUp(Count - 1);
     }
 
-    public T Peek()
+        /// <summary>
+    /// Peek method.
+    /// </summary>
+public T Peek()
     {
         if (Count == 0) throw new InvalidOperationException("Heap is empty.");
         return _items[0];
     }
 
-    public T Extract()
+        /// <summary>
+    /// Extract method.
+    /// </summary>
+public T Extract()
     {
         if (Count == 0) throw new InvalidOperationException("Heap is empty.");
 

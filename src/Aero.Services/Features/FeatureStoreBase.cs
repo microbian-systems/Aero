@@ -1,33 +1,75 @@
-﻿namespace Aero.Services.Features;
+namespace Aero.Services.Features;
 
+/// <summary>
+/// Represents a class for FeatureStoreBase.
+/// </summary>
 public abstract class FeatureStoreBase(ILogger<FeatureStoreBase> log) : IFeatureStore
 {
-    protected readonly ILogger<FeatureStoreBase> log = log;
+        /// <summary>
+    /// log.
+    /// </summary>
+protected readonly ILogger<FeatureStoreBase> log = log;
 
-    public virtual Features GetFeature(string value) => GetFeatureAsync(value).GetAwaiter().GetResult();
+        /// <summary>
+    /// GetFeature method.
+    /// </summary>
+public virtual Features GetFeature(string value) => GetFeatureAsync(value).GetAwaiter().GetResult();
         
-    public abstract Task<Features> GetFeatureAsync(string value);
+        /// <summary>
+    /// GetFeatureAsync method.
+    /// </summary>
+public abstract Task<Features> GetFeatureAsync(string value);
         
-    public virtual List<Features> GetAllFeatures() => GetAllFeaturesAsync().GetAwaiter().GetResult();
+        /// <summary>
+    /// GetAllFeatures method.
+    /// </summary>
+public virtual List<Features> GetAllFeatures() => GetAllFeaturesAsync().GetAwaiter().GetResult();
 
-    public abstract Task<List<Features>> GetAllFeaturesAsync();
+        /// <summary>
+    /// GetAllFeaturesAsync method.
+    /// </summary>
+public abstract Task<List<Features>> GetAllFeaturesAsync();
         
     // public virtual void SetFeature(Features value) => SetFeatureAsync(value).GetAwaiter().GetResult();
     //
     // public abstract Task SetFeatureAsync(Features value);
 
-    public virtual void SetFeatures(Features value) => SetFeaturesAsync(value).GetAwaiter().GetResult();
+        /// <summary>
+    /// SetFeatures method.
+    /// </summary>
+public virtual void SetFeatures(Features value) => SetFeaturesAsync(value).GetAwaiter().GetResult();
 
-    public abstract Task SetFeaturesAsync(Features value);
-    public void DeleteFeature(string feature) => DeleteFeatureAsync(feature).GetAwaiter().GetResult();
+        /// <summary>
+    /// SetFeaturesAsync method.
+    /// </summary>
+public abstract Task SetFeaturesAsync(Features value);
+        /// <summary>
+    /// DeleteFeature method.
+    /// </summary>
+public void DeleteFeature(string feature) => DeleteFeatureAsync(feature).GetAwaiter().GetResult();
         
-    public abstract Task DeleteFeatureAsync(string feature);
+        /// <summary>
+    /// DeleteFeatureAsync method.
+    /// </summary>
+public abstract Task DeleteFeatureAsync(string feature);
 
-    public void DeleteFeatures() => DeleteFeaturesAsync().GetAwaiter().GetResult();
+        /// <summary>
+    /// DeleteFeatures method.
+    /// </summary>
+public void DeleteFeatures() => DeleteFeaturesAsync().GetAwaiter().GetResult();
 
-    public abstract Task DeleteFeaturesAsync();
+        /// <summary>
+    /// DeleteFeaturesAsync method.
+    /// </summary>
+public abstract Task DeleteFeaturesAsync();
 
-    public virtual void SetFeature(Features value) => SetFeatureAsync(value).GetAwaiter().GetResult();
+        /// <summary>
+    /// SetFeature method.
+    /// </summary>
+public virtual void SetFeature(Features value) => SetFeatureAsync(value).GetAwaiter().GetResult();
         
-    public abstract Task SetFeatureAsync(Features value);
+        /// <summary>
+    /// SetFeatureAsync method.
+    /// </summary>
+public abstract Task SetFeatureAsync(Features value);
 }

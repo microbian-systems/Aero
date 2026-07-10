@@ -1,5 +1,8 @@
 namespace Aero.Services.Mail;
 
+/// <summary>
+/// Represents a class for SendGridMailerExtensions.
+/// </summary>
 public static class SendGridMailerExtensions
 {
     /// <summary>

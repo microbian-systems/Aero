@@ -4,14 +4,23 @@ using NetTools;
 // todo - get cloudflare IPs from their api (vs hard coded)
 namespace Aero.Web.Middleware;
 
+/// <summary>
+/// Represents a class for CloudFlareConnectingIpExtensions.
+/// </summary>
 public static class CloudFlareConnectingIpExtensions
 {
-    public static IApplicationBuilder UseCloudFlareConnectingIp(this IApplicationBuilder app)
+        /// <summary>
+    /// UseCloudFlareConnectingIp method.
+    /// </summary>
+public static IApplicationBuilder UseCloudFlareConnectingIp(this IApplicationBuilder app)
     {
         return app.UseCloudFlareConnectingIp(false);
     }
 
-    public static IApplicationBuilder UseCloudFlareConnectingIp(this IApplicationBuilder app,
+        /// <summary>
+    /// UseCloudFlareConnectingIp method.
+    /// </summary>
+public static IApplicationBuilder UseCloudFlareConnectingIp(this IApplicationBuilder app,
         bool checkOriginatesFromCloudflare)
     {
         if (app == null)
@@ -36,9 +45,15 @@ public static class CloudFlareConnectingIpExtensions
     }
 }
 
+/// <summary>
+/// Represents a class for CloudFlareConnectingIpMiddleware.
+/// </summary>
 public class CloudFlareConnectingIpMiddleware(RequestDelegate next, ILoggerFactory loggerFactory)
 {
-    public const string CLOUDFLARE_CONNECTING_IP_HEADER_NAME = "CF_CONNECTING_IP";
+        /// <summary>
+    /// CLOUDFLARE_CONNECTING_IP_HEADER_NAME.
+    /// </summary>
+public const string CLOUDFLARE_CONNECTING_IP_HEADER_NAME = "CF_CONNECTING_IP";
 
     private static readonly IPAddressRange[] _cloudFlareIpAddressRanges =
     [
@@ -73,7 +88,10 @@ public class CloudFlareConnectingIpMiddleware(RequestDelegate next, ILoggerFacto
             ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
         }));
 
-    public Task Invoke(HttpContext context)
+        /// <summary>
+    /// Invoke method.
+    /// </summary>
+public Task Invoke(HttpContext context)
     {
         if (context.Request.Headers.ContainsKey(CLOUDFLARE_CONNECTING_IP_HEADER_NAME) &&
             IsCloudFlareIp(context.Connection.RemoteIpAddress))

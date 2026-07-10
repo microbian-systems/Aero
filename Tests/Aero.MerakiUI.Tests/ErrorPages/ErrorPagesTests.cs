@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.ErrorPages;
 using Bunit;
 using Aero.MerakiUI.ErrorPages;
 
 namespace Aero.MerakiUI.Tests.ErrorPages;
 
+/// <summary>
+/// Represents a class for ErrorPagesTests.
+/// </summary>
 public class ErrorPagesTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// Simple404_ShouldRender method.
+    /// </summary>
+[Test]
     public void Simple404_ShouldRender()
     {
         var cut = Render<Simple404>(parameters => parameters
@@ -17,7 +23,10 @@ public class ErrorPagesTests : BunitContext
         Assert.Contains("Page Not Found", cut.Markup);
     }
 
-    [Test]
+        /// <summary>
+    /// Centered404_ShouldRender method.
+    /// </summary>
+[Test]
     public void Centered404_ShouldRender()
     {
         var cut = Render<Centered404>(parameters => parameters
@@ -27,7 +36,10 @@ public class ErrorPagesTests : BunitContext
         Assert.Contains("Centered Not Found", cut.Markup);
     }
 
-    [Test]
+        /// <summary>
+    /// Illustration404_ShouldRender method.
+    /// </summary>
+[Test]
     public void Illustration404_ShouldRender()
     {
         var cut = Render<Illustration404>(parameters => parameters
@@ -37,7 +49,10 @@ public class ErrorPagesTests : BunitContext
         Assert.Contains("src=\"test.svg\"", cut.Markup);
     }
 
-    [Test]
+        /// <summary>
+    /// Image404_ShouldRender method.
+    /// </summary>
+[Test]
     public void Image404_ShouldRender()
     {
         var cut = Render<Image404>(parameters => parameters

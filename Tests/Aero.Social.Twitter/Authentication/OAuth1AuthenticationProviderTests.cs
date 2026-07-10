@@ -1,20 +1,29 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Authentication;
 using Aero.Social.Twitter.Client.Configuration;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Authentication;
 
+/// <summary>
+/// Represents a class for OAuth1AuthenticationProviderTests.
+/// </summary>
 public class OAuth1AuthenticationProviderTests
 {
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldThrowOnNullOptions method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldThrowOnNullOptions()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => new OAuth1AuthenticationProvider(null!));
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldThrowOnMissingConsumerKey method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldThrowOnMissingConsumerKey()
     {
         // Arrange
@@ -29,7 +38,10 @@ public class OAuth1AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth1AuthenticationProvider(options));
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldThrowOnMissingConsumerSecret method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldThrowOnMissingConsumerSecret()
     {
         // Arrange
@@ -44,7 +56,10 @@ public class OAuth1AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth1AuthenticationProvider(options));
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldThrowOnMissingAccessToken method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldThrowOnMissingAccessToken()
     {
         // Arrange
@@ -59,7 +74,10 @@ public class OAuth1AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth1AuthenticationProvider(options));
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldThrowOnMissingAccessTokenSecret method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldThrowOnMissingAccessTokenSecret()
     {
         // Arrange
@@ -74,7 +92,10 @@ public class OAuth1AuthenticationProviderTests
         Assert.Throws<InvalidOperationException>(() => new OAuth1AuthenticationProvider(options));
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateRequestAsync_ShouldAddAuthorizationHeader method.
+    /// </summary>
+[Test]
     public async Task AuthenticateRequestAsync_ShouldAddAuthorizationHeader()
     {
         // Arrange
@@ -101,7 +122,10 @@ public class OAuth1AuthenticationProviderTests
         await Assert.That(request.Headers.Authorization.Parameter).Contains("oauth_version=\"1.0\"");
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateRequestAsync_ShouldThrowOnNullRequest method.
+    /// </summary>
+[Test]
     public async Task AuthenticateRequestAsync_ShouldThrowOnNullRequest()
     {
         // Arrange

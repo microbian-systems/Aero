@@ -1,3 +1,6 @@
-﻿namespace Aero.Web.Extensions;
+namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a record for SeqConfig.
+/// </summary>
 public record SeqConfig;

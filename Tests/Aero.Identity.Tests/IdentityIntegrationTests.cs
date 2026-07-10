@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Identity.Extensions;
 using Aero.Identity.Models;
 using Marten;
@@ -10,9 +10,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Identity.Tests;
 
+/// <summary>
+/// Represents a class for IdentityIntegrationTests.
+/// </summary>
 public class IdentityIntegrationTests : AeroDbTestDriver
 {
-    [Test]
+        /// <summary>
+    /// UserManager_CanCreateAndFindUser method.
+    /// </summary>
+[Test]
     public async Task UserManager_CanCreateAndFindUser()
     {
         // Arrange
@@ -51,7 +57,10 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         Assert.Equal("integrated@example.com", dbUser.Email);
     }
 
-    [Test]
+        /// <summary>
+    /// UserManager_CanHandleRoles method.
+    /// </summary>
+[Test]
     public async Task UserManager_CanHandleRoles()
     {
         // Arrange
@@ -105,7 +114,10 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         Assert.Contains("TESTER", roles); // UserManager normalizes to uppercase
     }
 
-    [Test]
+        /// <summary>
+    /// UserManager_ScaleAndSearchTest method.
+    /// </summary>
+[Test]
     public async Task UserManager_ScaleAndSearchTest()
     {
         // Arrange
@@ -209,7 +221,10 @@ public class IdentityIntegrationTests : AeroDbTestDriver
         Assert.Equal("user500", updatedUser.UserName);
     }
 
-    [Test]
+        /// <summary>
+    /// UserManager_CanFindUsersInMultipleRoles method.
+    /// </summary>
+[Test]
     public async Task UserManager_CanFindUsersInMultipleRoles()
     {
         // Arrange

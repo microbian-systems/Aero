@@ -13,25 +13,40 @@ using System.Text.RegularExpressions;
 public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? value) : IFieldValidator
     where TBuilder : StringRuleBuilder<TBuilder>
 {
-    protected readonly string FieldName = fieldName;
-    protected readonly string? Value = value;
+        /// <summary>
+    /// FieldName.
+    /// </summary>
+protected readonly string FieldName = fieldName;
+        /// <summary>
+    /// Value.
+    /// </summary>
+protected readonly string? Value = value;
     private readonly List<Func<string?, string, ValidationError?>> _rules = [];
 
     // -------------------------------------------------------------------------
     // Presence
     // -------------------------------------------------------------------------
 
-    public TBuilder NotEmpty(string? message = null)
+        /// <summary>
+    /// NotEmpty method.
+    /// </summary>
+public TBuilder NotEmpty(string? message = null)
         => AddRule((val, field) => string.IsNullOrWhiteSpace(val)
             ? Fail(field, message ?? $"'{field}' is required.")
             : null);
 
-    public TBuilder MaxLength(int max, string? message = null)
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public TBuilder MaxLength(int max, string? message = null)
         => AddRule((val, field) => val is not null && val.Length > max
             ? Fail(field, message ?? $"'{field}' must not exceed {max} characters.")
             : null);
 
-    public TBuilder MinLength(int min, string? message = null)
+        /// <summary>
+    /// MinLength method.
+    /// </summary>
+public TBuilder MinLength(int min, string? message = null)
         => AddRule((val, field) => val is not null && val.Length < min
             ? Fail(field, message ?? $"'{field}' must be at least {min} characters.")
             : null);
@@ -40,23 +55,38 @@ public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? valu
     // Identity / Auth
     // -------------------------------------------------------------------------
 
-    public TBuilder MustBeEmail(string? message = null)
+        /// <summary>
+    /// MustBeEmail method.
+    /// </summary>
+public TBuilder MustBeEmail(string? message = null)
         => AddPatternRule(RegExConstants.Email,
             message ?? $"'{FieldName}' must be a valid email address.");
 
-    public TBuilder MustBeValidPassword(string? message = null)
+        /// <summary>
+    /// MustBeValidPassword method.
+    /// </summary>
+public TBuilder MustBeValidPassword(string? message = null)
         => AddPatternRule(RegExConstants.Password,
             message ?? $"'{FieldName}' must contain uppercase, lowercase, digit, and special character (min 8 chars).");
 
-    public TBuilder MustBeValidUsername(string? message = null)
+        /// <summary>
+    /// MustBeValidUsername method.
+    /// </summary>
+public TBuilder MustBeValidUsername(string? message = null)
         => AddPatternRule(RegExConstants.Username,
             message ?? $"'{FieldName}' must be 3–20 alphanumeric characters, underscores, or hyphens.");
 
-    public TBuilder MustBeValidJwt(string? message = null)
+        /// <summary>
+    /// MustBeValidJwt method.
+    /// </summary>
+public TBuilder MustBeValidJwt(string? message = null)
         => AddPatternRule(RegExConstants.JwtToken,
             message ?? $"'{FieldName}' must be a valid JWT token.");
 
-    public TBuilder MustBeValidGuid(string? message = null)
+        /// <summary>
+    /// MustBeValidGuid method.
+    /// </summary>
+public TBuilder MustBeValidGuid(string? message = null)
         => AddPatternRule(RegExConstants.Guid,
             message ?? $"'{FieldName}' must be a valid GUID.");
 
@@ -64,15 +94,24 @@ public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? valu
     // Phone
     // -------------------------------------------------------------------------
 
-    public TBuilder MustBePhone(string? message = null)
+        /// <summary>
+    /// MustBePhone method.
+    /// </summary>
+public TBuilder MustBePhone(string? message = null)
         => AddPatternRule(RegExConstants.Phone,
             message ?? $"'{FieldName}' must be a valid US phone number.");
 
-    public TBuilder MustBePhoneE164(string? message = null)
+        /// <summary>
+    /// MustBePhoneE164 method.
+    /// </summary>
+public TBuilder MustBePhoneE164(string? message = null)
         => AddPatternRule(RegExConstants.PhoneE164,
             message ?? $"'{FieldName}' must be in E.164 format (e.g. +14155552671).");
 
-    public TBuilder MustBeInternationalPhone(string? message = null)
+        /// <summary>
+    /// MustBeInternationalPhone method.
+    /// </summary>
+public TBuilder MustBeInternationalPhone(string? message = null)
         => AddPatternRule(RegExConstants.PhoneInternational,
             message ?? $"'{FieldName}' must be a valid international phone number.");
 
@@ -80,23 +119,38 @@ public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? valu
     // Address / Location
     // -------------------------------------------------------------------------
 
-    public TBuilder MustBeZipCode(string? message = null)
+        /// <summary>
+    /// MustBeZipCode method.
+    /// </summary>
+public TBuilder MustBeZipCode(string? message = null)
         => AddPatternRule(RegExConstants.ZipCode,
             message ?? $"'{FieldName}' must be a valid US ZIP code.");
 
-    public TBuilder MustBeUkPostcode(string? message = null)
+        /// <summary>
+    /// MustBeUkPostcode method.
+    /// </summary>
+public TBuilder MustBeUkPostcode(string? message = null)
         => AddPatternRule(RegExConstants.UkPostcode,
             message ?? $"'{FieldName}' must be a valid UK postcode.");
 
-    public TBuilder MustBeIPv4(string? message = null)
+        /// <summary>
+    /// MustBeIPv4 method.
+    /// </summary>
+public TBuilder MustBeIPv4(string? message = null)
         => AddPatternRule(RegExConstants.IPv4,
             message ?? $"'{FieldName}' must be a valid IPv4 address.");
 
-    public TBuilder MustBeIPv6(string? message = null)
+        /// <summary>
+    /// MustBeIPv6 method.
+    /// </summary>
+public TBuilder MustBeIPv6(string? message = null)
         => AddPatternRule(RegExConstants.IPv6,
             message ?? $"'{FieldName}' must be a valid IPv6 address.");
 
-    public TBuilder MustBeMacAddress(string? message = null)
+        /// <summary>
+    /// MustBeMacAddress method.
+    /// </summary>
+public TBuilder MustBeMacAddress(string? message = null)
         => AddPatternRule(RegExConstants.MacAddress,
             message ?? $"'{FieldName}' must be a valid MAC address.");
 
@@ -104,19 +158,31 @@ public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? valu
     // Web
     // -------------------------------------------------------------------------
 
-    public TBuilder MustBeUrl(string? message = null)
+        /// <summary>
+    /// MustBeUrl method.
+    /// </summary>
+public TBuilder MustBeUrl(string? message = null)
         => AddPatternRule(RegExConstants.Url,
             message ?? $"'{FieldName}' must be a valid URL.");
 
-    public TBuilder MustBeSlug(string? message = null)
+        /// <summary>
+    /// MustBeSlug method.
+    /// </summary>
+public TBuilder MustBeSlug(string? message = null)
         => AddPatternRule(RegExConstants.Slug,
             message ?? $"'{FieldName}' must be a valid URL slug (lowercase, hyphens only).");
 
-    public TBuilder MustBeDomain(string? message = null)
+        /// <summary>
+    /// MustBeDomain method.
+    /// </summary>
+public TBuilder MustBeDomain(string? message = null)
         => AddPatternRule(RegExConstants.Domain,
             message ?? $"'{FieldName}' must be a valid domain name.");
 
-    public TBuilder MustBeRelativePath(string? message = null)
+        /// <summary>
+    /// MustBeRelativePath method.
+    /// </summary>
+public TBuilder MustBeRelativePath(string? message = null)
         => AddPatternRule(RegExConstants.RelativePath,
             message ?? $"'{FieldName}' must be a valid relative path.");
 
@@ -124,19 +190,31 @@ public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? valu
     // Financial
     // -------------------------------------------------------------------------
 
-    public TBuilder MustBeCreditCard(string? message = null)
+        /// <summary>
+    /// MustBeCreditCard method.
+    /// </summary>
+public TBuilder MustBeCreditCard(string? message = null)
         => AddPatternRule(RegExConstants.CreditCard,
             message ?? $"'{FieldName}' must be a valid credit card number.");
 
-    public TBuilder MustBeCurrency(string? message = null)
+        /// <summary>
+    /// MustBeCurrency method.
+    /// </summary>
+public TBuilder MustBeCurrency(string? message = null)
         => AddPatternRule(RegExConstants.Currency,
             message ?? $"'{FieldName}' must be a valid currency value.");
 
-    public TBuilder MustBeIban(string? message = null)
+        /// <summary>
+    /// MustBeIban method.
+    /// </summary>
+public TBuilder MustBeIban(string? message = null)
         => AddPatternRule(RegExConstants.Iban,
             message ?? $"'{FieldName}' must be a valid IBAN.");
 
-    public TBuilder MustBeRoutingNumber(string? message = null)
+        /// <summary>
+    /// MustBeRoutingNumber method.
+    /// </summary>
+public TBuilder MustBeRoutingNumber(string? message = null)
         => AddPatternRule(RegExConstants.RoutingNumber,
             message ?? $"'{FieldName}' must be a valid 9-digit routing number.");
 
@@ -144,19 +222,31 @@ public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? valu
     // Date / Time
     // -------------------------------------------------------------------------
 
-    public TBuilder MustBeIsoDate(string? message = null)
+        /// <summary>
+    /// MustBeIsoDate method.
+    /// </summary>
+public TBuilder MustBeIsoDate(string? message = null)
         => AddPatternRule(RegExConstants.DateIso,
             message ?? $"'{FieldName}' must be a valid ISO 8601 date (YYYY-MM-DD).");
 
-    public TBuilder MustBeUsDate(string? message = null)
+        /// <summary>
+    /// MustBeUsDate method.
+    /// </summary>
+public TBuilder MustBeUsDate(string? message = null)
         => AddPatternRule(RegExConstants.DateUs,
             message ?? $"'{FieldName}' must be a valid US date (MM/DD/YYYY).");
 
-    public TBuilder MustBeTime24(string? message = null)
+        /// <summary>
+    /// MustBeTime24 method.
+    /// </summary>
+public TBuilder MustBeTime24(string? message = null)
         => AddPatternRule(RegExConstants.Time24,
             message ?? $"'{FieldName}' must be a valid 24-hour time (HH:MM).");
 
-    public TBuilder MustBeTime24WithSeconds(string? message = null)
+        /// <summary>
+    /// MustBeTime24WithSeconds method.
+    /// </summary>
+public TBuilder MustBeTime24WithSeconds(string? message = null)
         => AddPatternRule(RegExConstants.Time24WithSeconds,
             message ?? $"'{FieldName}' must be a valid 24-hour time with seconds (HH:MM:SS).");
 
@@ -164,15 +254,24 @@ public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? valu
     // Content / Sanitization
     // -------------------------------------------------------------------------
 
-    public TBuilder MustBeAlphanumeric(string? message = null)
+        /// <summary>
+    /// MustBeAlphanumeric method.
+    /// </summary>
+public TBuilder MustBeAlphanumeric(string? message = null)
         => AddPatternRule(RegExConstants.Alphanumeric,
             message ?? $"'{FieldName}' must contain only alphanumeric characters and spaces.");
 
-    public TBuilder MustBeHexColor(string? message = null)
+        /// <summary>
+    /// MustBeHexColor method.
+    /// </summary>
+public TBuilder MustBeHexColor(string? message = null)
         => AddPatternRule(RegExConstants.HexColor,
             message ?? $"'{FieldName}' must be a valid hex color (e.g. #FF0000 or #FFF).");
 
-    public TBuilder MustBeBase64(string? message = null)
+        /// <summary>
+    /// MustBeBase64 method.
+    /// </summary>
+public TBuilder MustBeBase64(string? message = null)
         => AddPatternRule(RegExConstants.Base64,
             message ?? $"'{FieldName}' must be valid Base64 encoded data.");
 
@@ -197,19 +296,31 @@ public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? valu
     // Identifiers
     // -------------------------------------------------------------------------
 
-    public TBuilder MustBeSsn(string? message = null)
+        /// <summary>
+    /// MustBeSsn method.
+    /// </summary>
+public TBuilder MustBeSsn(string? message = null)
         => AddPatternRule(RegExConstants.Ssn,
             message ?? $"'{FieldName}' must be a valid US Social Security Number.");
 
-    public TBuilder MustBeEin(string? message = null)
+        /// <summary>
+    /// MustBeEin method.
+    /// </summary>
+public TBuilder MustBeEin(string? message = null)
         => AddPatternRule(RegExConstants.Ein,
             message ?? $"'{FieldName}' must be a valid US EIN (XX-XXXXXXX).");
 
-    public TBuilder MustBeIsbn13(string? message = null)
+        /// <summary>
+    /// MustBeIsbn13 method.
+    /// </summary>
+public TBuilder MustBeIsbn13(string? message = null)
         => AddPatternRule(RegExConstants.Isbn13,
             message ?? $"'{FieldName}' must be a valid ISBN-13.");
 
-    public TBuilder MustBeSemVer(string? message = null)
+        /// <summary>
+    /// MustBeSemVer method.
+    /// </summary>
+public TBuilder MustBeSemVer(string? message = null)
         => AddPatternRule(RegExConstants.SemVer,
             message ?? $"'{FieldName}' must be a valid semantic version (e.g. 1.0.0).");
 
@@ -239,13 +350,19 @@ public abstract class StringRuleBuilder<TBuilder>(string fieldName, string? valu
                 ? Fail(field, message)
                 : null);
 
-    protected TBuilder AddRule(Func<string?, string, ValidationError?> rule)
+        /// <summary>
+    /// AddRule method.
+    /// </summary>
+protected TBuilder AddRule(Func<string?, string, ValidationError?> rule)
     {
         _rules.Add(rule);
         return (TBuilder)this;
     }
 
-    public IEnumerable<ValidationError> GetErrors()
+        /// <summary>
+    /// GetErrors method.
+    /// </summary>
+public IEnumerable<ValidationError> GetErrors()
         => _rules.Select(r => r(Value, FieldName)).OfType<ValidationError>();
 
     private static ValidationError Fail(string field, string message)

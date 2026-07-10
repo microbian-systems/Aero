@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for WordPressProvider.
+/// </summary>
 public class WordPressProvider(
     HttpClient httpClient,
     IConfiguration configuration,
@@ -19,15 +22,36 @@ public class WordPressProvider(
 {
     private readonly IConfiguration _configuration = configuration;
 
-    public override string Identifier => "wordpress";
-    public override string Name => "WordPress";
-    public override string[] Scopes => Array.Empty<string>();
-    public override int MaxConcurrentJobs => 5;
-    public override EditorType Editor => EditorType.Html;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "wordpress";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "WordPress";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => Array.Empty<string>();
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 5;
+        /// <summary>
+    /// Gets or sets the Editor.
+    /// </summary>
+public override EditorType Editor => EditorType.Html;
 
-    public override int MaxLength(object? additionalSettings = null) => 100000;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 100000;
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -40,7 +64,10 @@ public class WordPressProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -94,7 +121,10 @@ public class WordPressProvider(
         }
     }
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -110,7 +140,10 @@ public class WordPressProvider(
         });
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -179,7 +212,10 @@ public class WordPressProvider(
         };
     }
 
-    public async Task<List<WordPressPostType>> GetPostTypesAsync(string accessToken, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetPostTypesAsync method.
+    /// </summary>
+public async Task<List<WordPressPostType>> GetPostTypesAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var bodyBytes = Convert.FromBase64String(accessToken);
         var bodyJson = Encoding.UTF8.GetString(bodyBytes);
@@ -291,56 +327,98 @@ public class WordPressProvider(
 
     private class WordPressAuthBody
     {
-        [JsonPropertyName("domain")]
+                /// <summary>
+        /// Gets or sets the Domain.
+        /// </summary>
+[JsonPropertyName("domain")]
         public string Domain { get; set; } = string.Empty;
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
 
-        [JsonPropertyName("password")]
+                /// <summary>
+        /// Gets or sets the Password.
+        /// </summary>
+[JsonPropertyName("password")]
         public string Password { get; set; } = string.Empty;
     }
 
     private class WordPressUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("avatar_urls")]
+                /// <summary>
+        /// Gets or sets the Avatar Urls.
+        /// </summary>
+[JsonPropertyName("avatar_urls")]
         public Dictionary<string, string>? AvatarUrls { get; set; }
     }
 
     private class WordPressPostResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("link")]
+                /// <summary>
+        /// Gets or sets the Link.
+        /// </summary>
+[JsonPropertyName("link")]
         public string? Link { get; set; }
     }
 
     private class WordPressMediaResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
     }
 
     private class WordPressPostTypeRaw
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("rest_base")]
+                /// <summary>
+        /// Gets or sets the Rest Base.
+        /// </summary>
+[JsonPropertyName("rest_base")]
         public string? RestBase { get; set; }
     }
 
-    public class WordPressPostType
+        /// <summary>
+    /// Represents a class for WordPressPostType.
+    /// </summary>
+public class WordPressPostType
     {
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
     }
 
     //#endregion

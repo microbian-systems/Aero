@@ -3,9 +3,15 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Aero.Services.Geo;
 
+/// <summary>
+/// Defines an interface for IZipApiService.
+/// </summary>
 public interface IZipApiService
 {
-    Task<(bool success, string city, string state, string state_fullname)> GetCityAndState(string zip);
+        /// <summary>
+    /// GetCityAndState method.
+    /// </summary>
+Task<(bool success, string city, string state, string state_fullname)> GetCityAndState(string zip);
     /// <summary>
     ///
     /// </summary>
@@ -13,12 +19,24 @@ public interface IZipApiService
     /// <param name="state">full state name, no abbreviations</param>
     /// <returns></returns>
     Task<(bool status, string[] data)> GetZipCodesByCityAndState(string city, string state);
-    Task<(bool status, List<(string zipCode, string distance)>)> GetRadius(string zip, int radius);
-    Task<(bool status, (string distance, string unit) data)> GetDistance(string zip1, string zip2, string unit = "mi");
-    Task<(bool status, (string zipcode, string[] county) data)> GetCounty(string zip);
+        /// <summary>
+    /// GetRadius method.
+    /// </summary>
+Task<(bool status, List<(string zipCode, string distance)>)> GetRadius(string zip, int radius);
+        /// <summary>
+    /// GetDistance method.
+    /// </summary>
+Task<(bool status, (string distance, string unit) data)> GetDistance(string zip1, string zip2, string unit = "mi");
+        /// <summary>
+    /// GetCounty method.
+    /// </summary>
+Task<(bool status, (string zipcode, string[] county) data)> GetCounty(string zip);
 }
 
 // todo - use https://www.smartystreets.com/pricing when demand grows or https://loqate.com/
+/// <summary>
+/// Represents a class for ZipApiService.
+/// </summary>
 public class ZipApiService : IZipApiService
 {
     private readonly ILogger<ZipApiService> log;
@@ -27,7 +45,10 @@ public class ZipApiService : IZipApiService
     private readonly string apiKey;
     private const string param = "X-API-KEY=";
 
-    public ZipApiService(IOptionsMonitor<AppSettings> appSettings, ILogger<ZipApiService> log)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="ZipApiService"/> class.
+    /// </summary>
+public ZipApiService(IOptionsMonitor<AppSettings> appSettings, ILogger<ZipApiService> log)
     {
         this.log = log;
         settings = appSettings.CurrentValue.ZipApi;
@@ -46,7 +67,10 @@ public class ZipApiService : IZipApiService
         };
     }
 
-    public async Task<(bool success, string city, string state, string state_fullname)> GetCityAndState(string zip)
+        /// <summary>
+    /// GetCityAndState method.
+    /// </summary>
+public async Task<(bool success, string city, string state, string state_fullname)> GetCityAndState(string zip)
     {
         log.LogInformation($"getting city and state for zip code: {zip}");
 
@@ -82,7 +106,10 @@ public class ZipApiService : IZipApiService
         return (false, []);
     }
 
-    public async Task<(bool status, List<(string zipCode, string distance)>)> GetRadius(string zip, int radius)
+        /// <summary>
+    /// GetRadius method.
+    /// </summary>
+public async Task<(bool status, List<(string zipCode, string distance)>)> GetRadius(string zip, int radius)
     {
         log.LogInformation($"getting radius for zip code {zip}");
 
@@ -95,7 +122,10 @@ public class ZipApiService : IZipApiService
         return (false, new List<(string zipCode, string distance)>());
     }
 
-    public async Task<(bool status, (string distance, string unit) data)> GetDistance(string zip1, string zip2,
+        /// <summary>
+    /// GetDistance method.
+    /// </summary>
+public async Task<(bool status, (string distance, string unit) data)> GetDistance(string zip1, string zip2,
         string unit = "mi")
     {
         log.LogInformation($"getting distance bewteen {zip1} and {zip2}");
@@ -110,7 +140,10 @@ public class ZipApiService : IZipApiService
         return (false, ("", ""));
     }
 
-    public async Task<(bool status, (string zipcode, string[] county) data)> GetCounty(string zip)
+        /// <summary>
+    /// GetCounty method.
+    /// </summary>
+public async Task<(bool status, (string zipcode, string[] county) data)> GetCounty(string zip)
     {
         log.LogInformation($"getting county for zip {zip}");
 
@@ -124,18 +157,39 @@ public class ZipApiService : IZipApiService
     }
 }
 
+/// <summary>
+/// Represents a record for ZipResponse.
+/// </summary>
 public record ZipResponse
 {
-    [JsonPropertyName("status")] public bool Status { get; set; }
+        /// <summary>
+    /// Gets or sets the Status.
+    /// </summary>
+[JsonPropertyName("status")] public bool Status { get; set; }
 
-    [JsonPropertyName("data")] public DataObj Data { get; set; }
+        /// <summary>
+    /// Gets or sets the Data.
+    /// </summary>
+[JsonPropertyName("data")] public DataObj Data { get; set; }
 }
 
+/// <summary>
+/// Represents a record for DataObj.
+/// </summary>
 public record DataObj
 {
-    [JsonPropertyName("city")] public string City { get; set; }
+        /// <summary>
+    /// Gets or sets the City.
+    /// </summary>
+[JsonPropertyName("city")] public string City { get; set; }
 
-    [JsonPropertyName("state")] public string State { get; set; }
+        /// <summary>
+    /// Gets or sets the State.
+    /// </summary>
+[JsonPropertyName("state")] public string State { get; set; }
 
-    [JsonPropertyName("state_fullname")] public string StateFullName { get; set; }
+        /// <summary>
+    /// Gets or sets the State Full Name.
+    /// </summary>
+[JsonPropertyName("state_fullname")] public string StateFullName { get; set; }
 }

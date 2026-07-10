@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Aero.Web.Filters;
 
@@ -9,7 +9,10 @@ public class ValidateModelFilterAttribute : ActionFilterAttribute
 {
     private ILogger<ValidateModelFilterAttribute> log;
 
-    public override void OnActionExecuting(ActionExecutingContext context)
+        /// <summary>
+    /// OnActionExecuting method.
+    /// </summary>
+public override void OnActionExecuting(ActionExecutingContext context)
     {
         log = context.HttpContext.RequestServices.GetRequiredService<ILogger<ValidateModelFilterAttribute>>();
         log.LogInformation($"validating model");
@@ -20,7 +23,10 @@ public class ValidateModelFilterAttribute : ActionFilterAttribute
         }
     }
 
-    public override void OnActionExecuted(ActionExecutedContext context)
+        /// <summary>
+    /// OnActionExecuted method.
+    /// </summary>
+public override void OnActionExecuted(ActionExecutedContext context)
     {
         log.LogInformation($"model validated");
     }

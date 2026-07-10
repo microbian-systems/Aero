@@ -11,20 +11,41 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for KickProvider.
+/// </summary>
 public class KickProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<KickProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "kick";
-    public override string Name => "Kick";
-    public override string[] Scopes => new[] { "chat:write", "user:read", "channel:read" };
-    public override int MaxConcurrentJobs => 3;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "kick";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Kick";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[] { "chat:write", "user:read", "channel:read" };
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 3;
 
-    public override int MaxLength(object? additionalSettings = null) => 500;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 500;
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -52,7 +73,10 @@ public class KickProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -90,7 +114,10 @@ public class KickProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -123,7 +150,10 @@ public class KickProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -161,7 +191,10 @@ public class KickProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -262,60 +295,108 @@ public class KickProvider(
 
     private class KickTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("refresh_token")]
+                /// <summary>
+        /// Gets or sets the Refresh Token.
+        /// </summary>
+[JsonPropertyName("refresh_token")]
         public string RefreshToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int ExpiresIn { get; set; }
 
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string? Scope { get; set; }
     }
 
     private class KickUserResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public List<KickUser>? Data { get; set; }
     }
 
     private class KickUser
     {
-        [JsonPropertyName("user_id")]
+                /// <summary>
+        /// Gets or sets the User Id.
+        /// </summary>
+[JsonPropertyName("user_id")]
         public string? UserId { get; set; }
 
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int? Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("profile_picture")]
+                /// <summary>
+        /// Gets or sets the Profile Picture.
+        /// </summary>
+[JsonPropertyName("profile_picture")]
         public string? ProfilePicture { get; set; }
     }
 
     private class KickUserInfo
     {
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
-        public string? Picture { get; set; }
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+public string Username { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+public string? Picture { get; set; }
     }
 
     private class KickChatResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public KickChatData? Data { get; set; }
     }
 
     private class KickChatData
     {
-        [JsonPropertyName("message_id")]
+                /// <summary>
+        /// Gets or sets the Message Id.
+        /// </summary>
+[JsonPropertyName("message_id")]
         public string? MessageId { get; set; }
 
-        [JsonPropertyName("is_sent")]
+                /// <summary>
+        /// Gets or sets the Is Sent.
+        /// </summary>
+[JsonPropertyName("is_sent")]
         public bool IsSent { get; set; }
     }
 

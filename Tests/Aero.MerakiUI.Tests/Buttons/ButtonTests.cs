@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Buttons;
 using Bunit;
 using Aero.MerakiUI.Buttons;
 
 namespace Aero.MerakiUI.Tests.Buttons;
 
+/// <summary>
+/// Represents a class for ButtonTests.
+/// </summary>
 public class ButtonTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// PrimaryButton_ShouldRenderCorrectClasses method.
+    /// </summary>
+[Test]
     public void PrimaryButton_ShouldRenderCorrectClasses()
     {
         var cut = Render<PrimaryButton>(parameters => parameters

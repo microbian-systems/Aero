@@ -1,22 +1,31 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using Aero.Core.Extensions;
 
 namespace Aero.Auth.Jwt;
 
 
+/// <summary>
+/// Represents a class for JwtEncryptedFactory.
+/// </summary>
 public class JwtEncryptedFactory : JwtFactoryBase, IJwtFactory
 {
     private readonly JwtOptions options;
     private readonly byte[] encryptionKey;
 
-    public JwtEncryptedFactory(IOptions<JwtOptions> options, ILogger<JwtEncryptedFactory> log) 
+        /// <summary>
+    /// Initializes a new instance of the <see cref="JwtEncryptedFactory"/> class.
+    /// </summary>
+public JwtEncryptedFactory(IOptions<JwtOptions> options, ILogger<JwtEncryptedFactory> log) 
         : base(log)
     {
         this.options = options.Value;
         this.encryptionKey = this.options.EncryptionKey.FromBase64ToBytes();
     }
     
-    public override JwtResponseModel GenerateAccessToken(List<Claim> claims)
+        /// <summary>
+    /// GenerateAccessToken method.
+    /// </summary>
+public override JwtResponseModel GenerateAccessToken(List<Claim> claims)
     {
         log.LogInformation("generating encrypted jwt access token...");
         log.LogDebug("jwt options are: {@options}", ObjectExtensions.ToJson(options));
@@ -58,7 +67,10 @@ public class JwtEncryptedFactory : JwtFactoryBase, IJwtFactory
         return model;
     }
     
-    public override bool IsValidToken(string token)
+        /// <summary>
+    /// IsValidToken method.
+    /// </summary>
+public override bool IsValidToken(string token)
     {
         // var symkey = new SymmetricSecurityKey(encryptionKey);
         // var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Key));
@@ -91,7 +103,10 @@ public class JwtEncryptedFactory : JwtFactoryBase, IJwtFactory
         
         return true;
     }
-    public override ClaimsPrincipal? GetPrincipalFromToken(string? token)
+        /// <summary>
+    /// GetPrincipalFromToken method.
+    /// </summary>
+public override ClaimsPrincipal? GetPrincipalFromToken(string? token)
     {
         var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Key));
         var symkey = new SymmetricSecurityKey(options.EncryptionKey.FromBase64ToBytes());

@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Aero.Auth.Services;
 using Aero.Common.Web.Infrastructure;
 using Aero.Common.Web.Jwt;
@@ -11,6 +11,9 @@ using Aero.Web.Core.Controllers;
 
 namespace Aero.Common.Web.Controllers;
 
+/// <summary>
+/// Represents a class for JwtAuthController.
+/// </summary>
 [Route("/api")]
 public sealed class JwtAuthController : AeroApiBaseController
 {
@@ -18,7 +21,10 @@ public sealed class JwtAuthController : AeroApiBaseController
     private readonly IJwtFactory jwtGenerator;
     private readonly IClaimsPrincipalFactory claimsFactory;
 
-    public JwtAuthController(
+        /// <summary>
+    /// Initializes a new instance of the <see cref="JwtAuthController"/> class.
+    /// </summary>
+public JwtAuthController(
         IApiKeyService apiService,
         IClaimsPrincipalFactory claimsFactory,
         IJwtFactory jwtGenerator,
@@ -30,7 +36,10 @@ public sealed class JwtAuthController : AeroApiBaseController
         this.claimsFactory = claimsFactory;
     }
 
-    [ApiExplorerSettings(IgnoreApi = true)]
+        /// <summary>
+    /// Register method.
+    /// </summary>
+[ApiExplorerSettings(IgnoreApi = true)]
     [HttpPost("register")]
     public async Task<IActionResult> Register(ApiRegistrationRequest request)
     {
@@ -42,7 +51,10 @@ public sealed class JwtAuthController : AeroApiBaseController
         return Ok(new { api_key = model.ApiKey});
     }
 
-    [AllowAnonymous]
+        /// <summary>
+    /// Authenticate method.
+    /// </summary>
+[AllowAnonymous]
     [HttpPost("auth")]
     
     public async Task<IActionResult> Authenticate(ApiKeyAuthRequestModel model)
@@ -80,7 +92,10 @@ public sealed class JwtAuthController : AeroApiBaseController
         }
     }
     
-    [AllowAnonymous]
+        /// <summary>
+    /// RefreshToken method.
+    /// </summary>
+[AllowAnonymous]
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
     {
@@ -99,7 +114,10 @@ public sealed class JwtAuthController : AeroApiBaseController
         return Ok(newToken);
     }
     
-    [Authorize]
+        /// <summary>
+    /// Revoke method.
+    /// </summary>
+[Authorize]
     [HttpPost("revoke/{apiKey}")]
     public async Task<IActionResult> Revoke(string apiKey)
     {
@@ -113,7 +131,10 @@ public sealed class JwtAuthController : AeroApiBaseController
         return NoContent();
     }
 
-    [HttpPost("testkey")]
+        /// <summary>
+    /// Test method.
+    /// </summary>
+[HttpPost("testkey")]
     public async Task<IActionResult> Test()
     {
         return Ok();

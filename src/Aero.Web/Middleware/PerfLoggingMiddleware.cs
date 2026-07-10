@@ -2,9 +2,15 @@ using System.Diagnostics;
 
 namespace Aero.Web.Middleware;
 
+/// <summary>
+/// Represents a class for PerfLoggingMiddleware.
+/// </summary>
 public class PerfLoggingMiddleware(RequestDelegate next, ILogger<PerfLoggingMiddleware> log)
 {
-    public async Task InvokeAsync(HttpContext context)
+        /// <summary>
+    /// InvokeAsync method.
+    /// </summary>
+public async Task InvokeAsync(HttpContext context)
     {
         var sw = new Stopwatch();
         sw.Start();
@@ -16,8 +22,14 @@ public class PerfLoggingMiddleware(RequestDelegate next, ILogger<PerfLoggingMidd
     }
 }
 
+/// <summary>
+/// Represents a class for PerfLoggingMiddlewareRegistration.
+/// </summary>
 public static class PerfLoggingMiddlewareRegistration
 {
-    public static IApplicationBuilder UsePerfLogging(this IApplicationBuilder app) =>
+        /// <summary>
+    /// UsePerfLogging method.
+    /// </summary>
+public static IApplicationBuilder UsePerfLogging(this IApplicationBuilder app) =>
         app.UseMiddleware<PerfLoggingMiddleware>();
 }

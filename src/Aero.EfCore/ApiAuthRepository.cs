@@ -1,19 +1,31 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Aero.EfCore;
 
+/// <summary>
+/// Defines an interface for IApiAuthRepository.
+/// </summary>
 public interface IApiAuthRepository : IGenericEntityFrameworkRepository<ApiAccountModel>
 {
-    Task<ApiAccountModel?> GetByApiKey(string apiKey);
+        /// <summary>
+    /// GetByApiKey method.
+    /// </summary>
+Task<ApiAccountModel?> GetByApiKey(string apiKey);
 }
 
+/// <summary>
+/// Represents a class for ApiAuthRepository.
+/// </summary>
 public sealed class ApiAuthRepository(AeroDbContext context, ILogger<ApiAuthRepository> log)
     : GenericEntityFrameworkRepository<ApiAccountModel>(context, log), IApiAuthRepository
 {
     private readonly DbSet<ApiAccountModel> apiAccountsDb = context.ApiAccounts;
     private readonly DbSet<ApiClaimsModel> apiClaimsDb = context.ApiClaims;
 
-    public override Task<IEnumerable<ApiAccountModel>> GetAllAsync()
+        /// <summary>
+    /// GetAllAsync method.
+    /// </summary>
+public override Task<IEnumerable<ApiAccountModel>> GetAllAsync()
     {
         var accounts = apiAccountsDb.AsQueryable()
             .Include(a => a.Claims)
@@ -22,7 +34,10 @@ public sealed class ApiAuthRepository(AeroDbContext context, ILogger<ApiAuthRepo
         return Task.FromResult(accounts);
     }
 
-    public async Task<ApiAccountModel?> GetByKeyAsync(long key)
+        /// <summary>
+    /// GetByKeyAsync method.
+    /// </summary>
+public async Task<ApiAccountModel?> GetByKeyAsync(long key)
     {
         var account = await apiAccountsDb
             .Include(x => x.Claims)
@@ -31,28 +46,40 @@ public sealed class ApiAuthRepository(AeroDbContext context, ILogger<ApiAuthRepo
         return account;
     }
 
-    public override async Task<ApiAccountModel> InsertAsync(ApiAccountModel model)
+        /// <summary>
+    /// InsertAsync method.
+    /// </summary>
+public override async Task<ApiAccountModel> InsertAsync(ApiAccountModel model)
     {
         await apiAccountsDb.AddAsync(model);
 
         return model;
     }
 
-    public override Task<ApiAccountModel> UpdateAsync(ApiAccountModel model)
+        /// <summary>
+    /// UpdateAsync method.
+    /// </summary>
+public override Task<ApiAccountModel> UpdateAsync(ApiAccountModel model)
     {
         apiAccountsDb.Update(model);
 
         return Task.FromResult(model);
     }
 
-    public override Task DeleteAsync(ApiAccountModel model)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public override Task DeleteAsync(ApiAccountModel model)
     {
         apiAccountsDb.Remove(model);
 
         return Task.CompletedTask;
     }
 
-    public override async Task DeleteAsync(long id)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public override async Task DeleteAsync(long id)
     {
         var account = await apiAccountsDb
             .Include(x => x.Claims)
@@ -60,7 +87,10 @@ public sealed class ApiAuthRepository(AeroDbContext context, ILogger<ApiAuthRepo
         await DeleteAsync(account!);
     }
 
-    public override Task<IEnumerable<ApiAccountModel>> FindAsync(Expression<Func<ApiAccountModel, bool>> predicate)
+        /// <summary>
+    /// FindAsync method.
+    /// </summary>
+public override Task<IEnumerable<ApiAccountModel>> FindAsync(Expression<Func<ApiAccountModel, bool>> predicate)
     {
         var accounts = apiAccountsDb.Where(predicate)
             .Include(x => x.Claims)
@@ -69,10 +99,16 @@ public sealed class ApiAuthRepository(AeroDbContext context, ILogger<ApiAuthRepo
         return Task.FromResult(accounts);
     }
 
-    public async Task<int> SaveChangesAsync()
+        /// <summary>
+    /// SaveChangesAsync method.
+    /// </summary>
+public async Task<int> SaveChangesAsync()
         => await context.SaveChangesAsync();
 
-    public async Task<ApiAccountModel?> GetByApiKey(string apiKey)
+        /// <summary>
+    /// GetByApiKey method.
+    /// </summary>
+public async Task<ApiAccountModel?> GetByApiKey(string apiKey)
     {
         var model = await apiAccountsDb
             .Include(x => x.Claims)

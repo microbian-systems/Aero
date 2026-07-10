@@ -5,22 +5,55 @@ using Aero.Core.Entities;
 namespace Aero.EfCore;
 
 
+/// <summary>
+/// Represents a class for AeroDbContext.
+/// </summary>
 public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(options)
 {
-    public DbSet<AiUsageLog> AiUsageLogs { get; set; }
-    public DbSet<AddressModel> Addresses { get; set; }
-    public DbSet<ApiAccountModel> ApiAccounts { get; set; }
-    public DbSet<ApiClaimsModel> ApiClaims { get; set; }
-    public DbSet<CityModel> Cities { get; set; }
-    public DbSet<CountryModel> Countries { get; set; }
-    public DbSet<StateModel> States { get; set; }
+        /// <summary>
+    /// Gets or sets the Ai Usage Logs.
+    /// </summary>
+public DbSet<AiUsageLog> AiUsageLogs { get; set; }
+        /// <summary>
+    /// Gets or sets the Addresses.
+    /// </summary>
+public DbSet<AddressModel> Addresses { get; set; }
+        /// <summary>
+    /// Gets or sets the Api Accounts.
+    /// </summary>
+public DbSet<ApiAccountModel> ApiAccounts { get; set; }
+        /// <summary>
+    /// Gets or sets the Api Claims.
+    /// </summary>
+public DbSet<ApiClaimsModel> ApiClaims { get; set; }
+        /// <summary>
+    /// Gets or sets the Cities.
+    /// </summary>
+public DbSet<CityModel> Cities { get; set; }
+        /// <summary>
+    /// Gets or sets the Countries.
+    /// </summary>
+public DbSet<CountryModel> Countries { get; set; }
+        /// <summary>
+    /// Gets or sets the States.
+    /// </summary>
+public DbSet<StateModel> States { get; set; }
     //public DbSet<UserPasskeys> UserPasskeys { get; set; }
 
     // Authentication token management
-    public DbSet<RefreshToken> RefreshTokens { get; set; }
-    public DbSet<JwtSigningKey> JwtSigningKeys { get; set; }
+        /// <summary>
+    /// Gets or sets the Refresh Tokens.
+    /// </summary>
+public DbSet<RefreshToken> RefreshTokens { get; set; }
+        /// <summary>
+    /// Gets or sets the Jwt Signing Keys.
+    /// </summary>
+public DbSet<JwtSigningKey> JwtSigningKeys { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+        /// <summary>
+    /// OnModelCreating method.
+    /// </summary>
+protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
@@ -41,7 +74,10 @@ public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(
     }
 
 
-    protected void ModelApiAuth(ModelBuilder builder)
+        /// <summary>
+    /// ModelApiAuth method.
+    /// </summary>
+protected void ModelApiAuth(ModelBuilder builder)
     {
 
         builder.Entity<ApiAccountModel>()
@@ -119,13 +155,19 @@ public class AeroDbContext(DbContextOptions<AeroDbContext> options) : DbContext(
         });
     }
 
-    public override int SaveChanges()
+        /// <summary>
+    /// SaveChanges method.
+    /// </summary>
+public override int SaveChanges()
     {
         AssignSnowflakeIds();
         return base.SaveChanges();
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// SaveChangesAsync method.
+    /// </summary>
+public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         AssignSnowflakeIds();
         return await base.SaveChangesAsync(cancellationToken);

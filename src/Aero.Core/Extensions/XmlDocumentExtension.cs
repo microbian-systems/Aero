@@ -7,11 +7,17 @@ using Aero.Core.Xml;
 
 namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for XmlDocumentExtension.
+/// </summary>
 public static class XmlDocumentExtension
 {
     //#region Validation Methods
 
-    public static bool ValidateXmlInMemory(this XmlDocument doc, string schemaName = "")
+        /// <summary>
+    /// ValidateXmlInMemory method.
+    /// </summary>
+public static bool ValidateXmlInMemory(this XmlDocument doc, string schemaName = "")
     {
         if (string.IsNullOrEmpty(schemaName))
             throw new ArgumentException($"{nameof(schemaName)} cannot be null/empty");
@@ -22,7 +28,10 @@ public static class XmlDocumentExtension
         return validator.Validate(doc);
     }
 
-    public static bool ValidateXmlInMemory(this XDocument doc, string schemaName)
+        /// <summary>
+    /// ValidateXmlInMemory method.
+    /// </summary>
+public static bool ValidateXmlInMemory(this XDocument doc, string schemaName)
     {
         if (string.IsNullOrEmpty(schemaName))
             throw new ArgumentException($"{nameof(schemaName)} cannot be null/empty");
@@ -33,7 +42,10 @@ public static class XmlDocumentExtension
         return validator.Validate(doc);
     }
 
-    public static bool ValidateXmlInMemory(this XDocument doc, Uri uri)
+        /// <summary>
+    /// ValidateXmlInMemory method.
+    /// </summary>
+public static bool ValidateXmlInMemory(this XDocument doc, Uri uri)
     {
         if (uri == null)
             throw new ArgumentNullException(nameof(uri));
@@ -47,7 +59,10 @@ public static class XmlDocumentExtension
         return res;
     }
 
-    public static async Task<bool> ValidateXmlInMemoryAsync(this XmlDocument doc, string schemaName)
+        /// <summary>
+    /// ValidateXmlInMemoryAsync method.
+    /// </summary>
+public static async Task<bool> ValidateXmlInMemoryAsync(this XmlDocument doc, string schemaName)
     {
         if (string.IsNullOrEmpty(schemaName))
             throw new ArgumentException($"{nameof(schemaName)} cannot be null/empty");
@@ -58,7 +73,10 @@ public static class XmlDocumentExtension
         return await validator.ValidateAsync(doc);
     }
 
-    public static async Task<bool> ValidateXmlInMemoryAsync(this XDocument doc, string schemaName)
+        /// <summary>
+    /// ValidateXmlInMemoryAsync method.
+    /// </summary>
+public static async Task<bool> ValidateXmlInMemoryAsync(this XDocument doc, string schemaName)
     {
         if (string.IsNullOrEmpty(schemaName))
             throw new ArgumentException($"{nameof(schemaName)} cannot be null/empty");
@@ -69,7 +87,10 @@ public static class XmlDocumentExtension
         return await validator.ValidateAsync(doc);
     }
 
-    public static async Task<bool> ValidateXmlInMemoryAsync(this XDocument doc, Uri uri)
+        /// <summary>
+    /// ValidateXmlInMemoryAsync method.
+    /// </summary>
+public static async Task<bool> ValidateXmlInMemoryAsync(this XDocument doc, Uri uri)
     {
         if (uri == null)
             throw new ArgumentNullException(nameof(uri));
@@ -82,7 +103,10 @@ public static class XmlDocumentExtension
         return res;
     }
 
-    public static string ValidateXml(this XmlDocument doc, string fileName = "", string schema = "")
+        /// <summary>
+    /// ValidateXml method.
+    /// </summary>
+public static string ValidateXml(this XmlDocument doc, string fileName = "", string schema = "")
     {
         try
         {
@@ -526,7 +550,10 @@ public static class XmlDocumentExtension
         }
     }
 
-    public static void ShowCompileErrors(object sender, ValidationEventArgs args)
+        /// <summary>
+    /// ShowCompileErrors method.
+    /// </summary>
+public static void ShowCompileErrors(object sender, ValidationEventArgs args)
     {
         switch (args.Severity)
         {

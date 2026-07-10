@@ -3,12 +3,18 @@ using System.Linq.Expressions;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Linq;
 
+/// <summary>
+/// Represents a class for DocumentQueryable.
+/// </summary>
 public sealed class DocumentQueryable<TDocument> : IQueryable<TDocument>
     where TDocument : class
 {
     internal DocumentQueryProvider<TDocument> TypedProvider { get; }
 
-    public DocumentQueryable(DocumentQueryProvider<TDocument> provider)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="DocumentQueryable"/> class.
+    /// </summary>
+public DocumentQueryable(DocumentQueryProvider<TDocument> provider)
     {
         TypedProvider = provider;
         Expression = Expression.Constant(this);
@@ -22,11 +28,23 @@ public sealed class DocumentQueryable<TDocument> : IQueryable<TDocument>
         Expression = expression;
     }
 
-    public Type ElementType => typeof(TDocument);
-    public Expression Expression { get; }
-    public IQueryProvider Provider => TypedProvider;
+        /// <summary>
+    /// Gets or sets the Element Type.
+    /// </summary>
+public Type ElementType => typeof(TDocument);
+        /// <summary>
+    /// Gets or sets the Expression.
+    /// </summary>
+public Expression Expression { get; }
+        /// <summary>
+    /// Gets or sets the Provider.
+    /// </summary>
+public IQueryProvider Provider => TypedProvider;
 
-    public IEnumerator<TDocument> GetEnumerator() =>
+        /// <summary>
+    /// GetEnumerator method.
+    /// </summary>
+public IEnumerator<TDocument> GetEnumerator() =>
         TypedProvider
             .Execute<IEnumerable<TDocument>>(Expression)
             .GetEnumerator();

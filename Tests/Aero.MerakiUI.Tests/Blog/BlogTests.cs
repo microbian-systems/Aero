@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Blog;
 using Bunit;
 using Aero.MerakiUI.Blog;
 
 namespace Aero.MerakiUI.Tests.Blog;
 
+/// <summary>
+/// Represents a class for BlogTests.
+/// </summary>
 public class BlogTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// BlogCard_ShouldRender method.
+    /// </summary>
+[Test]
     public void BlogCard_ShouldRender()
     {
         var cut = Render<BlogCard>(parameters => parameters
@@ -17,7 +23,10 @@ public class BlogTests : BunitContext
         Assert.Contains("Awesome Post", cut.Markup);
     }
 
-    [Test]
+        /// <summary>
+    /// BlogSection_ShouldRenderTitle method.
+    /// </summary>
+[Test]
     public void BlogSection_ShouldRenderTitle()
     {
         var cut = Render<BlogSection>(parameters => parameters

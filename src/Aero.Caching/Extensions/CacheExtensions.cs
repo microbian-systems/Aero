@@ -1,10 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Aero.Caching.Extensions;
 
+/// <summary>
+/// Represents a class for CacheExtensions.
+/// </summary>
 public static class CacheExtensions
 {
-    public static IServiceCollection AddAeroCaching(this IServiceCollection services, bool useRedis = true)
+        /// <summary>
+    /// AddAeroCaching method.
+    /// </summary>
+public static IServiceCollection AddAeroCaching(this IServiceCollection services, bool useRedis = true)
     {
         if(useRedis)
             services.AddStackExchangeRedisCache(opts =>

@@ -1,10 +1,16 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace Aero.Core;
 
+/// <summary>
+/// Represents a class for Progress.
+/// </summary>
 public class Progress
 {
-    public static IEnumerable From(ICollection rgItems)
+        /// <summary>
+    /// From method.
+    /// </summary>
+public static IEnumerable From(ICollection rgItems)
     {
         var _cItems = rgItems.Count;
         var nPercent = 0;

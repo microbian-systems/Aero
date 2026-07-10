@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Pagination;
 using Bunit;
 using Aero.MerakiUI.Pagination;
 
 namespace Aero.MerakiUI.Tests.Pagination;
 
+/// <summary>
+/// Represents a class for PaginationTests.
+/// </summary>
 public class PaginationTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// Pagination_ShouldRenderPages method.
+    /// </summary>
+[Test]
     public void Pagination_ShouldRenderPages()
     {
         var cut = Render<PaginationControl>(parameters => parameters

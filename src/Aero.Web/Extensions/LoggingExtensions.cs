@@ -1,12 +1,18 @@
-﻿using Foundatio.Utility;
+using Foundatio.Utility;
 using Serilog;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for LoggingExtensions.
+/// </summary>
 public static class LoggingExtensions
 {
-    public static WebApplicationBuilder AddDefaultLogging(this WebApplicationBuilder builder)
+        /// <summary>
+    /// AddDefaultLogging method.
+    /// </summary>
+public static WebApplicationBuilder AddDefaultLogging(this WebApplicationBuilder builder)
     {
         builder.Host.UseSerilog((context, services, logConfig) =>
         {
@@ -22,20 +28,32 @@ public static class LoggingExtensions
         return builder;
     }
 
-    public static IServiceCollection AddDefaultLogging(this IServiceCollection services, IConfiguration config)
+        /// <summary>
+    /// AddDefaultLogging method.
+    /// </summary>
+public static IServiceCollection AddDefaultLogging(this IServiceCollection services, IConfiguration config)
     {
         services.AddSerilogLogging(config);
 
         return services;
     }
 
-    public static ILogger GetReloadableLogger(this IServiceCollection builder, IConfiguration config)
+        /// <summary>
+    /// GetReloadableLogger method.
+    /// </summary>
+public static ILogger GetReloadableLogger(this IServiceCollection builder, IConfiguration config)
         => GetReloadableLogger(config);
 
-    public static ILogger GetReloadableLogger(this WebApplicationBuilder builder)
+        /// <summary>
+    /// GetReloadableLogger method.
+    /// </summary>
+public static ILogger GetReloadableLogger(this WebApplicationBuilder builder)
         => GetReloadableLogger(builder.Configuration);
 
-    public static ILogger GetReloadableLogger(IConfiguration config)
+        /// <summary>
+    /// GetReloadableLogger method.
+    /// </summary>
+public static ILogger GetReloadableLogger(IConfiguration config)
     {
         var log = new LoggerConfiguration()
             .ReadFrom.Configuration(config)
@@ -46,7 +64,10 @@ public static class LoggingExtensions
         return log;
     }
 
-    public static IServiceCollection AddSerilogLogging(this IServiceCollection services, IConfiguration config)
+        /// <summary>
+    /// AddSerilogLogging method.
+    /// </summary>
+public static IServiceCollection AddSerilogLogging(this IServiceCollection services, IConfiguration config)
     {
         var loggerConfig = new LoggerConfiguration()
             .ReadFrom.Configuration(config)
@@ -70,7 +91,10 @@ public static class LoggingExtensions
         return services;
     }
 
-    public static WebApplicationBuilder AddSerilogLogging(this WebApplicationBuilder builder)
+        /// <summary>
+    /// AddSerilogLogging method.
+    /// </summary>
+public static WebApplicationBuilder AddSerilogLogging(this WebApplicationBuilder builder)
     {
         builder.Services.AddSerilogLogging(builder.Configuration);
 

@@ -4,6 +4,9 @@ using Microsoft.Extensions.Options;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
+/// <summary>
+/// Represents a class for CheckpointService.
+/// </summary>
 public sealed class CheckpointService(
     IWalStorageBackend walBackend,
     IWalWriter walWriter,
@@ -23,7 +26,10 @@ public sealed class CheckpointService(
     private readonly ILogger<CheckpointService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private int _entriesSinceLastCheckpoint;
 
-    protected override async Task ExecuteAsync(CancellationToken ct)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+protected override async Task ExecuteAsync(CancellationToken ct)
     {
         _logger.LogInformation(
             "CheckpointService started with check interval {Interval}",
@@ -74,7 +80,10 @@ public sealed class CheckpointService(
         _logger.LogInformation("CheckpointService stopped");
     }
 
-    public async Task CheckpointAsync(CancellationToken ct = default)
+        /// <summary>
+    /// CheckpointAsync method.
+    /// </summary>
+public async Task CheckpointAsync(CancellationToken ct = default)
     {
         _logger.LogInformation("Starting checkpoint");
 
@@ -179,7 +188,10 @@ public sealed class CheckpointService(
             pagesToFlush.Count);
     }
 
-    public void RecordEntry()
+        /// <summary>
+    /// RecordEntry method.
+    /// </summary>
+public void RecordEntry()
     {
         Interlocked.Increment(ref _entriesSinceLastCheckpoint);
     }

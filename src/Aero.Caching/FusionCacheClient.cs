@@ -5,45 +5,75 @@ using static Aero.Core.Railway.Prelude;
 
 namespace Aero.Caching;
 
+/// <summary>
+/// Defines an interface for IFusionCacheClient.
+/// </summary>
 public interface IFusionCacheClient : ICacheService;
 
+/// <summary>
+/// Represents a class for FusionCacheClient.
+/// </summary>
 public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBase> log)
     : CacheServiceBase(log), IFusionCacheClient
 {
     private readonly IFusionCache cache = cache;
-    public override void Delete(string key)
+        /// <summary>
+    /// Delete method.
+    /// </summary>
+public override void Delete(string key)
         => DeleteAsync(key).GetAwaiter().GetResult();
 
-    public override async Task DeleteAsync(string key)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public override async Task DeleteAsync(string key)
     {
         await cache.RemoveAsync(key);
     }
 
-    public override async Task SetAsync<T>(string key, IEnumerable<T> value, TimeSpan? absoluteExpiration = null)
+        /// <summary>
+    /// SetAsync method.
+    /// </summary>
+public override async Task SetAsync<T>(string key, IEnumerable<T> value, TimeSpan? absoluteExpiration = null)
     {
         await cache.SetAsync(key, value);
     }
 
-    public override void Set<T>(string key, IEnumerable<T> value, TimeSpan? absoluteExpiration = null)
+        /// <summary>
+    /// Set method.
+    /// </summary>
+public override void Set<T>(string key, IEnumerable<T> value, TimeSpan? absoluteExpiration = null)
         => SetAsync(key, value, absoluteExpiration).GetAwaiter().GetResult();
 
-    public override async Task<bool> KeyExistsAsync(string key)
+        /// <summary>
+    /// KeyExistsAsync method.
+    /// </summary>
+public override async Task<bool> KeyExistsAsync(string key)
     {
         var res = await cache.TryGetAsync<object>(key);
         return res.HasValue;
     }
 
-    public override void Set<T>(string key, T value, TimeSpan? absoluteExpiration = null)
+        /// <summary>
+    /// Set method.
+    /// </summary>
+public override void Set<T>(string key, T value, TimeSpan? absoluteExpiration = null)
     {
         cache.Set(key, value, opts => opts.Duration = absoluteExpiration ?? TimeSpan.FromMinutes(5));
     }
 
-    public override async Task SetAsync<T>(string key, T value, TimeSpan? absoluteExpiration = null)
+        /// <summary>
+    /// SetAsync method.
+    /// </summary>
+public override async Task SetAsync<T>(string key, T value, TimeSpan? absoluteExpiration = null)
     {
         await cache.SetAsync(key, value, opts => opts.Duration = absoluteExpiration ?? TimeSpan.FromMinutes(5));
     }
 
-    public override long Decrement(string key, long value = 1)
+        /// <summary>
+    /// Decrement method.
+    /// </summary>
+public override long Decrement(string key, long value = 1)
     {
         // FusionCache doesn't have atomic increment/decrement, so we simulate it
         // Note: This is not truly atomic - in production you might want Redis for this
@@ -53,7 +83,10 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         return newValue ?? 0;
     }
 
-    public override async Task<bool> HashSetAsync<T>(string key, string field, T value)
+        /// <summary>
+    /// HashSetAsync method.
+    /// </summary>
+public override async Task<bool> HashSetAsync<T>(string key, string field, T value)
     {
         // FusionCache doesn't have native hash support, so we simulate it with nested keys
         var hashKey = $"{key}:hash:{field}";
@@ -61,7 +94,10 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         return true;
     }
 
-    public override long Increment(string key, long value = 1)
+        /// <summary>
+    /// Increment method.
+    /// </summary>
+public override long Increment(string key, long value = 1)
     {
         // FusionCache doesn't have atomic increment/decrement, so we simulate it
         // Note: This is not truly atomic - in production you might want Redis for this
@@ -71,7 +107,10 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         return newValue ?? 0;
     }
 
-    public override async Task<long> IncrementAsync(string key, long value = 1)
+        /// <summary>
+    /// IncrementAsync method.
+    /// </summary>
+public override async Task<long> IncrementAsync(string key, long value = 1)
     {
         // FusionCache doesn't have atomic increment/decrement, so we simulate it
         var current = (await GetAsync<long?>(key)).GetOrElse(0);
@@ -80,7 +119,10 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         return newValue.Value;
     }
 
-    public override async Task<long> DecrementAsync(string key, long value = 1)
+        /// <summary>
+    /// DecrementAsync method.
+    /// </summary>
+public override async Task<long> DecrementAsync(string key, long value = 1)
     {
         // FusionCache doesn't have atomic increment/decrement, so we simulate it
         var current = (await GetAsync<long?>(key)).GetOrElse(0);
@@ -89,14 +131,20 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         return newValue ?? 0;
     }
 
-    public override Option<T> HashGet<T>(string key, string field)
+        /// <summary>
+    /// HashGet method.
+    /// </summary>
+public override Option<T> HashGet<T>(string key, string field)
     {
         // FusionCache doesn't have native hash support, so we simulate it with nested keys
         var hashKey = $"{key}:hash:{field}";
         return Get<T>(hashKey);
     }
 
-    public override async Task<Option<Dictionary<string, T>>> HashGetAllAsync<T>(string key)
+        /// <summary>
+    /// HashGetAllAsync method.
+    /// </summary>
+public override async Task<Option<Dictionary<string, T>>> HashGetAllAsync<T>(string key)
     {
         // FusionCache doesn't have native hash support
         // This is a limitation - we can't efficiently get all hash fields without maintaining metadata
@@ -104,7 +152,10 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         return None;
     }
 
-    public override bool HashSet<T>(string key, string field, T value)
+        /// <summary>
+    /// HashSet method.
+    /// </summary>
+public override bool HashSet<T>(string key, string field, T value)
     {
         // FusionCache doesn't have native hash support, so we simulate it with nested keys
         var hashKey = $"{key}:hash:{field}";
@@ -112,14 +163,20 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         return true;
     }
 
-    public override async Task<Option<T>> HashGetAsync<T>(string key, string field)
+        /// <summary>
+    /// HashGetAsync method.
+    /// </summary>
+public override async Task<Option<T>> HashGetAsync<T>(string key, string field)
     {
         // FusionCache doesn't have native hash support, so we simulate it with nested keys
         var hashKey = $"{key}:hash:{field}";
         return await GetAsync<T>(hashKey);
     }
 
-    public override Option<Dictionary<string, T>> HashGetAll<T>(string key)
+        /// <summary>
+    /// HashGetAll method.
+    /// </summary>
+public override Option<Dictionary<string, T>> HashGetAll<T>(string key)
     {
         // FusionCache doesn't have native hash support
         // This is a limitation - we can't efficiently get all hash fields without maintaining metadata
@@ -127,13 +184,19 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         return None;
     }
 
-    public override Option<T> Get<T>(string key)
+        /// <summary>
+    /// Get method.
+    /// </summary>
+public override Option<T> Get<T>(string key)
     {
         var res = cache.TryGet<T>(key);
         return res.HasValue ? Some(res.Value) : None;
     }
 
-    public override async Task<Option<T>> GetOrSetAsync<T>(string key, Func<Task<T>> factory, TimeSpan? absoluteExpiration = null)
+        /// <summary>
+    /// GetOrSetAsync method.
+    /// </summary>
+public override async Task<Option<T>> GetOrSetAsync<T>(string key, Func<Task<T>> factory, TimeSpan? absoluteExpiration = null)
     {
         var result = await cache.GetOrSetAsync<T>(key,
             async ct => await factory(), // Wrap the factory to accept CancellationToken
@@ -145,19 +208,28 @@ public sealed class FusionCacheClient(IFusionCache cache, ILogger<CacheServiceBa
         return result != null ? Some(result) : None;
     }
 
-    public override bool KeyExists(string key)
+        /// <summary>
+    /// KeyExists method.
+    /// </summary>
+public override bool KeyExists(string key)
     {
         var res = cache.TryGet<object>(key);
         return res.HasValue;
     }
 
-    public override async Task<Option<T>> GetAsync<T>(string key)
+        /// <summary>
+    /// GetAsync method.
+    /// </summary>
+public override async Task<Option<T>> GetAsync<T>(string key)
     {
         var res = await cache.TryGetAsync<T>(key);
         return res.HasValue ? Some(res.Value) : None;
     }
 
-    public override Option<T> GetOrSet<T>(string key, Func<T> factory, TimeSpan? absoluteExpiration = null)
+        /// <summary>
+    /// GetOrSet method.
+    /// </summary>
+public override Option<T> GetOrSet<T>(string key, Func<T> factory, TimeSpan? absoluteExpiration = null)
     {
         var result = cache.GetOrSet<T>(key, ct => factory(), opts =>
         {

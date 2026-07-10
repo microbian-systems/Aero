@@ -1,19 +1,28 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Electra.Auth;
 
 namespace Electra.Core.Tests;
 
+/// <summary>
+/// Represents a class for JwtExtensionsTests.
+/// </summary>
 public class JwtExtensionsTests
 {
     private readonly string validSecret;
     private readonly Faker faker = new();
 
-    public JwtExtensionsTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="JwtExtensionsTests"/> class.
+    /// </summary>
+public JwtExtensionsTests()
     {
         validSecret = GenerateRandomSecretKey();
     }
 
-    [Test]
+        /// <summary>
+    /// DecodeHttpRequest_ValidToken_ReturnsJwtPayload method.
+    /// </summary>
+[Test]
     public void DecodeHttpRequest_ValidToken_ReturnsJwtPayload()
     {
         // Arrange
@@ -34,7 +43,10 @@ public class JwtExtensionsTests
         Assert.NotEmpty(payload.Claims);
     }
 
-    [Test]
+        /// <summary>
+    /// DecodeStringToken_ValidToken_ReturnsJwtPayload method.
+    /// </summary>
+[Test]
     public void DecodeStringToken_ValidToken_ReturnsJwtPayload()
     {
         // Arrange
@@ -52,7 +64,10 @@ public class JwtExtensionsTests
         Assert.NotEmpty(payload.Claims);
     }
 
-    [Test]
+        /// <summary>
+    /// DecodeHttpRequest_InvalidToken_ReturnsNull method.
+    /// </summary>
+[Test]
     public void DecodeHttpRequest_InvalidToken_ReturnsNull()
     {
         // Arrange
@@ -69,7 +84,10 @@ public class JwtExtensionsTests
         //payload.Value.GetType().Should().Be<Exception>();
     }
 
-    [Test]
+        /// <summary>
+    /// DecodeStringToken_InvalidToken_ReturnsNull method.
+    /// </summary>
+[Test]
     public void DecodeStringToken_InvalidToken_ReturnsNull()
     {
         // Arrange

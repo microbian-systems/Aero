@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for TimelineOptionsTests.
+/// </summary>
 public class TimelineOptionsTests
 {
-    [Test]
+        /// <summary>
+    /// TimelineOptions_DefaultValues_AreNull method.
+    /// </summary>
+[Test]
     public void TimelineOptions_DefaultValues_AreNull()
     {
         // Arrange & Act
@@ -25,7 +31,10 @@ public class TimelineOptionsTests
         Assert.Null(options.UserFields);
     }
 
-    [Test]
+        /// <summary>
+    /// TimelineOptions_Validate_WithValidMaxResults_DoesNotThrow method.
+    /// </summary>
+[Test]
     [Arguments(5)]    // Minimum valid
     [Arguments(50)]   // Mid-range
     [Arguments(100)]  // Maximum valid
@@ -38,7 +47,10 @@ public class TimelineOptionsTests
         options.Validate(); // Should not throw
     }
 
-    [Test]
+        /// <summary>
+    /// TimelineOptions_Validate_WithInvalidMaxResults_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     [Arguments(1)]    // Too low
     [Arguments(4)]    // Just below minimum
     [Arguments(101)]  // Just above maximum
@@ -53,7 +65,10 @@ public class TimelineOptionsTests
         await Assert.That(exception.Message).Contains("MaxResults must be between 5 and 100");
     }
 
-    [Test]
+        /// <summary>
+    /// TimelineOptions_Validate_WithValidTimeRange_DoesNotThrow method.
+    /// </summary>
+[Test]
     public void TimelineOptions_Validate_WithValidTimeRange_DoesNotThrow()
     {
         // Arrange
@@ -67,7 +82,10 @@ public class TimelineOptionsTests
         options.Validate(); // Should not throw
     }
 
-    [Test]
+        /// <summary>
+    /// TimelineOptions_Validate_WithStartTimeAfterEndTime_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task TimelineOptions_Validate_WithStartTimeAfterEndTime_ThrowsArgumentException()
     {
         // Arrange
@@ -82,7 +100,10 @@ public class TimelineOptionsTests
         await Assert.That(exception.Message).Contains("StartTime cannot be greater than EndTime");
     }
 
-    [Test]
+        /// <summary>
+    /// TimelineOptions_Properties_CanBeSet method.
+    /// </summary>
+[Test]
     public async Task TimelineOptions_Properties_CanBeSet()
     {
         // Arrange & Act

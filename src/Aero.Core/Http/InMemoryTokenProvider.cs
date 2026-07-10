@@ -1,15 +1,24 @@
 namespace Aero.Core.Http;
 
+/// <summary>
+/// Represents a class for InMemoryTokenProvider.
+/// </summary>
 public sealed class InMemoryTokenProvider : ITokenProvider
 {
     private string? _accessToken;
 
-    public ValueTask<string?> GetAccessTokenAsync(CancellationToken cancellationToken)
+        /// <summary>
+    /// GetAccessTokenAsync method.
+    /// </summary>
+public ValueTask<string?> GetAccessTokenAsync(CancellationToken cancellationToken)
     {
         return ValueTask.FromResult(_accessToken);
     }
 
-    public void SetToken(string? token)
+        /// <summary>
+    /// SetToken method.
+    /// </summary>
+public void SetToken(string? token)
     {
         _accessToken = token;
     }

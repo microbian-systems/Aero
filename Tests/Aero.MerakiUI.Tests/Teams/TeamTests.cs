@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.MerakiUI.Teams;
 using Bunit;
 using Aero.MerakiUI.Teams;
 
 namespace Aero.MerakiUI.Tests.Teams;
 
+/// <summary>
+/// Represents a class for TeamTests.
+/// </summary>
 public class TeamTests : BunitContext
 {
-    [Test]
+        /// <summary>
+    /// TeamCard_ShouldRenderNameAndRole method.
+    /// </summary>
+[Test]
     public void TeamCard_ShouldRenderNameAndRole()
     {
         var cut = Render<TeamCard>(parameters => parameters

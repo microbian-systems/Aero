@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using FluentAssertions;
 using LanguageExt;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +31,10 @@ public class E2EWalletSwapTests : IAsyncLifetime
     private const string TestWallet1Name = "E2ETestWallet1";
     private const string TestWallet2Name = "E2ETestWallet2";
 
-    public E2EWalletSwapTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="E2EWalletSwapTests"/> class.
+    /// </summary>
+public E2EWalletSwapTests()
     {
         // Setup dependency injection
         var services = new ServiceCollection();
@@ -49,7 +52,10 @@ public class E2EWalletSwapTests : IAsyncLifetime
         _tokenAssetService = _serviceProvider.GetRequiredService<ITokenAssetService>();
     }
 
-    public async Task InitializeAsync()
+        /// <summary>
+    /// InitializeAsync method.
+    /// </summary>
+public async Task InitializeAsync()
     {
         // Verify testnet connection
         var health = await _rpcClient.GetHealthAsync();
@@ -60,7 +66,10 @@ public class E2EWalletSwapTests : IAsyncLifetime
         await _walletManager.DeleteWalletAsync(TestWallet2Name);
     }
 
-    public async Task DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public async Task DisposeAsync()
     {
         // Cleanup test wallets
         await _walletManager.DeleteWalletAsync(TestWallet1Name);
@@ -69,7 +78,10 @@ public class E2EWalletSwapTests : IAsyncLifetime
         _serviceProvider?.GetService<IDisposable>()?.Dispose();
     }
 
-    [Test]
+        /// <summary>
+    /// E2E_CreateTwoWallets_CheckBalances_TransferSol method.
+    /// </summary>
+[Test]
     public async Task E2E_CreateTwoWallets_CheckBalances_TransferSol()
     {
         // Step 1: Create two wallets with seed phrases
@@ -171,7 +183,10 @@ public class E2EWalletSwapTests : IAsyncLifetime
         retrievedWallet2.IfSome(w => w.Name.Should().Be(TestWallet2Name));
     }
 
-    [Test]
+        /// <summary>
+    /// E2E_CreateWallet_GetSwapQuote_ValidateSwapPreparation method.
+    /// </summary>
+[Test]
     public async Task E2E_CreateWallet_GetSwapQuote_ValidateSwapPreparation()
     {
         // Step 1: Create a wallet for swap testing
@@ -253,7 +268,10 @@ public class E2EWalletSwapTests : IAsyncLifetime
         await _walletManager.DeleteWalletAsync("SwapE2EWallet");
     }
 
-    [Test]
+        /// <summary>
+    /// E2E_BurnerWalletWorkflow_CreateUseAndBurn method.
+    /// </summary>
+[Test]
     public async Task E2E_BurnerWalletWorkflow_CreateUseAndBurn()
     {
         // Step 1: Create a burner wallet with seed phrase
@@ -302,7 +320,10 @@ public class E2EWalletSwapTests : IAsyncLifetime
         postBurnBalance.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// E2E_PortfolioManagement_MultipleWalletsAndTokens method.
+    /// </summary>
+[Test]
     public async Task E2E_PortfolioManagement_MultipleWalletsAndTokens()
     {
         // Step 1: Create multiple wallets
@@ -368,7 +389,10 @@ public class E2EWalletSwapTests : IAsyncLifetime
         await _walletManager.DeleteWalletAsync("PortfolioBurner");
     }
 
-    [Test]
+        /// <summary>
+    /// E2E_WalletSecurity_SigningAndVerification method.
+    /// </summary>
+[Test]
     public async Task E2E_WalletSecurity_SigningAndVerification()
     {
         // Step 1: Create a wallet for security testing
@@ -427,7 +451,10 @@ public class E2EWalletSwapTests : IAsyncLifetime
         await _walletManager.DeleteWalletAsync("SecurityTestWallet");
     }
 
-    [Test]
+        /// <summary>
+    /// E2E_ServiceIntegration_DependencyInjection method.
+    /// </summary>
+[Test]
     public async Task E2E_ServiceIntegration_DependencyInjection()
     {
         // Verify all services are properly registered and working

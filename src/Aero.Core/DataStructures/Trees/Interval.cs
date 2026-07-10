@@ -5,15 +5,27 @@ namespace Aero.Core.DataStructures.Trees;
 /// </summary>
 public class Interval(int start, int end) : IComparable<Interval>
 {
-    public int Start { get; } = start;
-    public int End { get; } = end;
+        /// <summary>
+    /// Gets or sets the Start.
+    /// </summary>
+public int Start { get; } = start;
+        /// <summary>
+    /// Gets or sets the End.
+    /// </summary>
+public int End { get; } = end;
 
-    public int CompareTo(Interval other)
+        /// <summary>
+    /// CompareTo method.
+    /// </summary>
+public int CompareTo(Interval other)
     {
         return Start.CompareTo(other.Start);
     }
 
-    public bool Overlaps(Interval other)
+        /// <summary>
+    /// Overlaps method.
+    /// </summary>
+public bool Overlaps(Interval other)
     {
         return Start < other.End && End > other.Start;
     }

@@ -2,6 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace Aero.Core.Security;
 
+/// <summary>
+/// Represents a class for HtmlSanitizer.
+/// </summary>
 public sealed class HtmlSanitizer : IHtmlSanitizer
 {
     private static readonly Regex ScriptTag =
@@ -20,7 +23,10 @@ public sealed class HtmlSanitizer : IHtmlSanitizer
         new(@"\son\w+\s*=\s*'[^']*'",
             RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-    public string Sanitize(string? html)
+        /// <summary>
+    /// Sanitize method.
+    /// </summary>
+public string Sanitize(string? html)
     {
         if (string.IsNullOrWhiteSpace(html))
             return string.Empty;

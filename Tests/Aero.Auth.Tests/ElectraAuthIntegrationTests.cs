@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -17,7 +17,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region Registration Tests
 
-    [Test]
+        /// <summary>
+    /// PostRegister_ShouldReturnBadRequest_WhenInvalidEmail method.
+    /// </summary>
+[Test]
     public async Task PostRegister_ShouldReturnBadRequest_WhenInvalidEmail()
     {
         // Arrange
@@ -36,7 +39,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRegister_ShouldReturnBadRequest_WhenWeakPassword method.
+    /// </summary>
+[Test]
     public async Task PostRegister_ShouldReturnBadRequest_WhenWeakPassword()
     {
         // Arrange
@@ -55,7 +61,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRegister_ShouldReturnBadRequest_WhenEmptyData method.
+    /// </summary>
+[Test]
     public async Task PostRegister_ShouldReturnBadRequest_WhenEmptyData()
     {
         // Arrange
@@ -78,7 +87,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region Traditional Login Tests
 
-    [Test]
+        /// <summary>
+    /// PostLogin_ShouldReturnUnauthorized_WhenInvalidCredentials method.
+    /// </summary>
+[Test]
     public async Task PostLogin_ShouldReturnUnauthorized_WhenInvalidCredentials()
     {
         // Arrange
@@ -97,7 +109,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// PostLogin_ShouldReturnBadRequest_WhenInvalidFormat method.
+    /// </summary>
+[Test]
     public async Task PostLogin_ShouldReturnBadRequest_WhenInvalidFormat()
     {
         // Arrange
@@ -120,7 +135,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region OpenIddict Token Flow Tests
 
-    [Test]
+        /// <summary>
+    /// PostTokenExchange_ShouldReturnBadRequest_WhenUnsupportedGrantType method.
+    /// </summary>
+[Test]
     public async Task PostTokenExchange_ShouldReturnBadRequest_WhenUnsupportedGrantType()
     {
         // Arrange
@@ -138,7 +156,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostTokenExchange_ShouldReturnForbidden_WhenInvalidPasswordCredentials method.
+    /// </summary>
+[Test]
     public async Task PostTokenExchange_ShouldReturnForbidden_WhenInvalidPasswordCredentials()
     {
         // Arrange
@@ -160,7 +181,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region Userinfo Endpoint Tests
 
-    [Test]
+        /// <summary>
+    /// GetUserinfo_ShouldReturnUnauthorized_WhenNotAuthenticated method.
+    /// </summary>
+[Test]
     public async Task GetUserinfo_ShouldReturnUnauthorized_WhenNotAuthenticated()
     {
         // Act
@@ -170,7 +194,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// PostUserinfo_ShouldReturnUnauthorized_WhenNotAuthenticated method.
+    /// </summary>
+[Test]
     public async Task PostUserinfo_ShouldReturnUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
@@ -187,7 +214,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region Token Revocation Tests
 
-    [Test]
+        /// <summary>
+    /// PostRevoke_ShouldReturnBadRequest_WhenNoTokenProvided method.
+    /// </summary>
+[Test]
     public async Task PostRevoke_ShouldReturnBadRequest_WhenNoTokenProvided()
     {
         // Arrange
@@ -203,7 +233,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRevoke_ShouldReturnOk_WhenValidTokenNotFound method.
+    /// </summary>
+[Test]
     public async Task PostRevoke_ShouldReturnOk_WhenValidTokenNotFound()
     {
         // Arrange
@@ -224,7 +257,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region Account Management Tests
 
-    [Test]
+        /// <summary>
+    /// GetAccountListPasskeys_ShouldReturnUnauthorized_WhenNotAuthenticated method.
+    /// </summary>
+[Test]
     public async Task GetAccountListPasskeys_ShouldReturnUnauthorized_WhenNotAuthenticated()
     {
         // Act
@@ -234,7 +270,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// DeletePasskey_ShouldReturnUnauthorized_WhenNotAuthenticated method.
+    /// </summary>
+[Test]
     public async Task DeletePasskey_ShouldReturnUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
@@ -247,7 +286,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// PostLogout_ShouldRequireAntiForgeryToken method.
+    /// </summary>
+[Test]
     public async Task PostLogout_ShouldRequireAntiForgeryToken()
     {
         // Arrange
@@ -264,7 +306,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region Passwordless/WebAuthn Tests
 
-    [Test]
+        /// <summary>
+    /// GetPasswordless_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     public async Task GetPasswordless_ShouldReturnValidResponse()
     {
         // Act
@@ -274,7 +319,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// GetUsernameless_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     public async Task GetUsernameless_ShouldReturnValidResponse()
     {
         // Act
@@ -284,7 +332,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// PostPasswordlessAuthenticate_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     public async Task PostPasswordlessAuthenticate_ShouldReturnValidResponse()
     {
         // Arrange
@@ -297,7 +348,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// PasswordlessController_ShouldHandleWebAuthnRequests method.
+    /// </summary>
+[Test]
     public async Task PasswordlessController_ShouldHandleWebAuthnRequests()
     {
         // Arrange
@@ -315,7 +369,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region External Login Tests
 
-    [Test]
+        /// <summary>
+    /// GetExternalLogin_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     public async Task GetExternalLogin_ShouldReturnValidResponse()
     {
         // Act
@@ -325,7 +382,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// ExternalLoginProviders_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     [Arguments("/ExternalLogin/google")]
     [Arguments("/ExternalLogin/microsoft")]
     [Arguments("/ExternalLogin/facebook")]
@@ -348,7 +408,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region HTTP Method Validation Tests
 
-    [Test]
+        /// <summary>
+    /// Register_ShouldNotAllowNonPostMethods method.
+    /// </summary>
+[Test]
     [Arguments("GET")]
     [Arguments("PUT")]
     [Arguments("PATCH")]
@@ -365,7 +428,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    [Test]
+        /// <summary>
+    /// Login_ShouldNotAllowNonPostMethods method.
+    /// </summary>
+[Test]
     [Arguments("GET")]
     [Arguments("PUT")]
     [Arguments("PATCH")]
@@ -382,7 +448,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    [Test]
+        /// <summary>
+    /// TokenExchange_ShouldNotAllowNonPostMethods method.
+    /// </summary>
+[Test]
     [Arguments("GET")]
     [Arguments("PUT")]
     [Arguments("PATCH")]
@@ -403,7 +472,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
 
     //#region Security Tests
 
-    [Test]
+        /// <summary>
+    /// PostLogin_ShouldRejectMaliciousInput method.
+    /// </summary>
+[Test]
     public async Task PostLogin_ShouldRejectMaliciousInput()
     {
         // Arrange
@@ -422,7 +494,10 @@ public class ElectraAuthIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRegister_ShouldRejectMaliciousInput method.
+    /// </summary>
+[Test]
     public async Task PostRegister_ShouldRejectMaliciousInput()
     {
         // Arrange

@@ -9,13 +9,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Core.Ai;
 
+/// <summary>
+/// Represents a class for TornadoAiChatClientFactory.
+/// </summary>
 public sealed class TornadoAiChatClientFactory(
     ILogger<TornadoAiChatClientFactory> logger,
     TornadoProviderClient tornadoClient) : IAiChatClientFactory
 {
     private static bool _tornadoConfigured;
 
-    public Task<Result<IChatClient>> CreateAsync(
+        /// <summary>
+    /// CreateAsync method.
+    /// </summary>
+public Task<Result<IChatClient>> CreateAsync(
         AiRuntimeSettings settings,
         CancellationToken cancellationToken = default)
     {
