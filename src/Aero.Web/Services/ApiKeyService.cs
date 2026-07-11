@@ -25,17 +25,17 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
     private readonly JwtOptions jwtOptions;
     //private readonly IAeroUnitOfWork uow;
 
-        /// <summary>
+    /// <summary>
     /// Initializes a new instance of the <see cref="ApiKeyService"/> class.
     /// </summary>
-public ApiKeyService(
-        IApiKeyFactory factory,
-        IJwtFactory jwtFactory,
-        IClaimsPrincipalFactory claimsFactory,
-        //IAeroUnitOfWork uow,
-        IOptions<JwtOptions> jwtOptions,
-        ILogger<ApiKeyService> log)
-        : base(log)
+    public ApiKeyService(
+            IApiKeyFactory factory,
+            IJwtFactory jwtFactory,
+            IClaimsPrincipalFactory claimsFactory,
+            //IAeroUnitOfWork uow,
+            IOptions<JwtOptions> jwtOptions,
+            ILogger<ApiKeyService> log)
+            : base(log)
     {
         //this.uow = uow;
         this.apiKeyFactory = factory;
@@ -44,10 +44,10 @@ public ApiKeyService(
         this.jwtOptions = jwtOptions.Value;
     }
 
-        /// <summary>
+    /// <summary>
     /// Register method.
     /// </summary>
-public override async Task<ApiAccountModel> Register(ApiRegistrationRequest request)
+    public override async Task<ApiAccountModel> Register(ApiRegistrationRequest request)
     {
         var principle =
             await claimsFactory.CreateClaimsPrincipal(request.Email);
@@ -76,11 +76,11 @@ public override async Task<ApiAccountModel> Register(ApiRegistrationRequest requ
         return model;
     }
 
-    // todo - move this out to a facgory or make it private (really belongs in a repository
-        /// <summary>
+    // todo - move this out to a factory or make it private (really belongs in a repository
+    /// <summary>
     /// Register method.
     /// </summary>
-[Obsolete("Remove submission of ApiAccountModel directly from service", false)]
+    [Obsolete("Remove submission of ApiAccountModel directly from service", false)]
     public override async Task<ApiAccountModel> Register(ApiAccountModel model)
     {
         await uow.AuthRepo.InsertAsync(model);
@@ -90,10 +90,10 @@ public override async Task<ApiAccountModel> Register(ApiRegistrationRequest requ
     }
 
     // todo - change update method signature to use a UpdateAccountRequest view model
-        /// <summary>
+    /// <summary>
     /// Update method.
     /// </summary>
-public override async Task<ApiAccountModel> Update(ApiAccountModel model)
+    public override async Task<ApiAccountModel> Update(ApiAccountModel model)
     {
         await uow.AuthRepo.UpdateAsync(model);
         await uow.SaveChangesAsync();
@@ -101,10 +101,10 @@ public override async Task<ApiAccountModel> Update(ApiAccountModel model)
         return model;
     }
 
-        /// <summary>
+    /// <summary>
     /// TryGetRefreshToken method.
     /// </summary>
-public override bool TryGetRefreshToken(RefreshTokenRequest request, out RefreshTokenResponse response)
+    public override bool TryGetRefreshToken(RefreshTokenRequest request, out RefreshTokenResponse response)
     {
         var accessToken = request.AccessToken;
         var refreshToken = request.RefreshToken;
@@ -115,7 +115,7 @@ public override bool TryGetRefreshToken(RefreshTokenRequest request, out Refresh
             response = new();
             return false;
         }
-        
+
         var claims = principal.Claims.ToList();
         var id = principal.Claims.FirstOrDefault(x => x.Type == "Id")?.Value;
         var user = GetAccountByApiKey(id!).GetAwaiter().GetResult();
@@ -128,24 +128,24 @@ public override bool TryGetRefreshToken(RefreshTokenRequest request, out Refresh
 
         var newAccessToken = jwtFactory.GenerateAccessToken(claims);
         var newRefreshToken = jwtFactory.GenerateRefreshToken();
-        
+
         response = new RefreshTokenResponse()
         {
             AccessToken = newAccessToken.AccessToken,
             Expiration = newAccessToken.Expiry,
             RefreshToken = newRefreshToken
         };
-        
+
         user.RefreshToken = newRefreshToken;
         uow.SaveChangesAsync().GetAwaiter().GetResult();
         return true;
     }
 
 
-        /// <summary>
+    /// <summary>
     /// Revoke method.
     /// </summary>
-public override async Task<bool> Revoke(string apiKey)
+    public override async Task<bool> Revoke(string apiKey)
     {
         var model = await uow.AuthRepo.GetByApiKey(apiKey);
 
@@ -161,10 +161,10 @@ public override async Task<bool> Revoke(string apiKey)
         return true;
     }
 
-        /// <summary>
+    /// <summary>
     /// RevokeAll method.
     /// </summary>
-public override async Task RevokeAll(string email)
+    public override async Task RevokeAll(string email)
     {
         var accounts = await uow.AuthRepo.FindAsync(x => x.Email == email);
 
@@ -177,30 +177,30 @@ public override async Task RevokeAll(string email)
         await uow.SaveChangesAsync();
     }
 
-        /// <summary>
+    /// <summary>
     /// GetAccountById method.
     /// </summary>
-public override async Task<ApiAccountModel?> GetAccountById(string id)
+    public override async Task<ApiAccountModel?> GetAccountById(string id)
     {
         var account = await uow.AuthRepo.FindByIdAsync(id);
 
         return account!;
     }
 
-        /// <summary>
+    /// <summary>
     /// GetAccountByApiKey method.
     /// </summary>
-public override async Task<ApiAccountModel?> GetAccountByApiKey(string key)
+    public override async Task<ApiAccountModel?> GetAccountByApiKey(string key)
     {
         var account = await uow.AuthRepo.GetByApiKey(key);
 
         return account!;
     }
 
-        /// <summary>
+    /// <summary>
     /// GetAccountsByEmail method.
     /// </summary>
-public override async Task<List<ApiAccountModel>> GetAccountsByEmail(string email)
+    public override async Task<List<ApiAccountModel>> GetAccountsByEmail(string email)
     {
         var accounts =
             (await uow.AuthRepo.FindAsync(x => x.Email == email))
@@ -209,10 +209,10 @@ public override async Task<List<ApiAccountModel>> GetAccountsByEmail(string emai
         return accounts;
     }
 
-        /// <summary>
+    /// <summary>
     /// Authenticate method.
     /// </summary>
-public override async Task<ApiAccountModel?> Authenticate(ApiKeyAuthRequestModel model)
+    public override async Task<ApiAccountModel?> Authenticate(ApiKeyAuthRequestModel model)
     {
         var account = await uow.AuthRepo.GetByApiKey(model.ApiKey);
         return account is not { Enabled: true } ? null! : account;
