@@ -1,5 +1,4 @@
 using Aero.Core.Data;
-using Aero.Marten;
 using Marten;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,10 +44,6 @@ public static IServiceCollection AddAeroDataLayer(
         // services.AddScoped(typeof(IGenericEntityFrameworkRepository<,>), typeof(GenericEntityFrameworkRepository<,>));
         services.AddScoped<IAiUsageLogRepository, AiUsageLogsRepository>();
         services.AddScoped<IApiAuthRepository, ApiAuthRepository>();
-
-        // todo - rename this project from EfCore to Data and move Marten stuff in same project 
-        services.AddScoped<IAeroDb, AeroDb>();
-        services.AddScoped<IAeroUserRepository, AeroUserRepository>();
 
         return services;
     }

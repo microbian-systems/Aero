@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
+    <ProjectReference Include="..\..\..\AeroDB\src\AeroDB.Sable\AeroDB.Sable.csproj" />
   </ItemGroup>
 
 
