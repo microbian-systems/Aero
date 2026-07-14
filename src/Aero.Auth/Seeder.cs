@@ -1,4 +1,4 @@
-using Aero.Core.Identity;
+using Aero.Models.Entities;
 using Marten;
 
 namespace Aero.Auth;

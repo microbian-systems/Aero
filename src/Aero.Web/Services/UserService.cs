@@ -1,5 +1,4 @@
 using Aero.Common.Web.Extensions;
-using Aero.Core.Identity;
 using Aero.Models.Entities;
 using Aero.Services;
 using Aero.Services.Geo;

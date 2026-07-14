@@ -1,5 +1,4 @@
 using Aero.Auth.Services;
-using Aero.Core.Identity;
 using Aero.Marten.Extensions;
 using Aero.Marten.Services;
 using Aero.Models.Entities;

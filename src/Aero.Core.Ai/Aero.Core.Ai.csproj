@@ -18,7 +18,6 @@
     <ItemGroup>
       <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
       <ProjectReference Include="..\Aero.Events\Aero.Events.csproj" />
-      <ProjectReference Include="..\Aero.Marten\Aero.Marten.csproj" />
     </ItemGroup>
 
     <ItemGroup>

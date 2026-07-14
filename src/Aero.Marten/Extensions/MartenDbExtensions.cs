@@ -1,5 +1,4 @@
 using Aero.Core.Data;
-using Aero.Core.Identity;
 using Aero.Models.Entities;
 using JasperFx;
 using JasperFx.Events;
