@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <PackageId>Aero.Core.Ai</PackageId>
-    <Version>0.0.9.1-alpha</Version>
     <Authors>Microbians</Authors>
     <Title>AI services for the Aero Web Platform</Title>
     <Description>AI and LLM integration components for the Aero platform</Description>

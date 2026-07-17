@@ -10,7 +10,6 @@
     <PackageId>Aero.Marten</PackageId>
 
     <!-- Increment this version every time you push a new update -->
-    <Version>0.0.9.1-alpha</Version>
 
     <!-- Your name or organization -->
     <Authors>Microbians</Authors>
