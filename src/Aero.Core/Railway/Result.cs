@@ -6,19 +6,27 @@ namespace Aero.Core.Railway;
 /// A default <see cref="Result{T, TError}"/> with <see cref="AeroError"/> as the error type.
 /// </summary>
 /// <typeparam name="T">The type of the success value.</typeparam>
-public record Result<T> : Result<T, AeroError>
+public abstract record Result<T> : Result<T, AeroError>
 {
     /// <summary>
     /// Represents a successful result with a value of type <typeparamref name="T"/>.
     /// </summary>
     /// <param name="Value">The success value.</param>
-    public new sealed record Ok(T Value) : Result<T>;
+    public new sealed record Ok(T Value) : Result<T>
+    {
+        public override bool IsSuccess => true;
+        public override string ToString() => Value?.ToString() ?? string.Empty;
+    }
 
     /// <summary>
     /// Represents a failed result with an <see cref="AeroError"/>.
     /// </summary>
     /// <param name="Error">The error value.</param>
-    public new sealed record Failure(AeroError Error) : Result<T>;
+    public new sealed record Failure(AeroError Error) : Result<T>
+    {
+        public override bool IsSuccess => false;
+        public override string ToString() => Error.ToString();
+    }
 
         /// <summary>
     /// Defines a conversion operator.
@@ -57,20 +65,26 @@ public abstract record Result<T, TError>
         /// <summary>
     /// Represents a record for Ok.
     /// </summary>
-public sealed record Ok(T Value) : Result<T, TError>;
+public sealed record Ok(T Value) : Result<T, TError>
+{
+    public override bool IsSuccess => true;
+}
         /// <summary>
     /// Represents a record for Failure.
     /// </summary>
-public sealed record Failure(TError Error) : Result<T, TError>;
+public sealed record Failure(TError Error) : Result<T, TError>
+{
+    public override bool IsSuccess => false;
+}
 
         /// <summary>
     /// Gets or sets the Is Success.
     /// </summary>
-public bool IsSuccess => this is Ok;
+public abstract bool IsSuccess { get; }
         /// <summary>
     /// Gets or sets the Is Failure.
     /// </summary>
-public bool IsFailure => this is Failure;
+public bool IsFailure => !IsSuccess;
 
         /// <summary>
     /// Defines a conversion operator.
