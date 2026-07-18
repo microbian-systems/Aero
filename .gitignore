@@ -14,7 +14,7 @@ Microbians.Mobile.zip
 .vs/
 .bevel/
 openobserve_data/
-
+*.snupkg
 # User-specific files
 *.suo
 *.user

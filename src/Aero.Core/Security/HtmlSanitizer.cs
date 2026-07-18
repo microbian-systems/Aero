@@ -15,12 +15,8 @@ public sealed class HtmlSanitizer : IHtmlSanitizer
         new(@"\bjavascript\s*:",
             RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-    private static readonly Regex OnEventDoubleQuoted =
-        new(@"\son\w+\s*=\s*""[^""]*""",
-            RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
-    private static readonly Regex OnEventSingleQuoted =
-        new(@"\son\w+\s*=\s*'[^']*'",
+    private static readonly Regex OnEventAttribute =
+        new(@"\son\w+\s*=\s*(?:""[^""]*""|'[^']*'|[^\s>]+)",
             RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         /// <summary>
@@ -33,8 +29,7 @@ public string Sanitize(string? html)
 
         html = ScriptTag.Replace(html, "");
         html = JavascriptScheme.Replace(html, "blocked:");
-        html = OnEventDoubleQuoted.Replace(html, "");
-        html = OnEventSingleQuoted.Replace(html, "");
+        html = OnEventAttribute.Replace(html, "");
 
         return html;
     }
