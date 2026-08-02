@@ -4,28 +4,18 @@
     Packs all Aero Framework library projects into NuGet packages.
 .DESCRIPTION
     Builds all library projects in Release mode and produces .nupkg files
-    in the build/nupkgs/ directory. Skips Aero.Cloudflare (EXE) and test projects.
-.PARAMETER VersionSuffix
-    Optional SemVer 2.0 suffix (e.g. "alpha.1", "rc.1").
-    When set, packages are versioned as <base-version>-<suffix>.
-    Default: "alpha" (produces 0.0.5-alpha).
+    in the build/nupkgs/ directory. Package version and symbol settings come
+    from src/Directory.Build.props. Skips Aero.Cloudflare (EXE) and test projects.
 .PARAMETER OutputDir
     Output directory for nupkg files. Default: build/nupkgs.
 .PARAMETER Configuration
     Build configuration. Default: Release.
 .EXAMPLE
     ./build/nuget-pack.ps1
-    Packs all libraries with version 0.0.5-alpha.
-
-    ./build/nuget-pack.ps1 -VersionSuffix "alpha.42"
-    Packs with version 0.0.5-alpha.42.
-
-    ./build/nuget-pack.ps1 -VersionSuffix "" -Configuration Debug
-    Packs with version 0.0.5 (no suffix, Debug config).
+    Packs all libraries with the version from src/Directory.Build.props.
 #>
 
 param(
-    [string]$VersionSuffix = "alpha",
     [string]$OutputDir = "",
     [string]$Configuration = "Release"
 )
@@ -37,10 +27,14 @@ Write-Host "=== Aero NuGet Pack Script ===" -ForegroundColor Cyan
 Write-Host "Repo:     $RepoRoot" -ForegroundColor Gray
 Write-Host "Output:   $OutputDir" -ForegroundColor Gray
 Write-Host "Config:   $Configuration" -ForegroundColor Gray
-Write-Host "Suffix:   $($VersionSuffix -replace '^', '-' -replace '^-$', '(none)')" -ForegroundColor Gray
 
-# Ensure output directory exists
+# Ensure output directory exists and contains no artifacts from earlier versions.
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
+$staleArtifacts = Get-ChildItem -LiteralPath $OutputDir -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name.StartsWith('Aero.') -and $_.Extension -in '.nupkg', '.snupkg' }
+foreach ($artifact in $staleArtifacts) {
+    Remove-Item -LiteralPath $artifact.FullName -Force
+}
 
 # Libraries to pack (excluding Aero.Cloudflare - EXE, and test projects)
 $libProjects = @(
@@ -64,11 +58,6 @@ $libProjects = @(
     "$RepoRoot/src/Aero.Auth"
 )
 
-$versionArgs = @()
-if ($VersionSuffix) {
-    $versionArgs += "-p:VersionSuffix=$VersionSuffix"
-}
-
 $failed = @()
 
 foreach ($proj in $libProjects) {
@@ -80,7 +69,7 @@ foreach ($proj in $libProjects) {
 
     $projName = (Get-Item $csproj).BaseName
     Write-Host "  Packing: $projName..." -ForegroundColor Cyan
-    $output = dotnet pack $csproj -c $Configuration -o $OutputDir --include-symbols -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg @versionArgs 2>&1
+    $output = dotnet pack $csproj -c $Configuration -o $OutputDir 2>&1
 
     if ($LASTEXITCODE -ne 0) {
         Write-Host "  FAILED: $(Split-Path $proj -Leaf)" -ForegroundColor Red
@@ -89,11 +78,9 @@ foreach ($proj in $libProjects) {
     }
 }
 
-# Clean up stale packages (e.g. Aero.Cloudflare if it was ever packed)
-Get-ChildItem "$OutputDir/Aero.Cloudflare*" -ErrorAction SilentlyContinue | Remove-Item -Force
-
 Write-Host "`n=== Summary ===" -ForegroundColor Cyan
-$count = (Get-ChildItem "$OutputDir/*.nupkg" -ErrorAction SilentlyContinue | Where-Object { $_.Name -notlike '*.snupkg' }).Count
+$count = (Get-ChildItem -LiteralPath $OutputDir -File -Filter '*.nupkg' -ErrorAction SilentlyContinue |
+    Where-Object { $_.Extension -eq '.nupkg' }).Count
 Write-Host "Packages created: $count" -ForegroundColor Green
 Write-Host "Location: $OutputDir" -ForegroundColor Green
 

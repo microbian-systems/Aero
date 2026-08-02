@@ -1,8 +1,10 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Pushes Aero Framework .nupkg and .snupkg to nuget.org.
+    Pushes Aero Framework packages and matching symbols to nuget.org.
 .DESCRIPTION
+    Pushes each primary .nupkg once. NuGet automatically publishes the matching
+    .snupkg when it is present beside the primary package.
     Uses -ApiKey, $env:NUGET_API_KEY_Aero2, $env:NUGET_API_KEY_AERO, or $env:NUGET_API_KEY.
 .PARAMETER ApiKey
     NuGet API key. Falls back to env vars if not provided.
@@ -13,7 +15,9 @@ param(
 )
 
 $RepoRoot = Resolve-Path "$PSScriptRoot/.."
-$nupkgs = Get-ChildItem "$RepoRoot/build/nupkgs/*.nupkg" -ErrorAction SilentlyContinue
+$packageDirectory = "$RepoRoot/build/nupkgs"
+$nupkgs = Get-ChildItem -LiteralPath $packageDirectory -File -Filter '*.nupkg' -ErrorAction SilentlyContinue |
+    Where-Object { $_.Extension -eq '.nupkg' }
 if (-not $nupkgs) {
     Write-Host "No .nupkg files found in build/nupkgs/. Run ./build/nuget-pack.ps1 first." -ForegroundColor Yellow
     exit 1
@@ -43,20 +47,6 @@ foreach ($nupkg in $nupkgs) {
     if ($LASTEXITCODE -ne 0) {
         Write-Host "  FAILED: $($nupkg.Name)" -ForegroundColor Red
         $failed++
-    }
-}
-
-# Push symbol packages (.snupkg)
-$snupkgs = Get-ChildItem "$RepoRoot/build/nupkgs/*.snupkg" -ErrorAction SilentlyContinue
-if ($snupkgs) {
-    Write-Host "Pushing $($snupkgs.Count) symbol packages..." -ForegroundColor Cyan
-    foreach ($snupkg in $snupkgs) {
-        Write-Host "  $($snupkg.Name)..." -ForegroundColor Gray
-        dotnet nuget push $snupkg.FullName --source https://api.nuget.org/v3/index.json --api-key "$ApiKey" --skip-duplicate
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "  FAILED: $($snupkg.Name)" -ForegroundColor Red
-            $failed++
-        }
     }
 }
 
