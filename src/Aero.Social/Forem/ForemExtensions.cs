@@ -3,9 +3,15 @@ using ThrowGuard;
 
 namespace Aero.Social.Forem;
 
+/// <summary>
+/// Represents a class for ForemExtensions.
+/// </summary>
 public static class ForemExtensions
 {
-    public static IServiceCollection AddForem(this IServiceCollection services, string url = "https://dev.to")
+        /// <summary>
+    /// AddForem method.
+    /// </summary>
+public static IServiceCollection AddForem(this IServiceCollection services, string url = "https://dev.to")
     {
         var apiKey = Environment.GetEnvironmentVariable("FOREM_API_KEY");
         Throw.IfNullOrEmpty(apiKey, "FOREM_API_KEY cannot be null or empty.");

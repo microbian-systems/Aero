@@ -1,5 +1,4 @@
 using Aero.Core.Entities;
-using Marten;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,7 +13,7 @@ namespace Aero.Modular;
 /// <summary>
 /// A base class for Aero.Cms modules that provides default implementations.
 /// </summary>
-public abstract class AeroModuleBase : IAeroModule, IConfigureMarten, IDisposable
+public abstract class AeroModuleBase : IAeroModule, IDisposable
 {
     /// <summary>
     /// Provides access to the logger instance used for logging diagnostic and operational information within the class.
@@ -66,7 +65,10 @@ public abstract class AeroModuleBase : IAeroModule, IConfigureMarten, IDisposabl
     public virtual Task RunAsync(IServiceProvider sp) => Task.CompletedTask;
 
     // todo - impl IAsyncDisposable pattern for modules
-    public virtual void Dispose(bool disposing)
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public virtual void Dispose(bool disposing)
     {
         if (disposing)
         {
@@ -79,22 +81,5 @@ public abstract class AeroModuleBase : IAeroModule, IConfigureMarten, IDisposabl
     {
         Dispose(true);
         GC.SuppressFinalize(this);
-    }
-
-    public virtual void Configure<T>(IServiceProvider services, StoreOptions opts, bool index = true)
-        where T : Entity
-    {
-        opts.Schema.For<T>().Identity(x => x.Id);
-        if (index == false) return;
-        opts.Schema.For<T>().Index(x => x.CreatedBy);
-        opts.Schema.For<T>().Index(x => x.ModifiedBy);
-        opts.Schema.For<T>().Index(x => x.CreatedOn);
-        opts.Schema.For<T>().Index(x => x.ModifiedOn);
-    }
-
-    // todo - add documentation for the marten configuration method and how it is used to configure document schemas, indexes, etc. and how it is called during application startup
-    public virtual void Configure(IServiceProvider services, StoreOptions options)
-    {
-        
     }
 }

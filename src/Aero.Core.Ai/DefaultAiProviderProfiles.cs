@@ -2,24 +2,72 @@ using Microsoft.Extensions.Configuration;
 
 namespace Aero.Core.Ai;
 
+/// <summary>
+/// Represents a class for DefaultAiProviderProfiles.
+/// </summary>
 public static class DefaultAiProviderProfiles
 {
-    public const string OpenAiProviderId = "openai";
-    public const string AnthropicProviderId = "anthropic";
-    public const string GoogleProviderId = "google";
-    public const string GroqProviderId = "groq";
-    public const string DeepSeekProviderId = "deepseek";
-    public const string MiniMaxProviderId = "minimax";
-    public const string MistralProviderId = "mistral";
-    public const string XAiProviderId = "xai";
-    public const string ZaiProviderId = "zai";
-    public const string PerplexityProviderId = "perplexity";
-    public const string AlibabaProviderId = "alibaba";
-    public const string OpenRouterProviderId = "openrouter";
-    public const string LmStudioProviderId = "lm-studio";
-    public const string OpenCodeProviderId = "opencode";
+        /// <summary>
+    /// OpenAiProviderId.
+    /// </summary>
+public const string OpenAiProviderId = "openai";
+        /// <summary>
+    /// AnthropicProviderId.
+    /// </summary>
+public const string AnthropicProviderId = "anthropic";
+        /// <summary>
+    /// GoogleProviderId.
+    /// </summary>
+public const string GoogleProviderId = "google";
+        /// <summary>
+    /// GroqProviderId.
+    /// </summary>
+public const string GroqProviderId = "groq";
+        /// <summary>
+    /// DeepSeekProviderId.
+    /// </summary>
+public const string DeepSeekProviderId = "deepseek";
+        /// <summary>
+    /// MiniMaxProviderId.
+    /// </summary>
+public const string MiniMaxProviderId = "minimax";
+        /// <summary>
+    /// MistralProviderId.
+    /// </summary>
+public const string MistralProviderId = "mistral";
+        /// <summary>
+    /// XAiProviderId.
+    /// </summary>
+public const string XAiProviderId = "xai";
+        /// <summary>
+    /// ZaiProviderId.
+    /// </summary>
+public const string ZaiProviderId = "zai";
+        /// <summary>
+    /// PerplexityProviderId.
+    /// </summary>
+public const string PerplexityProviderId = "perplexity";
+        /// <summary>
+    /// AlibabaProviderId.
+    /// </summary>
+public const string AlibabaProviderId = "alibaba";
+        /// <summary>
+    /// OpenRouterProviderId.
+    /// </summary>
+public const string OpenRouterProviderId = "openrouter";
+        /// <summary>
+    /// LmStudioProviderId.
+    /// </summary>
+public const string LmStudioProviderId = "lm-studio";
+        /// <summary>
+    /// OpenCodeProviderId.
+    /// </summary>
+public const string OpenCodeProviderId = "opencode";
 
-    public static IReadOnlyList<AiProviderProfile> Create(IConfiguration? configuration = null)
+        /// <summary>
+    /// Create method.
+    /// </summary>
+public static IReadOnlyList<AiProviderProfile> Create(IConfiguration? configuration = null)
     {
         configuration ??= new ConfigurationBuilder().Build();
 
@@ -58,7 +106,10 @@ public static class DefaultAiProviderProfiles
         ];
     }
 
-    public static string GetDefaultProviderId(IConfiguration? configuration = null)
+        /// <summary>
+    /// GetDefaultProviderId method.
+    /// </summary>
+public static string GetDefaultProviderId(IConfiguration? configuration = null)
         => Get(configuration ?? new ConfigurationBuilder().Build(), "Ai:DefaultProviderId", OpenCodeProviderId)
             ?? OpenCodeProviderId;
 

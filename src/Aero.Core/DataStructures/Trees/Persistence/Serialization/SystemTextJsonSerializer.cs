@@ -2,6 +2,9 @@ using System.Buffers;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Serialization;
 
+/// <summary>
+/// Represents a class for SystemTextJsonSerializer.
+/// </summary>
 public sealed class SystemTextJsonSerializer<TDocument>(JsonSerializerOptions? options = null)
     : IDocumentSerializer<TDocument>
     where TDocument : class
@@ -13,7 +16,10 @@ public sealed class SystemTextJsonSerializer<TDocument>(JsonSerializerOptions? o
         WriteIndented = false,
     };
 
-    public ReadOnlyMemory<byte> Serialize(TDocument document)
+        /// <summary>
+    /// Serialize method.
+    /// </summary>
+public ReadOnlyMemory<byte> Serialize(TDocument document)
     {
         var buffer = new ArrayBufferWriter<byte>();
         using var writer = new Utf8JsonWriter(buffer);
@@ -22,7 +28,10 @@ public sealed class SystemTextJsonSerializer<TDocument>(JsonSerializerOptions? o
         return buffer.WrittenMemory;
     }
 
-    public TDocument Deserialize(ReadOnlyMemory<byte> bytes)
+        /// <summary>
+    /// Deserialize method.
+    /// </summary>
+public TDocument Deserialize(ReadOnlyMemory<byte> bytes)
     {
         var result = JsonSerializer.Deserialize<TDocument>(bytes.Span, _options);
         return result ?? throw new SerializationException(

@@ -6,25 +6,49 @@ using Moq;
 
 namespace Aero.Social.Tests.Infrastructure;
 
+/// <summary>
+/// Represents a class for ProviderTestBase.
+/// </summary>
 public abstract class ProviderTestBase
 {
-    protected readonly Mock<ILogger> LoggerMock = new();
-    protected readonly MockHttpMessageHandler HttpHandler = new();
-    protected readonly Mock<IConfiguration> ConfigurationMock = new();
-    protected HttpClient HttpClient => new(HttpHandler);
+        /// <summary>
+    /// LoggerMock.
+    /// </summary>
+protected readonly Mock<ILogger> LoggerMock = new();
+        /// <summary>
+    /// HttpHandler.
+    /// </summary>
+protected readonly MockHttpMessageHandler HttpHandler = new();
+        /// <summary>
+    /// ConfigurationMock.
+    /// </summary>
+protected readonly Mock<IConfiguration> ConfigurationMock = new();
+        /// <summary>
+    /// Gets or sets the Http Client.
+    /// </summary>
+protected HttpClient HttpClient => new(HttpHandler);
 
-    protected Mock<ILogger<T>> CreateLoggerMock<T>()
+        /// <summary>
+    /// CreateLoggerMock method.
+    /// </summary>
+protected Mock<ILogger<T>> CreateLoggerMock<T>()
     {
         return new Mock<ILogger<T>>();
     }
 
-    protected void SetupConfiguration(string key, string value)
+        /// <summary>
+    /// SetupConfiguration method.
+    /// </summary>
+protected void SetupConfiguration(string key, string value)
     {
         ConfigurationMock.Setup(x => x[key]).Returns(value);
         ConfigurationMock.Setup(x => x.GetSection(key)).Returns(new Mock<IConfigurationSection>().Object);
     }
 
-    protected void SetupConfigurationSection(string key, Dictionary<string, string> values)
+        /// <summary>
+    /// SetupConfigurationSection method.
+    /// </summary>
+protected void SetupConfigurationSection(string key, Dictionary<string, string> values)
     {
         var sectionMock = new Mock<IConfigurationSection>();
         foreach (var kvp in values)
@@ -34,7 +58,10 @@ public abstract class ProviderTestBase
         ConfigurationMock.Setup(x => x.GetSection(key)).Returns(sectionMock.Object);
     }
 
-    protected void VerifyLog(LogLevel level, Times times)
+        /// <summary>
+    /// VerifyLog method.
+    /// </summary>
+protected void VerifyLog(LogLevel level, Times times)
     {
         LoggerMock.Verify(
             x => x.Log(
@@ -46,7 +73,10 @@ public abstract class ProviderTestBase
             times);
     }
 
-    protected static void VerifyLog<T>(Mock<ILogger<T>> loggerMock, LogLevel level, Times times)
+        /// <summary>
+    /// VerifyLog method.
+    /// </summary>
+protected static void VerifyLog<T>(Mock<ILogger<T>> loggerMock, LogLevel level, Times times)
     {
         loggerMock.Verify(
             x => x.Log(
@@ -58,7 +88,10 @@ public abstract class ProviderTestBase
             times);
     }
 
-    protected static void AssertContainsScope(string[] required, string[] granted)
+        /// <summary>
+    /// AssertContainsScope method.
+    /// </summary>
+protected static void AssertContainsScope(string[] required, string[] granted)
     {
         foreach (var scope in required)
         {

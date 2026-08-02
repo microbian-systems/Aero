@@ -1,5 +1,8 @@
 namespace Aero.Core.DataStructures.Trees.Persistence.Concurrency;
 
+/// <summary>
+/// Defines an enumeration for IsolationLevel.
+/// </summary>
 public enum IsolationLevel : byte
 {
     ReadCommitted = 0x01,

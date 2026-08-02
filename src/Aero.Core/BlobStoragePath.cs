@@ -1,7 +1,16 @@
-﻿namespace Aero.Core;
+namespace Aero.Core;
 
+/// <summary>
+/// Represents a class for BlobStoragePath.
+/// </summary>
 public class BlobStoragePath
 {
-    public string Container { get; set; } = "";
-    public List<string> FoldersList { get; protected set; } = new();
+        /// <summary>
+    /// Gets or sets the Container.
+    /// </summary>
+public string Container { get; set; } = "";
+        /// <summary>
+    /// Gets or sets the Folders List.
+    /// </summary>
+public List<string> FoldersList { get; protected set; } = new();
 }

@@ -10,6 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for MediumProvider.
+/// </summary>
 public class MediumProvider(
     HttpClient httpClient,
     IConfiguration configuration,
@@ -18,15 +21,36 @@ public class MediumProvider(
 {
     private readonly IConfiguration _configuration = configuration;
 
-    public override string Identifier => "medium";
-    public override string Name => "Medium";
-    public override string[] Scopes => Array.Empty<string>();
-    public override EditorType Editor => EditorType.Markdown;
-    public override int MaxConcurrentJobs => 3;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "medium";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Medium";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => Array.Empty<string>();
+        /// <summary>
+    /// Gets or sets the Editor.
+    /// </summary>
+public override EditorType Editor => EditorType.Markdown;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 3;
 
-    public override int MaxLength(object? additionalSettings = null) => 100000;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 100000;
 
-    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -39,7 +63,10 @@ public class MediumProvider(
         });
     }
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -55,7 +82,10 @@ public class MediumProvider(
         });
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -96,7 +126,10 @@ public class MediumProvider(
         }
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -154,7 +187,10 @@ public class MediumProvider(
         };
     }
 
-    public async Task<List<MediumPublication>> GetPublicationsAsync(string accessToken, string userId, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetPublicationsAsync method.
+    /// </summary>
+public async Task<List<MediumPublication>> GetPublicationsAsync(string accessToken, string userId, CancellationToken cancellationToken = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.medium.com/v1/users/{userId}/publications");
         request.Headers.Add("Authorization", $"Bearer {accessToken}");
@@ -180,7 +216,10 @@ public class MediumProvider(
 
     private class MediumAuthBody
     {
-        [JsonPropertyName("apiKey")]
+                /// <summary>
+        /// Gets or sets the Api Key.
+        /// </summary>
+[JsonPropertyName("apiKey")]
         public string? ApiKey { get; set; }
     }
 
@@ -188,55 +227,94 @@ public class MediumProvider(
 
     private class MediumUserResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public MediumUserData Data { get; set; } = new();
     }
 
     private class MediumUserData
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
 
-        [JsonPropertyName("imageUrl")]
+                /// <summary>
+        /// Gets or sets the Image Url.
+        /// </summary>
+[JsonPropertyName("imageUrl")]
         public string? ImageUrl { get; set; }
     }
 
     private class MediumPostResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public MediumPostData Data { get; set; } = new();
     }
 
     private class MediumPostData
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string Url { get; set; } = string.Empty;
     }
 
     private class MediumPublicationsResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public List<MediumPublication>? Data { get; set; }
     }
 
-    public class MediumPublication
+        /// <summary>
+    /// Represents a class for MediumPublication.
+    /// </summary>
+public class MediumPublication
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string Url { get; set; } = string.Empty;
     }
 

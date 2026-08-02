@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
 using Microsoft.Extensions.Options;
@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
+/// <summary>
+/// Represents a class for TwitterClientTests.
+/// </summary>
 public class TwitterClientTests
 {
-    [Test]
+        /// <summary>
+    /// TwitterClient_ShouldImplementITwitterClient method.
+    /// </summary>
+[Test]
     public async Task TwitterClient_ShouldImplementITwitterClient()
     {
         // Arrange
@@ -25,7 +31,10 @@ public class TwitterClientTests
         await Assert.That(client).IsAssignableTo<ITwitterClient>();
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterClient_Constructor_ShouldThrowOnNullHttpClient method.
+    /// </summary>
+[Test]
     public void TwitterClient_Constructor_ShouldThrowOnNullHttpClient()
     {
         // Arrange
@@ -35,7 +44,10 @@ public class TwitterClientTests
         Assert.Throws<ArgumentNullException>(() => new TwitterClient(null!, options));
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterClient_Constructor_ShouldThrowOnNullOptions method.
+    /// </summary>
+[Test]
     public void TwitterClient_Constructor_ShouldThrowOnNullOptions()
     {
         // Arrange
@@ -46,9 +58,15 @@ public class TwitterClientTests
     }
 }
 
+/// <summary>
+/// Represents a class for ITwitterClientTests.
+/// </summary>
 public class ITwitterClientTests
 {
-    [Test]
+        /// <summary>
+    /// ITwitterClient_ShouldHaveGetTweetAsyncMethod method.
+    /// </summary>
+[Test]
     public async Task ITwitterClient_ShouldHaveGetTweetAsyncMethod()
     {
         // This test verifies the interface contract

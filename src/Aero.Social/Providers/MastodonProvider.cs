@@ -8,20 +8,41 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for MastodonProvider.
+/// </summary>
 public class MastodonProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<MastodonProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "mastodon";
-    public override string Name => "Mastodon";
-    public override string[] Scopes => new[] { "write:statuses", "profile", "write:media" };
-    public override int MaxConcurrentJobs => 5;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "mastodon";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Mastodon";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[] { "write:statuses", "profile", "write:media" };
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 5;
 
-    public override int MaxLength(object? additionalSettings = null) => 500;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 500;
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -45,7 +66,10 @@ public class MastodonProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -82,7 +106,10 @@ public class MastodonProvider(
         };
     }
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -98,7 +125,10 @@ public class MastodonProvider(
         });
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -155,7 +185,10 @@ public class MastodonProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -274,52 +307,91 @@ public class MastodonProvider(
 
     private class MastodonTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("token_type")]
+                /// <summary>
+        /// Gets or sets the Token Type.
+        /// </summary>
+[JsonPropertyName("token_type")]
         public string? TokenType { get; set; }
 
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string? Scope { get; set; }
 
-        [JsonPropertyName("created_at")]
+                /// <summary>
+        /// Gets or sets the Created At.
+        /// </summary>
+[JsonPropertyName("created_at")]
         public long? CreatedAt { get; set; }
     }
 
     private class MastodonUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
 
-        [JsonPropertyName("display_name")]
+                /// <summary>
+        /// Gets or sets the Display Name.
+        /// </summary>
+[JsonPropertyName("display_name")]
         public string? DisplayName { get; set; }
 
-        [JsonPropertyName("avatar")]
+                /// <summary>
+        /// Gets or sets the Avatar.
+        /// </summary>
+[JsonPropertyName("avatar")]
         public string? Avatar { get; set; }
     }
 
     private class MastodonStatusResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string? Url { get; set; }
     }
 
     private class MastodonMediaResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("type")]
+                /// <summary>
+        /// Gets or sets the Type.
+        /// </summary>
+[JsonPropertyName("type")]
         public string? Type { get; set; }
 
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string? Url { get; set; }
     }
 

@@ -2,6 +2,9 @@ namespace Aero.Services.Images;
 
 // ─── Photo Models ────────────────────────────────────────
 
+/// <summary>
+/// Represents a record for PexelsSearchResult.
+/// </summary>
 public sealed record PexelsSearchResult(
     [property: JsonPropertyName("photos")] IReadOnlyList<PexelsPhoto> Photos,
     [property: JsonPropertyName("total_results")] int TotalResults,
@@ -9,6 +12,9 @@ public sealed record PexelsSearchResult(
     [property: JsonPropertyName("per_page")] int PerPage
 );
 
+/// <summary>
+/// Represents a record for PexelsPhoto.
+/// </summary>
 public sealed record PexelsPhoto(
     [property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("url")] string Url,
@@ -17,6 +23,9 @@ public sealed record PexelsPhoto(
     [property: JsonPropertyName("photographer")] string Photographer
 );
 
+/// <summary>
+/// Represents a record for PexelsSrc.
+/// </summary>
 public sealed record PexelsSrc(
     [property: JsonPropertyName("original")] string Original,
     [property: JsonPropertyName("large")] string Large,
@@ -28,6 +37,9 @@ public sealed record PexelsSrc(
 
 // ─── Video Models ────────────────────────────────────────
 
+/// <summary>
+/// Represents a record for PexelsVideoSearchResult.
+/// </summary>
 public sealed record PexelsVideoSearchResult(
     [property: JsonPropertyName("videos")] IReadOnlyList<PexelsVideo> Videos,
     [property: JsonPropertyName("total_results")] int TotalResults,
@@ -35,6 +47,9 @@ public sealed record PexelsVideoSearchResult(
     [property: JsonPropertyName("per_page")] int PerPage
 );
 
+/// <summary>
+/// Represents a record for PexelsVideo.
+/// </summary>
 public sealed record PexelsVideo(
     [property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("url")] string Url,
@@ -43,6 +58,9 @@ public sealed record PexelsVideo(
     [property: JsonPropertyName("user")] PexelsVideoUser? User
 );
 
+/// <summary>
+/// Represents a record for PexelsVideoFile.
+/// </summary>
 public sealed record PexelsVideoFile(
     [property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("quality")] string Quality,
@@ -51,6 +69,9 @@ public sealed record PexelsVideoFile(
     [property: JsonPropertyName("height")] int Height
 );
 
+/// <summary>
+/// Represents a record for PexelsVideoUser.
+/// </summary>
 public sealed record PexelsVideoUser(
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("url")] string Url

@@ -1,10 +1,16 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 namespace Aero.Web.Middleware;
 
+/// <summary>
+/// Represents a class for RequestCultureMiddleware.
+/// </summary>
 public class RequestCultureMiddleware(RequestDelegate next)
 {
-    public async Task InvokeAsync(HttpContext context)
+        /// <summary>
+    /// InvokeAsync method.
+    /// </summary>
+public async Task InvokeAsync(HttpContext context)
     {
         var cultureQuery = context.Request.Query["culture"];
         if (!string.IsNullOrWhiteSpace(cultureQuery))
@@ -20,9 +26,15 @@ public class RequestCultureMiddleware(RequestDelegate next)
     }
 }
 
+/// <summary>
+/// Represents a class for RequestCultureMiddlewareExtensions.
+/// </summary>
 public static class RequestCultureMiddlewareExtensions
 {
-    public static IApplicationBuilder UseRequestCultureMiddleware(
+        /// <summary>
+    /// UseRequestCultureMiddleware method.
+    /// </summary>
+public static IApplicationBuilder UseRequestCultureMiddleware(
         this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<RequestCultureMiddleware>();

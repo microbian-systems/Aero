@@ -14,14 +14,35 @@ internal sealed class TransactionContext(
     private bool _aborted;
     private bool _disposed;
 
-    public long TransactionId => transactionId;
-    public Lsn BeginLsn => beginLsn;
-    public bool IsCommitted => _committed;
-    public bool IsAborted => _aborted;
-    public IReadOnlyDictionary<long, ReadOnlyMemory<byte>> DirtyPages => _dirtyPages;
-    public IReadOnlyDictionary<long, uint> ReadSet => _readSet;
+        /// <summary>
+    /// Gets or sets the Transaction Id.
+    /// </summary>
+public long TransactionId => transactionId;
+        /// <summary>
+    /// Gets or sets the Begin Lsn.
+    /// </summary>
+public Lsn BeginLsn => beginLsn;
+        /// <summary>
+    /// Gets or sets the Is Committed.
+    /// </summary>
+public bool IsCommitted => _committed;
+        /// <summary>
+    /// Gets or sets the Is Aborted.
+    /// </summary>
+public bool IsAborted => _aborted;
+        /// <summary>
+    /// Gets or sets the Dirty Pages.
+    /// </summary>
+public IReadOnlyDictionary<long, ReadOnlyMemory<byte>> DirtyPages => _dirtyPages;
+        /// <summary>
+    /// Gets or sets the Read Set.
+    /// </summary>
+public IReadOnlyDictionary<long, uint> ReadSet => _readSet;
 
-    public void TrackRead(long pageId)
+        /// <summary>
+    /// TrackRead method.
+    /// </summary>
+public void TrackRead(long pageId)
     {
         ThrowIfDisposed();
         if (!_readSet.ContainsKey(pageId))
@@ -30,7 +51,10 @@ internal sealed class TransactionContext(
         }
     }
 
-    public void TrackRead(long pageId, uint version)
+        /// <summary>
+    /// TrackRead method.
+    /// </summary>
+public void TrackRead(long pageId, uint version)
     {
         ThrowIfDisposed();
         if (!_readSet.ContainsKey(pageId))
@@ -39,7 +63,10 @@ internal sealed class TransactionContext(
         }
     }
 
-    public void TrackWrite(long pageId, ReadOnlyMemory<byte> beforeImage)
+        /// <summary>
+    /// TrackWrite method.
+    /// </summary>
+public void TrackWrite(long pageId, ReadOnlyMemory<byte> beforeImage)
     {
         ThrowIfDisposed();
 
@@ -49,12 +76,18 @@ internal sealed class TransactionContext(
         }
     }
 
-    public void RecordWriteLsn(long pageId, Lsn lsn)
+        /// <summary>
+    /// RecordWriteLsn method.
+    /// </summary>
+public void RecordWriteLsn(long pageId, Lsn lsn)
     {
         _writeLsns[pageId] = lsn;
     }
 
-    public async ValueTask CommitAsync(CancellationToken ct = default)
+        /// <summary>
+    /// CommitAsync method.
+    /// </summary>
+public async ValueTask CommitAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -77,7 +110,10 @@ internal sealed class TransactionContext(
         manager.Complete(transactionId);
     }
 
-    public async ValueTask RollbackAsync(CancellationToken ct = default)
+        /// <summary>
+    /// RollbackAsync method.
+    /// </summary>
+public async ValueTask RollbackAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -119,7 +155,10 @@ internal sealed class TransactionContext(
         manager.Complete(transactionId);
     }
 
-    public async ValueTask DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public async ValueTask DisposeAsync()
     {
         if (_disposed)
             return;

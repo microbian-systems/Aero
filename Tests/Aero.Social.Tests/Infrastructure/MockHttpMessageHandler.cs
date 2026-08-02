@@ -4,30 +4,48 @@ using System.Text.Json;
 
 namespace Aero.Social.Tests.Infrastructure;
 
+/// <summary>
+/// Represents a class for MockHttpMessageHandler.
+/// </summary>
 public class MockHttpMessageHandler : HttpMessageHandler
 {
     private readonly List<MockedRequest> _mockedRequests = new();
     private readonly List<HttpRequestMessage> _receivedRequests = new();
 
-    public IReadOnlyList<HttpRequestMessage> ReceivedRequests => _receivedRequests;
+        /// <summary>
+    /// Gets or sets the Received Requests.
+    /// </summary>
+public IReadOnlyList<HttpRequestMessage> ReceivedRequests => _receivedRequests;
 
-    public MockHttpMessageHandler When(Func<HttpRequestMessage, bool> predicate)
+        /// <summary>
+    /// When method.
+    /// </summary>
+public MockHttpMessageHandler When(Func<HttpRequestMessage, bool> predicate)
     {
         _mockedRequests.Add(new MockedRequest { Predicate = predicate });
         return this;
     }
 
-    public MockHttpMessageHandler WhenGet(string urlPattern)
+        /// <summary>
+    /// WhenGet method.
+    /// </summary>
+public MockHttpMessageHandler WhenGet(string urlPattern)
     {
         return When(req => req.Method == HttpMethod.Get && MatchUrl(req, urlPattern));
     }
 
-    public MockHttpMessageHandler WhenPost(string urlPattern)
+        /// <summary>
+    /// WhenPost method.
+    /// </summary>
+public MockHttpMessageHandler WhenPost(string urlPattern)
     {
         return When(req => req.Method == HttpMethod.Post && MatchUrl(req, urlPattern));
     }
 
-    public MockedRequest RespondWith(string content, HttpStatusCode statusCode = HttpStatusCode.OK, string contentType = "application/json")
+        /// <summary>
+    /// RespondWith method.
+    /// </summary>
+public MockedRequest RespondWith(string content, HttpStatusCode statusCode = HttpStatusCode.OK, string contentType = "application/json")
     {
         var mock = _mockedRequests.Last();
         mock.ResponseContent = content;
@@ -36,14 +54,20 @@ public class MockHttpMessageHandler : HttpMessageHandler
         return mock;
     }
 
-    public MockedRequest RespondWith(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
+        /// <summary>
+    /// RespondWith method.
+    /// </summary>
+public MockedRequest RespondWith(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
     {
         var mock = _mockedRequests.Last();
         mock.ResponseFactory = responseFactory;
         return mock;
     }
 
-    public MockedRequest RespondWithJson<T>(T data, HttpStatusCode statusCode = HttpStatusCode.OK)
+        /// <summary>
+    /// RespondWithJson method.
+    /// </summary>
+public MockedRequest RespondWithJson<T>(T data, HttpStatusCode statusCode = HttpStatusCode.OK)
     {
         var json = JsonSerializer.Serialize(data, new JsonSerializerOptions
         {
@@ -52,7 +76,10 @@ public class MockHttpMessageHandler : HttpMessageHandler
         return RespondWith(json, statusCode);
     }
 
-    public MockedRequest RespondWithStatusCode(HttpStatusCode statusCode)
+        /// <summary>
+    /// RespondWithStatusCode method.
+    /// </summary>
+public MockedRequest RespondWithStatusCode(HttpStatusCode statusCode)
     {
         var mock = _mockedRequests.Last();
         mock.StatusCode = statusCode;
@@ -71,7 +98,10 @@ public class MockHttpMessageHandler : HttpMessageHandler
         return url.Contains(pattern, StringComparison.OrdinalIgnoreCase);
     }
 
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        /// <summary>
+    /// SendAsync method.
+    /// </summary>
+protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         _receivedRequests.Add(request);
 
@@ -108,30 +138,63 @@ public class MockHttpMessageHandler : HttpMessageHandler
         };
     }
 
-    public void Reset()
+        /// <summary>
+    /// Reset method.
+    /// </summary>
+public void Reset()
     {
         _mockedRequests.Clear();
         _receivedRequests.Clear();
     }
 }
 
+/// <summary>
+/// Represents a class for MockedRequest.
+/// </summary>
 public class MockedRequest
 {
-    public Func<HttpRequestMessage, bool> Predicate { get; set; } = _ => false;
-    public string? ResponseContent { get; set; }
-    public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
-    public string ContentType { get; set; } = "application/json";
-    public int DelayMs { get; set; }
-    public Exception? ThrowException { get; set; }
-    public Func<HttpRequestMessage, HttpResponseMessage>? ResponseFactory { get; set; }
+        /// <summary>
+    /// Gets or sets the Predicate.
+    /// </summary>
+public Func<HttpRequestMessage, bool> Predicate { get; set; } = _ => false;
+        /// <summary>
+    /// Gets or sets the Response Content.
+    /// </summary>
+public string? ResponseContent { get; set; }
+        /// <summary>
+    /// Gets or sets the Status Code.
+    /// </summary>
+public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
+        /// <summary>
+    /// Gets or sets the Content Type.
+    /// </summary>
+public string ContentType { get; set; } = "application/json";
+        /// <summary>
+    /// Gets or sets the Delay Ms.
+    /// </summary>
+public int DelayMs { get; set; }
+        /// <summary>
+    /// Gets or sets the Throw Exception.
+    /// </summary>
+public Exception? ThrowException { get; set; }
+        /// <summary>
+    /// Gets or sets the Response Factory.
+    /// </summary>
+public Func<HttpRequestMessage, HttpResponseMessage>? ResponseFactory { get; set; }
 
-    public MockedRequest WithDelay(int milliseconds)
+        /// <summary>
+    /// WithDelay method.
+    /// </summary>
+public MockedRequest WithDelay(int milliseconds)
     {
         DelayMs = milliseconds;
         return this;
     }
 
-    public MockedRequest Throw(Exception exception)
+        /// <summary>
+    /// Throw method.
+    /// </summary>
+public MockedRequest Throw(Exception exception)
     {
         ThrowException = exception;
         return this;

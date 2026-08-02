@@ -12,7 +12,10 @@ public class GitAutomator
 {
     private const string GitCommand = "git";
 
-    public static void Main(string[] args)
+        /// <summary>
+    /// Main method.
+    /// </summary>
+public static void Main(string[] args)
     {
         string commitMessage = string.Empty;
 

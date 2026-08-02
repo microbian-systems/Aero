@@ -10,6 +10,9 @@ using CloudFlare.Client.Enumerators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
+/// <summary>
+/// Represents a class for DnsUpdaterHostedService.
+/// </summary>
 public partial class DnsUpdaterHostedService : BackgroundService, IHostedService
 {
     private readonly HttpClient httpClient;
@@ -17,7 +20,10 @@ public partial class DnsUpdaterHostedService : BackgroundService, IHostedService
     private readonly IAuthentication authentication;
     private readonly TimeSpan updateInterval;
 
-    public DnsUpdaterHostedService(HttpClient httpClient, ILogger<DnsUpdaterHostedService> log, IConfiguration config)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="DnsUpdaterHostedService"/> class.
+    /// </summary>
+public DnsUpdaterHostedService(HttpClient httpClient, ILogger<DnsUpdaterHostedService> log, IConfiguration config)
     {
         this.httpClient = httpClient;
         this.log = log;
@@ -31,7 +37,10 @@ public partial class DnsUpdaterHostedService : BackgroundService, IHostedService
         this.updateInterval = TimeSpan.FromSeconds(config.GetValue("UpdateIntervalSeconds", 30));
     }
 
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -42,13 +51,19 @@ public partial class DnsUpdaterHostedService : BackgroundService, IHostedService
         }
     }
 
-    public override async Task StartAsync(CancellationToken cancellationToken)
+        /// <summary>
+    /// StartAsync method.
+    /// </summary>
+public override async Task StartAsync(CancellationToken cancellationToken)
     {
         log.LogInformation("Started DNS updater...");
         await base.StartAsync(cancellationToken);
     }
 
-    public async Task UpdateDnsAsync(CancellationToken cancellationToken)
+        /// <summary>
+    /// UpdateDnsAsync method.
+    /// </summary>
+public async Task UpdateDnsAsync(CancellationToken cancellationToken)
     {
         try
         {
@@ -176,7 +191,10 @@ public partial class DnsUpdaterHostedService : BackgroundService, IHostedService
         return null;
     }
 
-    public override async Task StopAsync(CancellationToken cancellationToken)
+        /// <summary>
+    /// StopAsync method.
+    /// </summary>
+public override async Task StopAsync(CancellationToken cancellationToken)
     {
         log.LogInformation("Stopping DNS updater...");
         await base.StopAsync(cancellationToken);

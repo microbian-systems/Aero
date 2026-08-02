@@ -86,15 +86,15 @@ public interface IAeroModuleBuilder
     IReadOnlyList<Type> SearchIndexers { get; }
 
     /// <summary>
-    /// Gets the registered Marten configuration contributor types.
+    /// Gets the registered database configuration contributor types.
     /// </summary>
-    IReadOnlyList<Type> MartenConfigurations { get; }
+    IReadOnlyList<Type> DbConfigurations { get; }
 
     /// <summary>
-    /// Registers a Marten schema configuration contributor type.
-    /// The type must implement <see cref="global::Marten.IConfigureMarten"/>.
+    /// Registers a database configuration contributor type.
+    /// The type must implement <see cref="global::AeroDB.IConfigureAeroDB"/>.
     /// </summary>
-    void AddMartenConfiguration<T>() where T : class, global::Marten.IConfigureMarten;
+    void AddDbConfiguration<T>() where T : class;
 }
 
 /// <summary>

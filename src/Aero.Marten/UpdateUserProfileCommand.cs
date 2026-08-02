@@ -6,12 +6,18 @@ using Aero.Models.Entities;
 
 namespace Aero.Marten;
 
+/// <summary>
+/// Represents a class for UpdateUserProfileCommand.
+/// </summary>
 public class UpdateUserProfileCommand(
     IGenericRepository<AeroUserProfile, long> db,
     ILogger<UpdateUserProfileCommand> log)
     : IAsyncCommand<AeroUserProfile, AeroUserProfile>
 {
-    public async Task<AeroUserProfile> ExecuteAsync(AeroUserProfile profile)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task<AeroUserProfile> ExecuteAsync(AeroUserProfile profile)
     {
         log.LogInformation($"updating user profile: {profile.ToJson()}");
         var results = await db.UpsertAsync(profile);

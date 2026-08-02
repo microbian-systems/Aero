@@ -2,28 +2,76 @@ using Aero.Core;
 
 namespace Aero.Services;
 
+/// <summary>
+/// Defines an interface for IJwtTokenBuilder.
+/// </summary>
 public interface IJwtTokenBuilder
 {
-    JwtTokenBuilder AddSecurityKey();
-    JwtTokenBuilder AddSecurityKey(string secret);
-    JwtTokenBuilder AddSecurityKey(SecurityKey securityKey);
-    JwtTokenBuilder AddSubject(string subject);
-    JwtTokenBuilder AddIssuer(string issuer);
-    JwtTokenBuilder AddAudience(string audience);
-    JwtTokenBuilder AddClaim(string type, string value);
-    JwtTokenBuilder AddClaims(Dictionary<string, string> claims);
-    JwtTokenBuilder AddExpiry(int expiryInMinutes);
-    JwtTokenBuilder AddExpiry(TimeSpan expiry);
-    JwtToken Build();
+        /// <summary>
+    /// AddSecurityKey method.
+    /// </summary>
+JwtTokenBuilder AddSecurityKey();
+        /// <summary>
+    /// AddSecurityKey method.
+    /// </summary>
+JwtTokenBuilder AddSecurityKey(string secret);
+        /// <summary>
+    /// AddSecurityKey method.
+    /// </summary>
+JwtTokenBuilder AddSecurityKey(SecurityKey securityKey);
+        /// <summary>
+    /// AddSubject method.
+    /// </summary>
+JwtTokenBuilder AddSubject(string subject);
+        /// <summary>
+    /// AddIssuer method.
+    /// </summary>
+JwtTokenBuilder AddIssuer(string issuer);
+        /// <summary>
+    /// AddAudience method.
+    /// </summary>
+JwtTokenBuilder AddAudience(string audience);
+        /// <summary>
+    /// AddClaim method.
+    /// </summary>
+JwtTokenBuilder AddClaim(string type, string value);
+        /// <summary>
+    /// AddClaims method.
+    /// </summary>
+JwtTokenBuilder AddClaims(Dictionary<string, string> claims);
+        /// <summary>
+    /// AddExpiry method.
+    /// </summary>
+JwtTokenBuilder AddExpiry(int expiryInMinutes);
+        /// <summary>
+    /// AddExpiry method.
+    /// </summary>
+JwtTokenBuilder AddExpiry(TimeSpan expiry);
+        /// <summary>
+    /// Build method.
+    /// </summary>
+JwtToken Build();
 }
 
+/// <summary>
+/// Represents a class for JwtToken.
+/// </summary>
 public sealed class JwtToken(JwtSecurityToken token)
 {
-    public DateTime ValidTo => token.ValidTo;
-    public string Value => new JwtSecurityTokenHandler().WriteToken(token);
+        /// <summary>
+    /// Gets or sets the Valid To.
+    /// </summary>
+public DateTime ValidTo => token.ValidTo;
+        /// <summary>
+    /// Gets or sets the Value.
+    /// </summary>
+public string Value => new JwtSecurityTokenHandler().WriteToken(token);
 }
 
 
+/// <summary>
+/// Represents a class for JwtTokenBuilder.
+/// </summary>
 public sealed class JwtTokenBuilder(IOptions<AppSettings> settings) : IJwtTokenBuilder
 {
     private SecurityKey securityKey = default;
@@ -37,9 +85,15 @@ public sealed class JwtTokenBuilder(IOptions<AppSettings> settings) : IJwtTokenB
     private Dictionary<string, string> claims = [];
     private TimeSpan expiry = TimeSpan.FromMinutes(15);
 
-    public JwtTokenBuilder AddSecurityKey() => AddSecurityKey(settings.Value.Secret);
+        /// <summary>
+    /// AddSecurityKey method.
+    /// </summary>
+public JwtTokenBuilder AddSecurityKey() => AddSecurityKey(settings.Value.Secret);
 
-    public JwtTokenBuilder AddSecurityKey(string secret)
+        /// <summary>
+    /// AddSecurityKey method.
+    /// </summary>
+public JwtTokenBuilder AddSecurityKey(string secret)
     {
         ArgumentException.ThrowIfNullOrEmpty(secret);
         if(secret.Length < 32)
@@ -49,34 +103,49 @@ public sealed class JwtTokenBuilder(IOptions<AppSettings> settings) : IJwtTokenB
         return this;
     }
 
-    public JwtTokenBuilder AddSecurityKey(SecurityKey securityKey)
+        /// <summary>
+    /// AddSecurityKey method.
+    /// </summary>
+public JwtTokenBuilder AddSecurityKey(SecurityKey securityKey)
     {
         this.securityKey = securityKey;
         return this;
     }
 
-    public JwtTokenBuilder AddSubject(string subject)
+        /// <summary>
+    /// AddSubject method.
+    /// </summary>
+public JwtTokenBuilder AddSubject(string subject)
     {
         ArgumentException.ThrowIfNullOrEmpty(subject);
         this.subject = subject;
         return this;
     }
 
-    public JwtTokenBuilder AddIssuer(string issuer)
+        /// <summary>
+    /// AddIssuer method.
+    /// </summary>
+public JwtTokenBuilder AddIssuer(string issuer)
     {
         ArgumentException.ThrowIfNullOrEmpty(issuer);
         this.issuer = issuer;
         return this;
     }
 
-    public JwtTokenBuilder AddAudience(string audience)
+        /// <summary>
+    /// AddAudience method.
+    /// </summary>
+public JwtTokenBuilder AddAudience(string audience)
     {
         ArgumentException.ThrowIfNullOrEmpty(audience);
         this.audience = audience;
         return this;
     }
 
-    public JwtTokenBuilder AddClaim(string type, string value)
+        /// <summary>
+    /// AddClaim method.
+    /// </summary>
+public JwtTokenBuilder AddClaim(string type, string value)
     {
         ArgumentException.ThrowIfNullOrEmpty(type);
         ArgumentException.ThrowIfNullOrEmpty(value);
@@ -84,16 +153,25 @@ public sealed class JwtTokenBuilder(IOptions<AppSettings> settings) : IJwtTokenB
         return this;
     }
 
-    public JwtTokenBuilder AddClaims(Dictionary<string, string> claims)
+        /// <summary>
+    /// AddClaims method.
+    /// </summary>
+public JwtTokenBuilder AddClaims(Dictionary<string, string> claims)
     {
         ArgumentNullException.ThrowIfNull(claims);
         this.claims = this.claims.Union(claims).ToDictionary();
         return this;
     }
 
-    public JwtTokenBuilder AddExpiry(TimeSpan expiry) => AddExpiry((int)expiry.TotalMinutes);
+        /// <summary>
+    /// AddExpiry method.
+    /// </summary>
+public JwtTokenBuilder AddExpiry(TimeSpan expiry) => AddExpiry((int)expiry.TotalMinutes);
 
-    public JwtTokenBuilder AddExpiry(int expiry)
+        /// <summary>
+    /// AddExpiry method.
+    /// </summary>
+public JwtTokenBuilder AddExpiry(int expiry)
     {
         ArgumentOutOfRangeException
             .ThrowIfLessThan(expiry, 1, nameof(expiry));
@@ -101,7 +179,10 @@ public sealed class JwtTokenBuilder(IOptions<AppSettings> settings) : IJwtTokenB
         return this;
     }
 
-    public JwtToken Build()
+        /// <summary>
+    /// Build method.
+    /// </summary>
+public JwtToken Build()
     {
         EnsureArguments();
 

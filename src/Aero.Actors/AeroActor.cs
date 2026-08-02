@@ -3,6 +3,9 @@ using System.Diagnostics;
 namespace Aero.Actors;
 
 
+/// <summary>
+/// Defines an interface for IAeroActor.
+/// </summary>
 public interface IAeroActor : IGrainWithIntegerCompoundKey;
 
 /// <summary>
@@ -11,9 +14,15 @@ public interface IAeroActor : IGrainWithIntegerCompoundKey;
 /// <param name="log">ILogger<T/> instance for logging</param>
 public abstract class AeroActor(ILogger<AeroActor> log) : Grain, IAeroActor
 {
-    protected static readonly ActivitySource Span = new(nameof(AeroActor));
+        /// <summary>
+    /// Span.
+    /// </summary>
+protected static readonly ActivitySource Span = new(nameof(AeroActor));
 
-    public override async Task OnActivateAsync(CancellationToken cancellationToken)
+        /// <summary>
+    /// OnActivateAsync method.
+    /// </summary>
+public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
         using var activity = Span.StartActivity($"{GetType().Name}.Activated");
         activity?.SetTag("grain.id", this.GetGrainId().ToString());
@@ -23,7 +32,10 @@ public abstract class AeroActor(ILogger<AeroActor> log) : Grain, IAeroActor
         log.LogInformation("Actor {Type} activated", GetType().Name);
     }
 
-    public override async Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
+        /// <summary>
+    /// OnDeactivateAsync method.
+    /// </summary>
+public override async Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
     {
         if (reason.ReasonCode == DeactivationReasonCode.ShuttingDown)
         {

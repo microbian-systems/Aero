@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Electra.Crypto.Solana;
 using FluentAssertions;
 using LanguageExt;
@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Electra.Crypto.Solana.Tests;
 
+/// <summary>
+/// Represents a class for SolanaWalletManagerTests.
+/// </summary>
 public class SolanaWalletManagerTests
 {
     private readonly IRpcClient _mockRpcClient;
@@ -19,7 +22,10 @@ public class SolanaWalletManagerTests
     private readonly ITokenAssetService _mockTokenAssetService;
     private readonly SolanaWalletManager _walletManager;
 
-    public SolanaWalletManagerTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="SolanaWalletManagerTests"/> class.
+    /// </summary>
+public SolanaWalletManagerTests()
     {
         _mockRpcClient = Substitute.For<IRpcClient>();
         _mockTokenMintResolver = Substitute.For<ITokenMintResolver>();
@@ -27,7 +33,10 @@ public class SolanaWalletManagerTests
         _walletManager = new SolanaWalletManager(_mockRpcClient, _mockTokenMintResolver, _mockTokenAssetService);
     }
 
-    [Test]
+        /// <summary>
+    /// CreateWalletAsync_WithValidParameters_ShouldCreateWallet method.
+    /// </summary>
+[Test]
     public async Task CreateWalletAsync_WithValidParameters_ShouldCreateWallet()
     {
         // Arrange
@@ -49,7 +58,10 @@ public class SolanaWalletManagerTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// CreateWalletAsync_WithDuplicateName_ShouldReturnNone method.
+    /// </summary>
+[Test]
     public async Task CreateWalletAsync_WithDuplicateName_ShouldReturnNone()
     {
         // Arrange
@@ -65,7 +77,10 @@ public class SolanaWalletManagerTests
         result.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// CreateBurnerWalletAsync_ShouldCreateBurnerWallet method.
+    /// </summary>
+[Test]
     public async Task CreateBurnerWalletAsync_ShouldCreateBurnerWallet()
     {
         // Arrange
@@ -87,7 +102,10 @@ public class SolanaWalletManagerTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// CreateBurnerWalletAsync_WithoutName_ShouldGenerateDefaultName method.
+    /// </summary>
+[Test]
     public async Task CreateBurnerWalletAsync_WithoutName_ShouldGenerateDefaultName()
     {
         // Act
@@ -104,7 +122,10 @@ public class SolanaWalletManagerTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// ImportWalletAsync_WithValidMnemonic_ShouldImportWallet method.
+    /// </summary>
+[Test]
     public async Task ImportWalletAsync_WithValidMnemonic_ShouldImportWallet()
     {
         // Arrange
@@ -127,7 +148,10 @@ public class SolanaWalletManagerTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// ImportWalletAsync_WithInvalidMnemonic_ShouldReturnNone method.
+    /// </summary>
+[Test]
     public async Task ImportWalletAsync_WithInvalidMnemonic_ShouldReturnNone()
     {
         // Arrange
@@ -142,7 +166,10 @@ public class SolanaWalletManagerTests
         result.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// GetWalletAsync_WithExistingWallet_ShouldReturnWallet method.
+    /// </summary>
+[Test]
     public async Task GetWalletAsync_WithExistingWallet_ShouldReturnWallet()
     {
         // Arrange
@@ -164,7 +191,10 @@ public class SolanaWalletManagerTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// GetWalletAsync_WithNonExistentWallet_ShouldReturnNone method.
+    /// </summary>
+[Test]
     public async Task GetWalletAsync_WithNonExistentWallet_ShouldReturnNone()
     {
         // Act
@@ -174,7 +204,10 @@ public class SolanaWalletManagerTests
         result.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// GetAllWalletsAsync_WithMultipleWallets_ShouldReturnAllWallets method.
+    /// </summary>
+[Test]
     public async Task GetAllWalletsAsync_WithMultipleWallets_ShouldReturnAllWallets()
     {
         // Arrange
@@ -199,7 +232,10 @@ public class SolanaWalletManagerTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// DeleteWalletAsync_WithExistingWallet_ShouldDeleteWallet method.
+    /// </summary>
+[Test]
     public async Task DeleteWalletAsync_WithExistingWallet_ShouldDeleteWallet()
     {
         // Arrange
@@ -216,7 +252,10 @@ public class SolanaWalletManagerTests
         //getResult.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// DeleteWalletAsync_WithNonExistentWallet_ShouldReturnNFalse method.
+    /// </summary>
+[Test]
     public async Task DeleteWalletAsync_WithNonExistentWallet_ShouldReturnNFalse()
     {
         // Act
@@ -226,7 +265,10 @@ public class SolanaWalletManagerTests
         result.Should().BeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// GetTotalPortfolioValueAsync_WithMockedAssets_ShouldCalculateCorrectly method.
+    /// </summary>
+[Test]
     public async Task GetTotalPortfolioValueAsync_WithMockedAssets_ShouldCalculateCorrectly()
     {
         // Arrange
@@ -245,7 +287,10 @@ public class SolanaWalletManagerTests
         //result.IfNone(-1).Should().BeGreaterThanOrEqualTo(0);
     }
 
-    [Test]
+        /// <summary>
+    /// Dispose_ShouldDisposeAllWallets method.
+    /// </summary>
+[Test]
     public void Dispose_ShouldDisposeAllWallets()
     {
         // Arrange
@@ -256,20 +301,29 @@ public class SolanaWalletManagerTests
     }
 }
 
+/// <summary>
+/// Represents a class for TokenAssetServiceTests.
+/// </summary>
 public class TokenAssetServiceTests
 {
     private readonly IRpcClient _mockRpcClient;
     private readonly ITokenMintResolver _mockTokenMintResolver;
     private readonly TokenAssetService _tokenAssetService;
 
-    public TokenAssetServiceTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="TokenAssetServiceTests"/> class.
+    /// </summary>
+public TokenAssetServiceTests()
     {
         _mockRpcClient = Substitute.For<IRpcClient>();
         _mockTokenMintResolver = Substitute.For<ITokenMintResolver>();
         _tokenAssetService = new TokenAssetService(_mockRpcClient, _mockTokenMintResolver);
     }
 
-    [Test]
+        /// <summary>
+    /// GetTokenInfoAsync_WithValidMint_ShouldReturnTokenInfo method.
+    /// </summary>
+[Test]
     public async Task GetTokenInfoAsync_WithValidMint_ShouldReturnTokenInfo()
     {
         // Arrange
@@ -300,7 +354,10 @@ public class TokenAssetServiceTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// GetTokenInfoAsync_WithEmptyMint_ShouldReturnNone method.
+    /// </summary>
+[Test]
     public async Task GetTokenInfoAsync_WithEmptyMint_ShouldReturnNone()
     {
         // Act
@@ -310,7 +367,10 @@ public class TokenAssetServiceTests
         result.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// GetPopularTokensAsync_ShouldReturnPopularTokens method.
+    /// </summary>
+[Test]
     public async Task GetPopularTokensAsync_ShouldReturnPopularTokens()
     {
         // Act
@@ -328,7 +388,10 @@ public class TokenAssetServiceTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTokensAsync_WithValidQuery_ShouldReturnMatchingTokens method.
+    /// </summary>
+[Test]
     public async Task SearchTokensAsync_WithValidQuery_ShouldReturnMatchingTokens()
     {
         // Act
@@ -345,7 +408,10 @@ public class TokenAssetServiceTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTokensAsync_WithEmptyQuery_ShouldReturnNone method.
+    /// </summary>
+[Test]
     public async Task SearchTokensAsync_WithEmptyQuery_ShouldReturnNone()
     {
         // Act
@@ -355,7 +421,10 @@ public class TokenAssetServiceTests
         result.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// Dispose_ShouldDisposeHttpClient method.
+    /// </summary>
+[Test]
     public void Dispose_ShouldDisposeHttpClient()
     {
         // Act & Assert
@@ -363,9 +432,15 @@ public class TokenAssetServiceTests
     }
 }
 
+/// <summary>
+/// Represents a class for TokenAssetInfoTests.
+/// </summary>
 public class TokenAssetInfoTests
 {
-    [Test]
+        /// <summary>
+    /// CreateSolToken_ShouldCreateCorrectSolTokenInfo method.
+    /// </summary>
+[Test]
     public void CreateSolToken_ShouldCreateCorrectSolTokenInfo()
     {
         // Arrange
@@ -384,7 +459,10 @@ public class TokenAssetInfoTests
         result.IsVerified.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// WithBalance_ShouldUpdateBalanceAndTimestamp method.
+    /// </summary>
+[Test]
     public void WithBalance_ShouldUpdateBalanceAndTimestamp()
     {
         // Arrange
@@ -402,7 +480,10 @@ public class TokenAssetInfoTests
         result.Symbol.Should().Be(originalToken.Symbol); // Other properties should remain unchanged
     }
 
-    [Test]
+        /// <summary>
+    /// WithPrice_ShouldUpdatePriceAndTimestamp method.
+    /// </summary>
+[Test]
     public void WithPrice_ShouldUpdatePriceAndTimestamp()
     {
         // Arrange
@@ -418,7 +499,10 @@ public class TokenAssetInfoTests
         result.Balance.Should().Be(originalToken.Balance); // Other properties should remain unchanged
     }
 
-    [Test]
+        /// <summary>
+    /// Value_WithPriceSet_ShouldCalculateCorrectly method.
+    /// </summary>
+[Test]
     public void Value_WithPriceSet_ShouldCalculateCorrectly()
     {
         // Arrange
@@ -433,7 +517,10 @@ public class TokenAssetInfoTests
         value.Should().Be(250m); // 2.5 * 100
     }
 
-    [Test]
+        /// <summary>
+    /// Value_WithoutPrice_ShouldReturnNull method.
+    /// </summary>
+[Test]
     public void Value_WithoutPrice_ShouldReturnNull()
     {
         // Arrange

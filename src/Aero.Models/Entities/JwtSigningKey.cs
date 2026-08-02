@@ -9,7 +9,10 @@ namespace Aero.Models.Entities;
 /// </summary>
 public class JwtSigningKey : IEntity<string>
 {
-    [Key]
+        /// <summary>
+    /// Gets or sets the Id.
+    /// </summary>
+[Key]
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
@@ -27,9 +30,18 @@ public class JwtSigningKey : IEntity<string>
     /// </summary>
     public DateTimeOffset CreatedOn { get; set; } = DateTimeOffset.UtcNow;
 
-    public DateTimeOffset? ModifiedOn { get; set; }
-    public string CreatedBy { get; set; } = "system";
-    public string ModifiedBy { get; set; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Modified On.
+    /// </summary>
+public DateTimeOffset? ModifiedOn { get; set; }
+        /// <summary>
+    /// Gets or sets the Created By.
+    /// </summary>
+public string CreatedBy { get; set; } = "system";
+        /// <summary>
+    /// Gets or sets the Modified By.
+    /// </summary>
+public string ModifiedBy { get; set; } = string.Empty;
 
     /// <summary>
     /// When this key should no longer be used for validation

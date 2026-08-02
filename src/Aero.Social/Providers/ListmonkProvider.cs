@@ -431,74 +431,122 @@ public class ListmonkProvider(
 
     private class ListmonkAuthBody
     {
-        public string Url { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+public string Url { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+public string Username { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Password.
+        /// </summary>
+public string Password { get; set; } = string.Empty;
     }
 
     private class ListmonkSettingsResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public ListmonkSettingsData? Data { get; set; }
     }
 
     private class ListmonkSettingsData
     {
-        [JsonPropertyName("app.site_name")]
+                /// <summary>
+        /// Gets or sets the App Site Name.
+        /// </summary>
+[JsonPropertyName("app.site_name")]
         public string? AppSiteName { get; set; }
 
-        [JsonPropertyName("app.logo_url")]
+                /// <summary>
+        /// Gets or sets the App Logo Url.
+        /// </summary>
+[JsonPropertyName("app.logo_url")]
         public string? AppLogoUrl { get; set; }
     }
 
     private class ListmonkListsResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public ListmonkListsData? Data { get; set; }
     }
 
     private class ListmonkListsData
     {
-        [JsonPropertyName("results")]
+                /// <summary>
+        /// Gets or sets the Results.
+        /// </summary>
+[JsonPropertyName("results")]
         public List<ListmonkListResult>? Results { get; set; }
     }
 
     private class ListmonkListResult
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
     }
 
     private class ListmonkTemplatesResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public List<ListmonkTemplateResult>? Data { get; set; }
     }
 
     private class ListmonkTemplateResult
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
     }
 
     private class ListmonkCampaignResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public ListmonkCampaignData? Data { get; set; }
     }
 
     private class ListmonkCampaignData
     {
-        [JsonPropertyName("uuid")]
+                /// <summary>
+        /// Gets or sets the Uuid.
+        /// </summary>
+[JsonPropertyName("uuid")]
         public string? Uuid { get; set; }
 
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
     }
 

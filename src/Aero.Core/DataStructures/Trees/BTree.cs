@@ -5,13 +5,19 @@ namespace Aero.Core.DataStructures.Trees;
 /// </summary>
 public class BTreeNodeWrapper<T>(BTreeNode<T> node, int keyIndex) : ITreeNode<T>
 {
-    public T Value
+        /// <summary>
+    /// Gets or sets the Value.
+    /// </summary>
+public T Value
     {
         get => node.Keys[keyIndex];
         set => node.Keys[keyIndex] = value;
     }
 
-    public IEnumerable<ITreeNode<T>> Children
+        /// <summary>
+    /// Gets or sets the Children.
+    /// </summary>
+public IEnumerable<ITreeNode<T>> Children
     {
         get
         {
@@ -35,7 +41,10 @@ public class BTreeNodeWrapper<T>(BTreeNode<T> node, int keyIndex) : ITreeNode<T>
 public class BTree<T>(int degree) : ITree<T>
     where T : IComparable<T>
 {
-    public BTreeNode<T> Root { get; private set; } = new(degree);
+        /// <summary>
+    /// Gets or sets the Root.
+    /// </summary>
+public BTreeNode<T> Root { get; private set; } = new(degree);
 
     // Minimum degree
 
@@ -71,7 +80,10 @@ public class BTree<T>(int degree) : ITree<T>
         return result.HasValue ? new BTreeNodeWrapper<T>(result.Value.node, result.Value.index) : null;
     }
 
-    public void Insert(T key)
+        /// <summary>
+    /// Insert method.
+    /// </summary>
+public void Insert(T key)
     {
         var root = Root;
         if (root.Keys.Count == 2 * degree - 1)
@@ -138,7 +150,10 @@ public class BTree<T>(int degree) : ITree<T>
         }
     }
         
-    public void Delete(T key)
+        /// <summary>
+    /// Delete method.
+    /// </summary>
+public void Delete(T key)
     {
         Remove(Root, key);
 

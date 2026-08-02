@@ -4,6 +4,9 @@ using Microsoft.Extensions.Options;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Vacuum;
 
+/// <summary>
+/// Represents a class for AutoVacuumService.
+/// </summary>
 public sealed class AutoVacuumService(
     IVacuumable tree,
     IOptions<AutoVacuumOptions> options,
@@ -14,7 +17,10 @@ public sealed class AutoVacuumService(
     private readonly AutoVacuumOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
     private readonly ILogger<AutoVacuumService> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    protected override async Task ExecuteAsync(CancellationToken ct)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+protected override async Task ExecuteAsync(CancellationToken ct)
     {
         _logger.LogInformation(
             "AutoVacuumService started with check interval {Interval}, threshold {Threshold:P0}",

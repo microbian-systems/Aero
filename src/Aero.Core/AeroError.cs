@@ -105,13 +105,34 @@ public abstract record AeroError : IAeroError
     /// <param name="msg">The error message that describes the configuration issue.</param>
     public sealed record Configuration(string msg) : AeroError;
 
-    public static implicit operator AeroError(string msg) => new Error(msg);
-    public static implicit operator AeroError((HttpStatusCode code, string msg) err) => new HttpRequest(err.code, err.msg);
-    public static implicit operator AeroError(string[] errors) => new Validation(errors.ToImmutableList());
-    public static implicit operator AeroError(ImmutableList<string> errors) => new Validation(errors);
-    public static implicit operator AeroError(ImmutableArray<string> errors) => new Validation(errors.ToImmutableList());
-    public static implicit operator AeroError(List<string> errors) => new Validation(errors.ToImmutableList());
-    public static implicit operator AeroError(HashSet<string> errors) => new Validation(errors.ToImmutableList());
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator AeroError(string msg) => new Error(msg);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator AeroError((HttpStatusCode code, string msg) err) => new HttpRequest(err.code, err.msg);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator AeroError(string[] errors) => new Validation(errors.ToImmutableList());
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator AeroError(ImmutableList<string> errors) => new Validation(errors);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator AeroError(ImmutableArray<string> errors) => new Validation(errors.ToImmutableList());
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator AeroError(List<string> errors) => new Validation(errors.ToImmutableList());
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator AeroError(HashSet<string> errors) => new Validation(errors.ToImmutableList());
 
     /// <summary>
     /// Creates a new instance of the Error class with the specified error message.

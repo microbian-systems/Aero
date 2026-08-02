@@ -1,23 +1,32 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Shouldly;
 using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
+/// <summary>
+/// Represents a class for RegistrationControllerIntegrationTests.
+/// </summary>
 [ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
 public class RegistrationControllerIntegrationTests
 {
     private readonly HttpClient _client;
     private readonly TestWebAppFactory _factory;
 
-    public RegistrationControllerIntegrationTests(TestWebAppFactory factory)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="RegistrationControllerIntegrationTests"/> class.
+    /// </summary>
+public RegistrationControllerIntegrationTests(TestWebAppFactory factory)
     {
         _factory = factory;
         _client = factory.CreateClient();
     }
 
-    [Test]
+        /// <summary>
+    /// GetRegistration_ShouldReturnSuccessStatusCode method.
+    /// </summary>
+[Test]
     public async Task GetRegistration_ShouldReturnSuccessStatusCode()
     {
         // Act
@@ -27,7 +36,10 @@ public class RegistrationControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRegistration_ShouldReturnMethodNotAllowed_WhenNoData method.
+    /// </summary>
+[Test]
     public async Task PostRegistration_ShouldReturnMethodNotAllowed_WhenNoData()
     {
         // Arrange
@@ -41,7 +53,10 @@ public class RegistrationControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound, HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// RegistrationEndpoints_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     [Arguments("/Registration/index")]
     [Arguments("/Registration/create")]
     [Arguments("/Registration/options")]
@@ -55,7 +70,10 @@ public class RegistrationControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// Registration_ShouldNotAllowInvalidMethods method.
+    /// </summary>
+[Test]
     [Arguments("PUT")]
     [Arguments("PATCH")]
     [Arguments("DELETE")]

@@ -3,9 +3,15 @@ using System.Reflection;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Linq.Translation;
 
+/// <summary>
+/// Represents a class for ExpressionEvaluator.
+/// </summary>
 public static class ExpressionEvaluator
 {
-    public static object Evaluate(Expression expr)
+        /// <summary>
+    /// Evaluate method.
+    /// </summary>
+public static object Evaluate(Expression expr)
     {
         switch (expr)
         {
@@ -44,4 +50,7 @@ public static class ExpressionEvaluator
     }
 }
 
+/// <summary>
+/// Represents a class for NotSupportedInQueryException.
+/// </summary>
 public sealed class NotSupportedInQueryException(string message, Exception? inner = null) : Exception(message, inner);

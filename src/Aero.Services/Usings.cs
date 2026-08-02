@@ -15,6 +15,7 @@ global using FluentEmail.Core;
 global using JasperFx.Core;
 global using Aero.Core.Identity;
 global using Aero.Models;
+global using Aero.Models.Entities;
 global using Aero.Models.ViewModels;
 global using Aero.Models.Entities;
 global using Aero.Services.Features;

@@ -1,4 +1,4 @@
-﻿
+
 // todo - consider moving LoggerConfig into its own csproj
 
 using Microsoft.Extensions.Configuration;
@@ -9,9 +9,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for ConfigurationExtensions.
+/// </summary>
 public static class ConfigurationExtensions
 {
-    public static ConfigurationManager AddConfiguration<T>(this ConfigurationManager config, IHostEnvironment env)
+        /// <summary>
+    /// AddConfiguration method.
+    /// </summary>
+public static ConfigurationManager AddConfiguration<T>(this ConfigurationManager config, IHostEnvironment env)
         where T : class
     {
         config.AddJsonFile("appsettings.json", true);
@@ -23,6 +29,9 @@ public static class ConfigurationExtensions
     }
 }
 
+/// <summary>
+/// Represents a class for LoggingExtensions.
+/// </summary>
 public static class LoggingExtensions
 {
     const string fileLogPath = "logs/aero-.log";
@@ -30,7 +39,10 @@ public static class LoggingExtensions
     // may not need this if loading everything before the module initialization
     static readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
 
-    public static async Task<ReloadableLogger> ConfigureLogging(this IServiceCollection services, IConfiguration config, string appName = "Aero")
+        /// <summary>
+    /// ConfigureLogging method.
+    /// </summary>
+public static async Task<ReloadableLogger> ConfigureLogging(this IServiceCollection services, IConfiguration config, string appName = "Aero")
     {
         if (appName.IsNullOrEmpty())
             appName = config["AppName"] ?? "aero-app-01";

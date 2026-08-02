@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 // Basic Account Controller tests - main tests are in ElectraAuthIntegrationTests.cs
 using System.Net;
 using Shouldly;
@@ -6,17 +6,26 @@ using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
+/// <summary>
+/// Represents a class for AccountControllerIntegrationTests.
+/// </summary>
 [ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
 public class AccountControllerIntegrationTests
 {
     private readonly HttpClient _client;
 
-    public AccountControllerIntegrationTests(TestWebAppFactory factory)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="AccountControllerIntegrationTests"/> class.
+    /// </summary>
+public AccountControllerIntegrationTests(TestWebAppFactory factory)
     {
         _client = factory.CreateClient();
     }
 
-    [Test]
+        /// <summary>
+    /// GetAccountListPasskeys_ShouldReturnUnauthorized_WhenNotAuthenticated method.
+    /// </summary>
+[Test]
     public async Task GetAccountListPasskeys_ShouldReturnUnauthorized_WhenNotAuthenticated()
     {
         // Act
@@ -26,7 +35,10 @@ public class AccountControllerIntegrationTests
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// PostLogout_ShouldRequireAntiForgeryToken method.
+    /// </summary>
+[Test]
     public async Task PostLogout_ShouldRequireAntiForgeryToken()
     {
         // Arrange

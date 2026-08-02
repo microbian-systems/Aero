@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
@@ -11,12 +11,18 @@ using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
+/// <summary>
+/// Represents a class for TwitterClientSearchTests.
+/// </summary>
 public class TwitterClientSearchTests
 {
     private readonly IOptions<TwitterClientOptions> _options;
     private readonly ILogger<TwitterClient> _logger;
 
-    public TwitterClientSearchTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="TwitterClientSearchTests"/> class.
+    /// </summary>
+public TwitterClientSearchTests()
     {
         _options = Options.Create(new TwitterClientOptions
         {
@@ -25,7 +31,10 @@ public class TwitterClientSearchTests
         _logger = Substitute.For<ILogger<TwitterClient>>();
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_WithValidQuery_ReturnsTweets method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_WithValidQuery_ReturnsTweets()
     {
         // Arrange
@@ -78,7 +87,10 @@ public class TwitterClientSearchTests
         await Assert.That(result.Meta.ResultCount).IsEqualTo(2);
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_WithOptions_IncludesAllParameters method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_WithOptions_IncludesAllParameters()
     {
         // Arrange
@@ -132,7 +144,10 @@ public class TwitterClientSearchTests
         await Assert.That(query).Contains("expansions=author_id");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_WithNextToken_IncludesPaginationToken method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_WithNextToken_IncludesPaginationToken()
     {
         // Arrange
@@ -172,7 +187,10 @@ public class TwitterClientSearchTests
         await Assert.That(capturedRequest.RequestUri?.Query).Contains("next_token=b26v89c19zqg8o3f");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_WithNullQuery_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_WithNullQuery_ThrowsArgumentException()
     {
         // Arrange
@@ -185,7 +203,10 @@ public class TwitterClientSearchTests
         await Assert.That(exception.Message).Contains("Search query cannot be null or empty");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_WithEmptyQuery_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_WithEmptyQuery_ThrowsArgumentException()
     {
         // Arrange
@@ -198,7 +219,10 @@ public class TwitterClientSearchTests
         await Assert.That(exception.Message).Contains("Search query cannot be null or empty");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_WithWhitespaceQuery_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_WithWhitespaceQuery_ThrowsArgumentException()
     {
         // Arrange
@@ -211,7 +235,10 @@ public class TwitterClientSearchTests
         await Assert.That(exception.Message).Contains("Search query cannot be null or empty");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_WithInvalidMaxResults_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_WithInvalidMaxResults_ThrowsArgumentException()
     {
         // Arrange
@@ -229,7 +256,10 @@ public class TwitterClientSearchTests
         await Assert.That(exception.Message).Contains("MaxResults must be between 10 and 100");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_WithInvalidTimeRange_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_WithInvalidTimeRange_ThrowsArgumentException()
     {
         // Arrange
@@ -248,7 +278,10 @@ public class TwitterClientSearchTests
         await Assert.That(exception.Message).Contains("StartTime cannot be greater than EndTime");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_WithRateLimit_ThrowsTwitterRateLimitException method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_WithRateLimit_ThrowsTwitterRateLimitException()
     {
         // Arrange
@@ -281,7 +314,10 @@ public class TwitterClientSearchTests
         await Assert.That(exception.RetryAfter).IsEqualTo(TimeSpan.FromSeconds(900));
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsAsync_QueryEncoding_EncodesSpecialCharacters method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsAsync_QueryEncoding_EncodesSpecialCharacters()
     {
         // Arrange
@@ -321,12 +357,18 @@ public class TwitterClientSearchTests
     {
         private readonly Func<HttpRequestMessage, Task<HttpResponseMessage>> _handler;
 
-        public TestHttpMessageHandler(Func<HttpRequestMessage, Task<HttpResponseMessage>> handler)
+                /// <summary>
+        /// Initializes a new instance of the <see cref="TestHttpMessageHandler"/> class.
+        /// </summary>
+public TestHttpMessageHandler(Func<HttpRequestMessage, Task<HttpResponseMessage>> handler)
         {
             _handler = handler;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+                /// <summary>
+        /// SendAsync method.
+        /// </summary>
+protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return await _handler(request);
 }

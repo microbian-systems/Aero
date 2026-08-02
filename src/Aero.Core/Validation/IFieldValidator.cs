@@ -2,5 +2,8 @@ namespace Aero.Core.Validation;
 
 internal interface IFieldValidator
 {
-    IEnumerable<ValidationError> GetErrors();
+        /// <summary>
+    /// GetErrors method.
+    /// </summary>
+IEnumerable<ValidationError> GetErrors();
 }

@@ -2,6 +2,9 @@ using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
+/// <summary>
+/// Represents a record for RecoveryResult.
+/// </summary>
 public sealed record RecoveryResult(
     int WinnerTransactions,
     int LoserTransactions,
@@ -11,6 +14,9 @@ public sealed record RecoveryResult(
     Lsn RecoveredUpToLsn
 );
 
+/// <summary>
+/// Represents a class for RecoveryEngine.
+/// </summary>
 public sealed class RecoveryEngine(
     IStorageBackend inner,
     IWalReader walReader,
@@ -20,9 +26,15 @@ public sealed class RecoveryEngine(
     private readonly IWalReader _walReader = walReader ?? throw new ArgumentNullException(nameof(walReader));
     private readonly IWalWriter _walWriter = walWriter ?? throw new ArgumentNullException(nameof(walWriter));
 
-    public RecoveryResult? LastRecoveryResult { get; private set; }
+        /// <summary>
+    /// Gets or sets the Last Recovery Result.
+    /// </summary>
+public RecoveryResult? LastRecoveryResult { get; private set; }
 
-    public async ValueTask RecoverAsync(Lsn lastCheckpointLsn, CancellationToken ct = default)
+        /// <summary>
+    /// RecoverAsync method.
+    /// </summary>
+public async ValueTask RecoverAsync(Lsn lastCheckpointLsn, CancellationToken ct = default)
     {
         var analysisResult = await AnalysisPhaseAsync(lastCheckpointLsn, ct);
         var redoCount = await RedoPhaseAsync(analysisResult, ct);

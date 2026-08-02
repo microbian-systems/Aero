@@ -8,9 +8,15 @@ namespace Aero.Models.Entities;
 // todo - later denormalize if join performance costs too much (cache first, then denormalize)
 // todo - add foreign key to the Users (AspNetUsers) table
 // https://www.npgsql.org/efcore/mapping/json.html?tabs=data-annotations%2Cpoco
+/// <summary>
+/// Represents a class for AeroUserProfile.
+/// </summary>
 public class AeroUserProfile : Entity
 {
-    public AeroUserProfile()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="AeroUserProfile"/> class.
+    /// </summary>
+public AeroUserProfile()
     {
         
     }
@@ -20,29 +26,47 @@ public class AeroUserProfile : Entity
     [JsonPropertyName("user_id")]
     public long Userid { get; set; } // todo - make this generic so the type can vary for pkey
 
-    [MinLength(4)] // todo - remove data annotations and use FluentValidation
+        /// <summary>
+    /// Gets or sets the Username.
+    /// </summary>
+[MinLength(4)] // todo - remove data annotations and use FluentValidation
     [MaxLength(256)]
     [JsonPropertyName("username")]
     public string Username { get; set; }
 
-    [Url]
+        /// <summary>
+    /// Gets or sets the Website.
+    /// </summary>
+[Url]
     [MinLength(4)]
     [MaxLength(1024)]
     [JsonPropertyName("website")]
     public string? Website { get; set; }
 
-    [JsonPropertyName("social_media")]
+        /// <summary>
+    /// Gets or sets the Social Media.
+    /// </summary>
+[JsonPropertyName("social_media")]
     public Dictionary<SocialMediaType, string> SocialMedia { get; } = [];
 
-    [MaxLength(128)]
+        /// <summary>
+    /// Gets or sets the Headline.
+    /// </summary>
+[MaxLength(128)]
     [JsonPropertyName("headline")]
     public string Headline { get; set; }
 
-    [MaxLength(128)]
+        /// <summary>
+    /// Gets or sets the Location.
+    /// </summary>
+[MaxLength(128)]
     [JsonPropertyName("location")]
     public string Location { get; set; }
 
-    [MaxLength(1024)]
+        /// <summary>
+    /// Gets or sets the Bio.
+    /// </summary>
+[MaxLength(1024)]
     [JsonPropertyName("bio")]
     public string? Bio { get; set; }
 
@@ -53,5 +77,8 @@ public class AeroUserProfile : Entity
     [MaxLength(1024)]
     [JsonPropertyName("image_url")]
     public string? ImageUrl { get; set; }
-    public AddressModel? Address { get; set; }
+        /// <summary>
+    /// Gets or sets the Address.
+    /// </summary>
+public AddressModel? Address { get; set; }
 }

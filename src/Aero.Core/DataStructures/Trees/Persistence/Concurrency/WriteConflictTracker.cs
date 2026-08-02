@@ -2,18 +2,27 @@ using System.Collections.Concurrent;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Concurrency;
 
+/// <summary>
+/// Represents a class for WriteConflictTracker.
+/// </summary>
 public sealed class WriteConflictTracker
 {
     private readonly ConcurrentDictionary<long, List<long>> _pageWriters = new();
     private readonly object _lock = new();
 
-    public void RecordWrite(long pageId, long txnId)
+        /// <summary>
+    /// RecordWrite method.
+    /// </summary>
+public void RecordWrite(long pageId, long txnId)
     {
         _pageWriters.GetOrAdd(pageId, _ => new List<long>())
             .Add(txnId);
     }
 
-    public bool HasConflict(long pageId, long readerTxnId)
+        /// <summary>
+    /// HasConflict method.
+    /// </summary>
+public bool HasConflict(long pageId, long readerTxnId)
     {
         if (!_pageWriters.TryGetValue(pageId, out var writers))
             return false;
@@ -21,7 +30,10 @@ public sealed class WriteConflictTracker
         return writers.Any(writerTxnId => writerTxnId > readerTxnId);
     }
 
-    public void Evict(long pageId, long safeBeforeTxnId)
+        /// <summary>
+    /// Evict method.
+    /// </summary>
+public void Evict(long pageId, long safeBeforeTxnId)
     {
         if (!_pageWriters.TryGetValue(pageId, out var writers))
             return;

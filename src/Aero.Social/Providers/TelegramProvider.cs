@@ -8,22 +8,49 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for TelegramProvider.
+/// </summary>
 public class TelegramProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<TelegramProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "telegram";
-    public override string Name => "Telegram";
-    public override string[] Scopes => Array.Empty<string>();
-    public override EditorType Editor => EditorType.Html;
-    public override bool IsWeb3 => true;
-    public override int MaxConcurrentJobs => 3;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "telegram";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Telegram";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => Array.Empty<string>();
+        /// <summary>
+    /// Gets or sets the Editor.
+    /// </summary>
+public override EditorType Editor => EditorType.Html;
+        /// <summary>
+    /// Gets or sets the Is Web3.
+    /// </summary>
+public override bool IsWeb3 => true;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 3;
 
-    public override int MaxLength(object? additionalSettings = null) => 4096;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 4096;
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -39,7 +66,10 @@ public class TelegramProvider(
         });
     }
 
-    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -52,7 +82,10 @@ public class TelegramProvider(
         });
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -86,7 +119,10 @@ public class TelegramProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -117,7 +153,10 @@ public class TelegramProvider(
         return Array.Empty<PostResponse>();
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -354,70 +393,115 @@ public class TelegramProvider(
 
     private class TelegramChatResponse
     {
-        [JsonPropertyName("ok")]
+                /// <summary>
+        /// Gets or sets the Ok.
+        /// </summary>
+[JsonPropertyName("ok")]
         public bool Ok { get; set; }
 
-        [JsonPropertyName("result")]
+                /// <summary>
+        /// Gets or sets the Result.
+        /// </summary>
+[JsonPropertyName("result")]
         public TelegramChat? Result { get; set; }
     }
 
     private class TelegramChat
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("title")]
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+[JsonPropertyName("title")]
         public string? Title { get; set; }
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
 
-        [JsonPropertyName("photo")]
+                /// <summary>
+        /// Gets or sets the Photo.
+        /// </summary>
+[JsonPropertyName("photo")]
         public TelegramChatPhoto? Photo { get; set; }
     }
 
     private class TelegramChatPhoto
     {
-        [JsonPropertyName("big_file_id")]
+                /// <summary>
+        /// Gets or sets the Big File Id.
+        /// </summary>
+[JsonPropertyName("big_file_id")]
         public string? BigFileId { get; set; }
     }
 
     private class TelegramFileResponse
     {
-        [JsonPropertyName("ok")]
+                /// <summary>
+        /// Gets or sets the Ok.
+        /// </summary>
+[JsonPropertyName("ok")]
         public bool Ok { get; set; }
 
-        [JsonPropertyName("result")]
+                /// <summary>
+        /// Gets or sets the Result.
+        /// </summary>
+[JsonPropertyName("result")]
         public TelegramFile? Result { get; set; }
     }
 
     private class TelegramFile
     {
-        [JsonPropertyName("file_path")]
+                /// <summary>
+        /// Gets or sets the File Path.
+        /// </summary>
+[JsonPropertyName("file_path")]
         public string? FilePath { get; set; }
     }
 
     private class TelegramMessageResponse
     {
-        [JsonPropertyName("ok")]
+                /// <summary>
+        /// Gets or sets the Ok.
+        /// </summary>
+[JsonPropertyName("ok")]
         public bool Ok { get; set; }
 
-        [JsonPropertyName("result")]
+                /// <summary>
+        /// Gets or sets the Result.
+        /// </summary>
+[JsonPropertyName("result")]
         public TelegramMessage? Result { get; set; }
     }
 
     private class TelegramMessagesResponse
     {
-        [JsonPropertyName("ok")]
+                /// <summary>
+        /// Gets or sets the Ok.
+        /// </summary>
+[JsonPropertyName("ok")]
         public bool Ok { get; set; }
 
-        [JsonPropertyName("result")]
+                /// <summary>
+        /// Gets or sets the Result.
+        /// </summary>
+[JsonPropertyName("result")]
         public List<TelegramMessage>? Result { get; set; }
     }
 
     private class TelegramMessage
     {
-        [JsonPropertyName("message_id")]
+                /// <summary>
+        /// Gets or sets the Message Id.
+        /// </summary>
+[JsonPropertyName("message_id")]
         public int MessageId { get; set; }
     }
 

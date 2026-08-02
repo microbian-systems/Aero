@@ -2,39 +2,60 @@ using System.Buffers.Binary;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Heap;
 
+/// <summary>
+/// Represents a struct for SlottedPage.
+/// </summary>
 public ref struct SlottedPage(Span<byte> page)
 {
     private readonly Span<byte> _page = page;
     private readonly int _pageSize = page.Length;
 
-    public ulong PageLsn
+        /// <summary>
+    /// Gets or sets the Page Lsn.
+    /// </summary>
+public ulong PageLsn
     {
         get => BinaryPrimitives.ReadUInt64LittleEndian(_page[HeapPageLayout.PageLsnOffset..]);
         set => BinaryPrimitives.WriteUInt64LittleEndian(_page[HeapPageLayout.PageLsnOffset..], value);
     }
 
-    public ushort SlotCount
+        /// <summary>
+    /// Gets or sets the Slot Count.
+    /// </summary>
+public ushort SlotCount
     {
         get => BinaryPrimitives.ReadUInt16LittleEndian(_page[HeapPageLayout.SlotCountOffset..]);
         set => BinaryPrimitives.WriteUInt16LittleEndian(_page[HeapPageLayout.SlotCountOffset..], value);
     }
 
-    public ushort LiveCount
+        /// <summary>
+    /// Gets or sets the Live Count.
+    /// </summary>
+public ushort LiveCount
     {
         get => BinaryPrimitives.ReadUInt16LittleEndian(_page[HeapPageLayout.LiveCountOffset..]);
         set => BinaryPrimitives.WriteUInt16LittleEndian(_page[HeapPageLayout.LiveCountOffset..], value);
     }
 
-    public ushort FreeSpaceStart
+        /// <summary>
+    /// Gets or sets the Free Space Start.
+    /// </summary>
+public ushort FreeSpaceStart
     {
         get => BinaryPrimitives.ReadUInt16LittleEndian(_page[HeapPageLayout.FreeSpaceOffset..]);
         set => BinaryPrimitives.WriteUInt16LittleEndian(_page[HeapPageLayout.FreeSpaceOffset..], value);
     }
 
-    public int FreeBytes =>
+        /// <summary>
+    /// Gets or sets the Free Bytes.
+    /// </summary>
+public int FreeBytes =>
         _pageSize - FreeSpaceStart - (SlotCount * HeapPageLayout.SlotEntrySize);
 
-    public short WriteRecord(ReadOnlySpan<byte> data)
+        /// <summary>
+    /// WriteRecord method.
+    /// </summary>
+public short WriteRecord(ReadOnlySpan<byte> data)
     {
         if (data.Length > FreeBytes)
             throw new InvalidOperationException(
@@ -61,7 +82,10 @@ public ref struct SlottedPage(Span<byte> page)
         return slotIndex;
     }
 
-    public ReadOnlySpan<byte> ReadRecord(short slotIndex)
+        /// <summary>
+    /// ReadRecord method.
+    /// </summary>
+public ReadOnlySpan<byte> ReadRecord(short slotIndex)
     {
         var slotOffset = HeapPageLayout.SlotOffset(slotIndex);
         var flags = _page[slotOffset + 4];
@@ -75,14 +99,20 @@ public ref struct SlottedPage(Span<byte> page)
         return _page.Slice(dataOffset, dataLength);
     }
 
-    public void DeleteRecord(short slotIndex)
+        /// <summary>
+    /// DeleteRecord method.
+    /// </summary>
+public void DeleteRecord(short slotIndex)
     {
         var slotOffset = HeapPageLayout.SlotOffset(slotIndex);
         _page[slotOffset + 4] = HeapPageLayout.SlotDeleted;
         LiveCount--;
     }
 
-    public bool TryUpdateRecord(short slotIndex, ReadOnlySpan<byte> newData)
+        /// <summary>
+    /// TryUpdateRecord method.
+    /// </summary>
+public bool TryUpdateRecord(short slotIndex, ReadOnlySpan<byte> newData)
     {
         var slotOffset = HeapPageLayout.SlotOffset(slotIndex);
         var dataLength = BinaryPrimitives.ReadUInt16LittleEndian(_page[(slotOffset + 2)..]);
@@ -95,7 +125,10 @@ public ref struct SlottedPage(Span<byte> page)
         return true;
     }
 
-    public int Compact()
+        /// <summary>
+    /// Compact method.
+    /// </summary>
+public int Compact()
     {
         var liveRecords = new List<(short SlotIndex, byte[] Data)>();
 
@@ -127,7 +160,10 @@ public ref struct SlottedPage(Span<byte> page)
         return freedBytes - FreeSpaceStart;
     }
 
-    public static SlottedPage InitializePage(Span<byte> page)
+        /// <summary>
+    /// InitializePage method.
+    /// </summary>
+public static SlottedPage InitializePage(Span<byte> page)
     {
         page.Clear();
         page[HeapPageLayout.NodeTypeOffset] = HeapPageLayout.NodeType;

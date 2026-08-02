@@ -7,9 +7,18 @@ namespace Aero.Core.Xml;
 /// </summary>
 public class MyXmlWriter : XmlTextWriter
 {
-    public MyXmlWriter(Stream w, Encoding encoding) : base(w, encoding) { }
-    public MyXmlWriter(string filename, Encoding encoding) : base(filename, encoding) { }
-    public MyXmlWriter(TextWriter w) : base(w) { }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="MyXmlWriter"/> class.
+    /// </summary>
+public MyXmlWriter(Stream w, Encoding encoding) : base(w, encoding) { }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="MyXmlWriter"/> class.
+    /// </summary>
+public MyXmlWriter(string filename, Encoding encoding) : base(filename, encoding) { }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="MyXmlWriter"/> class.
+    /// </summary>
+public MyXmlWriter(TextWriter w) : base(w) { }
 
     /// <summary>
     /// Writes an element with a single attribute and value

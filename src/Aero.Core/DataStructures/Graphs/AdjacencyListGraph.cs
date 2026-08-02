@@ -1,18 +1,39 @@
 namespace Aero.Core.DataStructures.Graphs;
 
+/// <summary>
+/// Represents a class for AdjacencyListGraph.
+/// </summary>
 public class AdjacencyListGraph<T>(bool isDirected = true)
     where T : notnull
 {
     private readonly Dictionary<T, Dictionary<T, int>> _adjacencyList = new();
 
-    public const int NoEdge = int.MinValue;
-    public const int Unreachable = int.MaxValue;
+        /// <summary>
+    /// NoEdge.
+    /// </summary>
+public const int NoEdge = int.MinValue;
+        /// <summary>
+    /// Unreachable.
+    /// </summary>
+public const int Unreachable = int.MaxValue;
 
-    public int VertexCount => _adjacencyList.Count;
-    public int EdgeCount { get; private set; }
-    public bool IsDirected => isDirected;
+        /// <summary>
+    /// Gets or sets the Vertex Count.
+    /// </summary>
+public int VertexCount => _adjacencyList.Count;
+        /// <summary>
+    /// Gets or sets the Edge Count.
+    /// </summary>
+public int EdgeCount { get; private set; }
+        /// <summary>
+    /// Gets or sets the Is Directed.
+    /// </summary>
+public bool IsDirected => isDirected;
 
-    public void AddVertex(T vertex)
+        /// <summary>
+    /// AddVertex method.
+    /// </summary>
+public void AddVertex(T vertex)
     {
         if (!_adjacencyList.ContainsKey(vertex))
         {
@@ -20,7 +41,10 @@ public class AdjacencyListGraph<T>(bool isDirected = true)
         }
     }
 
-    public bool RemoveVertex(T vertex)
+        /// <summary>
+    /// RemoveVertex method.
+    /// </summary>
+public bool RemoveVertex(T vertex)
     {
         if (!_adjacencyList.ContainsKey(vertex))
             return false;
@@ -38,7 +62,10 @@ public class AdjacencyListGraph<T>(bool isDirected = true)
         return true;
     }
 
-    public void AddEdge(T source, T destination, int weight)
+        /// <summary>
+    /// AddEdge method.
+    /// </summary>
+public void AddEdge(T source, T destination, int weight)
     {
         AddVertex(source);
         AddVertex(destination);
@@ -54,7 +81,10 @@ public class AdjacencyListGraph<T>(bool isDirected = true)
         }
     }
 
-    public bool RemoveEdge(T source, T destination)
+        /// <summary>
+    /// RemoveEdge method.
+    /// </summary>
+public bool RemoveEdge(T source, T destination)
     {
         if (!_adjacencyList.TryGetValue(source, out var edges))
             return false;
@@ -72,12 +102,21 @@ public class AdjacencyListGraph<T>(bool isDirected = true)
         return true;
     }
 
-    public bool ContainsVertex(T vertex) => _adjacencyList.ContainsKey(vertex);
+        /// <summary>
+    /// ContainsVertex method.
+    /// </summary>
+public bool ContainsVertex(T vertex) => _adjacencyList.ContainsKey(vertex);
 
-    public bool ContainsEdge(T source, T destination) =>
+        /// <summary>
+    /// ContainsEdge method.
+    /// </summary>
+public bool ContainsEdge(T source, T destination) =>
         _adjacencyList.TryGetValue(source, out var edges) && edges.ContainsKey(destination);
 
-    public bool TryGetWeight(T source, T destination, out int weight)
+        /// <summary>
+    /// TryGetWeight method.
+    /// </summary>
+public bool TryGetWeight(T source, T destination, out int weight)
     {
         weight = default;
         if (_adjacencyList.TryGetValue(source, out var edges) && edges.TryGetValue(destination, out weight))
@@ -85,12 +124,21 @@ public class AdjacencyListGraph<T>(bool isDirected = true)
         return false;
     }
 
-    public IReadOnlyCollection<T> GetVertices() => _adjacencyList.Keys;
+        /// <summary>
+    /// GetVertices method.
+    /// </summary>
+public IReadOnlyCollection<T> GetVertices() => _adjacencyList.Keys;
 
-    public IReadOnlyDictionary<T, int> GetNeighbors(T vertex) =>
+        /// <summary>
+    /// GetNeighbors method.
+    /// </summary>
+public IReadOnlyDictionary<T, int> GetNeighbors(T vertex) =>
         _adjacencyList.TryGetValue(vertex, out var edges) ? edges : new Dictionary<T, int>();
 
-    public List<T> Bfs(T startVertex)
+        /// <summary>
+    /// Bfs method.
+    /// </summary>
+public List<T> Bfs(T startVertex)
     {
         if (!_adjacencyList.ContainsKey(startVertex)) return new List<T>();
 
@@ -118,7 +166,10 @@ public class AdjacencyListGraph<T>(bool isDirected = true)
         return result;
     }
 
-    public List<T> Dfs(T startVertex)
+        /// <summary>
+    /// Dfs method.
+    /// </summary>
+public List<T> Dfs(T startVertex)
     {
         if (!_adjacencyList.ContainsKey(startVertex)) return new List<T>();
 
@@ -148,7 +199,10 @@ public class AdjacencyListGraph<T>(bool isDirected = true)
         return result;
     }
 
-    public Dictionary<T, int> Dijkstra(T startVertex)
+        /// <summary>
+    /// Dijkstra method.
+    /// </summary>
+public Dictionary<T, int> Dijkstra(T startVertex)
     {
         if (!_adjacencyList.ContainsKey(startVertex))
             throw new ArgumentException($"Vertex '{startVertex}' not found in graph.", nameof(startVertex));
@@ -192,7 +246,10 @@ public class AdjacencyListGraph<T>(bool isDirected = true)
         return distances;
     }
 
-    public int?[,] GetAdjacencyMatrix()
+        /// <summary>
+    /// GetAdjacencyMatrix method.
+    /// </summary>
+public int?[,] GetAdjacencyMatrix()
     {
         var vertices = _adjacencyList.Keys.OrderBy(k => k).ToList();
         var vertexMap = new Dictionary<T, int>();
@@ -218,13 +275,19 @@ public class AdjacencyListGraph<T>(bool isDirected = true)
         return matrix;
     }
 
-    public void Clear()
+        /// <summary>
+    /// Clear method.
+    /// </summary>
+public void Clear()
     {
         _adjacencyList.Clear();
         EdgeCount = 0;
     }
 }
 
+/// <summary>
+/// Represents a class for Graph.
+/// </summary>
 [Obsolete("Use AdjacencyListGraph<T> instead. This class will be removed in a future version.")]
 public class Graph<T>(bool isDirected = true) : AdjacencyListGraph<T>(isDirected)
     where T : notnull;

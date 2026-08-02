@@ -1,13 +1,19 @@
-﻿using Aero.Core.Encryption;
+using Aero.Core.Encryption;
 
 namespace Aero.Core.Secrets;
 
+/// <summary>
+/// Represents a class for EncryptingSecretManager.
+/// </summary>
 public sealed class EncryptingSecretManager(
     ISecretManager manager,
     IEncryptor encryptor,
     ILogger<IEncryptingSecretManager> log) : IEncryptingSecretManager
 {
-    public string[]? CreateFragments(string? secret, ushort numFragments = 3)
+        /// <summary>
+    /// CreateFragments method.
+    /// </summary>
+public string[]? CreateFragments(string? secret, ushort numFragments = 3)
     {
         ArgumentException.ThrowIfNullOrEmpty(secret);
         var frags = manager.CreateFragments(Encoding.UTF8.GetBytes(secret), numFragments);
@@ -17,7 +23,10 @@ public sealed class EncryptingSecretManager(
         return encrypted;
     }
 
-    public string[]? CreateFragments(byte[]? secret, ushort nbFragments = 3)
+        /// <summary>
+    /// CreateFragments method.
+    /// </summary>
+public string[]? CreateFragments(byte[]? secret, ushort nbFragments = 3)
     {
         log.LogInformation("encrypting fragments");
 
@@ -40,7 +49,10 @@ public sealed class EncryptingSecretManager(
         return encrypted.ToArray();
     }
 
-    public byte[] ComputeFragments(string[] fragments)
+        /// <summary>
+    /// ComputeFragments method.
+    /// </summary>
+public byte[] ComputeFragments(string[] fragments)
     {
         log.LogInformation("decrypting fragments");
         var decryptedFraments = fragments.Select(encryptor.DecryptString);

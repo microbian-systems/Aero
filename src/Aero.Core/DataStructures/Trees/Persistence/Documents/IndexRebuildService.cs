@@ -4,6 +4,9 @@ using Aero.Core.DataStructures.Trees.Persistence.Serialization;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Documents;
 
+/// <summary>
+/// Represents a class for IndexRebuildService.
+/// </summary>
 public sealed class IndexRebuildService<TDocument>(
     IDocumentCollection<TDocument> collection,
     DocumentIndexRegistry<TDocument> registry,
@@ -13,7 +16,10 @@ public sealed class IndexRebuildService<TDocument>(
 {
     private readonly IDocumentCollection<TDocument> _collection = collection;
 
-    public async ValueTask RebuildAllAsync(
+        /// <summary>
+    /// RebuildAllAsync method.
+    /// </summary>
+public async ValueTask RebuildAllAsync(
         IProgress<int>? progress = null,
         CancellationToken ct = default)
     {
@@ -21,7 +27,10 @@ public sealed class IndexRebuildService<TDocument>(
             await RebuildIndexAsync(index.FieldName, progress, ct);
     }
 
-    public async ValueTask RebuildIndexAsync(
+        /// <summary>
+    /// RebuildIndexAsync method.
+    /// </summary>
+public async ValueTask RebuildIndexAsync(
         string fieldName,
         IProgress<int>? progress = null,
         CancellationToken ct = default)

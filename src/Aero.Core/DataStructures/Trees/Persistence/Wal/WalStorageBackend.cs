@@ -4,6 +4,9 @@ using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
+/// <summary>
+/// Represents a class for WalStorageBackend.
+/// </summary>
 public sealed class WalStorageBackend(
     IStorageBackend inner,
     IWalWriter walWriter,
@@ -20,11 +23,23 @@ public sealed class WalStorageBackend(
     private Lsn _lastCommittedLsn = Lsn.Zero;
     private bool _disposed;
 
-    public int PageSize => _inner.PageSize;
-    public long PageCount => _inner.PageCount;
-    public Lsn LastCommittedLsn => _lastCommittedLsn;
+        /// <summary>
+    /// Gets or sets the Page Size.
+    /// </summary>
+public int PageSize => _inner.PageSize;
+        /// <summary>
+    /// Gets or sets the Page Count.
+    /// </summary>
+public long PageCount => _inner.PageCount;
+        /// <summary>
+    /// Gets or sets the Last Committed Lsn.
+    /// </summary>
+public Lsn LastCommittedLsn => _lastCommittedLsn;
 
-    public ValueTask<ITransactionContext> BeginTransactionAsync(CancellationToken ct = default)
+        /// <summary>
+    /// BeginTransactionAsync method.
+    /// </summary>
+public ValueTask<ITransactionContext> BeginTransactionAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -37,7 +52,10 @@ public sealed class WalStorageBackend(
         return new ValueTask<ITransactionContext>(txn);
     }
 
-    public async ValueTask<Memory<byte>> ReadPageAsync(long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// ReadPageAsync method.
+    /// </summary>
+public async ValueTask<Memory<byte>> ReadPageAsync(long pageId, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -49,7 +67,10 @@ public sealed class WalStorageBackend(
         return await _inner.ReadPageAsync(pageId, ct);
     }
 
-    public async ValueTask WritePageAsync(long pageId, ReadOnlyMemory<byte> data, CancellationToken ct = default)
+        /// <summary>
+    /// WritePageAsync method.
+    /// </summary>
+public async ValueTask WritePageAsync(long pageId, ReadOnlyMemory<byte> data, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -94,7 +115,10 @@ public sealed class WalStorageBackend(
         _dirtyPageCache[pageId] = dataBytes;
     }
 
-    public async ValueTask<long> AllocatePageAsync(CancellationToken ct = default)
+        /// <summary>
+    /// AllocatePageAsync method.
+    /// </summary>
+public async ValueTask<long> AllocatePageAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -118,7 +142,10 @@ public sealed class WalStorageBackend(
         return newPageId;
     }
 
-    public async ValueTask FreePageAsync(long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// FreePageAsync method.
+    /// </summary>
+public async ValueTask FreePageAsync(long pageId, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -140,13 +167,19 @@ public sealed class WalStorageBackend(
         _dirtyPageCache.Remove(pageId);
     }
 
-    public async ValueTask<PageMetadata> GetPageMetadataAsync(long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// GetPageMetadataAsync method.
+    /// </summary>
+public async ValueTask<PageMetadata> GetPageMetadataAsync(long pageId, CancellationToken ct = default)
     {
         ThrowIfDisposed();
         return await _inner.GetPageMetadataAsync(pageId, ct);
     }
 
-    public async ValueTask UpdatePageMetadataAsync(
+        /// <summary>
+    /// UpdatePageMetadataAsync method.
+    /// </summary>
+public async ValueTask UpdatePageMetadataAsync(
         long pageId,
         int liveDelta,
         int deadDelta,
@@ -156,7 +189,10 @@ public sealed class WalStorageBackend(
         await _inner.UpdatePageMetadataAsync(pageId, liveDelta, deadDelta, ct);
     }
 
-    public async IAsyncEnumerable<PageMetadata> GetFragmentedPagesAsync(
+        /// <summary>
+    /// GetFragmentedPagesAsync method.
+    /// </summary>
+public async IAsyncEnumerable<PageMetadata> GetFragmentedPagesAsync(
         double threshold,
         [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct = default)
     {
@@ -167,7 +203,10 @@ public sealed class WalStorageBackend(
         }
     }
 
-    public async ValueTask FlushAsync(CancellationToken ct = default)
+        /// <summary>
+    /// FlushAsync method.
+    /// </summary>
+public async ValueTask FlushAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         await _inner.FlushAsync(ct);
@@ -191,7 +230,10 @@ public sealed class WalStorageBackend(
         _currentTxn = null;
     }
 
-    public async ValueTask DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public async ValueTask DisposeAsync()
     {
         if (_disposed)
             return;

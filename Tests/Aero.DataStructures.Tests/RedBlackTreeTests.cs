@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for RedBlackTreeTests.
+/// </summary>
 public class RedBlackTreeTests
 {
-    [Test]
+        /// <summary>
+    /// Insert_And_Balance_Test method.
+    /// </summary>
+[Test]
     public void Insert_And_Balance_Test()
     {
         // Arrange
@@ -24,7 +30,10 @@ public class RedBlackTreeTests
         ((RedBlackTreeNode<int>)rbt.Root.Right).Color.ShouldBe(NodeColor.Black);
     }
 
-    [Test]
+        /// <summary>
+    /// Delete_And_Balance_Test method.
+    /// </summary>
+[Test]
     public void Delete_And_Balance_Test()
     {
         // Arrange

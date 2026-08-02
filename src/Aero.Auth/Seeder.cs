@@ -1,13 +1,19 @@
-using Aero.Core.Identity;
+using Aero.Models.Entities;
 using Marten;
 
 namespace Aero.Auth;
 
+/// <summary>
+/// Represents a class for Seeder.
+/// </summary>
 public class Seeder
 {
     // todo - verify we need Seeder.cs - this logic is already in the setup module
     // todo - update method signature to have only WebApplication param and get servicprovider and config from that
-    public static async Task Initialize(IServiceProvider serviceProvider, IConfiguration configuration)
+        /// <summary>
+    /// Initialize method.
+    /// </summary>
+public static async Task Initialize(IServiceProvider serviceProvider, IConfiguration configuration)
     {
         using var scope = serviceProvider.CreateScope();
         var sp = scope.ServiceProvider;

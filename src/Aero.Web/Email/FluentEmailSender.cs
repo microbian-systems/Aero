@@ -3,9 +3,15 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Aero.Web.Email;
 
+/// <summary>
+/// Represents a class for FluentEmailSender.
+/// </summary>
 public class FluentEmailSender(IFluentEmail client, ILogger<FluentEmailSender> log) : IEmailSender
 {
-    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        /// <summary>
+    /// SendEmailAsync method.
+    /// </summary>
+public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
         log.LogInformation($"sending email to {email}");
         await client.To(email)

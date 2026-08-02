@@ -1,14 +1,23 @@
 namespace Aero.Core.DataStructures.Trees.Persistence.Concurrency;
 
+/// <summary>
+/// Represents a class for MvccSnapshot.
+/// </summary>
 public sealed class MvccSnapshot(
     long snapshotTxnId,
     CommitTable commitTable,
     IReadOnlySet<long> inProgressAtSnapshot)
     : IReadSnapshot
 {
-    public long SnapshotTransactionId => snapshotTxnId;
+        /// <summary>
+    /// Gets or sets the Snapshot Transaction Id.
+    /// </summary>
+public long SnapshotTransactionId => snapshotTxnId;
 
-    public bool IsVisible(long xmin, long xmax)
+        /// <summary>
+    /// IsVisible method.
+    /// </summary>
+public bool IsVisible(long xmin, long xmax)
     {
         if (!commitTable.IsCommitted(xmin)) return false;
         if (inProgressAtSnapshot.Contains(xmin)) return false;
@@ -21,5 +30,8 @@ public sealed class MvccSnapshot(
         return false;
     }
 
-    public void Dispose() { }
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public void Dispose() { }
 }

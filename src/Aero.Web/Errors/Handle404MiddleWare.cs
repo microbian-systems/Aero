@@ -10,7 +10,10 @@ public class Handle404Middleware(RequestDelegate next, ILogger logger)
 {
     readonly ILogger log = logger;
 
-    public async Task InvokeAsync(HttpContext context)
+        /// <summary>
+    /// InvokeAsync method.
+    /// </summary>
+public async Task InvokeAsync(HttpContext context)
     {
         await next(context);
 
@@ -25,7 +28,13 @@ public class Handle404Middleware(RequestDelegate next, ILogger logger)
     }
 }
 
+/// <summary>
+/// Represents a class for Handle404MiddlewareRegistration.
+/// </summary>
 public static class Handle404MiddlewareRegistration{
-    public static IApplicationBuilder Use404Handler(this IApplicationBuilder app) =>
+        /// <summary>
+    /// Use404Handler method.
+    /// </summary>
+public static IApplicationBuilder Use404Handler(this IApplicationBuilder app) =>
         app.UseMiddleware<Handle404Middleware>();
 }

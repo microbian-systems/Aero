@@ -1,15 +1,24 @@
 namespace Aero.Core.Http;
 
+/// <summary>
+/// Represents a class for AeroHttpLoggingHandler.
+/// </summary>
 public sealed class AeroHttpLoggingHandler : DelegatingHandler
 {
     private readonly ILogger<AeroHttpLoggingHandler> _logger;
 
-    public AeroHttpLoggingHandler(ILogger<AeroHttpLoggingHandler> logger)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="AeroHttpLoggingHandler"/> class.
+    /// </summary>
+public AeroHttpLoggingHandler(ILogger<AeroHttpLoggingHandler> logger)
     {
         _logger = logger;
     }
 
-    protected override async Task<HttpResponseMessage> SendAsync(
+        /// <summary>
+    /// SendAsync method.
+    /// </summary>
+protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {

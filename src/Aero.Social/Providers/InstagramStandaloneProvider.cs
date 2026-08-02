@@ -8,6 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for InstagramStandaloneProvider.
+/// </summary>
 public class InstagramStandaloneProvider(
     HttpClient httpClient,
     IConfiguration configuration,
@@ -17,26 +20,50 @@ public class InstagramStandaloneProvider(
     private readonly InstagramProvider _instagramProvider = new(httpClient, configuration,
         new LoggerFactory().CreateLogger<InstagramProvider>());
 
-    public override string Identifier => "instagram-standalone";
-    public override string Name => "Instagram\n(Standalone)";
-    public override string[] Scopes => new[]
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "instagram-standalone";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Instagram\n(Standalone)";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[]
     {
         "instagram_business_basic",
         "instagram_business_content_publish",
         "instagram_business_manage_comments",
         "instagram_business_manage_insights"
     };
-    public override int MaxConcurrentJobs => 200;
-    public override bool IsBetweenSteps => false;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 200;
+        /// <summary>
+    /// Gets or sets the Is Between Steps.
+    /// </summary>
+public override bool IsBetweenSteps => false;
 
-    public override int MaxLength(object? additionalSettings = null) => 2200;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 2200;
 
-    protected override ErrorHandlingResult? HandleErrors(string responseBody)
+        /// <summary>
+    /// HandleErrors method.
+    /// </summary>
+protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
         return _instagramProvider.HandleErrors(responseBody);
     }
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -66,7 +93,10 @@ public class InstagramStandaloneProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -120,7 +150,10 @@ public class InstagramStandaloneProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -144,7 +177,10 @@ public class InstagramStandaloneProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -154,7 +190,10 @@ public class InstagramStandaloneProvider(
         return await _instagramProvider.PostAsync(id, accessToken, posts, integration, cancellationToken);
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -166,7 +205,10 @@ public class InstagramStandaloneProvider(
         return await _instagramProvider.CommentAsync(id, postId, lastCommentId, accessToken, posts, integration, cancellationToken);
     }
 
-    public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
+        /// <summary>
+    /// AnalyticsAsync method.
+    /// </summary>
+public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
         string id,
         string accessToken,
         int days,
@@ -175,7 +217,10 @@ public class InstagramStandaloneProvider(
         return await _instagramProvider.AnalyticsAsync(id, accessToken, days, cancellationToken);
     }
 
-    public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
+        /// <summary>
+    /// PostAnalyticsAsync method.
+    /// </summary>
+public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
         string integrationId,
         string accessToken,
         string postId,
@@ -203,43 +248,73 @@ public class InstagramStandaloneProvider(
 
     private class InstagramShortTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("user_id")]
+                /// <summary>
+        /// Gets or sets the User Id.
+        /// </summary>
+[JsonPropertyName("user_id")]
         public string? UserId { get; set; }
 
-        [JsonPropertyName("permissions")]
+                /// <summary>
+        /// Gets or sets the Permissions.
+        /// </summary>
+[JsonPropertyName("permissions")]
         public List<string>? Permissions { get; set; }
     }
 
     private class InstagramLongTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int? ExpiresIn { get; set; }
     }
 
     private class InstagramRefreshTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
     }
 
     private class InstagramUserInfo
     {
-        [JsonPropertyName("user_id")]
+                /// <summary>
+        /// Gets or sets the User Id.
+        /// </summary>
+[JsonPropertyName("user_id")]
         public string? UserId { get; set; }
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("profile_picture_url")]
+                /// <summary>
+        /// Gets or sets the Profile Picture Url.
+        /// </summary>
+[JsonPropertyName("profile_picture_url")]
         public string? ProfilePictureUrl { get; set; }
     }
 

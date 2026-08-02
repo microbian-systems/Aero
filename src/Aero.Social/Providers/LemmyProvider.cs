@@ -10,6 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for LemmyProvider.
+/// </summary>
 public class LemmyProvider(
     HttpClient httpClient,
     IConfiguration configuration,
@@ -18,14 +21,32 @@ public class LemmyProvider(
 {
     private readonly IConfiguration _configuration = configuration;
 
-    public override string Identifier => "lemmy";
-    public override string Name => "Lemmy";
-    public override string[] Scopes => Array.Empty<string>();
-    public override int MaxConcurrentJobs => 3;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "lemmy";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Lemmy";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => Array.Empty<string>();
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 3;
 
-    public override int MaxLength(object? additionalSettings = null) => 10000;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 10000;
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -38,7 +59,10 @@ public class LemmyProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -104,7 +128,10 @@ public class LemmyProvider(
         }
     }
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -120,7 +147,10 @@ public class LemmyProvider(
         });
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -197,7 +227,10 @@ public class LemmyProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -257,7 +290,10 @@ public class LemmyProvider(
         };
     }
 
-    public async Task<List<LemmyCommunity>> SearchCommunitiesAsync(
+        /// <summary>
+    /// SearchCommunitiesAsync method.
+    /// </summary>
+public async Task<List<LemmyCommunity>> SearchCommunitiesAsync(
         Integration integration,
         string query,
         CancellationToken cancellationToken = default)
@@ -328,129 +364,225 @@ public class LemmyProvider(
 
     private class LemmyAuthBody
     {
-        [JsonPropertyName("service")]
+                /// <summary>
+        /// Gets or sets the Service.
+        /// </summary>
+[JsonPropertyName("service")]
         public string Service { get; set; } = "https://lemmy.world";
 
-        [JsonPropertyName("identifier")]
+                /// <summary>
+        /// Gets or sets the Identifier.
+        /// </summary>
+[JsonPropertyName("identifier")]
         public string Identifier { get; set; } = string.Empty;
 
-        [JsonPropertyName("password")]
+                /// <summary>
+        /// Gets or sets the Password.
+        /// </summary>
+[JsonPropertyName("password")]
         public string Password { get; set; } = string.Empty;
     }
 
     private class LemmyLoginResponse
     {
-        [JsonPropertyName("jwt")]
+                /// <summary>
+        /// Gets or sets the Jwt.
+        /// </summary>
+[JsonPropertyName("jwt")]
         public string? Jwt { get; set; }
     }
 
     private class LemmyUserResponse
     {
-        [JsonPropertyName("person_view")]
+                /// <summary>
+        /// Gets or sets the Person View.
+        /// </summary>
+[JsonPropertyName("person_view")]
         public LemmyPersonView PersonView { get; set; } = new();
     }
 
     private class LemmyPersonView
     {
-        [JsonPropertyName("person")]
+                /// <summary>
+        /// Gets or sets the Person.
+        /// </summary>
+[JsonPropertyName("person")]
         public LemmyPerson Person { get; set; } = new();
     }
 
     private class LemmyPerson
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("display_name")]
+                /// <summary>
+        /// Gets or sets the Display Name.
+        /// </summary>
+[JsonPropertyName("display_name")]
         public string? DisplayName { get; set; }
 
-        [JsonPropertyName("avatar")]
+                /// <summary>
+        /// Gets or sets the Avatar.
+        /// </summary>
+[JsonPropertyName("avatar")]
         public string? Avatar { get; set; }
     }
 
     private class LemmyPostResponse
     {
-        [JsonPropertyName("post_view")]
+                /// <summary>
+        /// Gets or sets the Post View.
+        /// </summary>
+[JsonPropertyName("post_view")]
         public LemmyPostView PostView { get; set; } = new();
     }
 
     private class LemmyPostView
     {
-        [JsonPropertyName("post")]
+                /// <summary>
+        /// Gets or sets the Post.
+        /// </summary>
+[JsonPropertyName("post")]
         public LemmyPost Post { get; set; } = new();
     }
 
     private class LemmyPost
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
     }
 
     private class LemmyCommentResponse
     {
-        [JsonPropertyName("comment_view")]
+                /// <summary>
+        /// Gets or sets the Comment View.
+        /// </summary>
+[JsonPropertyName("comment_view")]
         public LemmyCommentView CommentView { get; set; } = new();
     }
 
     private class LemmyCommentView
     {
-        [JsonPropertyName("comment")]
+                /// <summary>
+        /// Gets or sets the Comment.
+        /// </summary>
+[JsonPropertyName("comment")]
         public LemmyComment Comment { get; set; } = new();
     }
 
     private class LemmyComment
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
     }
 
     private class LemmySearchResponse
     {
-        [JsonPropertyName("communities")]
+                /// <summary>
+        /// Gets or sets the Communities.
+        /// </summary>
+[JsonPropertyName("communities")]
         public List<LemmyCommunityView>? Communities { get; set; }
     }
 
     private class LemmyCommunityView
     {
-        [JsonPropertyName("community")]
+                /// <summary>
+        /// Gets or sets the Community.
+        /// </summary>
+[JsonPropertyName("community")]
         public LemmyCommunityDetail Community { get; set; } = new();
     }
 
     private class LemmyCommunityDetail
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("title")]
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+[JsonPropertyName("title")]
         public string Title { get; set; } = string.Empty;
     }
 
-    public class LemmyCommunity
+        /// <summary>
+    /// Represents a class for LemmyCommunity.
+    /// </summary>
+public class LemmyCommunity
     {
-        public string Title { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public int Id { get; set; }
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+public string Title { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public int Id { get; set; }
     }
 
-    public class LemmySubreddit
+        /// <summary>
+    /// Represents a class for LemmySubreddit.
+    /// </summary>
+public class LemmySubreddit
     {
-        public LemmySubredditValue Value { get; set; } = new();
+                /// <summary>
+        /// Gets or sets the Value.
+        /// </summary>
+public LemmySubredditValue Value { get; set; } = new();
     }
 
-    public class LemmySubredditValue
+        /// <summary>
+    /// Represents a class for LemmySubredditValue.
+    /// </summary>
+public class LemmySubredditValue
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = string.Empty;
-        public string? Url { get; set; }
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public int Id { get; set; }
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+public string Title { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+public string? Url { get; set; }
     }
 
     //#endregion

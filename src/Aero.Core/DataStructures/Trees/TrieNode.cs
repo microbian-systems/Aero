@@ -5,6 +5,12 @@ namespace Aero.Core.DataStructures.Trees;
 /// </summary>
 public class TrieNode
 {
-    public Dictionary<char, TrieNode> Children { get; } = new();
-    public bool IsEndOfWord { get; set; }
+        /// <summary>
+    /// Gets or sets the Children.
+    /// </summary>
+public Dictionary<char, TrieNode> Children { get; } = new();
+        /// <summary>
+    /// Gets or sets the Is End Of Word.
+    /// </summary>
+public bool IsEndOfWord { get; set; }
 }

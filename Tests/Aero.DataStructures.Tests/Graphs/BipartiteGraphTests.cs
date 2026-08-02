@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -7,6 +7,9 @@ using Humanizer;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for BipartiteGraphTests.
+/// </summary>
 public class BipartiteGraphTests
 {
     private readonly Faker _faker = new();
@@ -14,7 +17,10 @@ public class BipartiteGraphTests
 
     //#region Partition Tests
 
-    [Test]
+        /// <summary>
+    /// AddVertexToSetU_ShouldIncreaseSetUCount method.
+    /// </summary>
+[Test]
     public void AddVertexToSetU_ShouldIncreaseSetUCount()
     {
         var graph = new BipartiteGraph<string>();
@@ -26,7 +32,10 @@ public class BipartiteGraphTests
         graph.SetU.ShouldContain(vertex);
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertexToSetV_ShouldIncreaseSetVCount method.
+    /// </summary>
+[Test]
     public void AddVertexToSetV_ShouldIncreaseSetVCount()
     {
         var graph = new BipartiteGraph<string>();
@@ -38,7 +47,10 @@ public class BipartiteGraphTests
         graph.SetV.ShouldContain(vertex);
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertexToSetU_ShouldNotAllowDuplicate method.
+    /// </summary>
+[Test]
     public void AddVertexToSetU_ShouldNotAllowDuplicate()
     {
         var graph = new BipartiteGraph<string>();
@@ -49,7 +61,10 @@ public class BipartiteGraphTests
         result.ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldNotAllowSameInBothSets method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldNotAllowSameInBothSets()
     {
         var graph = new BipartiteGraph<string>();
@@ -60,7 +75,10 @@ public class BipartiteGraphTests
         result.ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// GetPartition_ShouldReturnCorrectPartition method.
+    /// </summary>
+[Test]
     public void GetPartition_ShouldReturnCorrectPartition()
     {
         var graph = new BipartiteGraph<string>();
@@ -76,7 +94,10 @@ public class BipartiteGraphTests
 
     //#region Edge Tests
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldConnectUToV method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldConnectUToV()
     {
         var graph = new BipartiteGraph<string>();
@@ -89,7 +110,10 @@ public class BipartiteGraphTests
         graph.EdgeCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldConnectVToU method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldConnectVToU()
     {
         var graph = new BipartiteGraph<string>();
@@ -101,7 +125,10 @@ public class BipartiteGraphTests
         graph.ContainsEdge("job", "worker").ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldThrow_WhenBothInSamePartition method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldThrow_WhenBothInSamePartition()
     {
         var graph = new BipartiteGraph<string>();
@@ -113,7 +140,10 @@ public class BipartiteGraphTests
         act.ShouldThrow<ArgumentException>("*same partition*");
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldThrow_WhenVertexDoesNotExist method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldThrow_WhenVertexDoesNotExist()
     {
         var graph = new BipartiteGraph<string>();
@@ -128,7 +158,10 @@ public class BipartiteGraphTests
 
     //#region Neighbor Tests
 
-    [Test]
+        /// <summary>
+    /// GetNeighbors_ShouldReturnOppositePartition method.
+    /// </summary>
+[Test]
     public void GetNeighbors_ShouldReturnOppositePartition()
     {
         var graph = new BipartiteGraph<string>();
@@ -147,7 +180,10 @@ public class BipartiteGraphTests
 
     //#region Matching Tests
 
-    [Test]
+        /// <summary>
+    /// FindMaximumMatching_ShouldFindPerfectMatching_WhenExists method.
+    /// </summary>
+[Test]
     public void FindMaximumMatching_ShouldFindPerfectMatching_WhenExists()
     {
         var graph = new BipartiteGraph<string>();
@@ -165,7 +201,10 @@ public class BipartiteGraphTests
         matching.Count.ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// FindMaximumMatching_ShouldHandleUnbalancedGraph method.
+    /// </summary>
+[Test]
     public void FindMaximumMatching_ShouldHandleUnbalancedGraph()
     {
         var graph = new BipartiteGraph<string>();
@@ -180,7 +219,10 @@ public class BipartiteGraphTests
         matching.Count.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// FindMaximumMatching_ShouldReturnEmpty_WhenNoEdges method.
+    /// </summary>
+[Test]
     public void FindMaximumMatching_ShouldReturnEmpty_WhenNoEdges()
     {
         var graph = new BipartiteGraph<string>();
@@ -196,7 +238,10 @@ public class BipartiteGraphTests
 
     //#region Perfect Matching Tests
 
-    [Test]
+        /// <summary>
+    /// HasPerfectMatching_ShouldReturnTrue_WhenExists method.
+    /// </summary>
+[Test]
     public void HasPerfectMatching_ShouldReturnTrue_WhenExists()
     {
         var graph = new BipartiteGraph<string>();
@@ -210,7 +255,10 @@ public class BipartiteGraphTests
         graph.HasPerfectMatching().ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// HasPerfectMatching_ShouldReturnFalse_WhenUnbalanced method.
+    /// </summary>
+[Test]
     public void HasPerfectMatching_ShouldReturnFalse_WhenUnbalanced()
     {
         var graph = new BipartiteGraph<string>();
@@ -223,7 +271,10 @@ public class BipartiteGraphTests
         graph.HasPerfectMatching().ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// FindPerfectMatching_ShouldReturnNull_WhenNotExists method.
+    /// </summary>
+[Test]
     public void FindPerfectMatching_ShouldReturnNull_WhenNotExists()
     {
         var graph = new BipartiteGraph<int>();
@@ -240,7 +291,10 @@ public class BipartiteGraphTests
 
     //#region Vertex Cover Tests
 
-    [Test]
+        /// <summary>
+    /// FindMinimumVertexCover_ShouldReturnCorrectSize method.
+    /// </summary>
+[Test]
     public void FindMinimumVertexCover_ShouldReturnCorrectSize()
     {
         var graph = new BipartiteGraph<string>();
@@ -261,7 +315,10 @@ public class BipartiteGraphTests
 
     //#region Remove Tests
 
-    [Test]
+        /// <summary>
+    /// RemoveVertex_ShouldRemoveFromCorrectSet method.
+    /// </summary>
+[Test]
     public void RemoveVertex_ShouldRemoveFromCorrectSet()
     {
         var graph = new BipartiteGraph<string>();
@@ -274,7 +331,10 @@ public class BipartiteGraphTests
         graph.SetVCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// RemoveEdge_ShouldDecreaseEdgeCount method.
+    /// </summary>
+[Test]
     public void RemoveEdge_ShouldDecreaseEdgeCount()
     {
         var graph = new BipartiteGraph<string>();
@@ -291,7 +351,10 @@ public class BipartiteGraphTests
 
     //#region Clear Tests
 
-    [Test]
+        /// <summary>
+    /// Clear_ShouldRemoveAllVerticesAndEdges method.
+    /// </summary>
+[Test]
     public void Clear_ShouldRemoveAllVerticesAndEdges()
     {
         var graph = new BipartiteGraph<string>();
@@ -311,7 +374,10 @@ public class BipartiteGraphTests
 
     //#region Real-World Scenario Tests
 
-    [Test]
+        /// <summary>
+    /// JobAssignmentScenario_ShouldWorkCorrectly method.
+    /// </summary>
+[Test]
     public void JobAssignmentScenario_ShouldWorkCorrectly()
     {
         var graph = new BipartiteGraph<string>();

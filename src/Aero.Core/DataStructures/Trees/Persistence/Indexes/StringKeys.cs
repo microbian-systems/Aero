@@ -2,14 +2,26 @@ using System.Runtime.InteropServices;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
+/// <summary>
+/// Defines an interface for IStringKey.
+/// </summary>
 public interface IStringKey<TSelf> : IComparable<TSelf>
     where TSelf : unmanaged, IStringKey<TSelf>
 {
     static abstract TSelf From(string value);
-    string ToDisplayString();
-    bool IsTruncated { get; }
+        /// <summary>
+    /// ToDisplayString method.
+    /// </summary>
+string ToDisplayString();
+        /// <summary>
+    /// Gets or sets the Is Truncated.
+    /// </summary>
+bool IsTruncated { get; }
 }
 
+/// <summary>
+/// Represents a struct for StringKey64.
+/// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 65)]
 public struct StringKey64 : IStringKey<StringKey64>
 {
@@ -23,7 +35,10 @@ public struct StringKey64 : IStringKey<StringKey64>
     private byte _data56, _data57, _data58, _data59, _data60, _data61, _data62, _data63;
     private byte _isTruncated;
 
-    public static StringKey64 From(string value)
+        /// <summary>
+    /// From method.
+    /// </summary>
+public static StringKey64 From(string value)
     {
         var key = new StringKey64();
         var span = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref key, 1));
@@ -35,16 +50,25 @@ public struct StringKey64 : IStringKey<StringKey64>
         return key;
     }
 
-    public bool IsTruncated => _isTruncated != 0;
+        /// <summary>
+    /// Gets or sets the Is Truncated.
+    /// </summary>
+public bool IsTruncated => _isTruncated != 0;
 
-    public int CompareTo(StringKey64 other)
+        /// <summary>
+    /// CompareTo method.
+    /// </summary>
+public int CompareTo(StringKey64 other)
     {
         var thisSpan = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this, 1))[..64];
         var otherSpan = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref other, 1))[..64];
         return thisSpan.SequenceCompareTo(otherSpan);
     }
 
-    public string ToDisplayString()
+        /// <summary>
+    /// ToDisplayString method.
+    /// </summary>
+public string ToDisplayString()
     {
         var span = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this, 1))[..64];
         var end = span.IndexOf((byte)0);
@@ -52,6 +76,9 @@ public struct StringKey64 : IStringKey<StringKey64>
     }
 }
 
+/// <summary>
+/// Represents a struct for StringKey32.
+/// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 33)]
 public struct StringKey32 : IStringKey<StringKey32>
 {
@@ -61,7 +88,10 @@ public struct StringKey32 : IStringKey<StringKey32>
     private byte _data24, _data25, _data26, _data27, _data28, _data29, _data30, _data31;
     private byte _isTruncated;
 
-    public static StringKey32 From(string value)
+        /// <summary>
+    /// From method.
+    /// </summary>
+public static StringKey32 From(string value)
     {
         var key = new StringKey32();
         var span = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref key, 1));
@@ -73,16 +103,25 @@ public struct StringKey32 : IStringKey<StringKey32>
         return key;
     }
 
-    public bool IsTruncated => _isTruncated != 0;
+        /// <summary>
+    /// Gets or sets the Is Truncated.
+    /// </summary>
+public bool IsTruncated => _isTruncated != 0;
 
-    public int CompareTo(StringKey32 other)
+        /// <summary>
+    /// CompareTo method.
+    /// </summary>
+public int CompareTo(StringKey32 other)
     {
         var thisSpan = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this, 1))[..32];
         var otherSpan = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref other, 1))[..32];
         return thisSpan.SequenceCompareTo(otherSpan);
     }
 
-    public string ToDisplayString()
+        /// <summary>
+    /// ToDisplayString method.
+    /// </summary>
+public string ToDisplayString()
     {
         var span = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this, 1))[..32];
         var end = span.IndexOf((byte)0);
@@ -90,6 +129,9 @@ public struct StringKey32 : IStringKey<StringKey32>
     }
 }
 
+/// <summary>
+/// Represents a struct for StringKey128.
+/// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 129)]
 public struct StringKey128 : IStringKey<StringKey128>
 {
@@ -111,7 +153,10 @@ public struct StringKey128 : IStringKey<StringKey128>
     private byte _data120, _data121, _data122, _data123, _data124, _data125, _data126, _data127;
     private byte _isTruncated;
 
-    public static StringKey128 From(string value)
+        /// <summary>
+    /// From method.
+    /// </summary>
+public static StringKey128 From(string value)
     {
         var key = new StringKey128();
         var span = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref key, 1));
@@ -123,16 +168,25 @@ public struct StringKey128 : IStringKey<StringKey128>
         return key;
     }
 
-    public bool IsTruncated => _isTruncated != 0;
+        /// <summary>
+    /// Gets or sets the Is Truncated.
+    /// </summary>
+public bool IsTruncated => _isTruncated != 0;
 
-    public int CompareTo(StringKey128 other)
+        /// <summary>
+    /// CompareTo method.
+    /// </summary>
+public int CompareTo(StringKey128 other)
     {
         var thisSpan = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this, 1))[..128];
         var otherSpan = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref other, 1))[..128];
         return thisSpan.SequenceCompareTo(otherSpan);
     }
 
-    public string ToDisplayString()
+        /// <summary>
+    /// ToDisplayString method.
+    /// </summary>
+public string ToDisplayString()
     {
         var span = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this, 1))[..128];
         var end = span.IndexOf((byte)0);
@@ -140,6 +194,9 @@ public struct StringKey128 : IStringKey<StringKey128>
     }
 }
 
+/// <summary>
+/// Represents a struct for StringKey256.
+/// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 257)]
 public struct StringKey256 : IStringKey<StringKey256>
 {
@@ -177,7 +234,10 @@ public struct StringKey256 : IStringKey<StringKey256>
     private byte _data248, _data249, _data250, _data251, _data252, _data253, _data254, _data255;
     private byte _isTruncated;
 
-    public static StringKey256 From(string value)
+        /// <summary>
+    /// From method.
+    /// </summary>
+public static StringKey256 From(string value)
     {
         var key = new StringKey256();
         var span = MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref key, 1));
@@ -189,16 +249,25 @@ public struct StringKey256 : IStringKey<StringKey256>
         return key;
     }
 
-    public bool IsTruncated => _isTruncated != 0;
+        /// <summary>
+    /// Gets or sets the Is Truncated.
+    /// </summary>
+public bool IsTruncated => _isTruncated != 0;
 
-    public int CompareTo(StringKey256 other)
+        /// <summary>
+    /// CompareTo method.
+    /// </summary>
+public int CompareTo(StringKey256 other)
     {
         var thisSpan = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this, 1))[..256];
         var otherSpan = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref other, 1))[..256];
         return thisSpan.SequenceCompareTo(otherSpan);
     }
 
-    public string ToDisplayString()
+        /// <summary>
+    /// ToDisplayString method.
+    /// </summary>
+public string ToDisplayString()
     {
         var span = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref this, 1))[..256];
         var end = span.IndexOf((byte)0);

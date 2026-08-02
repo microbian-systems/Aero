@@ -62,7 +62,6 @@ $libProjects = @(
     "$RepoRoot/src/Aero.Services"
     "$RepoRoot/src/Aero.Web"
     "$RepoRoot/src/Aero.Auth"
-    "$RepoRoot/src/Aero.MerakiUI"
 )
 
 $versionArgs = @()

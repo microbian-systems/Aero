@@ -1,6 +1,12 @@
 namespace Aero.Core.Http;
 
+/// <summary>
+/// Defines an interface for ITokenProvider.
+/// </summary>
 public interface ITokenProvider
 {
-    ValueTask<string?> GetAccessTokenAsync(CancellationToken cancellationToken);
+        /// <summary>
+    /// GetAccessTokenAsync method.
+    /// </summary>
+ValueTask<string?> GetAccessTokenAsync(CancellationToken cancellationToken);
 }

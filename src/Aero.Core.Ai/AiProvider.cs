@@ -1,5 +1,8 @@
 namespace Aero.Core.Ai;
 
+/// <summary>
+/// Defines an enumeration for AiProvider.
+/// </summary>
 public enum AiProvider
 {
     Anthropic,  // User's key

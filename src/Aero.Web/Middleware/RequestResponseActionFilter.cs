@@ -5,10 +5,16 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Aero.Web.Middleware;
 
+/// <summary>
+/// Represents a class for RequestResponseActionFilter.
+/// </summary>
 public sealed class RequestResponseActionFilter(ILogger<RequestResponseActionFilter> log)
     : ActionFilterAttribute
 {
-    public override async Task OnActionExecutionAsync(
+        /// <summary>
+    /// OnActionExecutionAsync method.
+    /// </summary>
+public override async Task OnActionExecutionAsync(
         ActionExecutingContext context,
         ActionExecutionDelegate next)
     {

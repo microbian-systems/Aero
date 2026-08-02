@@ -1,19 +1,40 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Aero.Core.Entities;
 
 namespace Aero.Models.Entities;
 
+/// <summary>
+/// Represents a class for ApiAccountModel.
+/// </summary>
 public class ApiAccountModel : Entity
 {
-    [MaxLength(128)]
+        /// <summary>
+    /// Gets or sets the Api Key.
+    /// </summary>
+[MaxLength(128)]
     public string? ApiKey { get; set; }
-    [MaxLength(256)]
+        /// <summary>
+    /// Gets or sets the Email.
+    /// </summary>
+[MaxLength(256)]
     public string Email { get; set; }
-    public bool Enabled { get; set; }
-    [MaxLength(1024)]
+        /// <summary>
+    /// Gets or sets the Enabled.
+    /// </summary>
+public bool Enabled { get; set; }
+        /// <summary>
+    /// Gets or sets the Refresh Token.
+    /// </summary>
+[MaxLength(1024)]
     public string RefreshToken { get; set; }
-    public DateTimeOffset RefreshTokenExpiry { get; set; }
-    public virtual List<ApiClaimsModel> Claims { get; set; } = [];
+        /// <summary>
+    /// Gets or sets the Refresh Token Expiry.
+    /// </summary>
+public DateTimeOffset RefreshTokenExpiry { get; set; }
+        /// <summary>
+    /// Gets or sets the Claims.
+    /// </summary>
+public virtual List<ApiClaimsModel> Claims { get; set; } = [];
 }
 
 // public record ApiAccountModel : IEntity<int>

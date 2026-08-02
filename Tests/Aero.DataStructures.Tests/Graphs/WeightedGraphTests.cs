@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -6,6 +6,9 @@ using AutoFixture;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for WeightedGraphTests.
+/// </summary>
 public class WeightedGraphTests
 {
     private readonly Faker _faker = new();
@@ -13,7 +16,10 @@ public class WeightedGraphTests
 
     //#region Constructor Tests
 
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldCreateDirectedGraph_WhenSpecified method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldCreateDirectedGraph_WhenSpecified()
     {
         var graph = new WeightedGraph<string, int>(directed: true);
@@ -21,7 +27,10 @@ public class WeightedGraphTests
         graph.IsDirected.ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldCreateUndirectedGraph_ByDefault method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldCreateUndirectedGraph_ByDefault()
     {
         var graph = new WeightedGraph<string, int>(directed: false);
@@ -33,7 +42,10 @@ public class WeightedGraphTests
 
     //#region Edge Tests
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldStoreWeight method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldStoreWeight()
     {
         var graph = new WeightedGraph<string, int>();
@@ -45,7 +57,10 @@ public class WeightedGraphTests
         storedWeight.ShouldBe(weight);
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldAutoAddVertices method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldAutoAddVertices()
     {
         var graph = new WeightedGraph<int, double>();
@@ -57,7 +72,10 @@ public class WeightedGraphTests
         graph.VertexCount.ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_Undirected_ShouldStoreBidirectional method.
+    /// </summary>
+[Test]
     public void AddEdge_Undirected_ShouldStoreBidirectional()
     {
         var graph = new WeightedGraph<string, int>(directed: false);
@@ -67,7 +85,10 @@ public class WeightedGraphTests
         graph.ContainsEdge("Y", "X").ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_Directed_ShouldStoreOneDirection method.
+    /// </summary>
+[Test]
     public void AddEdge_Directed_ShouldStoreOneDirection()
     {
         var graph = new WeightedGraph<string, int>(directed: true);
@@ -77,7 +98,10 @@ public class WeightedGraphTests
         graph.ContainsEdge("Y", "X").ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldIncreaseEdgeCount method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldIncreaseEdgeCount()
     {
         var graph = new WeightedGraph<string, int>();
@@ -87,7 +111,10 @@ public class WeightedGraphTests
         graph.EdgeCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldAcceptVariousWeights method.
+    /// </summary>
+[Test]
     [Arguments(0)]
     [Arguments(-5)]
     [Arguments(100)]
@@ -105,7 +132,10 @@ public class WeightedGraphTests
 
     //#region Weight Retrieval Tests
 
-    [Test]
+        /// <summary>
+    /// TryGetWeight_ShouldReturnFalse_WhenEdgeDoesNotExist method.
+    /// </summary>
+[Test]
     public void TryGetWeight_ShouldReturnFalse_WhenEdgeDoesNotExist()
     {
         var graph = new WeightedGraph<string, int>();
@@ -113,7 +143,10 @@ public class WeightedGraphTests
         graph.TryGetWeight("nonexistent", "edge", out _).ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// TryGetWeight_ShouldReturnCorrectWeight method.
+    /// </summary>
+[Test]
     public void TryGetWeight_ShouldReturnCorrectWeight()
     {
         var graph = new WeightedGraph<string, double>();
@@ -128,7 +161,10 @@ public class WeightedGraphTests
 
     //#region GetEdges Tests
 
-    [Test]
+        /// <summary>
+    /// GetEdges_ShouldReturnAllEdgesWithWeights method.
+    /// </summary>
+[Test]
     public void GetEdges_ShouldReturnAllEdgesWithWeights()
     {
         var graph = new WeightedGraph<string, int>();
@@ -146,7 +182,10 @@ public class WeightedGraphTests
 
     //#region Neighbors Tests
 
-    [Test]
+        /// <summary>
+    /// GetNeighborsWithWeights_ShouldReturnCorrectData method.
+    /// </summary>
+[Test]
     public void GetNeighborsWithWeights_ShouldReturnCorrectData()
     {
         var graph = new WeightedGraph<string, int>();
@@ -165,7 +204,10 @@ public class WeightedGraphTests
 
     //#region Dijkstra Tests
 
-    [Test]
+        /// <summary>
+    /// Dijkstra_ShouldFindShortestPaths method.
+    /// </summary>
+[Test]
     public void Dijkstra_ShouldFindShortestPaths()
     {
         var graph = new WeightedGraph<string, int>();
@@ -180,7 +222,10 @@ public class WeightedGraphTests
         distances["C"].ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// Dijkstra_ShouldThrow_WhenStartVertexNotFound method.
+    /// </summary>
+[Test]
     public void Dijkstra_ShouldThrow_WhenStartVertexNotFound()
     {
         var graph = new WeightedGraph<string, int>();
@@ -190,7 +235,10 @@ public class WeightedGraphTests
         act.ShouldThrow<ArgumentException>();
     }
 
-    [Test]
+        /// <summary>
+    /// Dijkstra_ShouldHandleDisconnectedVertices method.
+    /// </summary>
+[Test]
     public void Dijkstra_ShouldHandleDisconnectedVertices()
     {
         var graph = new WeightedGraph<string, int>();
@@ -206,7 +254,10 @@ public class WeightedGraphTests
 
     //#region Shortest Path Tests
 
-    [Test]
+        /// <summary>
+    /// GetShortestPath_ShouldReturnCorrectPath method.
+    /// </summary>
+[Test]
     public void GetShortestPath_ShouldReturnCorrectPath()
     {
         var graph = new WeightedGraph<string, int>();
@@ -220,7 +271,10 @@ public class WeightedGraphTests
         weight.ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// GetShortestPath_ShouldReturnEmpty_WhenNoPath method.
+    /// </summary>
+[Test]
     public void GetShortestPath_ShouldReturnEmpty_WhenNoPath()
     {
         var graph = new WeightedGraph<string, int>();
@@ -236,7 +290,10 @@ public class WeightedGraphTests
 
     //#region MST Tests
 
-    [Test]
+        /// <summary>
+    /// GetMinimumSpanningTree_ShouldReturnCorrectEdges method.
+    /// </summary>
+[Test]
     public void GetMinimumSpanningTree_ShouldReturnCorrectEdges()
     {
         var graph = new WeightedGraph<string, int>(directed: false);
@@ -251,7 +308,10 @@ public class WeightedGraphTests
         mst.ContainsEdge("B", "C").ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// GetMinimumSpanningTree_ShouldThrow_ForDirectedGraph method.
+    /// </summary>
+[Test]
     public void GetMinimumSpanningTree_ShouldThrow_ForDirectedGraph()
     {
         var graph = new WeightedGraph<string, int>(directed: true);
@@ -265,7 +325,10 @@ public class WeightedGraphTests
 
     //#region Remove Tests
 
-    [Test]
+        /// <summary>
+    /// RemoveEdge_ShouldRemoveWeight method.
+    /// </summary>
+[Test]
     public void RemoveEdge_ShouldRemoveWeight()
     {
         var graph = new WeightedGraph<string, int>();
@@ -276,7 +339,10 @@ public class WeightedGraphTests
         graph.TryGetWeight("A", "B", out _).ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// RemoveVertex_ShouldRemoveAllIncidentEdges method.
+    /// </summary>
+[Test]
     public void RemoveVertex_ShouldRemoveAllIncidentEdges()
     {
         var graph = new WeightedGraph<string, int>();
@@ -293,7 +359,10 @@ public class WeightedGraphTests
 
     //#region Generic Weight Type Tests
 
-    [Test]
+        /// <summary>
+    /// WeightedGraph_ShouldWorkWithDoubleWeights method.
+    /// </summary>
+[Test]
     public void WeightedGraph_ShouldWorkWithDoubleWeights()
     {
         var graph = new WeightedGraph<string, double>();
@@ -305,7 +374,10 @@ public class WeightedGraphTests
         distances["C"].ShouldBe(4.2, 0.0001);
     }
 
-    [Test]
+        /// <summary>
+    /// WeightedGraph_ShouldWorkWithLongWeights method.
+    /// </summary>
+[Test]
     public void WeightedGraph_ShouldWorkWithLongWeights()
     {
         var graph = new WeightedGraph<int, long>();

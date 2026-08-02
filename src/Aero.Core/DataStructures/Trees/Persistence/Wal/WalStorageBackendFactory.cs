@@ -3,9 +3,15 @@ using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
+/// <summary>
+/// Represents a class for WalStorageBackendFactory.
+/// </summary>
 public static class WalStorageBackendFactory
 {
-    public static async ValueTask<IWalStorageBackend> CreateAsync(
+        /// <summary>
+    /// CreateAsync method.
+    /// </summary>
+public static async ValueTask<IWalStorageBackend> CreateAsync(
         IStorageBackend inner,
         string walPath,
         IConcurrencyStrategy? concurrency = null,
@@ -23,13 +29,19 @@ public static class WalStorageBackendFactory
         return new WalStorageBackend(inner, walFile, txnManager, concurrency);
     }
 
-    public static ValueTask<IWalStorageBackend> CreateWithMvccAsync(
+        /// <summary>
+    /// CreateWithMvccAsync method.
+    /// </summary>
+public static ValueTask<IWalStorageBackend> CreateWithMvccAsync(
         IStorageBackend inner,
         string walPath,
         CancellationToken ct = default) =>
         CreateAsync(inner, walPath, new MvccConcurrencyStrategy(), ct);
 
-    public static ValueTask<IWalStorageBackend> CreateWithOccAsync(
+        /// <summary>
+    /// CreateWithOccAsync method.
+    /// </summary>
+public static ValueTask<IWalStorageBackend> CreateWithOccAsync(
         IStorageBackend inner,
         string walPath,
         CancellationToken ct = default) =>

@@ -1,10 +1,16 @@
-﻿using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for BlobStorageClientHelpers.
+/// </summary>
 public static class BlobStorageClientHelpers
 {
-    public static CloudBlobDirectory GetLastDirectoryReference(this CloudBlobContainer container, List<string> folders)
+        /// <summary>
+    /// GetLastDirectoryReference method.
+    /// </summary>
+public static CloudBlobDirectory GetLastDirectoryReference(this CloudBlobContainer container, List<string> folders)
     {
         var dirs = new List<CloudBlobDirectory>();
         foreach (var folder in folders)

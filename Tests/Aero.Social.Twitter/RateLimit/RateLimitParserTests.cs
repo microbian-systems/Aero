@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.RateLimit;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.RateLimit;
 
+/// <summary>
+/// Represents a class for RateLimitParserTests.
+/// </summary>
 public class RateLimitParserTests
 {
-    [Test]
+        /// <summary>
+    /// ParseRateLimitHeaders_AllHeadersPresent_ReturnsParsedInfo method.
+    /// </summary>
+[Test]
     public async Task ParseRateLimitHeaders_AllHeadersPresent_ReturnsParsedInfo()
     {
         // Arrange
@@ -28,7 +34,10 @@ public class RateLimitParserTests
         await Assert.That(info.RetryAfter).IsEqualTo(TimeSpan.FromSeconds(60));
     }
 
-    [Test]
+        /// <summary>
+    /// ParseRateLimitHeaders_NoHeaders_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ParseRateLimitHeaders_NoHeaders_ReturnsNull()
     {
         // Arrange
@@ -41,7 +50,10 @@ public class RateLimitParserTests
         Assert.Null(info);
     }
 
-    [Test]
+        /// <summary>
+    /// ParseRateLimitHeaders_PartialHeaders_ReturnsPartialInfo method.
+    /// </summary>
+[Test]
     public async Task ParseRateLimitHeaders_PartialHeaders_ReturnsPartialInfo()
     {
         // Arrange
@@ -60,7 +72,10 @@ public class RateLimitParserTests
         await Assert.That(info.ResetTimestamp).IsEqualTo(0);
     }
 
-    [Test]
+        /// <summary>
+    /// ParseRateLimitHeaders_InvalidValues_ReturnsPartialInfo method.
+    /// </summary>
+[Test]
     public async Task ParseRateLimitHeaders_InvalidValues_ReturnsPartialInfo()
     {
         // Arrange
@@ -79,7 +94,10 @@ public class RateLimitParserTests
         await Assert.That(info.ResetTimestamp).IsEqualTo(1234567890);
     }
 
-    [Test]
+        /// <summary>
+    /// ParseRateLimitHeaders_NullResponse_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ParseRateLimitHeaders_NullResponse_ReturnsNull()
     {
         // Act
@@ -89,7 +107,10 @@ public class RateLimitParserTests
         Assert.Null(info);
     }
 
-    [Test]
+        /// <summary>
+    /// GetRateLimitDescription_WithValidInfo_ReturnsDescriptiveString method.
+    /// </summary>
+[Test]
     public async Task GetRateLimitDescription_WithValidInfo_ReturnsDescriptiveString()
     {
         // Arrange
@@ -108,7 +129,10 @@ public class RateLimitParserTests
         await Assert.That(description).Contains("50% consumed");
     }
 
-    [Test]
+        /// <summary>
+    /// GetRateLimitDescription_WithRateLimit_ReturnsRateLimitedMessage method.
+    /// </summary>
+[Test]
     public async Task GetRateLimitDescription_WithRateLimit_ReturnsRateLimitedMessage()
     {
         // Arrange
@@ -126,7 +150,10 @@ public class RateLimitParserTests
         await Assert.That(description).Contains("Rate limit exceeded");
     }
 
-    [Test]
+        /// <summary>
+    /// GetRateLimitDescription_WithApproachingLimit_ReturnsApproachingMessage method.
+    /// </summary>
+[Test]
     public async Task GetRateLimitDescription_WithApproachingLimit_ReturnsApproachingMessage()
     {
         // Arrange
@@ -144,7 +171,10 @@ public class RateLimitParserTests
         await Assert.That(description).Contains("Approaching rate limit");
     }
 
-    [Test]
+        /// <summary>
+    /// GetRateLimitDescription_WithNullInfo_ReturnsNotAvailableMessage method.
+    /// </summary>
+[Test]
     public async Task GetRateLimitDescription_WithNullInfo_ReturnsNotAvailableMessage()
     {
         // Act
@@ -154,7 +184,10 @@ public class RateLimitParserTests
         await Assert.That(description).IsEqualTo("Rate limit information not available.");
     }
 
-    [Test]
+        /// <summary>
+    /// ShouldLogWarning_VariousScenarios_ReturnsExpectedResult method.
+    /// </summary>
+[Test]
     [Arguments(100, 5, true)]   // Less than 10% remaining
     [Arguments(100, 0, true)]   // Rate limited
     [Arguments(100, 15, false)] // Above 10% threshold
@@ -173,14 +206,20 @@ public class RateLimitParserTests
         await Assert.That(RateLimitParser.ShouldLogWarning(info)).IsEqualTo(expected);
     }
 
-    [Test]
+        /// <summary>
+    /// ShouldLogWarning_WithNullInfo_ReturnsFalse method.
+    /// </summary>
+[Test]
     public async Task ShouldLogWarning_WithNullInfo_ReturnsFalse()
     {
         // Act & Assert
         await Assert.That(RateLimitParser.ShouldLogWarning(null)).IsFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// ParseRateLimitHeaders_OnlyRetryAfter_ReturnsInfoWithRetryAfter method.
+    /// </summary>
+[Test]
     public async Task ParseRateLimitHeaders_OnlyRetryAfter_ReturnsInfoWithRetryAfter()
     {
         // Arrange

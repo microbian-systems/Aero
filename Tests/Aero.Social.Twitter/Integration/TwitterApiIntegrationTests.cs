@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Exceptions;
 using Aero.Social.Twitter.Client.Models;
@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Integration;
 
+/// <summary>
+/// Represents a class for TwitterApiIntegrationTests.
+/// </summary>
 [Property("Category", "Integration")]
 [ClassDataSource<WireMockFixture>(Shared = SharedType.Keyed, Key = "Integration")]
 public class TwitterApiIntegrationTests : IDisposable
@@ -21,7 +24,10 @@ public class TwitterApiIntegrationTests : IDisposable
     private readonly Fixture _autoFixture;
     private bool _disposed;
 
-    public TwitterApiIntegrationTests(WireMockFixture fixture)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="TwitterApiIntegrationTests"/> class.
+    /// </summary>
+public TwitterApiIntegrationTests(WireMockFixture fixture)
     {
         _fixture = fixture;
         _faker = new Faker();
@@ -31,7 +37,10 @@ public class TwitterApiIntegrationTests : IDisposable
 
     //#region Happy Path Tests
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_WithValidId_ReturnsTweet method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_WithValidId_ReturnsTweet()
     {
         // Arrange - Using Bogus for realistic data
@@ -64,7 +73,10 @@ public class TwitterApiIntegrationTests : IDisposable
         result.Text.ShouldBe("Test tweet content");
     }
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_WithAutoFixtureData_ReturnsTweet method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_WithAutoFixtureData_ReturnsTweet()
     {
         // Arrange - Using AutoFixture
@@ -98,7 +110,10 @@ public class TwitterApiIntegrationTests : IDisposable
         result.Text.ShouldBe(tweetText);
     }
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_WithOAuth2_SendsBearerToken method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_WithOAuth2_SendsBearerToken()
     {
         // Arrange
@@ -130,7 +145,10 @@ public class TwitterApiIntegrationTests : IDisposable
         result.Id.ShouldBe(tweetId);
     }
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_DeserializesPublicMetrics method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_DeserializesPublicMetrics()
     {
         // Arrange
@@ -175,7 +193,10 @@ public class TwitterApiIntegrationTests : IDisposable
 
     //#region Error Handling Tests
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_WithInvalidOAuth1_ThrowsAuthenticationException method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_WithInvalidOAuth1_ThrowsAuthenticationException()
     {
         // Arrange
@@ -202,7 +223,10 @@ public class TwitterApiIntegrationTests : IDisposable
         exception.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_WithInvalidId_ThrowsNotFoundException method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_WithInvalidId_ThrowsNotFoundException()
     {
         // Arrange
@@ -229,7 +253,10 @@ public class TwitterApiIntegrationTests : IDisposable
         exception.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_WhenRateLimited_ThrowsRateLimitExceptionWithRetryAfter method.
+    /// </summary>
+[Test]
     [Arguments(900)]  // 15 minutes
     [Arguments(60)]   // 1 minute
     public async Task GetTweetAsync_WhenRateLimited_ThrowsRateLimitExceptionWithRetryAfter(int retryAfterSeconds)
@@ -261,7 +288,10 @@ public class TwitterApiIntegrationTests : IDisposable
         exception.RetryAfter.Value.TotalSeconds.ShouldBe(retryAfterSeconds);
     }
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_WithServerError_ThrowsApiException method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_WithServerError_ThrowsApiException()
     {
         // Arrange
@@ -292,7 +322,10 @@ public class TwitterApiIntegrationTests : IDisposable
 
     //#region Request Validation Tests
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_MakesRequestToCorrectEndpoint method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_MakesRequestToCorrectEndpoint()
     {
         // Arrange
@@ -322,7 +355,10 @@ public class TwitterApiIntegrationTests : IDisposable
             entry.RequestMessage.Path == $"/2/tweets/{tweetId}");
     }
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_UsesGetMethod method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_UsesGetMethod()
     {
         // Arrange
@@ -355,7 +391,10 @@ public class TwitterApiIntegrationTests : IDisposable
 
     //#region Retry Behavior Tests
 
-    [Test]
+        /// <summary>
+    /// GetTweetAsync_WithTransientFailure_RetriesAndSucceeds method.
+    /// </summary>
+[Test]
     public async Task GetTweetAsync_WithTransientFailure_RetriesAndSucceeds()
     {
         // Arrange - Test retry behavior with transient failure
@@ -386,7 +425,10 @@ public class TwitterApiIntegrationTests : IDisposable
 
     //#endregion
 
-    public void Dispose()
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public void Dispose()
     {
         if (!_disposed)
         {

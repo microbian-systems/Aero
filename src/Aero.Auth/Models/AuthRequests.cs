@@ -31,11 +31,17 @@ public class LoginWebRequest
 /// </summary>
 public class LoginAppRequest
 {
-    [Required]
+        /// <summary>
+    /// Gets or sets the Email.
+    /// </summary>
+[Required]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
 
-    [Required]
+        /// <summary>
+    /// Gets or sets the Password.
+    /// </summary>
+[Required]
     public string Password { get; set; } = string.Empty;
 
     /// <summary>

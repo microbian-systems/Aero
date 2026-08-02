@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for KdTreeTests.
+/// </summary>
 public class KdTreeTests
 {
-    [Test]
+        /// <summary>
+    /// RangeSearch_Returns_Points_In_Range method.
+    /// </summary>
+[Test]
     public void RangeSearch_Returns_Points_In_Range()
     {
         // Arrange
@@ -27,7 +33,10 @@ public class KdTreeTests
         inRange.ShouldContain(p => p.X == 6 && p.Y == 12);
     }
         
-    [Test]
+        /// <summary>
+    /// NearestNeighbor_Returns_Closest_Point method.
+    /// </summary>
+[Test]
     public void NearestNeighbor_Returns_Closest_Point()
     {
         // Arrange

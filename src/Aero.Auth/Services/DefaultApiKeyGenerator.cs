@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 
 namespace Aero.Auth.Services;
 
@@ -22,7 +22,10 @@ public sealed class DefaultApiKeyFactory(IOptions<ApiKeyOptions> apiKeyOptions) 
 {
     private readonly ApiKeyOptions options = apiKeyOptions.Value;
 
-    public string? GenerateApiKey()
+        /// <summary>
+    /// GenerateApiKey method.
+    /// </summary>
+public string? GenerateApiKey()
     {
         var bytes = RandomNumberGenerator.GetBytes(options.LengthOfKey);
 

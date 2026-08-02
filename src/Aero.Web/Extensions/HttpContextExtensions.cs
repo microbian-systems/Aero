@@ -1,11 +1,17 @@
-﻿using Aero.Models;
+using Aero.Models;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for HttpContextExtensions.
+/// </summary>
 public static class HttpContextExtensions
 {
-    public static async Task<RequestResponseLogModel> ToRequestResponseLogModel(this ActionExecutingContext context)
+        /// <summary>
+    /// ToRequestResponseLogModel method.
+    /// </summary>
+public static async Task<RequestResponseLogModel> ToRequestResponseLogModel(this ActionExecutingContext context)
     {
         var request = context.HttpContext.Request;
         request.EnableBuffering();
@@ -19,7 +25,10 @@ public static class HttpContextExtensions
         return model with {RequestBody = body};
     }
     
-    public static async Task<RequestResponseLogModel> ToRequestResponseLogModel(this ActionExecutedContext context)
+        /// <summary>
+    /// ToRequestResponseLogModel method.
+    /// </summary>
+public static async Task<RequestResponseLogModel> ToRequestResponseLogModel(this ActionExecutedContext context)
     {
         var response = context.HttpContext.Response;
         var model = context.HttpContext.ToRequestResponseLogModel();
@@ -36,7 +45,10 @@ public static class HttpContextExtensions
 
     }
     
-    public static RequestResponseLogModel ToRequestResponseLogModel(this HttpContext? context)
+        /// <summary>
+    /// ToRequestResponseLogModel method.
+    /// </summary>
+public static RequestResponseLogModel ToRequestResponseLogModel(this HttpContext? context)
     {
         if (context is null)
             return new();
@@ -72,7 +84,10 @@ public static class HttpContextExtensions
         return model;
     }
     
-    public static bool IsLocal(this HttpRequest req)
+        /// <summary>
+    /// IsLocal method.
+    /// </summary>
+public static bool IsLocal(this HttpRequest req)
     {
         var connection = req.HttpContext.Connection;
         if (connection.RemoteIpAddress != null && connection.RemoteIpAddress.IsSet())
@@ -94,7 +109,10 @@ public static class HttpContextExtensions
         return address != null && address.ToString() != nullIpAddress;
     }
 
-    public static Tuple<string,string> GetUsedPassFromBasicAuth(this HttpRequest req)
+        /// <summary>
+    /// GetUsedPassFromBasicAuth method.
+    /// </summary>
+public static Tuple<string,string> GetUsedPassFromBasicAuth(this HttpRequest req)
     {
         try
         {
@@ -111,7 +129,10 @@ public static class HttpContextExtensions
 
     }
 
-    public static async Task<string> GetBodyOfRequest(this HttpRequest req)
+        /// <summary>
+    /// GetBodyOfRequest method.
+    /// </summary>
+public static async Task<string> GetBodyOfRequest(this HttpRequest req)
     {
         try
         {

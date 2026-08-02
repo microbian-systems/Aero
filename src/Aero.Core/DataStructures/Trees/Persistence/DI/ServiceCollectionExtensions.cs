@@ -9,9 +9,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.DI;
 
+/// <summary>
+/// Represents a class for ServiceCollectionExtensions.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddInMemoryMinHeap<T>(
+        /// <summary>
+    /// AddInMemoryMinHeap method.
+    /// </summary>
+public static IServiceCollection AddInMemoryMinHeap<T>(
         this IServiceCollection services)
         where T : unmanaged, IComparable<T>
     {
@@ -21,7 +27,10 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddDiskBPlusTree<TKey, TValue>(
+        /// <summary>
+    /// AddDiskBPlusTree method.
+    /// </summary>
+public static IServiceCollection AddDiskBPlusTree<TKey, TValue>(
         this IServiceCollection services,
         string filePath)
         where TKey : unmanaged, IComparable<TKey>
@@ -33,7 +42,10 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddMmapBPlusTree<TKey, TValue>(
+        /// <summary>
+    /// AddMmapBPlusTree method.
+    /// </summary>
+public static IServiceCollection AddMmapBPlusTree<TKey, TValue>(
         this IServiceCollection services,
         string filePath,
         long capacityBytes)
@@ -46,7 +58,10 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddAutoVacuum(
+        /// <summary>
+    /// AddAutoVacuum method.
+    /// </summary>
+public static IServiceCollection AddAutoVacuum(
         this IServiceCollection services,
         Action<AutoVacuumOptions>? configure = null)
     {
@@ -59,7 +74,10 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddWal(
+        /// <summary>
+    /// AddWal method.
+    /// </summary>
+public static IServiceCollection AddWal(
         this IServiceCollection services,
         string walPath,
         IsolationLevel isolation = IsolationLevel.ReadCommitted)
@@ -84,7 +102,10 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddCheckpointService(
+        /// <summary>
+    /// AddCheckpointService method.
+    /// </summary>
+public static IServiceCollection AddCheckpointService(
         this IServiceCollection services,
         Action<CheckpointOptions>? configure = null)
     {

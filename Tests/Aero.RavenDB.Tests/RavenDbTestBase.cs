@@ -5,14 +5,23 @@ using Raven.Embedded;
 
 namespace Aero.RavenDB.Tests;
 
+/// <summary>
+/// Represents a class for RavenDbTestBase.
+/// </summary>
 public abstract class RavenDbTestBase : IDisposable
 {
     private static readonly object _lock = new object();
     private static bool _serverStarted = false;
     
-    protected IDocumentStore DocumentStore { get; }
+        /// <summary>
+    /// Gets or sets the Document Store.
+    /// </summary>
+protected IDocumentStore DocumentStore { get; }
 
-    protected RavenDbTestBase()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="RavenDbTestBase"/> class.
+    /// </summary>
+protected RavenDbTestBase()
     {
         lock (_lock)
         {
@@ -32,7 +41,10 @@ public abstract class RavenDbTestBase : IDisposable
         DocumentStore = EmbeddedServer.Instance.GetDocumentStore(new DatabaseOptions(dbName));
     }
 
-    public void Dispose()
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public void Dispose()
     {
         // Delete the database after the test is done
         try 

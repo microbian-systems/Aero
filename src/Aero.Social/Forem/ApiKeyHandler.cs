@@ -1,8 +1,14 @@
 namespace Aero.Social.Forem;
 
+/// <summary>
+/// Represents a class for ForemApiKeyHandler.
+/// </summary>
 public class ForemApiKeyHandler : DelegatingHandler
 {
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        /// <summary>
+    /// SendAsync method.
+    /// </summary>
+protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         // add stuff here - logging possibly
         

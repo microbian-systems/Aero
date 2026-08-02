@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -20,7 +20,10 @@ public class JwtSigningKeyStoreIntegrationTests
     private readonly ILogger<JwtSigningKeyStore> _mockLogger;
     private readonly IJwtSigningKeyPersistence _mockPersistence;
 
-    public JwtSigningKeyStoreIntegrationTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="JwtSigningKeyStoreIntegrationTests"/> class.
+    /// </summary>
+public JwtSigningKeyStoreIntegrationTests()
     {
         _memoryCache = new MemoryCache(new MemoryCacheOptions());
         _mockLogger = Substitute.For<ILogger<JwtSigningKeyStore>>();
@@ -29,7 +32,10 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetCurrentSigningKey Tests
 
-    [Test]
+        /// <summary>
+    /// GetCurrentSigningKeyAsync_WithValidKey_ShouldReturnSecurityKey method.
+    /// </summary>
+[Test]
     public void GetCurrentSigningKeyAsync_WithValidKey_ShouldReturnSecurityKey()
     {
         // Arrange
@@ -51,7 +57,10 @@ public class JwtSigningKeyStoreIntegrationTests
         store.GetCurrentSigningKeyAsync().Result.ShouldNotBeNull();
     }
 
-    [Test]
+        /// <summary>
+    /// GetCurrentSigningKeyAsync_WithNullKey_ShouldThrowInvalidOperationException method.
+    /// </summary>
+[Test]
     public async Task GetCurrentSigningKeyAsync_WithNullKey_ShouldThrowInvalidOperationException()
     {
         // Arrange
@@ -71,7 +80,10 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetCurrentKeyId Tests
 
-    [Test]
+        /// <summary>
+    /// GetCurrentKeyIdAsync_WithValidKey_ShouldReturnKeyId method.
+    /// </summary>
+[Test]
     public async Task GetCurrentKeyIdAsync_WithValidKey_ShouldReturnKeyId()
     {
         // Arrange
@@ -96,7 +108,10 @@ public class JwtSigningKeyStoreIntegrationTests
         result.ShouldBe(expectedKeyId);
     }
 
-    [Test]
+        /// <summary>
+    /// GetCurrentKeyIdAsync_ShouldCacheResult method.
+    /// </summary>
+[Test]
     public async Task GetCurrentKeyIdAsync_ShouldCacheResult()
     {
         // Arrange
@@ -128,7 +143,10 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetValidationKeys Tests
 
-    [Test]
+        /// <summary>
+    /// GetValidationKeysAsync_WithMultipleKeys_ShouldReturnAllKeys method.
+    /// </summary>
+[Test]
     public async Task GetValidationKeysAsync_WithMultipleKeys_ShouldReturnAllKeys()
     {
         // Arrange
@@ -164,7 +182,10 @@ public class JwtSigningKeyStoreIntegrationTests
         result.ShouldBeOfType<SymmetricSecurityKey>();
     }
 
-    [Test]
+        /// <summary>
+    /// GetValidationKeysAsync_ShouldCacheResults method.
+    /// </summary>
+[Test]
     public async Task GetValidationKeysAsync_ShouldCacheResults()
     {
         // Arrange
@@ -197,7 +218,10 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region RotateSigningKey Tests
 
-    [Test]
+        /// <summary>
+    /// RotateSigningKeyAsync_ShouldCreateNewKey method.
+    /// </summary>
+[Test]
     public async Task RotateSigningKeyAsync_ShouldCreateNewKey()
     {
         // Arrange
@@ -222,7 +246,10 @@ public class JwtSigningKeyStoreIntegrationTests
         await _mockPersistence.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
-    [Test]
+        /// <summary>
+    /// RotateSigningKeyAsync_ShouldInvalidateCache method.
+    /// </summary>
+[Test]
     public async Task RotateSigningKeyAsync_ShouldInvalidateCache()
     {
         // Arrange
@@ -253,7 +280,10 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region RevokeKey Tests
 
-    [Test]
+        /// <summary>
+    /// RevokeKeyAsync_WithValidKeyId_ShouldRevokeKey method.
+    /// </summary>
+[Test]
     public async Task RevokeKeyAsync_WithValidKeyId_ShouldRevokeKey()
     {
         // Arrange
@@ -275,7 +305,10 @@ public class JwtSigningKeyStoreIntegrationTests
         await _mockPersistence.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
-    [Test]
+        /// <summary>
+    /// RevokeKeyAsync_WithNullKeyId_ShouldThrowArgumentException method.
+    /// </summary>
+[Test]
     public async Task RevokeKeyAsync_WithNullKeyId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -288,7 +321,10 @@ public class JwtSigningKeyStoreIntegrationTests
         act.ShouldThrow<ArgumentException>();
     }
 
-    [Test]
+        /// <summary>
+    /// RevokeKeyAsync_WithEmptyKeyId_ShouldThrowArgumentException method.
+    /// </summary>
+[Test]
     public async Task RevokeKeyAsync_WithEmptyKeyId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -305,7 +341,10 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetKeyById Tests
 
-    [Test]
+        /// <summary>
+    /// GetKeyByIdAsync_WithValidKeyId_ShouldReturnKey method.
+    /// </summary>
+[Test]
     public async Task GetKeyByIdAsync_WithValidKeyId_ShouldReturnKey()
     {
         // Arrange
@@ -331,7 +370,10 @@ public class JwtSigningKeyStoreIntegrationTests
         result.ShouldBeOfType<SymmetricSecurityKey>();
     }
 
-    [Test]
+        /// <summary>
+    /// GetKeyByIdAsync_WithInvalidKeyId_ShouldReturnNull method.
+    /// </summary>
+[Test]
     public async Task GetKeyByIdAsync_WithInvalidKeyId_ShouldReturnNull()
     {
         // Arrange
@@ -347,7 +389,10 @@ public class JwtSigningKeyStoreIntegrationTests
         result.ShouldBeNull();
     }
 
-    [Test]
+        /// <summary>
+    /// GetKeyByIdAsync_WithNullKeyId_ShouldThrowArgumentException method.
+    /// </summary>
+[Test]
     public async Task GetKeyByIdAsync_WithNullKeyId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -364,7 +409,10 @@ public class JwtSigningKeyStoreIntegrationTests
 
     //#region GetSigningCredentials Tests
 
-    [Test]
+        /// <summary>
+    /// GetSigningCredentialsAsync_WithValidKey_ShouldReturnCredentials method.
+    /// </summary>
+[Test]
     public async Task GetSigningCredentialsAsync_WithValidKey_ShouldReturnCredentials()
     {
         // Arrange

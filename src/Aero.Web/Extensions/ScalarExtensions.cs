@@ -2,9 +2,15 @@ using Scalar.AspNetCore;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for ScalarUIExtensions.
+/// </summary>
 public static class ScalarUIExtensions
 {
-    public static WebApplication AddScalarUI(this WebApplication app)
+        /// <summary>
+    /// AddScalarUI method.
+    /// </summary>
+public static WebApplication AddScalarUI(this WebApplication app)
     {
         if (!app.Environment.IsProduction())
         {

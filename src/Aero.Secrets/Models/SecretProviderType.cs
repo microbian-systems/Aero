@@ -1,5 +1,8 @@
 namespace Aero.Secrets.Models;
 
+/// <summary>
+/// Defines an enumeration for SecretProviderType.
+/// </summary>
 public enum SecretProviderType
 {
     Unknown = 0,

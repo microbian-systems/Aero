@@ -5,10 +5,19 @@ namespace Aero.Modular;
 /// </summary>
 public sealed class ModuleGraph
 {
-    public required IReadOnlyDictionary<string, ModuleDescriptor> Modules { get; init; }
-    public required IReadOnlyList<ModuleDescriptor> LoadOrder { get; init; }
+        /// <summary>
+    /// Gets or sets the Modules.
+    /// </summary>
+public required IReadOnlyDictionary<string, ModuleDescriptor> Modules { get; init; }
+        /// <summary>
+    /// Gets or sets the Load Order.
+    /// </summary>
+public required IReadOnlyList<ModuleDescriptor> LoadOrder { get; init; }
 
-    public static ModuleGraph Empty() => new()
+        /// <summary>
+    /// Empty method.
+    /// </summary>
+public static ModuleGraph Empty() => new()
     {
         Modules = new Dictionary<string, ModuleDescriptor>(),
         LoadOrder = []

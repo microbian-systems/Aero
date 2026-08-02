@@ -1,19 +1,28 @@
-﻿using Aero.Auth.Services;
+using Aero.Auth.Services;
 using Aero.Common.Web.Infrastructure;
 using Aero.Common.Web.Services;
 
 namespace Aero.Common.Web.Extensions;
 
+/// <summary>
+/// Represents a class for ApiKeyExtensions.
+/// </summary>
 public static class ApiKeyExtensions
 {
-    public static WebApplicationBuilder AddApiKeyGenerator(this WebApplicationBuilder builder)
+        /// <summary>
+    /// AddApiKeyGenerator method.
+    /// </summary>
+public static WebApplicationBuilder AddApiKeyGenerator(this WebApplicationBuilder builder)
     {
         var config = builder.Configuration;
         builder.Services.AddApiKeyGenerator(config);
         return builder;
     }
     
-    public static IServiceCollection AddApiKeyGenerator(
+        /// <summary>
+    /// AddApiKeyGenerator method.
+    /// </summary>
+public static IServiceCollection AddApiKeyGenerator(
         this IServiceCollection services,
         IConfiguration config)
     {

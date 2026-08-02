@@ -1,8 +1,25 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <PackageId>Aero.Actors.Abstractions</PackageId>
+    <Authors>Microbians</Authors>
+    <Title>Actors Abstractions for the Aero Web Platform</Title>
+    <Description>Abstractions for the Aero actor system</Description>
+    <PackageTags>aero;actors;orleans</PackageTags>
+    <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>aero-logo-new.png</PackageIcon>
+    <IsPackable>true</IsPackable>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Orleans.Sdk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\assets\aero-logo-new.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

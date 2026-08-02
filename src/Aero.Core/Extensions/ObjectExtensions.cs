@@ -1,11 +1,20 @@
 namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for ObjectExtensions.
+/// </summary>
 public static class ObjectExtensions
 {
-    public static string ToJson(this object obj) 
+        /// <summary>
+    /// ToJson method.
+    /// </summary>
+public static string ToJson(this object obj) 
         => JsonSerializer.Serialize(obj);
     
-    public static T? FromJson<T>(string json) where T : class
+        /// <summary>
+    /// FromJson method.
+    /// </summary>
+public static T? FromJson<T>(string json) where T : class
     {
         return JsonSerializer.Deserialize<T>(json);
     }
@@ -17,7 +26,10 @@ public static class ObjectExtensions
     /// <returns>a json string</returns>
     public static string Dump(this object obj) => obj.ToJson();
     
-    public static string ToQueryString(this object obj)
+        /// <summary>
+    /// ToQueryString method.
+    /// </summary>
+public static string ToQueryString(this object obj)
     {
         if (obj == null)
             return "";

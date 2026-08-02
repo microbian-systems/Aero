@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -10,6 +10,9 @@ using Marten;
 
 namespace Aero.Identity.Tests;
 
+/// <summary>
+/// Represents a class for IdentityManagementTests.
+/// </summary>
 public class IdentityManagementTests : AeroDbTestDriver
 {
     private async Task<(UserManager<User>, RoleManager<Role>, IDocumentSession, IServiceProvider)> SetupIdentityAsync(IDocumentStore store)
@@ -32,7 +35,10 @@ public class IdentityManagementTests : AeroDbTestDriver
         return (userManager, roleManager, session, serviceProvider);
     }
 
-    [Test]
+        /// <summary>
+    /// UserLifecycle_Create_Read_Update_Delete method.
+    /// </summary>
+[Test]
     public async Task UserLifecycle_Create_Read_Update_Delete()
     {
         // Arrange
@@ -68,7 +74,10 @@ public class IdentityManagementTests : AeroDbTestDriver
         Assert.Null(deletedUser);
     }
 
-    [Test]
+        /// <summary>
+    /// RoleAndClaimManagement_Lifecycle method.
+    /// </summary>
+[Test]
     public async Task RoleAndClaimManagement_Lifecycle()
     {
         // Arrange
@@ -109,7 +118,10 @@ public class IdentityManagementTests : AeroDbTestDriver
         Assert.Contains(dbUser.Claims, c => c.ClaimType == "Permission" && c.ClaimValue == "ViewDashboard");
     }
 
-    [Test]
+        /// <summary>
+    /// UserClaims_CanBeAddedAndRemovedDirectly method.
+    /// </summary>
+[Test]
     public async Task UserClaims_CanBeAddedAndRemovedDirectly()
     {
         // Arrange

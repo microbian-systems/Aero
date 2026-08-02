@@ -1,5 +1,8 @@
 namespace Aero.Core.DataStructures.Trees.Persistence.Format;
 
+/// <summary>
+/// Defines an enumeration for TypeCode.
+/// </summary>
 public enum TypeCode : byte
 {
     Int32 = 0x01,

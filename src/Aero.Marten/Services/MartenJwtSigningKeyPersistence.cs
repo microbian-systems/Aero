@@ -16,7 +16,10 @@ public class MartenJwtSigningKeyPersistence(
     private readonly ILogger<MartenJwtSigningKeyPersistence> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private const string KeyCollectionName = "JwtSigningKeys";
 
-    public async Task<JwtSigningKey?> GetCurrentSigningKeyAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetCurrentSigningKeyAsync method.
+    /// </summary>
+public async Task<JwtSigningKey?> GetCurrentSigningKeyAsync(CancellationToken cancellationToken = default)
     {
         var session = GetSession();
 
@@ -29,7 +32,10 @@ public class MartenJwtSigningKeyPersistence(
         return key;
     }
 
-    public async Task<IEnumerable<JwtSigningKey>> GetValidSigningKeysAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetValidSigningKeysAsync method.
+    /// </summary>
+public async Task<IEnumerable<JwtSigningKey>> GetValidSigningKeysAsync(CancellationToken cancellationToken = default)
     {
         var session = GetSession();
 
@@ -42,7 +48,10 @@ public class MartenJwtSigningKeyPersistence(
         return keys;
     }
 
-    public async Task<JwtSigningKey?> GetKeyByIdAsync(string keyId, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetKeyByIdAsync method.
+    /// </summary>
+public async Task<JwtSigningKey?> GetKeyByIdAsync(string keyId, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(keyId))
         {
@@ -60,7 +69,10 @@ public class MartenJwtSigningKeyPersistence(
         return key;
     }
 
-    public async Task<bool> AddKeyAsync(JwtSigningKey key, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// AddKeyAsync method.
+    /// </summary>
+public async Task<bool> AddKeyAsync(JwtSigningKey key, CancellationToken cancellationToken = default)
     {
         if (key == null)
         {
@@ -83,7 +95,10 @@ public class MartenJwtSigningKeyPersistence(
         }
     }
 
-    public async Task<bool> UpdateKeyAsync(JwtSigningKey key, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// UpdateKeyAsync method.
+    /// </summary>
+public async Task<bool> UpdateKeyAsync(JwtSigningKey key, CancellationToken cancellationToken = default)
     {
         if (key == null)
         {
@@ -114,7 +129,10 @@ public class MartenJwtSigningKeyPersistence(
         }
     }
 
-    public async Task<bool> DeactivateCurrentKeyAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// DeactivateCurrentKeyAsync method.
+    /// </summary>
+public async Task<bool> DeactivateCurrentKeyAsync(CancellationToken cancellationToken = default)
     {
         var session = GetSession();
 
@@ -142,7 +160,10 @@ public class MartenJwtSigningKeyPersistence(
         }
     }
 
-    public async Task<bool> RevokeKeyAsync(string keyId, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// RevokeKeyAsync method.
+    /// </summary>
+public async Task<bool> RevokeKeyAsync(string keyId, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(keyId))
         {
@@ -175,7 +196,10 @@ public class MartenJwtSigningKeyPersistence(
         }
     }
 
-    public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// SaveChangesAsync method.
+    /// </summary>
+public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         try
         {

@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
@@ -11,13 +11,19 @@ using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
+/// <summary>
+/// Represents a class for TwitterClientUserTests.
+/// </summary>
 public class TwitterClientUserTests
 {
     private readonly HttpClient _httpClient;
     private readonly IOptions<TwitterClientOptions> _options;
     private readonly ILogger<TwitterClient> _logger;
 
-    public TwitterClientUserTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="TwitterClientUserTests"/> class.
+    /// </summary>
+public TwitterClientUserTests()
     {
         _httpClient = new HttpClient();
         _options = Options.Create(new TwitterClientOptions
@@ -27,7 +33,10 @@ public class TwitterClientUserTests
         _logger = Substitute.For<ILogger<TwitterClient>>();
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserByIdAsync_WithValidId_ReturnsUser method.
+    /// </summary>
+[Test]
     public async Task GetUserByIdAsync_WithValidId_ReturnsUser()
     {
         // Arrange
@@ -66,7 +75,10 @@ public class TwitterClientUserTests
         await Assert.That(user.Verified).IsTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserByIdAsync_WithFields_IncludesFieldsInRequest method.
+    /// </summary>
+[Test]
     public async Task GetUserByIdAsync_WithFields_IncludesFieldsInRequest()
     {
         // Arrange
@@ -106,7 +118,10 @@ public class TwitterClientUserTests
         await Assert.That(capturedRequest.RequestUri?.Query).Contains("location");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserByIdAsync_WithNullUserId_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task GetUserByIdAsync_WithNullUserId_ThrowsArgumentException()
     {
         // Arrange
@@ -118,7 +133,10 @@ public class TwitterClientUserTests
         await Assert.That(exception.Message).Contains("User ID cannot be null or empty");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserByIdAsync_WithEmptyUserId_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task GetUserByIdAsync_WithEmptyUserId_ThrowsArgumentException()
     {
         // Arrange
@@ -130,7 +148,10 @@ public class TwitterClientUserTests
         await Assert.That(exception.Message).Contains("User ID cannot be null or empty");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserByIdAsync_WithNotFound_ThrowsTwitterApiException method.
+    /// </summary>
+[Test]
     public async Task GetUserByIdAsync_WithNotFound_ThrowsTwitterApiException()
     {
         // Arrange
@@ -161,7 +182,10 @@ public class TwitterClientUserTests
         await Assert.That(exception.StatusCode).IsEqualTo(HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserByUsernameAsync_WithValidUsername_ReturnsUser method.
+    /// </summary>
+[Test]
     public async Task GetUserByUsernameAsync_WithValidUsername_ReturnsUser()
     {
         // Arrange
@@ -197,7 +221,10 @@ public class TwitterClientUserTests
         await Assert.That(user.Username).IsEqualTo("testuser");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserByUsernameAsync_WithAtPrefix_RemovesPrefix method.
+    /// </summary>
+[Test]
     public async Task GetUserByUsernameAsync_WithAtPrefix_RemovesPrefix()
     {
         // Arrange
@@ -234,7 +261,10 @@ public class TwitterClientUserTests
         await Assert.That(capturedRequest.RequestUri?.AbsolutePath).DoesNotContain("@");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserByUsernameAsync_WithFields_IncludesFieldsInRequest method.
+    /// </summary>
+[Test]
     public async Task GetUserByUsernameAsync_WithFields_IncludesFieldsInRequest()
     {
         // Arrange
@@ -275,7 +305,10 @@ public class TwitterClientUserTests
         await Assert.That(capturedRequest.RequestUri?.Query).Contains("public_metrics");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserByUsernameAsync_WithNullUsername_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task GetUserByUsernameAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Arrange
@@ -291,12 +324,18 @@ public class TwitterClientUserTests
     {
         private readonly Func<HttpRequestMessage, Task<HttpResponseMessage>> _handler;
 
-        public TestHttpMessageHandler(Func<HttpRequestMessage, Task<HttpResponseMessage>> handler)
+                /// <summary>
+        /// Initializes a new instance of the <see cref="TestHttpMessageHandler"/> class.
+        /// </summary>
+public TestHttpMessageHandler(Func<HttpRequestMessage, Task<HttpResponseMessage>> handler)
         {
             _handler = handler;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+                /// <summary>
+        /// SendAsync method.
+        /// </summary>
+protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return await _handler(request);
 }

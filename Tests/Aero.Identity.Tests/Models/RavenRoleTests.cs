@@ -1,11 +1,17 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Identity.Models;
 
 namespace Aero.Identity.Tests.Models;
 
+/// <summary>
+/// Represents a class for AeroRoleTests.
+/// </summary>
 public class AeroRoleTests
 {
-    [Test]
+        /// <summary>
+    /// CanInitializeAeroRole method.
+    /// </summary>
+[Test]
     public void CanInitializeAeroRole()
     {
         // Arrange & Act
@@ -15,7 +21,10 @@ public class AeroRoleTests
         Assert.NotNull(role);
     }
 
-    [Test]
+        /// <summary>
+    /// CanSetRoleProperties method.
+    /// </summary>
+[Test]
     public void CanSetRoleProperties()
     {
         // Arrange

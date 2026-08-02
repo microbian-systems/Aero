@@ -2,15 +2,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Aero.Auth.Models;
 
+/// <summary>
+/// Represents a class for LoginRequest.
+/// </summary>
 public class LoginRequest
 {
-    [Required]
+        /// <summary>
+    /// Gets or sets the Email.
+    /// </summary>
+[Required]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
 
-    [Required]
+        /// <summary>
+    /// Gets or sets the Password.
+    /// </summary>
+[Required]
     [DataType(DataType.Password)]
     public string Password { get; set; } = string.Empty;
 
-    public bool RememberMe { get; set; } = false;
+        /// <summary>
+    /// Gets or sets the Remember Me.
+    /// </summary>
+public bool RememberMe { get; set; } = false;
 }

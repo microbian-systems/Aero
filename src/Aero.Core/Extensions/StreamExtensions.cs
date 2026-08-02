@@ -1,7 +1,10 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 
 namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for StreamExtensions.
+/// </summary>
 public static class StreamExtensions
 {
     /// <summary>
@@ -19,7 +22,10 @@ public static class StreamExtensions
         return compressedMemoryStream;
     }
 
-    public static  MemoryStream LoadStreamWithJson(this MemoryStream ms, string json)
+        /// <summary>
+    /// LoadStreamWithJson method.
+    /// </summary>
+public static  MemoryStream LoadStreamWithJson(this MemoryStream ms, string json)
     {
         var sw = new StreamWriter(ms);
         sw.Write(json);
@@ -28,5 +34,8 @@ public static class StreamExtensions
         return ms;
     }
         
-    public static string StripTrailingBackSlash(this string path) => path.TrimEnd('/');
+        /// <summary>
+    /// StripTrailingBackSlash method.
+    /// </summary>
+public static string StripTrailingBackSlash(this string path) => path.TrimEnd('/');
 }

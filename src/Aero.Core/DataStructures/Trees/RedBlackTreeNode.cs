@@ -1,5 +1,8 @@
 namespace Aero.Core.DataStructures.Trees;
 
+/// <summary>
+/// Defines an enumeration for NodeColor.
+/// </summary>
 public enum NodeColor
 {
     Red,

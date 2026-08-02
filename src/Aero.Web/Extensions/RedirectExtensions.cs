@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for EndpointExtensions.
+/// </summary>
 public static class EndpointExtensions
 {
     // public static IApplicationBuilder Redirect(this IApplicationBuilder app, string from, string to)
@@ -37,17 +40,26 @@ public static class EndpointExtensions
     //     return app;
     // }
     
-    public static IEndpointRouteBuilder Redirect(this IEndpointRouteBuilder endpoints, string from, string to)
+        /// <summary>
+    /// Redirect method.
+    /// </summary>
+public static IEndpointRouteBuilder Redirect(this IEndpointRouteBuilder endpoints, string from, string to)
     {
         return Redirect(endpoints, new Redirect(from, to));
     }
 
-    public static IEndpointRouteBuilder RedirectPermanent(this IEndpointRouteBuilder endpoints, string from, string to)
+        /// <summary>
+    /// RedirectPermanent method.
+    /// </summary>
+public static IEndpointRouteBuilder RedirectPermanent(this IEndpointRouteBuilder endpoints, string from, string to)
     {
         return Redirect(endpoints,new Redirect(from, to, true));
     }
 
-    public static IEndpointRouteBuilder Redirect(this IEndpointRouteBuilder endpoints, params Redirect[] paths)
+        /// <summary>
+    /// Redirect method.
+    /// </summary>
+public static IEndpointRouteBuilder Redirect(this IEndpointRouteBuilder endpoints, params Redirect[] paths)
     {
         foreach (var (from, to, permanent) in paths)
         {
@@ -62,4 +74,7 @@ public static class EndpointExtensions
     }
 }
 
+/// <summary>
+/// Represents a record for Redirect.
+/// </summary>
 public record Redirect(string From, string To, bool Permanent = false);

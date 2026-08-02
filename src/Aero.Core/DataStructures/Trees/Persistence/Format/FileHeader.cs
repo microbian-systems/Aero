@@ -3,11 +3,23 @@ using Aero.Core.DataStructures.Trees.Persistence.Wal;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Format;
 
+/// <summary>
+/// Represents a class for FileHeader.
+/// </summary>
 public sealed class FileHeader
 {
-    public const uint MagicNumber = 0x54504446;
-    public const ushort CurrentVersion = 1;
-    public const int HeaderPageSize = 4096;
+        /// <summary>
+    /// MagicNumber.
+    /// </summary>
+public const uint MagicNumber = 0x54504446;
+        /// <summary>
+    /// CurrentVersion.
+    /// </summary>
+public const ushort CurrentVersion = 1;
+        /// <summary>
+    /// HeaderPageSize.
+    /// </summary>
+public const int HeaderPageSize = 4096;
 
     private const int MagicOffset = 0;
     private const int FormatVersionOffset = 4;
@@ -25,22 +37,61 @@ public sealed class FileHeader
     private const int ShutdownStateOffset = 88;
     private const int ReservedOffset = 89;
 
-    public ushort FormatVersion { get; init; }
-    public int PageSize { get; init; }
-    public Guid FileId { get; init; }
-    public long CreatedAtUtc { get; init; }
-    public long LastOpenedAtUtc { get; set; }
-    public long PageCount { get; set; }
-    public long FreePageCount { get; set; }
-    public long CatalogPageId { get; init; } = 1;
-    public Lsn LastCheckpointLsn { get; set; }
-    public long MinActiveTxnId { get; set; }
-    public long NextTransactionId { get; set; }
-    public ShutdownState ShutdownState { get; set; }
+        /// <summary>
+    /// Gets or sets the Format Version.
+    /// </summary>
+public ushort FormatVersion { get; init; }
+        /// <summary>
+    /// Gets or sets the Page Size.
+    /// </summary>
+public int PageSize { get; init; }
+        /// <summary>
+    /// Gets or sets the File Id.
+    /// </summary>
+public Guid FileId { get; init; }
+        /// <summary>
+    /// Gets or sets the Created At Utc.
+    /// </summary>
+public long CreatedAtUtc { get; init; }
+        /// <summary>
+    /// Gets or sets the Last Opened At Utc.
+    /// </summary>
+public long LastOpenedAtUtc { get; set; }
+        /// <summary>
+    /// Gets or sets the Page Count.
+    /// </summary>
+public long PageCount { get; set; }
+        /// <summary>
+    /// Gets or sets the Free Page Count.
+    /// </summary>
+public long FreePageCount { get; set; }
+        /// <summary>
+    /// Gets or sets the Catalog Page Id.
+    /// </summary>
+public long CatalogPageId { get; init; } = 1;
+        /// <summary>
+    /// Gets or sets the Last Checkpoint Lsn.
+    /// </summary>
+public Lsn LastCheckpointLsn { get; set; }
+        /// <summary>
+    /// Gets or sets the Min Active Txn Id.
+    /// </summary>
+public long MinActiveTxnId { get; set; }
+        /// <summary>
+    /// Gets or sets the Next Transaction Id.
+    /// </summary>
+public long NextTransactionId { get; set; }
+        /// <summary>
+    /// Gets or sets the Shutdown State.
+    /// </summary>
+public ShutdownState ShutdownState { get; set; }
 
     private FileHeader() { }
 
-    public static FileHeader CreateNew(int pageSize)
+        /// <summary>
+    /// CreateNew method.
+    /// </summary>
+public static FileHeader CreateNew(int pageSize)
     {
         var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         return new FileHeader
@@ -60,7 +111,10 @@ public sealed class FileHeader
         };
     }
 
-    public static FileHeader ReadFrom(ReadOnlySpan<byte> page)
+        /// <summary>
+    /// ReadFrom method.
+    /// </summary>
+public static FileHeader ReadFrom(ReadOnlySpan<byte> page)
     {
         if (page.Length < HeaderPageSize)
             throw new ArgumentException($"Page must be at least {HeaderPageSize} bytes.", nameof(page));
@@ -110,7 +164,10 @@ public sealed class FileHeader
         };
     }
 
-    public void WriteTo(Span<byte> page)
+        /// <summary>
+    /// WriteTo method.
+    /// </summary>
+public void WriteTo(Span<byte> page)
     {
         if (page.Length < HeaderPageSize)
             throw new ArgumentException($"Page must be at least {HeaderPageSize} bytes.", nameof(page));

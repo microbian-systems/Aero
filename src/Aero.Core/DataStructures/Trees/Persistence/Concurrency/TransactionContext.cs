@@ -1,16 +1,25 @@
 namespace Aero.Core.DataStructures.Trees.Persistence.Concurrency;
 
+/// <summary>
+/// Represents a class for TransactionContext.
+/// </summary>
 public static class TransactionContext
 {
     private static readonly AsyncLocal<long> _current = new();
 
-    public static long Current
+        /// <summary>
+    /// Gets or sets the Current.
+    /// </summary>
+public static long Current
     {
         get => _current.Value;
         set => _current.Value = value;
     }
 
-    public static IDisposable Scope(long txnId)
+        /// <summary>
+    /// Scope method.
+    /// </summary>
+public static IDisposable Scope(long txnId)
     {
         var previous = _current.Value;
         _current.Value = txnId;
@@ -21,7 +30,10 @@ public static class TransactionContext
     {
         private bool _disposed;
 
-        public void Dispose()
+                /// <summary>
+        /// Dispose method.
+        /// </summary>
+public void Dispose()
         {
             if (!_disposed)
             {

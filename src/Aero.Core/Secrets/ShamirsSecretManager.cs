@@ -1,18 +1,27 @@
-﻿using System.Numerics;
+using System.Numerics;
 using SecretSharingDotNet.Cryptography.ShamirsSecretSharing;
 using SecretSharingDotNet.Math;
 
 namespace Aero.Core.Secrets;
 
+/// <summary>
+/// Represents a class for ShamirsSecretManager.
+/// </summary>
 public class ShamirsSecretManager : SecretManager
 {
-    public override string[]? CreateFragments(string? secret, ushort numFragments = 3)
+        /// <summary>
+    /// CreateFragments method.
+    /// </summary>
+public override string[]? CreateFragments(string? secret, ushort numFragments = 3)
     {
         var bytes = Encoding.UTF8.GetBytes(secret);
         return CreateFragments(bytes, numFragments);
     }
 
-    public override string[]? CreateFragments(byte[]? secret, ushort nbFragments = 3)
+        /// <summary>
+    /// CreateFragments method.
+    /// </summary>
+public override string[]? CreateFragments(byte[]? secret, ushort nbFragments = 3)
     {
         ArgumentNullException.ThrowIfNull(secret);
 
@@ -46,7 +55,10 @@ public class ShamirsSecretManager : SecretManager
         return fragments;
     }
 
-    public override byte[]? ComputeFragments(string[] fragments)
+        /// <summary>
+    /// ComputeFragments method.
+    /// </summary>
+public override byte[]? ComputeFragments(string[] fragments)
     {
         throw new NotImplementedException();
         ArgumentNullException.ThrowIfNull(fragments);

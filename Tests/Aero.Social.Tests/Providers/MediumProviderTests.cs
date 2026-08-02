@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Providers;
 
+/// <summary>
+/// Represents a class for MediumProviderTests.
+/// </summary>
 public class MediumProviderTests : ProviderTestBase
 {
     private readonly Mock<ILogger<MediumProvider>> _loggerMock = new();
@@ -20,7 +23,10 @@ public class MediumProviderTests : ProviderTestBase
         return new MediumProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Test]
+        /// <summary>
+    /// Provider_ShouldHaveCorrectIdentifier method.
+    /// </summary>
+[Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -31,7 +37,10 @@ public class MediumProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxLength_ShouldReturn100000 method.
+    /// </summary>
+[Test]
     public void MaxLength_ShouldReturn100000()
     {
         var provider = CreateProvider();
@@ -39,7 +48,10 @@ public class MediumProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(100000);
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_ShouldReturnEmptyUrl method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnEmptyUrl()
     {
         var provider = CreateProvider();

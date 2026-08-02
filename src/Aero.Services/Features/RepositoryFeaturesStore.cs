@@ -8,6 +8,9 @@ namespace Aero.Services.Features;
 
 
 // todo - finish implementing feature store
+/// <summary>
+/// Represents a class for RepositoryFeaturesStore.
+/// </summary>
 public class RepositoryFeaturesStore(
     IGenericRepository<Features> repo,
     AppSettings settings,
@@ -18,7 +21,10 @@ public class RepositoryFeaturesStore(
     private readonly IGenericRepository<Features> repo = repo;
     private readonly AppSettings settings = settings;
 
-    public override async Task<Features> GetFeatureAsync(string value)
+        /// <summary>
+    /// GetFeatureAsync method.
+    /// </summary>
+public override async Task<Features> GetFeatureAsync(string value)
     {
         log.LogInformation($"getting feature: {value}");
         var result = await GetAllFeaturesAsync();
@@ -28,7 +34,10 @@ public class RepositoryFeaturesStore(
         return feature;
     }
 
-    public override async Task<List<Features>> GetAllFeaturesAsync()
+        /// <summary>
+    /// GetAllFeaturesAsync method.
+    /// </summary>
+public override async Task<List<Features>> GetAllFeaturesAsync()
     {
         await Task.CompletedTask;
         throw new NotImplementedException();
@@ -36,13 +45,19 @@ public class RepositoryFeaturesStore(
         // return await repo.GetAllAsync();
     }
 
-    public override async Task SetFeaturesAsync(Features value)
+        /// <summary>
+    /// SetFeaturesAsync method.
+    /// </summary>
+public override async Task SetFeaturesAsync(Features value)
     {
         await Task.CompletedTask;
         throw new NotImplementedException();
     }
 
-    public override async Task SetFeatureAsync(Features value)
+        /// <summary>
+    /// SetFeatureAsync method.
+    /// </summary>
+public override async Task SetFeatureAsync(Features value)
     {
         await Task.CompletedTask;
         log.LogInformation($"setting feature for: {value.ToJson()}");
@@ -65,7 +80,10 @@ public class RepositoryFeaturesStore(
     }
 
 
-    public override async Task DeleteFeatureAsync(string feature)
+        /// <summary>
+    /// DeleteFeatureAsync method.
+    /// </summary>
+public override async Task DeleteFeatureAsync(string feature)
     {
         await Task.CompletedTask;
         log.LogInformation($"deleting feature {feature}");
@@ -85,7 +103,10 @@ public class RepositoryFeaturesStore(
         // await repo.UpsertAsync((Features) features);
     }
 
-    public override async Task DeleteFeaturesAsync()
+        /// <summary>
+    /// DeleteFeaturesAsync method.
+    /// </summary>
+public override async Task DeleteFeaturesAsync()
     {
         await Task.CompletedTask;
         log.LogWarning($"deleting all features ");

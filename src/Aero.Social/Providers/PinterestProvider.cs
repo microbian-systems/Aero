@@ -10,15 +10,27 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for PinterestProvider.
+/// </summary>
 public class PinterestProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<PinterestProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "pinterest";
-    public override string Name => "Pinterest";
-    public override string[] Scopes => new[]
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "pinterest";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Pinterest";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[]
     {
         "boards:read",
         "boards:write",
@@ -26,11 +38,20 @@ public class PinterestProvider(
         "pins:write",
         "user_accounts:read"
     };
-    public override int MaxConcurrentJobs => 3;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 3;
 
-    public override int MaxLength(object? additionalSettings = null) => 500;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 500;
 
-    protected override ErrorHandlingResult? HandleErrors(string responseBody)
+        /// <summary>
+    /// HandleErrors method.
+    /// </summary>
+protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (responseBody.Contains("cover_image_url or cover_image_content_type"))
         {
@@ -42,7 +63,10 @@ public class PinterestProvider(
         return null;
     }
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -66,7 +90,10 @@ public class PinterestProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -113,7 +140,10 @@ public class PinterestProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -157,7 +187,10 @@ public class PinterestProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -250,7 +283,10 @@ public class PinterestProvider(
         };
     }
 
-    public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
+        /// <summary>
+    /// AnalyticsAsync method.
+    /// </summary>
+public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
         string id,
         string accessToken,
         int days,
@@ -303,7 +339,10 @@ public class PinterestProvider(
         return result.ToArray();
     }
 
-    public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
+        /// <summary>
+    /// PostAnalyticsAsync method.
+    /// </summary>
+public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
         string integrationId,
         string accessToken,
         string postId,
@@ -384,7 +423,10 @@ public class PinterestProvider(
         return result.ToArray();
     }
 
-    public async Task<List<PinterestBoard>> GetBoardsAsync(string accessToken, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetBoardsAsync method.
+    /// </summary>
+public async Task<List<PinterestBoard>> GetBoardsAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var url = "https://api.pinterest.com/v5/boards";
 
@@ -494,133 +536,226 @@ public class PinterestProvider(
 
     private class PinterestTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("refresh_token")]
+                /// <summary>
+        /// Gets or sets the Refresh Token.
+        /// </summary>
+[JsonPropertyName("refresh_token")]
         public string? RefreshToken { get; set; }
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int? ExpiresIn { get; set; }
 
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string? Scope { get; set; }
     }
 
     private class PinterestUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
 
-        [JsonPropertyName("profile_image")]
+                /// <summary>
+        /// Gets or sets the Profile Image.
+        /// </summary>
+[JsonPropertyName("profile_image")]
         public string? ProfileImage { get; set; }
     }
 
     private class PinterestPinResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class PinterestBoardsResponse
     {
-        [JsonPropertyName("items")]
+                /// <summary>
+        /// Gets or sets the Items.
+        /// </summary>
+[JsonPropertyName("items")]
         public List<PinterestBoard>? Items { get; set; }
     }
 
-    public class PinterestBoard
+        /// <summary>
+    /// Represents a class for PinterestBoard.
+    /// </summary>
+public class PinterestBoard
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
     }
 
     private class PinterestMediaUploadResponse
     {
-        [JsonPropertyName("upload_url")]
+                /// <summary>
+        /// Gets or sets the Upload Url.
+        /// </summary>
+[JsonPropertyName("upload_url")]
         public string UploadUrl { get; set; } = string.Empty;
 
-        [JsonPropertyName("media_id")]
+                /// <summary>
+        /// Gets or sets the Media Id.
+        /// </summary>
+[JsonPropertyName("media_id")]
         public string MediaId { get; set; } = string.Empty;
 
-        [JsonPropertyName("upload_parameters")]
+                /// <summary>
+        /// Gets or sets the Upload Parameters.
+        /// </summary>
+[JsonPropertyName("upload_parameters")]
         public Dictionary<string, object?>? UploadParameters { get; set; }
     }
 
     private class PinterestMediaStatusResponse
     {
-        [JsonPropertyName("status")]
+                /// <summary>
+        /// Gets or sets the Status.
+        /// </summary>
+[JsonPropertyName("status")]
         public string? Status { get; set; }
     }
 
     private class PinterestAnalyticsResponse
     {
-        [JsonPropertyName("all")]
+                /// <summary>
+        /// Gets or sets the All.
+        /// </summary>
+[JsonPropertyName("all")]
         public PinterestAnalyticsAll? All { get; set; }
     }
 
     private class PinterestAnalyticsAll
     {
-        [JsonPropertyName("daily_metrics")]
+                /// <summary>
+        /// Gets or sets the Daily Metrics.
+        /// </summary>
+[JsonPropertyName("daily_metrics")]
         public List<PinterestDailyMetric>? DailyMetrics { get; set; }
     }
 
     private class PinterestDailyMetric
     {
-        [JsonPropertyName("date")]
+                /// <summary>
+        /// Gets or sets the Date.
+        /// </summary>
+[JsonPropertyName("date")]
         public string Date { get; set; } = string.Empty;
 
-        [JsonPropertyName("metrics")]
+                /// <summary>
+        /// Gets or sets the Metrics.
+        /// </summary>
+[JsonPropertyName("metrics")]
         public PinterestMetrics? Metrics { get; set; }
     }
 
     private class PinterestMetrics
     {
-        [JsonPropertyName("PIN_CLICK_RATE")]
+                /// <summary>
+        /// Gets or sets the Pin Click Rate.
+        /// </summary>
+[JsonPropertyName("PIN_CLICK_RATE")]
         public double? PinClickRate { get; set; }
 
-        [JsonPropertyName("IMPRESSION")]
+                /// <summary>
+        /// Gets or sets the Impression.
+        /// </summary>
+[JsonPropertyName("IMPRESSION")]
         public long? Impression { get; set; }
 
-        [JsonPropertyName("PIN_CLICK")]
+                /// <summary>
+        /// Gets or sets the Pin Click.
+        /// </summary>
+[JsonPropertyName("PIN_CLICK")]
         public long? PinClick { get; set; }
 
-        [JsonPropertyName("ENGAGEMENT")]
+                /// <summary>
+        /// Gets or sets the Engagement.
+        /// </summary>
+[JsonPropertyName("ENGAGEMENT")]
         public long? Engagement { get; set; }
 
-        [JsonPropertyName("SAVE")]
+                /// <summary>
+        /// Gets or sets the Save.
+        /// </summary>
+[JsonPropertyName("SAVE")]
         public long? Save { get; set; }
     }
 
     private class PinterestPinAnalyticsResponse
     {
-        [JsonPropertyName("all")]
+                /// <summary>
+        /// Gets or sets the All.
+        /// </summary>
+[JsonPropertyName("all")]
         public PinterestPinAnalyticsAll? All { get; set; }
     }
 
     private class PinterestPinAnalyticsAll
     {
-        [JsonPropertyName("lifetime_metrics")]
+                /// <summary>
+        /// Gets or sets the Lifetime Metrics.
+        /// </summary>
+[JsonPropertyName("lifetime_metrics")]
         public PinterestLifetimeMetrics? LifetimeMetrics { get; set; }
     }
 
     private class PinterestLifetimeMetrics
     {
-        [JsonPropertyName("IMPRESSION")]
+                /// <summary>
+        /// Gets or sets the Impression.
+        /// </summary>
+[JsonPropertyName("IMPRESSION")]
         public long? Impression { get; set; }
 
-        [JsonPropertyName("PIN_CLICK")]
+                /// <summary>
+        /// Gets or sets the Pin Click.
+        /// </summary>
+[JsonPropertyName("PIN_CLICK")]
         public long? PinClick { get; set; }
 
-        [JsonPropertyName("OUTBOUND_CLICK")]
+                /// <summary>
+        /// Gets or sets the Outbound Click.
+        /// </summary>
+[JsonPropertyName("OUTBOUND_CLICK")]
         public long? OutboundClick { get; set; }
 
-        [JsonPropertyName("SAVE")]
+                /// <summary>
+        /// Gets or sets the Save.
+        /// </summary>
+[JsonPropertyName("SAVE")]
         public long? Save { get; set; }
     }
 

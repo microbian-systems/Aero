@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Exceptions;
 using Aero.Social.Twitter.Client.Models;
@@ -7,16 +7,25 @@ using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
+/// <summary>
+/// Represents a class for TwitterClientPaginationTests.
+/// </summary>
 public class TwitterClientPaginationTests
 {
     private readonly ITwitterClient _mockClient;
 
-    public TwitterClientPaginationTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="TwitterClientPaginationTests"/> class.
+    /// </summary>
+public TwitterClientPaginationTests()
     {
         _mockClient = Substitute.For<ITwitterClient>();
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_WithNullClient_ThrowsArgumentNullException method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_WithNullClient_ThrowsArgumentNullException()
     {
         // Arrange
@@ -32,7 +41,10 @@ public class TwitterClientPaginationTests
         await Assert.That(exception.ParamName).IsEqualTo("client");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_WithSinglePage_YieldsAllTweets method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_WithSinglePage_YieldsAllTweets()
     {
         // Arrange
@@ -70,7 +82,10 @@ public class TwitterClientPaginationTests
         await _mockClient.Received(1).SearchTweetsAsync("test", Arg.Any<SearchOptions>(), Arg.Any<CancellationToken>());
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_WithMultiplePages_YieldsAllTweets method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_WithMultiplePages_YieldsAllTweets()
     {
         // Arrange
@@ -115,7 +130,10 @@ public class TwitterClientPaginationTests
         await _mockClient.Received(2).SearchTweetsAsync("test", Arg.Any<SearchOptions>(), Arg.Any<CancellationToken>());
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_WithRateLimitWithoutRetryAfter_PropagatesException method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_WithRateLimitWithoutRetryAfter_PropagatesException()
     {
         // Arrange - rate limit without retry-after should throw
@@ -131,7 +149,10 @@ public class TwitterClientPaginationTests
         });
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_WithRateLimitNoRetryAfter_ThrowsException method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_WithRateLimitNoRetryAfter_ThrowsException()
     {
         // Arrange
@@ -147,7 +168,10 @@ public class TwitterClientPaginationTests
         });
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_WithEmptyResponse_DoesNotYield method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_WithEmptyResponse_DoesNotYield()
     {
         // Arrange
@@ -170,7 +194,10 @@ public class TwitterClientPaginationTests
         await Assert.That(result).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_WithOptions_PreservesOptions method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_WithOptions_PreservesOptions()
     {
         // Arrange
@@ -206,7 +233,10 @@ public class TwitterClientPaginationTests
             Arg.Any<CancellationToken>());
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_WithCancellation_StopsEnumeration method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_WithCancellation_StopsEnumeration()
     {
         // Arrange
@@ -242,7 +272,10 @@ public class TwitterClientPaginationTests
         await Assert.That(callCount).IsEqualTo(1);
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_PassesCancellationTokenToEachPageRequest method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_PassesCancellationTokenToEachPageRequest()
     {
         // Arrange
@@ -269,7 +302,10 @@ public class TwitterClientPaginationTests
         await Assert.That(passedTokens[0]).IsEqualTo(cts.Token);
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserTweetsPaginatedAsync_WithNullClient_ThrowsArgumentNullException method.
+    /// </summary>
+[Test]
     public async Task GetUserTweetsPaginatedAsync_WithNullClient_ThrowsArgumentNullException()
     {
         // Arrange
@@ -285,7 +321,10 @@ public class TwitterClientPaginationTests
         await Assert.That(exception.ParamName).IsEqualTo("client");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserTweetsPaginatedAsync_WithMultiplePages_YieldsAllTweets method.
+    /// </summary>
+[Test]
     public async Task GetUserTweetsPaginatedAsync_WithMultiplePages_YieldsAllTweets()
     {
         // Arrange
@@ -315,7 +354,10 @@ public class TwitterClientPaginationTests
         await Assert.That(result.Count).IsEqualTo(2);
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserMentionsPaginatedAsync_WithMultiplePages_YieldsAllTweets method.
+    /// </summary>
+[Test]
     public async Task GetUserMentionsPaginatedAsync_WithMultiplePages_YieldsAllTweets()
     {
         // Arrange
@@ -345,7 +387,10 @@ public class TwitterClientPaginationTests
         await Assert.That(result.Count).IsEqualTo(2);
     }
 
-    [Test]
+        /// <summary>
+    /// SearchTweetsPaginatedAsync_HandlesNullDataInResponse method.
+    /// </summary>
+[Test]
     public async Task SearchTweetsPaginatedAsync_HandlesNullDataInResponse()
     {
         // Arrange
@@ -368,7 +413,10 @@ public class TwitterClientPaginationTests
         await Assert.That(result).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserTweetsPaginatedAsync_HandlesNullMeta method.
+    /// </summary>
+[Test]
     public async Task GetUserTweetsPaginatedAsync_HandlesNullMeta()
     {
         // Arrange
@@ -387,7 +435,10 @@ public class TwitterClientPaginationTests
         await Assert.That(result).HasSingleItem();
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserTweetsPaginatedAsync_WithRateLimit_PropagatesException method.
+    /// </summary>
+[Test]
     public async Task GetUserTweetsPaginatedAsync_WithRateLimit_PropagatesException()
     {
         // Arrange - rate limit without retry-after should throw
@@ -403,7 +454,10 @@ public class TwitterClientPaginationTests
         });
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserMentionsPaginatedAsync_WithRateLimit_PropagatesException method.
+    /// </summary>
+[Test]
     public async Task GetUserMentionsPaginatedAsync_WithRateLimit_PropagatesException()
     {
         // Arrange - rate limit without retry-after should throw

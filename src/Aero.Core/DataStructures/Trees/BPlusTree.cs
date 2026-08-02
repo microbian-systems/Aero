@@ -5,13 +5,19 @@ namespace Aero.Core.DataStructures.Trees;
 /// </summary>
 public class BPlusTreeNodeWrapper<T>(BPlusTreeNode<T> node, int keyIndex) : ITreeNode<T>
 {
-    public T Value
+        /// <summary>
+    /// Gets or sets the Value.
+    /// </summary>
+public T Value
     {
         get => node.Keys[keyIndex];
         set => node.Keys[keyIndex] = value;
     }
 
-    public IEnumerable<ITreeNode<T>> Children
+        /// <summary>
+    /// Gets or sets the Children.
+    /// </summary>
+public IEnumerable<ITreeNode<T>> Children
     {
         get
         {
@@ -35,7 +41,10 @@ public class BPlusTreeNodeWrapper<T>(BPlusTreeNode<T> node, int keyIndex) : ITre
 public class BPlusTree<T>(int degree) : ITree<T>
     where T : IComparable<T>
 {
-    public BPlusTreeNode<T> Root { get; private set; } = new(degree) { IsLeaf = true };
+        /// <summary>
+    /// Gets or sets the Root.
+    /// </summary>
+public BPlusTreeNode<T> Root { get; private set; } = new(degree) { IsLeaf = true };
 
     /// <summary>
     /// Finds a key in the B+ Tree and returns it if found.
@@ -80,7 +89,10 @@ public class BPlusTree<T>(int degree) : ITree<T>
         return result.HasValue ? new BPlusTreeNodeWrapper<T>(result.Value.node, result.Value.index) : null;
     }
 
-    public IEnumerable<T> FindRange(T startKey, T endKey)
+        /// <summary>
+    /// FindRange method.
+    /// </summary>
+public IEnumerable<T> FindRange(T startKey, T endKey)
     {
         var leaf = FindLeaf(startKey);
         while (leaf != null)
@@ -103,7 +115,10 @@ public class BPlusTree<T>(int degree) : ITree<T>
     }
 
 
-    public void Insert(T key)
+        /// <summary>
+    /// Insert method.
+    /// </summary>
+public void Insert(T key)
     {
         var leaf = FindLeaf(key);
         InsertIntoLeaf(leaf, key);
@@ -148,7 +163,10 @@ public class BPlusTree<T>(int degree) : ITree<T>
         }
     }
 
-    public void Delete(T key)
+        /// <summary>
+    /// Delete method.
+    /// </summary>
+public void Delete(T key)
     {
         var leaf = FindLeaf(key);
         RemoveFromLeaf(leaf, key);

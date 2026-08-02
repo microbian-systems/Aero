@@ -5,9 +5,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Validators;
 
+/// <summary>
+/// Represents a class for SmtpEmailOptionsValidator.
+/// </summary>
 public class SmtpEmailOptionsValidator : BaseModelValidator<SmtpEmailOptions>
 {
-    public SmtpEmailOptionsValidator(IMemoryCache cache, ILogger<SmtpEmailOptionsValidator> log) 
+        /// <summary>
+    /// Initializes a new instance of the <see cref="SmtpEmailOptionsValidator"/> class.
+    /// </summary>
+public SmtpEmailOptionsValidator(IMemoryCache cache, ILogger<SmtpEmailOptionsValidator> log) 
         : base(cache, log)
     {
         RuleFor(x => x.Host).NotNullOrEmpty();

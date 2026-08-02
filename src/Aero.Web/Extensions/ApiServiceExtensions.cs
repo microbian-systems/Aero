@@ -1,18 +1,27 @@
-﻿using Aero.Auth.Jwt;
+using Aero.Auth.Jwt;
 using Aero.Auth.Services;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for ApiServiceExtensions.
+/// </summary>
 public static class ApiServiceExtensions
 {
-    public static WebApplicationBuilder AddDefaultApiServices(this WebApplicationBuilder builder)
+        /// <summary>
+    /// AddDefaultApiServices method.
+    /// </summary>
+public static WebApplicationBuilder AddDefaultApiServices(this WebApplicationBuilder builder)
     {
         builder.Services
             .AddDefaultApiServices(builder.Configuration);
         return builder;
     }
 
-    public static IServiceCollection AddDefaultApiServices(this IServiceCollection services, IConfiguration config)
+        /// <summary>
+    /// AddDefaultApiServices method.
+    /// </summary>
+public static IServiceCollection AddDefaultApiServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddTransient<IJwtFactory, JwtFactory>();
         services.AddTransient<IClaimsPrincipalFactory, ClaimsPrincipalFactory>();

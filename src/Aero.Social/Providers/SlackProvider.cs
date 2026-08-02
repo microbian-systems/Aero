@@ -8,15 +8,27 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for SlackProvider.
+/// </summary>
 public class SlackProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<SlackProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "slack";
-    public override string Name => "Slack";
-    public override string[] Scopes => new[]
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "slack";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Slack";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[]
     {
         "channels:read",
         "chat:write",
@@ -25,11 +37,20 @@ public class SlackProvider(
         "channels:join",
         "chat:write.customize"
     };
-    public override int MaxConcurrentJobs => 3;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 3;
 
-    public override int MaxLength(object? additionalSettings = null) => 400000;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 400000;
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -45,7 +66,10 @@ public class SlackProvider(
         });
     }
 
-    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -68,7 +92,10 @@ public class SlackProvider(
         });
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -113,7 +140,10 @@ public class SlackProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -182,7 +212,10 @@ public class SlackProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -253,7 +286,10 @@ public class SlackProvider(
         };
     }
 
-    public async Task<List<SlackChannel>> GetChannelsAsync(string accessToken, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetChannelsAsync method.
+    /// </summary>
+public async Task<List<SlackChannel>> GetChannelsAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, 
             "https://slack.com/api/conversations.list?types=public_channel,private_channel");
@@ -308,85 +344,145 @@ public class SlackProvider(
 
     private class SlackTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string Scope { get; set; } = string.Empty;
 
-        [JsonPropertyName("team")]
+                /// <summary>
+        /// Gets or sets the Team.
+        /// </summary>
+[JsonPropertyName("team")]
         public SlackTeam Team { get; set; } = new();
 
-        [JsonPropertyName("bot_user_id")]
+                /// <summary>
+        /// Gets or sets the Bot User Id.
+        /// </summary>
+[JsonPropertyName("bot_user_id")]
         public string BotUserId { get; set; } = string.Empty;
     }
 
     private class SlackTeam
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class SlackUserResponse
     {
-        [JsonPropertyName("user")]
+                /// <summary>
+        /// Gets or sets the User.
+        /// </summary>
+[JsonPropertyName("user")]
         public SlackUser User { get; set; } = new();
     }
 
     private class SlackUser
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("real_name")]
+                /// <summary>
+        /// Gets or sets the Real Name.
+        /// </summary>
+[JsonPropertyName("real_name")]
         public string RealName { get; set; } = string.Empty;
 
-        [JsonPropertyName("profile")]
+                /// <summary>
+        /// Gets or sets the Profile.
+        /// </summary>
+[JsonPropertyName("profile")]
         public SlackProfile? Profile { get; set; }
     }
 
     private class SlackProfile
     {
-        [JsonPropertyName("image_original")]
+                /// <summary>
+        /// Gets or sets the Image Original.
+        /// </summary>
+[JsonPropertyName("image_original")]
         public string? ImageOriginal { get; set; }
     }
 
     private class SlackPostResponse
     {
-        [JsonPropertyName("ok")]
+                /// <summary>
+        /// Gets or sets the Ok.
+        /// </summary>
+[JsonPropertyName("ok")]
         public bool Ok { get; set; }
 
-        [JsonPropertyName("ts")]
+                /// <summary>
+        /// Gets or sets the Timestamp.
+        /// </summary>
+[JsonPropertyName("ts")]
         public string Timestamp { get; set; } = string.Empty;
 
-        [JsonPropertyName("channel")]
+                /// <summary>
+        /// Gets or sets the Channel.
+        /// </summary>
+[JsonPropertyName("channel")]
         public string Channel { get; set; } = string.Empty;
     }
 
     private class SlackPermalinkResponse
     {
-        [JsonPropertyName("ok")]
+                /// <summary>
+        /// Gets or sets the Ok.
+        /// </summary>
+[JsonPropertyName("ok")]
         public bool Ok { get; set; }
 
-        [JsonPropertyName("permalink")]
+                /// <summary>
+        /// Gets or sets the Permalink.
+        /// </summary>
+[JsonPropertyName("permalink")]
         public string? Permalink { get; set; }
     }
 
     private class SlackChannelsResponse
     {
-        [JsonPropertyName("ok")]
+                /// <summary>
+        /// Gets or sets the Ok.
+        /// </summary>
+[JsonPropertyName("ok")]
         public bool Ok { get; set; }
 
-        [JsonPropertyName("channels")]
+                /// <summary>
+        /// Gets or sets the Channels.
+        /// </summary>
+[JsonPropertyName("channels")]
         public List<SlackChannel>? Channels { get; set; }
     }
 
-    public class SlackChannel
+        /// <summary>
+    /// Represents a class for SlackChannel.
+    /// </summary>
+public class SlackChannel
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
     }
 

@@ -1,8 +1,14 @@
 namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for ExceptionExtensions.
+/// </summary>
 public static class ExceptionExtensions
 {
-    public static IEnumerable<TSource> FromHierarchy<TSource>(
+        /// <summary>
+    /// FromHierarchy method.
+    /// </summary>
+public static IEnumerable<TSource> FromHierarchy<TSource>(
         this TSource source,
         Func<TSource, TSource> nextItem,
         Func<TSource, bool> canContinue)
@@ -13,7 +19,10 @@ public static class ExceptionExtensions
         }
     }
 
-    public static IEnumerable<TSource> FromHierarchy<TSource>(
+        /// <summary>
+    /// FromHierarchy method.
+    /// </summary>
+public static IEnumerable<TSource> FromHierarchy<TSource>(
         this TSource source,
         Func<TSource, TSource> nextItem)
         where TSource : class
@@ -21,7 +30,10 @@ public static class ExceptionExtensions
         return FromHierarchy(source, nextItem, s => s != null);
     }
         
-    public static string GetInnerExceptions(this Exception exception)
+        /// <summary>
+    /// GetInnerExceptions method.
+    /// </summary>
+public static string GetInnerExceptions(this Exception exception)
     {
         var messages = exception.FromHierarchy(ex => ex.InnerException)
             .Select(ex => ex.Message);

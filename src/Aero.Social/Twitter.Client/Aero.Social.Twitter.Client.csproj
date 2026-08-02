@@ -1,15 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-
+    <PackageId>Aero.Social.Twitter.Client</PackageId>
+    <Authors>Microbians</Authors>
+    <Title>Twitter Client for the Aero Social Platform</Title>
+    <Description>Twitter/X API client for the Aero social platform</Description>
     <RootNamespace>Aero.Social.Twitter.Client</RootNamespace>
     <AssemblyName>Aero.Social.Twitter.Client</AssemblyName>
+    <PackageTags>aero;social;twitter</PackageTags>
+    <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>aero-logo-new.png</PackageIcon>
+    <IsPackable>true</IsPackable>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\assets\aero-logo-new.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

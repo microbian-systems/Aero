@@ -3,26 +3,44 @@ using Aero.Core.Data;
 namespace Aero.EfCore;
 
 
+/// <summary>
+/// Represents a class for UnitEfCoreOfWorkEfCore.
+/// </summary>
 public abstract class UnitEfCoreOfWorkEfCore(DbContext context) : IUnitOfWork, IAsyncUnitOfWork
 {
     private Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction? _transaction;
-    public DbContext Context { get; } = context;
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// Gets or sets the Context.
+    /// </summary>
+public DbContext Context { get; } = context;
+        /// <summary>
+    /// SaveChangesAsync method.
+    /// </summary>
+public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return await Context.SaveChangesAsync(cancellationToken);
     }
 
-    public int SaveChanges()
+        /// <summary>
+    /// SaveChanges method.
+    /// </summary>
+public int SaveChanges()
     {
         return Context.SaveChanges();
     }
 
-    public async Task StartTransactionAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// StartTransactionAsync method.
+    /// </summary>
+public async Task StartTransactionAsync(CancellationToken cancellationToken = default)
     {
         _transaction = await Context.Database.BeginTransactionAsync(cancellationToken);
     }
 
-    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// CommitTransactionAsync method.
+    /// </summary>
+public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
         if (_transaction != null)
         {
@@ -32,7 +50,10 @@ public abstract class UnitEfCoreOfWorkEfCore(DbContext context) : IUnitOfWork, I
         }
     }
 
-    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// RollbackTransactionAsync method.
+    /// </summary>
+public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
         if (_transaction != null)
         {
@@ -42,7 +63,10 @@ public abstract class UnitEfCoreOfWorkEfCore(DbContext context) : IUnitOfWork, I
         }
     }
 
-    public void Dispose()
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public void Dispose()
     {
         _transaction?.Dispose();
         Context.Dispose();

@@ -2,6 +2,9 @@ using System.Globalization;
 
 namespace Aero.Core.Globalization;
 
+/// <summary>
+/// Represents a record for AeroLocaleOption.
+/// </summary>
 public sealed record AeroLocaleOption(
     string CultureName,
     string DisplayName,
@@ -12,13 +15,22 @@ public sealed record AeroLocaleOption(
     string RegionName,
     bool IsRightToLeft);
 
+/// <summary>
+/// Represents a class for AeroLocaleCatalog.
+/// </summary>
 public static class AeroLocaleCatalog
 {
     private static readonly Lazy<IReadOnlyList<AeroLocaleOption>> LocaleOptions = new(BuildLocaleOptions);
 
-    public static IReadOnlyList<AeroLocaleOption> GetLocales() => LocaleOptions.Value;
+        /// <summary>
+    /// GetLocales method.
+    /// </summary>
+public static IReadOnlyList<AeroLocaleOption> GetLocales() => LocaleOptions.Value;
 
-    public static string NormalizeCultureOrDefault(string? culture, string fallback = "en-US")
+        /// <summary>
+    /// NormalizeCultureOrDefault method.
+    /// </summary>
+public static string NormalizeCultureOrDefault(string? culture, string fallback = "en-US")
     {
         if (string.IsNullOrWhiteSpace(culture))
             return fallback;

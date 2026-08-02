@@ -1,15 +1,24 @@
-﻿namespace Aero.Core.Extensions;
+namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for RoundingExtensions.
+/// </summary>
 public static class RoundingExtensions
 {
-    public static double RoundToTwoDecimalPlaces(this double number)
+        /// <summary>
+    /// RoundToTwoDecimalPlaces method.
+    /// </summary>
+public static double RoundToTwoDecimalPlaces(this double number)
     {
         var rounded = Math.Round(number, 2);
 
         return rounded;
     }
 
-    public static double RoundUpOrDown(this double number)
+        /// <summary>
+    /// RoundUpOrDown method.
+    /// </summary>
+public static double RoundUpOrDown(this double number)
     {
         var roundedDoubleNumber = RoundedDivision(number);
 
@@ -27,14 +36,20 @@ public static class RoundingExtensions
         return difference < 0.5 ? floor : celing;
     }
 
-    public static double RoundToOneDecimalPlaces(this double number)
+        /// <summary>
+    /// RoundToOneDecimalPlaces method.
+    /// </summary>
+public static double RoundToOneDecimalPlaces(this double number)
     {
         var rounded = Math.Round(number, 2);
 
         return rounded;
     }
 
-    public static decimal RoundToTwoDecimalPlaces(this decimal number)
+        /// <summary>
+    /// RoundToTwoDecimalPlaces method.
+    /// </summary>
+public static decimal RoundToTwoDecimalPlaces(this decimal number)
     {
         var rounded = Math.Round(number, 2);
 

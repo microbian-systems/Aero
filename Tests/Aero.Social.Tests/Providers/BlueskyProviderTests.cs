@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -13,6 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Providers;
 
+/// <summary>
+/// Represents a class for BlueskyProviderTests.
+/// </summary>
 public class BlueskyProviderTests : ProviderTestBase
 {
     private readonly Mock<ILogger<BlueskyProvider>> _loggerMock = new();
@@ -24,7 +27,10 @@ public class BlueskyProviderTests : ProviderTestBase
         return new BlueskyProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Test]
+        /// <summary>
+    /// Provider_ShouldHaveCorrectIdentifier method.
+    /// </summary>
+[Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -35,7 +41,10 @@ public class BlueskyProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxLength_ShouldReturn300 method.
+    /// </summary>
+[Test]
     public void MaxLength_ShouldReturn300()
     {
         var provider = CreateProvider();
@@ -43,7 +52,10 @@ public class BlueskyProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(300);
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_ShouldReturnEmptyUrl method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnEmptyUrl()
     {
         var provider = CreateProvider();
@@ -56,7 +68,10 @@ public class BlueskyProviderTests : ProviderTestBase
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateAsync_ShouldReturnTokenDetails method.
+    /// </summary>
+[Test]
     public async Task AuthenticateAsync_ShouldReturnTokenDetails()
     {
         var authBody = new
@@ -90,7 +105,10 @@ public class BlueskyProviderTests : ProviderTestBase
         value.Username.ShouldBe("testuser.bsky.social");
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateAsync_WithInvalidCredentials_ShouldReturnFailure method.
+    /// </summary>
+[Test]
     public async Task AuthenticateAsync_WithInvalidCredentials_ShouldReturnFailure()
     {
         var authBody = new

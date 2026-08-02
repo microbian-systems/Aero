@@ -1,34 +1,100 @@
 namespace Aero.Social.Forem;
 
 
-    public class ArticleCreateRequest
+        /// <summary>
+    /// Represents a class for ArticleCreateRequest.
+    /// </summary>
+public class ArticleCreateRequest
     {
-        public ArticleData Article { get; set; } = new();
+                /// <summary>
+        /// Gets or sets the Article.
+        /// </summary>
+public ArticleData Article { get; set; } = new();
     }
 
-    public class ArticleData
+        /// <summary>
+    /// Represents a class for ArticleData.
+    /// </summary>
+public class ArticleData
     {
-        public string Title { get; set; } = string.Empty;
-        public string BodyMarkdown { get; set; } = string.Empty;
-        public bool Published { get; set; }
-        public string? Series { get; set; }
-        public string? MainImage { get; set; }
-        public string? CanonicalUrl { get; set; }
-        public string? Description { get; set; }
-        public string? Tags { get; set; }
-        public int? OrganizationId { get; set; }
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+public string Title { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Body Markdown.
+        /// </summary>
+public string BodyMarkdown { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Published.
+        /// </summary>
+public bool Published { get; set; }
+                /// <summary>
+        /// Gets or sets the Series.
+        /// </summary>
+public string? Series { get; set; }
+                /// <summary>
+        /// Gets or sets the Main Image.
+        /// </summary>
+public string? MainImage { get; set; }
+                /// <summary>
+        /// Gets or sets the Canonical Url.
+        /// </summary>
+public string? CanonicalUrl { get; set; }
+                /// <summary>
+        /// Gets or sets the Description.
+        /// </summary>
+public string? Description { get; set; }
+                /// <summary>
+        /// Gets or sets the Tags.
+        /// </summary>
+public string? Tags { get; set; }
+                /// <summary>
+        /// Gets or sets the Organization Id.
+        /// </summary>
+public int? OrganizationId { get; set; }
     }
 
-    public class ArticleCreateResponse
+        /// <summary>
+    /// Represents a class for ArticleCreateResponse.
+    /// </summary>
+public class ArticleCreateResponse
     {
-        public int Id { get; set; }
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public string? Url { get; set; }
-        public string? Slug { get; set; }
-        public string? Path { get; set; }
-        public string? CanonicalUrl { get; set; }
-        public string? BodyMarkdown { get; set; }
-        public string? BodyHtml { get; set; }
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public int Id { get; set; }
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+public string? Title { get; set; }
+                /// <summary>
+        /// Gets or sets the Description.
+        /// </summary>
+public string? Description { get; set; }
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+public string? Url { get; set; }
+                /// <summary>
+        /// Gets or sets the Slug.
+        /// </summary>
+public string? Slug { get; set; }
+                /// <summary>
+        /// Gets or sets the Path.
+        /// </summary>
+public string? Path { get; set; }
+                /// <summary>
+        /// Gets or sets the Canonical Url.
+        /// </summary>
+public string? CanonicalUrl { get; set; }
+                /// <summary>
+        /// Gets or sets the Body Markdown.
+        /// </summary>
+public string? BodyMarkdown { get; set; }
+                /// <summary>
+        /// Gets or sets the Body Html.
+        /// </summary>
+public string? BodyHtml { get; set; }
     }
 

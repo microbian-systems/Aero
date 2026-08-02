@@ -8,6 +8,12 @@ namespace Aero.Modular;
 /// </summary>
 public class ModuleSystemStartupException : Exception
 {
-    public ModuleSystemStartupException(string message) : base(message) { }
-    public ModuleSystemStartupException(string message, Exception inner) : base(message, inner) { }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="ModuleSystemStartupException"/> class.
+    /// </summary>
+public ModuleSystemStartupException(string message) : base(message) { }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="ModuleSystemStartupException"/> class.
+    /// </summary>
+public ModuleSystemStartupException(string message, Exception inner) : base(message, inner) { }
 }

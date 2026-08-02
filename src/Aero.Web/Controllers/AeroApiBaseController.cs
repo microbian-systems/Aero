@@ -1,4 +1,4 @@
-﻿using System.Net.Mime;
+using System.Net.Mime;
 using Aero.Core;
 using Aero.Core.Railway;
 using Microsoft.AspNetCore.RateLimiting;
@@ -6,6 +6,9 @@ using static Aero.Core.Railway.Prelude;
 
 namespace Aero.Web.Controllers;
 
+/// <summary>
+/// Represents a class for AeroApiBaseController.
+/// </summary>
 [Authorize] 
 [ApiController]
 [Produces(MediaTypeNames.Application.Json)]
@@ -24,9 +27,15 @@ namespace Aero.Web.Controllers;
 public abstract class AeroApiBaseController(ILogger<AeroApiBaseController> log)
     : ControllerBase
 {
-    protected readonly ILogger<AeroApiBaseController> log = log;
+        /// <summary>
+    /// log.
+    /// </summary>
+protected readonly ILogger<AeroApiBaseController> log = log;
 
-    protected Option<long> GetUserId()
+        /// <summary>
+    /// GetUserId method.
+    /// </summary>
+protected Option<long> GetUserId()
     {
         var claim = User.Claims.FirstOrDefault(c => c.Type == "id");
 
@@ -41,7 +50,10 @@ public abstract class AeroApiBaseController(ILogger<AeroApiBaseController> log)
             : None;
     }
 
-    protected IActionResult HandleResult<T>(Result<T, AeroError> result)
+        /// <summary>
+    /// HandleResult method.
+    /// </summary>
+protected IActionResult HandleResult<T>(Result<T, AeroError> result)
     {
         return result switch
         {

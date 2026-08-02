@@ -1,4 +1,4 @@
-﻿namespace Aero.Core.Commands;
+namespace Aero.Core.Commands;
 // todo - replace these commands with MediatR
 // public interface ICommand
 // {
@@ -16,29 +16,59 @@
 //     Task<T> ExecuteAsync<P>(P param);
 // }
 
+/// <summary>
+/// Defines an interface for ICommandAsync.
+/// </summary>
 public interface ICommandAsync<T, TReturn>
 {
-    Task<TReturn> ExecuteAsync(T param);
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+Task<TReturn> ExecuteAsync(T param);
 }
     
+/// <summary>
+/// Defines an interface for ICommandAsync.
+/// </summary>
 public interface ICommandAsync<T>
 {
-    Task ExecuteAsync(T param);
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+Task ExecuteAsync(T param);
 }
     
+/// <summary>
+/// Defines an interface for ICommandAsync.
+/// </summary>
 public interface ICommandAsync
 {
-    Task ExecuteAsync();
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+Task ExecuteAsync();
 }
 
+/// <summary>
+/// Defines an interface for ICommand.
+/// </summary>
 public interface ICommand<T> 
 {
-    void Execute(T param);
+        /// <summary>
+    /// Execute method.
+    /// </summary>
+void Execute(T param);
 }
 
+/// <summary>
+/// Defines an interface for ICommand.
+/// </summary>
 public interface ICommand
 {
-    void Execute();
+        /// <summary>
+    /// Execute method.
+    /// </summary>
+void Execute();
 }
     
 /// <summary>

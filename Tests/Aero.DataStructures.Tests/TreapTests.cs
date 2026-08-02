@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for TreapTests.
+/// </summary>
 public class TreapTests
 {
-    [Test]
+        /// <summary>
+    /// Insert_And_Maintains_Heap_Property method.
+    /// </summary>
+[Test]
     public void Insert_And_Maintains_Heap_Property()
     {
         // Arrange

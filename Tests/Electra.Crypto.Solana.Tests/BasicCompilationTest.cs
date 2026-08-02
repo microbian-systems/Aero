@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 
 namespace Electra.Crypto.Solana.Tests;
 
+/// <summary>
+/// Represents a class for BasicCompilationTest.
+/// </summary>
 public class BasicCompilationTest
 {
-    [Test]
+        /// <summary>
+    /// BasicArraySyntax_ShouldWork method.
+    /// </summary>
+[Test]
     public void BasicArraySyntax_ShouldWork()
     {
         // Test C# 12 collection initializer syntax
@@ -23,7 +29,10 @@ public class BasicCompilationTest
         arrayWithItems[1].Should().Be("item2");
     }
     
-    [Test]
+        /// <summary>
+    /// BasicAsync_ShouldWork method.
+    /// </summary>
+[Test]
     public async Task BasicAsync_ShouldWork()
     {
         // Test basic async functionality
@@ -39,7 +48,10 @@ public class BasicCompilationTest
         return "test";
     }
     
-    [Test]
+        /// <summary>
+    /// BasicRecord_ShouldWork method.
+    /// </summary>
+[Test]
     public void BasicRecord_ShouldWork()
     {
         // Test record syntax
@@ -53,4 +65,7 @@ public class BasicCompilationTest
     }
 }
 
+/// <summary>
+/// Represents a record for TestRecord.
+/// </summary>
 public record TestRecord(string Name, int Value, string[] Tags);

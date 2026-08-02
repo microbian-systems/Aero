@@ -4,9 +4,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Validators;
 
+/// <summary>
+/// Represents a class for BaseModelValidator.
+/// </summary>
 public abstract class BaseModelValidator<T>(IMemoryCache cache, ILogger<BaseModelValidator<T>> log)
     : AbstractValidator<T>
 {
-    protected readonly IMemoryCache cache = cache;
-    protected readonly ILogger<BaseModelValidator<T>> log = log;
+        /// <summary>
+    /// cache.
+    /// </summary>
+protected readonly IMemoryCache cache = cache;
+        /// <summary>
+    /// log.
+    /// </summary>
+protected readonly ILogger<BaseModelValidator<T>> log = log;
 }

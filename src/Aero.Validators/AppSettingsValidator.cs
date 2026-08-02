@@ -4,9 +4,15 @@ using FluentValidation;
 
 namespace Aero.Validators;
 
+/// <summary>
+/// Represents a class for AppSettingsValidator.
+/// </summary>
 public class AppSettingsValidator : AbstractValidator<AppSettings>
 {
-    public AppSettingsValidator()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="AppSettingsValidator"/> class.
+    /// </summary>
+public AppSettingsValidator()
     {
         RuleFor(x => x.Secret).NotNullOrEmpty()
             .WithMessage($"jwt secret (Secret) must not be empty");

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Aero.Web.Infrastructure;
 
@@ -23,11 +23,17 @@ public interface IApiKeysCacheService
 }
 
 
+/// <summary>
+/// Represents a class for ApiKeyCacheService.
+/// </summary>
 public class ApiKeyCacheService(IMemoryCache memoryCache, IClientsService clientsService) : IApiKeysCacheService
 {
     private static readonly TimeSpan cacheKeysTimeToLive = new(1, 0, 0);
 
-    public async ValueTask<string?> GetOwnerIdFromApiKey(string apiKey)
+        /// <summary>
+    /// GetOwnerIdFromApiKey method.
+    /// </summary>
+public async ValueTask<string?> GetOwnerIdFromApiKey(string apiKey)
     {
         if (!memoryCache.TryGetValue<Dictionary<string, Guid>>("Authentication_ApiKeys", out var internalKeys))
         {
@@ -44,7 +50,10 @@ public class ApiKeyCacheService(IMemoryCache memoryCache, IClientsService client
         return clientId.ToString();
     }
 
-    public async Task InvalidateApiKey(string apiKey)
+        /// <summary>
+    /// InvalidateApiKey method.
+    /// </summary>
+public async Task InvalidateApiKey(string apiKey)
     {
         if (memoryCache.TryGetValue<Dictionary<string, Guid>>("Authentication_ApiKeys", out var internalKeys))
         {

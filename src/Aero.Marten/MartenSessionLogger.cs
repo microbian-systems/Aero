@@ -5,37 +5,58 @@ using ILogger = Serilog.ILogger;
 
 namespace Aero.Marten;
 
+/// <summary>
+/// Represents a class for MartenSessionLogger.
+/// </summary>
 public class MartenSessionLogger : IMartenSessionLogger
 {
     // todo - consider DI for the Serilog.ILogger
     private readonly ILogger log = Log.Logger;
 
-    public void LogSuccess(NpgsqlCommand command)
+        /// <summary>
+    /// LogSuccess method.
+    /// </summary>
+public void LogSuccess(NpgsqlCommand command)
     {
         log.Information($"npgsql command successful {command.CommandType}: {command.CommandText}");
     }
 
-    public void LogFailure(NpgsqlCommand command, Exception ex)
+        /// <summary>
+    /// LogFailure method.
+    /// </summary>
+public void LogFailure(NpgsqlCommand command, Exception ex)
     {
         log.Error($"npgsql command successful {command.CommandType}: {command.CommandText}");
     }
 
-    public void LogSuccess(NpgsqlBatch batch)
+        /// <summary>
+    /// LogSuccess method.
+    /// </summary>
+public void LogSuccess(NpgsqlBatch batch)
     {
         log.Information("batch update success");
     }
 
-    public void LogFailure(NpgsqlBatch batch, Exception ex)
+        /// <summary>
+    /// LogFailure method.
+    /// </summary>
+public void LogFailure(NpgsqlBatch batch, Exception ex)
     {
         log.Error(ex, "error with batch command");
     }
 
-    public void LogFailure(Exception ex, string message)
+        /// <summary>
+    /// LogFailure method.
+    /// </summary>
+public void LogFailure(Exception ex, string message)
     {
         log.Error(ex, message);
     }
 
-    public void RecordSavedChanges(IDocumentSession session, IChangeSet commit)
+        /// <summary>
+    /// RecordSavedChanges method.
+    /// </summary>
+public void RecordSavedChanges(IDocumentSession session, IChangeSet commit)
     {
         log.Information($@"saved changes successful
                                  Inserts: {commit.Inserted}
@@ -44,11 +65,17 @@ public class MartenSessionLogger : IMartenSessionLogger
                              ");
     }
 
-    public void OnBeforeExecute(NpgsqlCommand command)
+        /// <summary>
+    /// OnBeforeExecute method.
+    /// </summary>
+public void OnBeforeExecute(NpgsqlCommand command)
     {
     }
 
-    public void OnBeforeExecute(NpgsqlBatch batch)
+        /// <summary>
+    /// OnBeforeExecute method.
+    /// </summary>
+public void OnBeforeExecute(NpgsqlBatch batch)
     {
     }
 }

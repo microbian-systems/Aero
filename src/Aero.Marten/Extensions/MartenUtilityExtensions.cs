@@ -1,5 +1,8 @@
-﻿namespace Aero.Marten.Extensions;
+namespace Aero.Marten.Extensions;
 
+/// <summary>
+/// Represents a class for MartenUtilityExtensions.
+/// </summary>
 public static class MartenUtilityExtensions
 {
     /// <summary>

@@ -3,15 +3,24 @@ using Aero.Core.DataStructures.Trees.Persistence.Wal;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Concurrency;
 
+/// <summary>
+/// Represents a class for MvccConcurrencyStrategy.
+/// </summary>
 public sealed class MvccConcurrencyStrategy : IConcurrencyStrategy
 {
     private readonly CommitTable _commitTable = new();
     private readonly WriteConflictTracker _writeConflictTracker = new();
     private readonly ConcurrentDictionary<long, long> _activeTxns = new();
 
-    public IsolationLevel Level => IsolationLevel.SnapshotMVCC;
+        /// <summary>
+    /// Gets or sets the Level.
+    /// </summary>
+public IsolationLevel Level => IsolationLevel.SnapshotMVCC;
 
-    public ValueTask<IReadSnapshot> BeginReadAsync(long txnId, CancellationToken ct = default)
+        /// <summary>
+    /// BeginReadAsync method.
+    /// </summary>
+public ValueTask<IReadSnapshot> BeginReadAsync(long txnId, CancellationToken ct = default)
     {
         var inProgress = new HashSet<long>(_activeTxns.Keys);
         inProgress.Remove(txnId);
@@ -19,13 +28,19 @@ public sealed class MvccConcurrencyStrategy : IConcurrencyStrategy
         return ValueTask.FromResult<IReadSnapshot>(snapshot);
     }
 
-    public ValueTask BeginWriteAsync(long txnId, long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// BeginWriteAsync method.
+    /// </summary>
+public ValueTask BeginWriteAsync(long txnId, long pageId, CancellationToken ct = default)
     {
         _activeTxns.TryAdd(txnId, txnId);
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask ValidateAsync(ITransactionContext txn, CancellationToken ct = default)
+        /// <summary>
+    /// ValidateAsync method.
+    /// </summary>
+public ValueTask ValidateAsync(ITransactionContext txn, CancellationToken ct = default)
     {
         foreach (var pageId in txn.DirtyPages.Keys)
         {
@@ -35,19 +50,28 @@ public sealed class MvccConcurrencyStrategy : IConcurrencyStrategy
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask OnCommitAsync(long txnId, Lsn commitLsn, CancellationToken ct = default)
+        /// <summary>
+    /// OnCommitAsync method.
+    /// </summary>
+public ValueTask OnCommitAsync(long txnId, Lsn commitLsn, CancellationToken ct = default)
     {
         _commitTable.RecordCommit(txnId);
         _activeTxns.TryRemove(txnId, out _);
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask OnAbortAsync(long txnId, CancellationToken ct = default)
+        /// <summary>
+    /// OnAbortAsync method.
+    /// </summary>
+public ValueTask OnAbortAsync(long txnId, CancellationToken ct = default)
     {
         _commitTable.RecordAbort(txnId);
         _activeTxns.TryRemove(txnId, out _);
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 }

@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Providers;
 
+/// <summary>
+/// Represents a class for FacebookProviderTests.
+/// </summary>
 public class FacebookProviderTests : ProviderTestBase
 {
     private readonly Mock<ILogger<FacebookProvider>> _loggerMock = new();
@@ -24,7 +27,10 @@ public class FacebookProviderTests : ProviderTestBase
         return new FacebookProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Test]
+        /// <summary>
+    /// Provider_ShouldHaveCorrectIdentifier method.
+    /// </summary>
+[Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -35,7 +41,10 @@ public class FacebookProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(100);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxLength_ShouldReturn63206 method.
+    /// </summary>
+[Test]
     public void MaxLength_ShouldReturn63206()
     {
         var provider = CreateProvider();
@@ -43,7 +52,10 @@ public class FacebookProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(63206);
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_ShouldReturnValidUrl method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();
@@ -60,7 +72,10 @@ public class FacebookProviderTests : ProviderTestBase
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// RefreshTokenAsync_ShouldReturnEmptyToken method.
+    /// </summary>
+[Test]
     public async Task RefreshTokenAsync_ShouldReturnEmptyToken()
     {
         var provider = CreateProvider();

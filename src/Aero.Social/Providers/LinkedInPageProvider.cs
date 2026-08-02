@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for LinkedInPageProvider.
+/// </summary>
 public class LinkedInPageProvider(
     HttpClient httpClient,
     IConfiguration configuration,
@@ -17,12 +20,30 @@ public class LinkedInPageProvider(
 {
     private readonly IConfiguration _configuration = configuration;
 
-    public override string Identifier => "linkedin-page";
-    public override string Name => "LinkedIn Page";
-    public override bool IsBetweenSteps => true;
-    public override bool RefreshWait => true;
-    public override int MaxConcurrentJobs => 2;
-    public override string[] Scopes => new[]
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "linkedin-page";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "LinkedIn Page";
+        /// <summary>
+    /// Gets or sets the Is Between Steps.
+    /// </summary>
+public override bool IsBetweenSteps => true;
+        /// <summary>
+    /// Gets or sets the Refresh Wait.
+    /// </summary>
+public override bool RefreshWait => true;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 2;
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[]
     {
         "openid",
         "profile",
@@ -33,7 +54,10 @@ public class LinkedInPageProvider(
         "r_organization_social"
     };
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -58,7 +82,10 @@ public class LinkedInPageProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -109,7 +136,10 @@ public class LinkedInPageProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -150,7 +180,10 @@ public class LinkedInPageProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -160,7 +193,10 @@ public class LinkedInPageProvider(
         return await PostAsCompanyAsync(id, accessToken, posts, integration, cancellationToken);
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -172,7 +208,10 @@ public class LinkedInPageProvider(
         return await CommentAsCompanyAsync(id, postId, accessToken, posts, integration, cancellationToken);
     }
 
-    public async Task<List<LinkedInCompany>> GetCompaniesAsync(string accessToken, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetCompaniesAsync method.
+    /// </summary>
+public async Task<List<LinkedInCompany>> GetCompaniesAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var url = "https://api.linkedin.com/v2/organizationalEntityAcls?q=roleAssignee&role=ADMINISTRATOR&projection=(elements*(organizationalTarget~(localizedName,vanityName,logoV2(original~:playableStreams))))";
 
@@ -198,7 +237,10 @@ public class LinkedInPageProvider(
             .ToList();
     }
 
-    public override async Task<Result<AuthTokenDetails?, AeroError>> ReConnectAsync(
+        /// <summary>
+    /// ReConnectAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails?, AeroError>> ReConnectAsync(
         string id,
         string requiredId,
         string accessToken,
@@ -218,7 +260,10 @@ public class LinkedInPageProvider(
         };
     }
 
-    public override async Task<Result<FetchPageInformationResult?, AeroError>> FetchPageInformationAsync(
+        /// <summary>
+    /// FetchPageInformationAsync method.
+    /// </summary>
+public override async Task<Result<FetchPageInformationResult?, AeroError>> FetchPageInformationAsync(
         string accessToken,
         object data,
         CancellationToken cancellationToken = default)
@@ -246,7 +291,10 @@ public class LinkedInPageProvider(
         };
     }
 
-    public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
+        /// <summary>
+    /// AnalyticsAsync method.
+    /// </summary>
+public override async Task<Result<AnalyticsData[]?, AeroError>> AnalyticsAsync(
         string id,
         string accessToken,
         int days,
@@ -286,7 +334,10 @@ public class LinkedInPageProvider(
             .ToArray();
     }
 
-    public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
+        /// <summary>
+    /// PostAnalyticsAsync method.
+    /// </summary>
+public override async Task<Result<AnalyticsData[]?, AeroError>> PostAnalyticsAsync(
         string integrationId,
         string accessToken,
         string postId,
@@ -599,231 +650,393 @@ public class LinkedInPageProvider(
 
     //#region DTOs
 
-    public class LinkedInCompany
+        /// <summary>
+    /// Represents a class for LinkedInCompany.
+    /// </summary>
+public class LinkedInCompany
     {
-        public string Id { get; set; } = string.Empty;
-        public string Page { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Picture { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Page.
+        /// </summary>
+public string Page { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+public string Username { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+public string Picture { get; set; } = string.Empty;
     }
 
     private class LinkedInCompaniesResponse
     {
-        [JsonPropertyName("elements")]
+                /// <summary>
+        /// Gets or sets the Elements.
+        /// </summary>
+[JsonPropertyName("elements")]
         public List<LinkedInCompanyElement>? Elements { get; set; }
     }
 
     private class LinkedInCompanyElement
     {
-        [JsonPropertyName("organizationalTarget")]
+                /// <summary>
+        /// Gets or sets the Organizational Target.
+        /// </summary>
+[JsonPropertyName("organizationalTarget")]
         public string? OrganizationalTarget { get; set; }
 
-        [JsonPropertyName("organizationalTarget~")]
+                /// <summary>
+        /// Gets or sets the Organizational Target Details.
+        /// </summary>
+[JsonPropertyName("organizationalTarget~")]
         public LinkedInOrganizationalTargetDetails? OrganizationalTargetDetails { get; set; }
     }
 
     private class LinkedInOrganizationalTargetDetails
     {
-        [JsonPropertyName("localizedName")]
+                /// <summary>
+        /// Gets or sets the Localized Name.
+        /// </summary>
+[JsonPropertyName("localizedName")]
         public string? LocalizedName { get; set; }
 
-        [JsonPropertyName("vanityName")]
+                /// <summary>
+        /// Gets or sets the Vanity Name.
+        /// </summary>
+[JsonPropertyName("vanityName")]
         public string? VanityName { get; set; }
 
-        [JsonPropertyName("logoV2")]
+                /// <summary>
+        /// Gets or sets the Logo V2.
+        /// </summary>
+[JsonPropertyName("logoV2")]
         public LinkedInLogoV2? LogoV2 { get; set; }
     }
 
     private class LinkedInLogoV2
     {
-        [JsonPropertyName("original~")]
+                /// <summary>
+        /// Gets or sets the Original.
+        /// </summary>
+[JsonPropertyName("original~")]
         public LinkedInLogoOriginal? Original { get; set; }
     }
 
     private class LinkedInLogoOriginal
     {
-        [JsonPropertyName("elements")]
+                /// <summary>
+        /// Gets or sets the Elements.
+        /// </summary>
+[JsonPropertyName("elements")]
         public List<LinkedInLogoElement>? Elements { get; set; }
     }
 
     private class LinkedInLogoElement
     {
-        [JsonPropertyName("identifiers")]
+                /// <summary>
+        /// Gets or sets the Identifiers.
+        /// </summary>
+[JsonPropertyName("identifiers")]
         public List<LinkedInIdentifier>? Identifiers { get; set; }
     }
 
     private class LinkedInIdentifier
     {
-        [JsonPropertyName("identifier")]
+                /// <summary>
+        /// Gets or sets the Identifier.
+        /// </summary>
+[JsonPropertyName("identifier")]
         public string? Identifier { get; set; }
     }
 
     private class LinkedInOrganizationResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("localizedName")]
+                /// <summary>
+        /// Gets or sets the Localized Name.
+        /// </summary>
+[JsonPropertyName("localizedName")]
         public string LocalizedName { get; set; } = string.Empty;
 
-        [JsonPropertyName("vanityName")]
+                /// <summary>
+        /// Gets or sets the Vanity Name.
+        /// </summary>
+[JsonPropertyName("vanityName")]
         public string? VanityName { get; set; }
 
-        [JsonPropertyName("logoV2")]
+                /// <summary>
+        /// Gets or sets the Logo V2.
+        /// </summary>
+[JsonPropertyName("logoV2")]
         public LinkedInLogoV2? LogoV2 { get; set; }
     }
 
     private class LinkedInTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("refresh_token")]
+                /// <summary>
+        /// Gets or sets the Refresh Token.
+        /// </summary>
+[JsonPropertyName("refresh_token")]
         public string RefreshToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int ExpiresIn { get; set; }
 
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string Scope { get; set; } = string.Empty;
     }
 
     private class LinkedInUploadResponse
     {
-        [JsonPropertyName("value")]
+                /// <summary>
+        /// Gets or sets the Value.
+        /// </summary>
+[JsonPropertyName("value")]
         public LinkedInUploadValue Value { get; set; } = new();
     }
 
     private class LinkedInUploadValue
     {
-        [JsonPropertyName("uploadUrl")]
+                /// <summary>
+        /// Gets or sets the Upload Url.
+        /// </summary>
+[JsonPropertyName("uploadUrl")]
         public string UploadUrl { get; set; } = string.Empty;
 
-        [JsonPropertyName("image")]
+                /// <summary>
+        /// Gets or sets the Image.
+        /// </summary>
+[JsonPropertyName("image")]
         public string Image { get; set; } = string.Empty;
     }
 
     private class LinkedInCommentResponse
     {
-        [JsonPropertyName("object")]
+                /// <summary>
+        /// Gets or sets the Object.
+        /// </summary>
+[JsonPropertyName("object")]
         public string Object { get; set; } = string.Empty;
     }
 
     private class LinkedInAnalyticsResponse
     {
-        [JsonPropertyName("elements")]
+                /// <summary>
+        /// Gets or sets the Elements.
+        /// </summary>
+[JsonPropertyName("elements")]
         public List<LinkedInAnalyticsElement>? Elements { get; set; }
     }
 
     private class LinkedInAnalyticsElement
     {
-        [JsonPropertyName("timeRange")]
+                /// <summary>
+        /// Gets or sets the Time Range.
+        /// </summary>
+[JsonPropertyName("timeRange")]
         public LinkedInTimeRange TimeRange { get; set; } = new();
 
-        [JsonPropertyName("totalPageStatistics")]
+                /// <summary>
+        /// Gets or sets the Total Page Statistics.
+        /// </summary>
+[JsonPropertyName("totalPageStatistics")]
         public LinkedInTotalPageStatistics? TotalPageStatistics { get; set; }
 
-        [JsonPropertyName("followerGains")]
+                /// <summary>
+        /// Gets or sets the Follower Gains.
+        /// </summary>
+[JsonPropertyName("followerGains")]
         public LinkedInFollowerGains? FollowerGains { get; set; }
 
-        [JsonPropertyName("totalShareStatistics")]
+                /// <summary>
+        /// Gets or sets the Total Share Statistics.
+        /// </summary>
+[JsonPropertyName("totalShareStatistics")]
         public LinkedInShareStatistics? TotalShareStatistics { get; set; }
     }
 
     private class LinkedInTimeRange
     {
-        [JsonPropertyName("start")]
+                /// <summary>
+        /// Gets or sets the Start.
+        /// </summary>
+[JsonPropertyName("start")]
         public long Start { get; set; }
 
-        [JsonPropertyName("end")]
+                /// <summary>
+        /// Gets or sets the End.
+        /// </summary>
+[JsonPropertyName("end")]
         public long End { get; set; }
     }
 
     private class LinkedInTotalPageStatistics
     {
-        [JsonPropertyName("views")]
+                /// <summary>
+        /// Gets or sets the Views.
+        /// </summary>
+[JsonPropertyName("views")]
         public LinkedInViews? Views { get; set; }
     }
 
     private class LinkedInViews
     {
-        [JsonPropertyName("allPageViews")]
+                /// <summary>
+        /// Gets or sets the All Page Views.
+        /// </summary>
+[JsonPropertyName("allPageViews")]
         public LinkedInPageViews? AllPageViews { get; set; }
     }
 
     private class LinkedInPageViews
     {
-        [JsonPropertyName("pageViews")]
+                /// <summary>
+        /// Gets or sets the Page Views.
+        /// </summary>
+[JsonPropertyName("pageViews")]
         public int PageViews { get; set; }
     }
 
     private class LinkedInFollowerGains
     {
-        [JsonPropertyName("organicFollowerGain")]
+                /// <summary>
+        /// Gets or sets the Organic Follower Gain.
+        /// </summary>
+[JsonPropertyName("organicFollowerGain")]
         public int OrganicFollowerGain { get; set; }
 
-        [JsonPropertyName("paidFollowerGain")]
+                /// <summary>
+        /// Gets or sets the Paid Follower Gain.
+        /// </summary>
+[JsonPropertyName("paidFollowerGain")]
         public int PaidFollowerGain { get; set; }
     }
 
     private class LinkedInShareStatistics
     {
-        [JsonPropertyName("impressionCount")]
+                /// <summary>
+        /// Gets or sets the Impression Count.
+        /// </summary>
+[JsonPropertyName("impressionCount")]
         public int ImpressionCount { get; set; }
 
-        [JsonPropertyName("uniqueImpressionsCount")]
+                /// <summary>
+        /// Gets or sets the Unique Impressions Count.
+        /// </summary>
+[JsonPropertyName("uniqueImpressionsCount")]
         public int UniqueImpressionsCount { get; set; }
 
-        [JsonPropertyName("clickCount")]
+                /// <summary>
+        /// Gets or sets the Click Count.
+        /// </summary>
+[JsonPropertyName("clickCount")]
         public int ClickCount { get; set; }
 
-        [JsonPropertyName("likeCount")]
+                /// <summary>
+        /// Gets or sets the Like Count.
+        /// </summary>
+[JsonPropertyName("likeCount")]
         public int LikeCount { get; set; }
 
-        [JsonPropertyName("commentCount")]
+                /// <summary>
+        /// Gets or sets the Comment Count.
+        /// </summary>
+[JsonPropertyName("commentCount")]
         public int CommentCount { get; set; }
 
-        [JsonPropertyName("shareCount")]
+                /// <summary>
+        /// Gets or sets the Share Count.
+        /// </summary>
+[JsonPropertyName("shareCount")]
         public int ShareCount { get; set; }
 
-        [JsonPropertyName("engagement")]
+                /// <summary>
+        /// Gets or sets the Engagement.
+        /// </summary>
+[JsonPropertyName("engagement")]
         public decimal Engagement { get; set; }
     }
 
     private class LinkedInShareStatsResponse
     {
-        [JsonPropertyName("elements")]
+                /// <summary>
+        /// Gets or sets the Elements.
+        /// </summary>
+[JsonPropertyName("elements")]
         public List<LinkedInShareStatsElement>? Elements { get; set; }
     }
 
     private class LinkedInShareStatsElement
     {
-        [JsonPropertyName("timeRange")]
+                /// <summary>
+        /// Gets or sets the Time Range.
+        /// </summary>
+[JsonPropertyName("timeRange")]
         public LinkedInTimeRange TimeRange { get; set; } = new();
 
-        [JsonPropertyName("totalShareStatistics")]
+                /// <summary>
+        /// Gets or sets the Total Share Statistics.
+        /// </summary>
+[JsonPropertyName("totalShareStatistics")]
         public LinkedInShareStatistics? TotalShareStatistics { get; set; }
     }
 
     private class LinkedInSocialActionsResponse
     {
-        [JsonPropertyName("likesSummary")]
+                /// <summary>
+        /// Gets or sets the Likes Summary.
+        /// </summary>
+[JsonPropertyName("likesSummary")]
         public LinkedInLikesSummary? LikesSummary { get; set; }
 
-        [JsonPropertyName("commentsSummary")]
+                /// <summary>
+        /// Gets or sets the Comments Summary.
+        /// </summary>
+[JsonPropertyName("commentsSummary")]
         public LinkedInCommentsSummary? CommentsSummary { get; set; }
     }
 
     private class LinkedInLikesSummary
     {
-        [JsonPropertyName("totalLikes")]
+                /// <summary>
+        /// Gets or sets the Total Likes.
+        /// </summary>
+[JsonPropertyName("totalLikes")]
         public int TotalLikes { get; set; }
     }
 
     private class LinkedInCommentsSummary
     {
-        [JsonPropertyName("totalFirstLevelComments")]
+                /// <summary>
+        /// Gets or sets the Total First Level Comments.
+        /// </summary>
+[JsonPropertyName("totalFirstLevelComments")]
         public int TotalFirstLevelComments { get; set; }
     }
 
@@ -880,7 +1093,10 @@ public class LinkedInPageProvider(
         };
     }
 
-    public async Task AutoRepostPost(
+        /// <summary>
+    /// AutoRepostPost method.
+    /// </summary>
+public async Task AutoRepostPost(
         string postId,
         string accessToken,
         int minLikes,
@@ -985,16 +1201,28 @@ public class LinkedInPageProvider(
 
     private class LinkedInPostContent
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("author")]
+                /// <summary>
+        /// Gets or sets the Author.
+        /// </summary>
+[JsonPropertyName("author")]
         public string Author { get; set; } = string.Empty;
 
-        [JsonPropertyName("commentary")]
+                /// <summary>
+        /// Gets or sets the Commentary.
+        /// </summary>
+[JsonPropertyName("commentary")]
         public string Commentary { get; set; } = string.Empty;
 
-        [JsonPropertyName("content")]
+                /// <summary>
+        /// Gets or sets the Content.
+        /// </summary>
+[JsonPropertyName("content")]
         public object? Content { get; set; }
     }
 

@@ -133,7 +133,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
             "B+ tree requires both key and value. Use InsertAsync(TKey key, TValue value) instead.");
     }
 
-    public async ValueTask<bool> DeleteAsync(TKey key, CancellationToken ct = default)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public async ValueTask<bool> DeleteAsync(TKey key, CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -193,7 +196,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
 
     //#region IVacuumable
 
-    public async ValueTask<double> GetFragmentationAsync(CancellationToken ct = default)
+        /// <summary>
+    /// GetFragmentationAsync method.
+    /// </summary>
+public async ValueTask<double> GetFragmentationAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -209,7 +215,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
         return totalSlots == 0 ? 0.0 : (double)deadSlots / totalSlots;
     }
 
-    public async ValueTask<bool> VacuumPageAsync(CancellationToken ct = default)
+        /// <summary>
+    /// VacuumPageAsync method.
+    /// </summary>
+public async ValueTask<bool> VacuumPageAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -222,7 +231,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
         return false;
     }
 
-    public async ValueTask VacuumAsync(
+        /// <summary>
+    /// VacuumAsync method.
+    /// </summary>
+public async ValueTask VacuumAsync(
         double fragmentationThreshold = DefaultCompactionThreshold,
         IProgress<VacuumProgress>? progress = null,
         CancellationToken ct = default)
@@ -294,7 +306,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
 
     //#region IOrderedTree<TKey>
 
-    public async ValueTask<TKey> MinAsync(CancellationToken ct = default)
+        /// <summary>
+    /// MinAsync method.
+    /// </summary>
+public async ValueTask<TKey> MinAsync(CancellationToken ct = default)
     {
         var (found, key) = await TryGetMinAsync(ct);
         if (!found)
@@ -302,7 +317,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
         return key;
     }
 
-    public async ValueTask<TKey> MaxAsync(CancellationToken ct = default)
+        /// <summary>
+    /// MaxAsync method.
+    /// </summary>
+public async ValueTask<TKey> MaxAsync(CancellationToken ct = default)
     {
         var (found, key) = await TryGetMaxAsync(ct);
         if (!found)
@@ -310,7 +328,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
         return key;
     }
 
-    public async ValueTask<(bool found, TKey value)> TryGetMinAsync(CancellationToken ct = default)
+        /// <summary>
+    /// TryGetMinAsync method.
+    /// </summary>
+public async ValueTask<(bool found, TKey value)> TryGetMinAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -337,7 +358,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
         }
     }
 
-    public async ValueTask<(bool found, TKey value)> TryGetMaxAsync(CancellationToken ct = default)
+        /// <summary>
+    /// TryGetMaxAsync method.
+    /// </summary>
+public async ValueTask<(bool found, TKey value)> TryGetMaxAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -364,7 +388,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
         }
     }
 
-    public async IAsyncEnumerable<TKey> InOrderAsync([EnumeratorCancellation] CancellationToken ct = default)
+        /// <summary>
+    /// InOrderAsync method.
+    /// </summary>
+public async IAsyncEnumerable<TKey> InOrderAsync([EnumeratorCancellation] CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -400,7 +427,10 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
         }
     }
 
-    public async IAsyncEnumerable<TKey> ScanAsync(TKey from, TKey to, [EnumeratorCancellation] CancellationToken ct = default)
+        /// <summary>
+    /// ScanAsync method.
+    /// </summary>
+public async IAsyncEnumerable<TKey> ScanAsync(TKey from, TKey to, [EnumeratorCancellation] CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -446,14 +476,20 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
         }
     }
 
-    public ValueTask<long> CountAsync(CancellationToken ct = default)
+        /// <summary>
+    /// CountAsync method.
+    /// </summary>
+public ValueTask<long> CountAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         // TODO: Track count in metadata
         return new ValueTask<long>(0L);
     }
 
-    public ValueTask ClearAsync(CancellationToken ct = default)
+        /// <summary>
+    /// ClearAsync method.
+    /// </summary>
+public ValueTask ClearAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         throw new NotImplementedException();
@@ -617,13 +653,19 @@ public sealed class PersistentBPlusTree<TKey, TValue> : Interfaces.ITree<TKey>, 
 
     //#endregion
 
-    public async ValueTask FlushAsync(CancellationToken ct = default)
+        /// <summary>
+    /// FlushAsync method.
+    /// </summary>
+public async ValueTask FlushAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         await _storage.FlushAsync(ct);
     }
 
-    public async ValueTask DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public async ValueTask DisposeAsync()
     {
         if (!_disposed)
         {

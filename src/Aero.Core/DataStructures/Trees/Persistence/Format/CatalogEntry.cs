@@ -2,29 +2,83 @@ using System.Runtime.InteropServices;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Format;
 
+/// <summary>
+/// Represents a struct for CatalogEntry.
+/// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct CatalogEntry
 {
-    public ulong PageLsn;
-    public long TransactionId;
-    public unsafe fixed byte TreeName[128];
-    public long RootPageId;
-    public byte TreeType;
-    public byte KeyTypeCode;
-    public byte ValueTypeCode;
-    public int PageSize;
-    public long CreatedAtUtc;
-    public long EntryCount;
-    public byte IsolationLevel;
-    public long HeapFilePageId;
-    public byte IndexType;
+        /// <summary>
+    /// PageLsn.
+    /// </summary>
+public ulong PageLsn;
+        /// <summary>
+    /// TransactionId.
+    /// </summary>
+public long TransactionId;
+        /// <summary>
+    /// TreeName.
+    /// </summary>
+public unsafe fixed byte TreeName[128];
+        /// <summary>
+    /// RootPageId.
+    /// </summary>
+public long RootPageId;
+        /// <summary>
+    /// TreeType.
+    /// </summary>
+public byte TreeType;
+        /// <summary>
+    /// KeyTypeCode.
+    /// </summary>
+public byte KeyTypeCode;
+        /// <summary>
+    /// ValueTypeCode.
+    /// </summary>
+public byte ValueTypeCode;
+        /// <summary>
+    /// PageSize.
+    /// </summary>
+public int PageSize;
+        /// <summary>
+    /// CreatedAtUtc.
+    /// </summary>
+public long CreatedAtUtc;
+        /// <summary>
+    /// EntryCount.
+    /// </summary>
+public long EntryCount;
+        /// <summary>
+    /// IsolationLevel.
+    /// </summary>
+public byte IsolationLevel;
+        /// <summary>
+    /// HeapFilePageId.
+    /// </summary>
+public long HeapFilePageId;
+        /// <summary>
+    /// IndexType.
+    /// </summary>
+public byte IndexType;
 
-    public const int TreeNameLength = 128;
-    public const int Size = 8 + 8 + 128 + 8 + 1 + 1 + 1 + 4 + 8 + 8 + 1 + 8 + 1;
+        /// <summary>
+    /// TreeNameLength.
+    /// </summary>
+public const int TreeNameLength = 128;
+        /// <summary>
+    /// Size.
+    /// </summary>
+public const int Size = 8 + 8 + 128 + 8 + 1 + 1 + 1 + 4 + 8 + 8 + 1 + 8 + 1;
 
-    public static readonly int SerializedSize = Marshal.SizeOf<CatalogEntry>();
+        /// <summary>
+    /// SerializedSize.
+    /// </summary>
+public static readonly int SerializedSize = Marshal.SizeOf<CatalogEntry>();
 
-    public string GetTreeName()
+        /// <summary>
+    /// GetTreeName method.
+    /// </summary>
+public string GetTreeName()
     {
         unsafe
         {
@@ -42,7 +96,10 @@ public struct CatalogEntry
         }
     }
 
-    public void SetTreeName(string name)
+        /// <summary>
+    /// SetTreeName method.
+    /// </summary>
+public void SetTreeName(string name)
     {
         unsafe
         {

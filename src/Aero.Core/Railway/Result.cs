@@ -6,24 +6,41 @@ namespace Aero.Core.Railway;
 /// A default <see cref="Result{T, TError}"/> with <see cref="AeroError"/> as the error type.
 /// </summary>
 /// <typeparam name="T">The type of the success value.</typeparam>
-public record Result<T> : Result<T, AeroError>
+public abstract record Result<T> : Result<T, AeroError>
 {
     /// <summary>
     /// Represents a successful result with a value of type <typeparamref name="T"/>.
     /// </summary>
     /// <param name="Value">The success value.</param>
-    public new sealed record Ok(T Value) : Result<T>;
+    public new sealed record Ok(T Value) : Result<T>
+    {
+        public override bool IsSuccess => true;
+        public override string ToString() => Value?.ToString() ?? string.Empty;
+    }
 
     /// <summary>
     /// Represents a failed result with an <see cref="AeroError"/>.
     /// </summary>
     /// <param name="Error">The error value.</param>
-    public new sealed record Failure(AeroError Error) : Result<T>;
+    public new sealed record Failure(AeroError Error) : Result<T>
+    {
+        public override bool IsSuccess => false;
+        public override string ToString() => Error.ToString();
+    }
 
-    public static implicit operator Result<T>(T value) => new Ok(value);
-    public static implicit operator Result<T>(AeroError error) => new Failure(error);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator Result<T>(T value) => new Ok(value);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator Result<T>(AeroError error) => new Failure(error);
 
-    public static Result<T> From(Result<T, AeroError> result)
+        /// <summary>
+    /// From method.
+    /// </summary>
+public static Result<T> From(Result<T, AeroError> result)
     {
         return result switch
         {
@@ -45,14 +62,38 @@ public abstract record Result<T, TError>
     where TError : AeroError
 {
     //private Result() { } // Prevent external inheritance for exhaustiveness
-    public sealed record Ok(T Value) : Result<T, TError>;
-    public sealed record Failure(TError Error) : Result<T, TError>;
+        /// <summary>
+    /// Represents a record for Ok.
+    /// </summary>
+public sealed record Ok(T Value) : Result<T, TError>
+{
+    public override bool IsSuccess => true;
+}
+        /// <summary>
+    /// Represents a record for Failure.
+    /// </summary>
+public sealed record Failure(TError Error) : Result<T, TError>
+{
+    public override bool IsSuccess => false;
+}
 
-    public bool IsSuccess => this is Ok;
-    public bool IsFailure => this is Failure;
+        /// <summary>
+    /// Gets or sets the Is Success.
+    /// </summary>
+public abstract bool IsSuccess { get; }
+        /// <summary>
+    /// Gets or sets the Is Failure.
+    /// </summary>
+public bool IsFailure => !IsSuccess;
 
-    public static implicit operator Result<T, TError>(T value) => new Ok(value);
-    public static implicit operator Result<T, TError>(TError error) => new Failure(error);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator Result<T, TError>(T value) => new Ok(value);
+        /// <summary>
+    /// Defines a conversion operator.
+    /// </summary>
+public static implicit operator Result<T, TError>(TError error) => new Failure(error);
 
     //public static explicit operator T(Result<T, TError> result) =>
     //    result switch
@@ -68,7 +109,10 @@ public abstract record Result<T, TError>
     //        Ok(var value) => throw new InvalidCastException($"Result was Ok: {value}"),
     //    };
 
-    public override string ToString()
+        /// <summary>
+    /// ToString method.
+    /// </summary>
+public override string ToString()
     {
         return this switch
         {
@@ -87,8 +131,14 @@ public abstract record Option<T>
 {
     private Option() { } // Prevent external inheritance
 
-    public sealed record Some(T Value) : Option<T>;
-    public sealed record None : Option<T>;
+        /// <summary>
+    /// Represents a record for Some.
+    /// </summary>
+public sealed record Some(T Value) : Option<T>;
+        /// <summary>
+    /// Represents a record for None.
+    /// </summary>
+public sealed record None : Option<T>;
 
     /// <summary>
     /// Gets a value indicating whether this Option contains a value (Some case).

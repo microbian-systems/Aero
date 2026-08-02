@@ -1,13 +1,25 @@
-﻿namespace Aero.Web.Models;
+namespace Aero.Web.Models;
 
+/// <summary>
+/// Represents a record for RefreshTokenResponse.
+/// </summary>
 public record RefreshTokenResponse
 {
-    [JsonPropertyName("access_token")] 
+        /// <summary>
+    /// Gets or sets the Access Token.
+    /// </summary>
+[JsonPropertyName("access_token")] 
     public string? AccessToken { get; set; }
     
-    [JsonPropertyName("refresh_token")]
+        /// <summary>
+    /// Gets or sets the Refresh Token.
+    /// </summary>
+[JsonPropertyName("refresh_token")]
     public string? RefreshToken { get; set; }
 
-    [JsonPropertyName("Expiration")]
+        /// <summary>
+    /// Gets or sets the Expiration.
+    /// </summary>
+[JsonPropertyName("Expiration")]
     public DateTimeOffset? Expiration { get; set; }
 }

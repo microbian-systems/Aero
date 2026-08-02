@@ -1,12 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <PackageId>Aero.Actors</PackageId>
+    <Authors>Microbians</Authors>
     <Title>Core Package for the Aero Web Platform</Title>
-    <Authors>Microbian Systems</Authors>
     <Description>Core components for the Aero web application platform</Description>
     <Copyright>Microbian Systems 2021</Copyright>
-    <PackageProjectUrl>http://Aero.pro</PackageProjectUrl>
-    <RepositoryUrl>http://github.com/Aero</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/microbian-systems/aero</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/microbian-systems/aero</RepositoryUrl>
     <PackageTags>Aero, web, asp.net core, .net, Aero</PackageTags>
+    <PackageIcon>aero-logo-new.png</PackageIcon>
     <IsPackable>true</IsPackable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
@@ -17,5 +19,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Aero.Actors.Abstractions\Aero.Actors.Abstractions.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\aero-logo-new.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

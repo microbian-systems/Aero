@@ -3,6 +3,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace Aero.Core.Workers;
 
+/// <summary>
+/// Represents a class for BackgroundServiceBase.
+/// </summary>
 public abstract class BackgroundServiceBase(
     IServiceProvider sp,
     ILogger<BackgroundServiceBase> log,
@@ -10,5 +13,8 @@ public abstract class BackgroundServiceBase(
     : BackgroundService
 {
 
-    protected abstract override Task ExecuteAsync(CancellationToken stoppingToken);
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+protected abstract override Task ExecuteAsync(CancellationToken stoppingToken);
 }

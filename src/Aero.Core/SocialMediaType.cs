@@ -1,5 +1,8 @@
 namespace Aero.Core;
 
+/// <summary>
+/// Defines an enumeration for SocialMediaType.
+/// </summary>
 public enum SocialMediaType
 {
     Facebook,

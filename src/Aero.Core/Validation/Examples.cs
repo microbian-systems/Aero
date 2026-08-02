@@ -1,10 +1,16 @@
 namespace Aero.Core.Validation;
 
+/// <summary>
+/// Represents a class for Examples.
+/// </summary>
 public class Examples
 {
         class BadRequest(IEnumerable<ValidationError> errors);
     
-    public void Test()
+        /// <summary>
+    /// Test method.
+    /// </summary>
+public void Test()
     {
         var email = "";
         var password = "";

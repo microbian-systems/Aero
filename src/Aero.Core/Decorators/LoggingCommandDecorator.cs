@@ -2,9 +2,15 @@ using Aero.Core.Commands;
 
 namespace Aero.Core.Decorators;
 
+/// <summary>
+/// Represents a class for LoggingCommandDecorator.
+/// </summary>
 public class LoggingCommandDecorator(IAsyncCommand decorated, ILogger log) : IAsyncCommand
 {
-    public async Task ExecuteAsync()
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task ExecuteAsync()
     {
         var type = decorated.GetType();
         log.LogInformation($"starting Execute on {type}");
@@ -13,9 +19,15 @@ public class LoggingCommandDecorator(IAsyncCommand decorated, ILogger log) : IAs
     }
 }
     
+/// <summary>
+/// Represents a class for LoggingCommandDecorator.
+/// </summary>
 public class LoggingCommandDecorator<TCommand>(IAsyncCommand<TCommand> decorated, ILogger log) : IAsyncCommand<TCommand>
 {
-    public async Task ExecuteAsync(TCommand param)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task ExecuteAsync(TCommand param)
     {
         var type = decorated.GetType();
         log.LogInformation($"starting Execute on {type}");
@@ -24,10 +36,16 @@ public class LoggingCommandDecorator<TCommand>(IAsyncCommand<TCommand> decorated
     }
 }
     
+/// <summary>
+/// Represents a class for LoggingCommandDecorator.
+/// </summary>
 public class LoggingCommandDecorator<TCommand, TReturn>(IAsyncCommand<TCommand, TReturn> decorated, ILogger log)
     : IAsyncCommand<TCommand, TReturn>
 {
-    public async Task<TReturn> ExecuteAsync(TCommand param)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task<TReturn> ExecuteAsync(TCommand param)
     {
         var type = decorated.GetType();
         log.LogInformation($"starting Execute on {type}");

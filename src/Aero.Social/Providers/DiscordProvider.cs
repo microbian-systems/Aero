@@ -449,88 +449,148 @@ public class DiscordProvider(
 
     private class DiscordTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
         
-        [JsonPropertyName("refresh_token")]
+                /// <summary>
+        /// Gets or sets the Refresh Token.
+        /// </summary>
+[JsonPropertyName("refresh_token")]
         public string RefreshToken { get; set; } = string.Empty;
         
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int ExpiresIn { get; set; }
         
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string Scope { get; set; } = string.Empty;
         
-        [JsonPropertyName("guild")]
+                /// <summary>
+        /// Gets or sets the Guild.
+        /// </summary>
+[JsonPropertyName("guild")]
         public DiscordGuild? Guild { get; set; }
     }
 
     private class DiscordGuild
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class DiscordApplicationInfo
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
         
-        [JsonPropertyName("bot")]
+                /// <summary>
+        /// Gets or sets the Bot.
+        /// </summary>
+[JsonPropertyName("bot")]
         public DiscordBot Bot { get; set; } = new();
     }
 
     private class DiscordBot
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
         
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
         
-        [JsonPropertyName("avatar")]
+                /// <summary>
+        /// Gets or sets the Avatar.
+        /// </summary>
+[JsonPropertyName("avatar")]
         public string Avatar { get; set; } = string.Empty;
     }
 
     private class DiscordMessageResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class DiscordThreadResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class DiscordRole
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
         
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
     }
 
     private class DiscordMember
     {
-        [JsonPropertyName("user")]
+                /// <summary>
+        /// Gets or sets the User.
+        /// </summary>
+[JsonPropertyName("user")]
         public DiscordUser User { get; set; } = new();
     }
 
     private class DiscordUser
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
         
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
         
-        [JsonPropertyName("global_name")]
+                /// <summary>
+        /// Gets or sets the Global Name.
+        /// </summary>
+[JsonPropertyName("global_name")]
         public string? GlobalName { get; set; }
         
-        [JsonPropertyName("avatar")]
+                /// <summary>
+        /// Gets or sets the Avatar.
+        /// </summary>
+[JsonPropertyName("avatar")]
         public string Avatar { get; set; } = string.Empty;
     }
 

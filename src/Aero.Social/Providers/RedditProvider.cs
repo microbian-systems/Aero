@@ -10,20 +10,41 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for RedditProvider.
+/// </summary>
 public class RedditProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<RedditProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "reddit";
-    public override string Name => "Reddit";
-    public override string[] Scopes => new[] { "read", "identity", "submit", "flair" };
-    public override int MaxConcurrentJobs => 1;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "reddit";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Reddit";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[] { "read", "identity", "submit", "flair" };
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 1;
 
-    public override int MaxLength(object? additionalSettings = null) => 10000;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 10000;
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -48,7 +69,10 @@ public class RedditProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -94,7 +118,10 @@ public class RedditProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -132,7 +159,10 @@ public class RedditProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -248,7 +278,10 @@ public class RedditProvider(
             .ToArray();
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -293,7 +326,10 @@ public class RedditProvider(
         };
     }
 
-    public async Task<List<RedditSubreddit>> SearchSubredditsAsync(string accessToken, string query, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// SearchSubredditsAsync method.
+    /// </summary>
+public async Task<List<RedditSubreddit>> SearchSubredditsAsync(string accessToken, string query, CancellationToken cancellationToken = default)
     {
         var url = $"https://oauth.reddit.com/subreddits/search?show=public&q={Uri.EscapeDataString(query)}&sort=activity&show_users=false&limit=10";
 
@@ -419,153 +455,258 @@ public class RedditProvider(
 
     private class RedditTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("refresh_token")]
+                /// <summary>
+        /// Gets or sets the Refresh Token.
+        /// </summary>
+[JsonPropertyName("refresh_token")]
         public string RefreshToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int ExpiresIn { get; set; }
 
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string Scope { get; set; } = string.Empty;
     }
 
     private class RedditUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("icon_img")]
+                /// <summary>
+        /// Gets or sets the Icon Img.
+        /// </summary>
+[JsonPropertyName("icon_img")]
         public string? IconImg { get; set; }
     }
 
     private class RedditSubmitResponse
     {
-        [JsonPropertyName("json")]
+                /// <summary>
+        /// Gets or sets the Json.
+        /// </summary>
+[JsonPropertyName("json")]
         public RedditSubmitJson? Json { get; set; }
     }
 
     private class RedditSubmitJson
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public RedditSubmitData? Data { get; set; }
     }
 
     private class RedditSubmitData
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string? Id { get; set; }
 
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string? Url { get; set; }
 
-        [JsonPropertyName("websocket_url")]
+                /// <summary>
+        /// Gets or sets the Websocket Url.
+        /// </summary>
+[JsonPropertyName("websocket_url")]
         public string? WebsocketUrl { get; set; }
     }
 
     private class RedditCommentResponse
     {
-        [JsonPropertyName("json")]
+                /// <summary>
+        /// Gets or sets the Json.
+        /// </summary>
+[JsonPropertyName("json")]
         public RedditCommentJson? Json { get; set; }
     }
 
     private class RedditCommentJson
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public RedditCommentData? Data { get; set; }
     }
 
     private class RedditCommentData
     {
-        [JsonPropertyName("things")]
+                /// <summary>
+        /// Gets or sets the Things.
+        /// </summary>
+[JsonPropertyName("things")]
         public List<RedditCommentThing>? Things { get; set; }
     }
 
     private class RedditCommentThing
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public RedditCommentThingData? Data { get; set; }
     }
 
     private class RedditCommentThingData
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string? Id { get; set; }
 
-        [JsonPropertyName("permalink")]
+                /// <summary>
+        /// Gets or sets the Permalink.
+        /// </summary>
+[JsonPropertyName("permalink")]
         public string? Permalink { get; set; }
     }
 
     private class RedditAssetResponse
     {
-        [JsonPropertyName("args")]
+                /// <summary>
+        /// Gets or sets the Args.
+        /// </summary>
+[JsonPropertyName("args")]
         public RedditAssetArgs Args { get; set; } = new();
     }
 
     private class RedditAssetArgs
     {
-        [JsonPropertyName("action")]
+                /// <summary>
+        /// Gets or sets the Action.
+        /// </summary>
+[JsonPropertyName("action")]
         public string Action { get; set; } = string.Empty;
 
-        [JsonPropertyName("fields")]
+                /// <summary>
+        /// Gets or sets the Fields.
+        /// </summary>
+[JsonPropertyName("fields")]
         public List<RedditAssetField> Fields { get; set; } = new();
     }
 
     private class RedditAssetField
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("value")]
+                /// <summary>
+        /// Gets or sets the Value.
+        /// </summary>
+[JsonPropertyName("value")]
         public string Value { get; set; } = string.Empty;
     }
 
     private class RedditSubredditSearchResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public RedditSubredditSearchData? Data { get; set; }
     }
 
     private class RedditSubredditSearchData
     {
-        [JsonPropertyName("children")]
+                /// <summary>
+        /// Gets or sets the Children.
+        /// </summary>
+[JsonPropertyName("children")]
         public List<RedditSubredditChild>? Children { get; set; }
     }
 
     private class RedditSubredditChild
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public RedditSubredditChildData? Data { get; set; }
     }
 
     private class RedditSubredditChildData
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string? Id { get; set; }
 
-        [JsonPropertyName("title")]
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+[JsonPropertyName("title")]
         public string? Title { get; set; }
 
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string? Url { get; set; }
 
-        [JsonPropertyName("subreddit_type")]
+                /// <summary>
+        /// Gets or sets the Subreddit Type.
+        /// </summary>
+[JsonPropertyName("subreddit_type")]
         public string? SubredditType { get; set; }
 
-        [JsonPropertyName("submission_type")]
+                /// <summary>
+        /// Gets or sets the Submission Type.
+        /// </summary>
+[JsonPropertyName("submission_type")]
         public string? SubmissionType { get; set; }
     }
 
-    public class RedditSubreddit
+        /// <summary>
+    /// Represents a class for RedditSubreddit.
+    /// </summary>
+public class RedditSubreddit
     {
-        public string Id { get; set; } = string.Empty;
-        public string Title { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+public string Title { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
     }
 
     //#endregion

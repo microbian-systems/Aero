@@ -1,16 +1,34 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 
 namespace Aero.Auth.Jwt;
 
+/// <summary>
+/// Represents a class for JwtFactoryBase.
+/// </summary>
 public abstract class JwtFactoryBase(ILogger<JwtFactoryBase> log) : IJwtFactory
 {
-    protected readonly ILogger<JwtFactoryBase> log = log;
+        /// <summary>
+    /// log.
+    /// </summary>
+protected readonly ILogger<JwtFactoryBase> log = log;
 
-    public abstract JwtResponseModel GenerateAccessToken(List<Claim> claims);
-    public abstract ClaimsPrincipal? GetPrincipalFromToken(string? token);
-    public abstract bool IsValidToken(string token);
+        /// <summary>
+    /// GenerateAccessToken method.
+    /// </summary>
+public abstract JwtResponseModel GenerateAccessToken(List<Claim> claims);
+        /// <summary>
+    /// GetPrincipalFromToken method.
+    /// </summary>
+public abstract ClaimsPrincipal? GetPrincipalFromToken(string? token);
+        /// <summary>
+    /// IsValidToken method.
+    /// </summary>
+public abstract bool IsValidToken(string token);
 
-    public string GenerateRefreshToken()
+        /// <summary>
+    /// GenerateRefreshToken method.
+    /// </summary>
+public string GenerateRefreshToken()
     {
         var randomNumber = new byte[64];
         using var rng = RandomNumberGenerator.Create();

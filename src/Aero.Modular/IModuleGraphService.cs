@@ -35,8 +35,14 @@ public interface IModuleGraphService
 /// </summary>
 public sealed class ModuleValidationResult
 {
-    public bool IsValid => Errors.Count == 0;
-    public List<ModuleValidationError> Errors { get; init; } = new();
+        /// <summary>
+    /// Gets or sets the Is Valid.
+    /// </summary>
+public bool IsValid => Errors.Count == 0;
+        /// <summary>
+    /// Gets or sets the Errors.
+    /// </summary>
+public List<ModuleValidationError> Errors { get; init; } = new();
 }
 
 /// <summary>
@@ -44,10 +50,22 @@ public sealed class ModuleValidationResult
 /// </summary>
 public sealed class ModuleValidationError
 {
-    public required string ModuleName { get; init; }
-    public required string ErrorType { get; init; }
-    public required string Message { get; init; }
-    public string? Details { get; init; }
+        /// <summary>
+    /// Gets or sets the Module Name.
+    /// </summary>
+public required string ModuleName { get; init; }
+        /// <summary>
+    /// Gets or sets the Error Type.
+    /// </summary>
+public required string ErrorType { get; init; }
+        /// <summary>
+    /// Gets or sets the Message.
+    /// </summary>
+public required string Message { get; init; }
+        /// <summary>
+    /// Gets or sets the Details.
+    /// </summary>
+public string? Details { get; init; }
 }
 
 /// <summary>
@@ -55,9 +73,24 @@ public sealed class ModuleValidationError
 /// </summary>
 public class ModuleDependencyException : Exception
 {
-    public ModuleDependencyException(string message) : base(message) { }
-    public ModuleDependencyException(string message, Exception inner) : base(message, inner) { }
-    public string? OffendingModule { get; init; }
-    public IReadOnlyList<string>? MissingDependencies { get; init; }
-    public IReadOnlyList<string>? CycleMembers { get; init; }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="ModuleDependencyException"/> class.
+    /// </summary>
+public ModuleDependencyException(string message) : base(message) { }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="ModuleDependencyException"/> class.
+    /// </summary>
+public ModuleDependencyException(string message, Exception inner) : base(message, inner) { }
+        /// <summary>
+    /// Gets or sets the Offending Module.
+    /// </summary>
+public string? OffendingModule { get; init; }
+        /// <summary>
+    /// Gets or sets the Missing Dependencies.
+    /// </summary>
+public IReadOnlyList<string>? MissingDependencies { get; init; }
+        /// <summary>
+    /// Gets or sets the Cycle Members.
+    /// </summary>
+public IReadOnlyList<string>? CycleMembers { get; init; }
 }

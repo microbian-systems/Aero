@@ -1,8 +1,14 @@
-﻿namespace Aero.Web.Extensions;
+namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for HostLifetimeExtensions.
+/// </summary>
 public static class HostLifetimeExtensions
 {
-    public static WebApplication AddLifetimeLogging(this WebApplication app, string appName = "")
+        /// <summary>
+    /// AddLifetimeLogging method.
+    /// </summary>
+public static WebApplication AddLifetimeLogging(this WebApplication app, string appName = "")
     {
         var log = app.Services.GetRequiredService<ILogger<WebApplication>>();
         app.Lifetime.ApplicationStarted.Register(() => log.LogInformation("{appName} Background services have started", appName));

@@ -30,12 +30,24 @@ public interface IAsyncQueryHandler<in TParam, TResult> //where TParam : IQuery<
     Task<TResult> ExecuteAsync(TParam param);
 }
 
+/// <summary>
+/// Defines an interface for IQueryHandler.
+/// </summary>
 public interface IQueryHandler<TResult>
 {
-    TResult Execute();
+        /// <summary>
+    /// Execute method.
+    /// </summary>
+TResult Execute();
 }
 
+/// <summary>
+/// Defines an interface for IQueryHandler.
+/// </summary>
 public interface IQueryHandler<TParam, TResult>
 {
-    TResult Execute(TParam param);
+        /// <summary>
+    /// Execute method.
+    /// </summary>
+TResult Execute(TParam param);
 }

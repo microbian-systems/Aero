@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Providers;
 
+/// <summary>
+/// Represents a class for VkProviderTests.
+/// </summary>
 public class VkProviderTests : ProviderTestBase
 {
     private readonly Mock<ILogger<VkProvider>> _loggerMock = new();
@@ -24,7 +27,10 @@ public class VkProviderTests : ProviderTestBase
         return new VkProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Test]
+        /// <summary>
+    /// Provider_ShouldHaveCorrectIdentifier method.
+    /// </summary>
+[Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -34,7 +40,10 @@ public class VkProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxLength_ShouldReturn2048 method.
+    /// </summary>
+[Test]
     public void MaxLength_ShouldReturn2048()
     {
         var provider = CreateProvider();
@@ -42,7 +51,10 @@ public class VkProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(2048);
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_ShouldReturnValidUrl method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();

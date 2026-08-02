@@ -1,8 +1,14 @@
-﻿
+
 
 namespace Aero.Models;
 
+/// <summary>
+/// Represents a record for ApiRegistrationRequest.
+/// </summary>
 public record ApiRegistrationRequest
 {
-    public string Email { get; set; }
+        /// <summary>
+    /// Gets or sets the Email.
+    /// </summary>
+public string Email { get; set; }
 }

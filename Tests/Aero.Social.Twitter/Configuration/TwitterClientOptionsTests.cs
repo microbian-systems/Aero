@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Configuration;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Configuration;
 
+/// <summary>
+/// Represents a class for TwitterClientOptionsTests.
+/// </summary>
 public class TwitterClientOptionsTests
 {
-    [Test]
+        /// <summary>
+    /// TwitterClientOptions_ShouldHaveDefaultTimeout method.
+    /// </summary>
+[Test]
     public async Task TwitterClientOptions_ShouldHaveDefaultTimeout()
     {
         // Arrange & Act
@@ -16,7 +22,10 @@ public class TwitterClientOptionsTests
         await Assert.That(options.Timeout).IsEqualTo(TimeSpan.FromSeconds(30));
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterClientOptions_ShouldHaveDefaultMaxRetries method.
+    /// </summary>
+[Test]
     public async Task TwitterClientOptions_ShouldHaveDefaultMaxRetries()
     {
         // Arrange & Act
@@ -26,7 +35,10 @@ public class TwitterClientOptionsTests
         await Assert.That(options.MaxRetries).IsEqualTo(3);
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterClientOptions_ShouldAllowSettingCredentials method.
+    /// </summary>
+[Test]
     public async Task TwitterClientOptions_ShouldAllowSettingCredentials()
     {
         // Arrange
@@ -47,7 +59,10 @@ public class TwitterClientOptionsTests
         await Assert.That(options.BearerToken).IsEqualTo("test-bearer-token");
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterClientOptions_ShouldAllowCustomizingTimeout method.
+    /// </summary>
+[Test]
     public async Task TwitterClientOptions_ShouldAllowCustomizingTimeout()
     {
         // Arrange
@@ -63,7 +78,10 @@ public class TwitterClientOptionsTests
         await Assert.That(options.Timeout).IsEqualTo(customTimeout);
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterClientOptions_ShouldAllowCustomizingMaxRetries method.
+    /// </summary>
+[Test]
     public async Task TwitterClientOptions_ShouldAllowCustomizingMaxRetries()
     {
         // Arrange

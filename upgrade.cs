@@ -14,7 +14,10 @@ public class UpgradeRunner
     private const string TargetFramework = "net9.0";
     private const string UpgradeAssistantCommand = "upgrade-assistant";
 
-    public static void Main(string[] args)
+        /// <summary>
+    /// Main method.
+    /// </summary>
+public static void Main(string[] args)
     {
         Console.WriteLine($"Starting fully unattended, in-place upgrade to {TargetFramework}...");
 

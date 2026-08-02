@@ -2,9 +2,15 @@ using Aero.Core.Commands;
 
 namespace Aero.Core.Decorators;
 
+/// <summary>
+/// Represents a class for ExceptionCommandHandlerDecorator.
+/// </summary>
 public class ExceptionCommandHandlerDecorator(IAsyncCommand decorated, ILogger log) : IAsyncCommand
 {
-    public async Task ExecuteAsync()
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task ExecuteAsync()
     {
         try
         {
@@ -17,10 +23,16 @@ public class ExceptionCommandHandlerDecorator(IAsyncCommand decorated, ILogger l
     }
 }
     
+/// <summary>
+/// Represents a class for ExceptionCommandHandlerDecorator.
+/// </summary>
 public class ExceptionCommandHandlerDecorator<TCommand>(IAsyncCommand<TCommand> decorated, ILogger log)
     : IAsyncCommand<TCommand>
 {
-    public async Task ExecuteAsync(TCommand param)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task ExecuteAsync(TCommand param)
     {
         try
         {
@@ -34,11 +46,17 @@ public class ExceptionCommandHandlerDecorator<TCommand>(IAsyncCommand<TCommand> 
     }
 }
     
+/// <summary>
+/// Represents a class for ExceptionCommandHandlerDecorator.
+/// </summary>
 public class ExceptionCommandHandlerDecorator<TCommand, TReturn>(
     IAsyncCommand<TCommand, TReturn> decorated,
     ILogger log) : IAsyncCommand<TCommand, TReturn>
 {
-    public async Task<TReturn> ExecuteAsync(TCommand param)
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public async Task<TReturn> ExecuteAsync(TCommand param)
     {
         var result = default(TReturn);
         try

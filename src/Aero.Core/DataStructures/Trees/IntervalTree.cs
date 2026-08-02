@@ -5,9 +5,15 @@ namespace Aero.Core.DataStructures.Trees;
 /// </summary>
 public class IntervalTree
 {
-    public IntervalTreeNode Root { get; private set; }
+        /// <summary>
+    /// Gets or sets the Root.
+    /// </summary>
+public IntervalTreeNode Root { get; private set; }
 
-    public void Insert(Interval interval)
+        /// <summary>
+    /// Insert method.
+    /// </summary>
+public void Insert(Interval interval)
     {
         Root = Insert(Root, interval);
     }
@@ -34,7 +40,10 @@ public class IntervalTree
         return Balance(node);
     }
         
-    public IEnumerable<Interval> SearchOverlapping(Interval interval)
+        /// <summary>
+    /// SearchOverlapping method.
+    /// </summary>
+public IEnumerable<Interval> SearchOverlapping(Interval interval)
     {
         var result = new List<Interval>();
         SearchOverlapping(Root, interval, result);

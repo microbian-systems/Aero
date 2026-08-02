@@ -2,34 +2,64 @@ using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
+/// <summary>
+/// Defines an interface for IDocumentIndexRegistry.
+/// </summary>
 public interface IDocumentIndexRegistry<TDocument>
     where TDocument : class
 {
-    IndexDefinition? FindByField(string fieldName);
-    IReadOnlyList<IndexDefinition> AllIndexes { get; }
-    IIndexExecutor<TDocument> GetExecutor(IndexDefinition definition);
+        /// <summary>
+    /// FindByField method.
+    /// </summary>
+IndexDefinition? FindByField(string fieldName);
+        /// <summary>
+    /// Gets or sets the All Indexes.
+    /// </summary>
+IReadOnlyList<IndexDefinition> AllIndexes { get; }
+        /// <summary>
+    /// GetExecutor method.
+    /// </summary>
+IIndexExecutor<TDocument> GetExecutor(IndexDefinition definition);
     
-    void Register<TField>(
+        /// <summary>
+    /// Register method.
+    /// </summary>
+void Register<TField>(
         IndexDefinition<TDocument, TField> definition,
         IOrderedKeyValueTree<CompositeKey<TField, Guid>, Guid> tree)
         where TField : unmanaged, IComparable<TField>;
 
-    void RegisterUnique<TField>(
+        /// <summary>
+    /// RegisterUnique method.
+    /// </summary>
+void RegisterUnique<TField>(
         IndexDefinition<TDocument, TField> definition,
         IOrderedKeyValueTree<TField, Guid> tree)
         where TField : unmanaged, IComparable<TField>;
 }
 
+/// <summary>
+/// Defines an interface for IIndexExecutor.
+/// </summary>
 public interface IIndexExecutor<TDocument>
     where TDocument : class
 {
-    IndexDefinition Definition { get; }
+        /// <summary>
+    /// Gets or sets the Definition.
+    /// </summary>
+IndexDefinition Definition { get; }
     
-    IAsyncEnumerable<Guid> LookupAsync(
+        /// <summary>
+    /// LookupAsync method.
+    /// </summary>
+IAsyncEnumerable<Guid> LookupAsync(
         object fieldValue,
         CancellationToken ct = default);
     
-    IAsyncEnumerable<Guid> ScanRangeAsync(
+        /// <summary>
+    /// ScanRangeAsync method.
+    /// </summary>
+IAsyncEnumerable<Guid> ScanRangeAsync(
         object? from,
         object? to,
         CancellationToken ct = default);

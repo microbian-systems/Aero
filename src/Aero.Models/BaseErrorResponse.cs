@@ -1,6 +1,9 @@
 namespace Aero.Models;
 
 // todo - rename BaseErrorResponse -> Just Error or AppError
+/// <summary>
+/// Represents a class for BaseErrorResponse.
+/// </summary>
 public class BaseErrorResponse
 {
     /// <summary>
@@ -20,6 +23,9 @@ public class BaseErrorResponse
     /// </summary>
     public string Message { get; set; }
 
-    [JsonPropertyName("details")]
+        /// <summary>
+    /// Gets or sets the Details.
+    /// </summary>
+[JsonPropertyName("details")]
     public string Details { get; set; }
 }

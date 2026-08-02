@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for IntervalTreeTests.
+/// </summary>
 public class IntervalTreeTests
 {
-    [Test]
+        /// <summary>
+    /// SearchOverlapping_Returns_Correct_Intervals method.
+    /// </summary>
+[Test]
     public void SearchOverlapping_Returns_Correct_Intervals()
     {
         // Arrange
