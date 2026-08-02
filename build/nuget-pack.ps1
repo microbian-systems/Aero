@@ -6,6 +6,9 @@
     Builds all library projects in Release mode and produces .nupkg files
     in the build/nupkgs/ directory. Package version and symbol settings come
     from src/Directory.Build.props. Skips Aero.Cloudflare (EXE) and test projects.
+.PARAMETER VersionSuffix
+    Optional SemVer prerelease suffix that overrides VersionSuffix from
+    src/Directory.Build.props. An explicitly empty value produces a stable package.
 .PARAMETER OutputDir
     Output directory for nupkg files. Default: build/nupkgs.
 .PARAMETER Configuration
@@ -16,6 +19,8 @@
 #>
 
 param(
+    [AllowEmptyString()]
+    [string]$VersionSuffix,
     [string]$OutputDir = "",
     [string]$Configuration = "Release"
 )
@@ -27,6 +32,11 @@ Write-Host "=== Aero NuGet Pack Script ===" -ForegroundColor Cyan
 Write-Host "Repo:     $RepoRoot" -ForegroundColor Gray
 Write-Host "Output:   $OutputDir" -ForegroundColor Gray
 Write-Host "Config:   $Configuration" -ForegroundColor Gray
+
+$versionArgs = @()
+if ($PSBoundParameters.ContainsKey('VersionSuffix')) {
+    $versionArgs += "-p:VersionSuffix=$VersionSuffix"
+}
 
 # Ensure output directory exists and contains no artifacts from earlier versions.
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
@@ -69,7 +79,7 @@ foreach ($proj in $libProjects) {
 
     $projName = (Get-Item $csproj).BaseName
     Write-Host "  Packing: $projName..." -ForegroundColor Cyan
-    $output = dotnet pack $csproj -c $Configuration -o $OutputDir 2>&1
+    $output = dotnet pack $csproj -c $Configuration -o $OutputDir @versionArgs 2>&1
 
     if ($LASTEXITCODE -ne 0) {
         Write-Host "  FAILED: $(Split-Path $proj -Leaf)" -ForegroundColor Red

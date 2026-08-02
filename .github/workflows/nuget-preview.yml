@@ -38,11 +38,6 @@ jobs:
 
       - name: Push to NuGet.org
         shell: pwsh
-        run: |
-          Get-ChildItem "build/nupkgs/*.nupkg" | ForEach-Object {
-            dotnet nuget push $_.FullName `
-              --api-key ${{ steps.login.outputs.NUGET_API_KEY }} `
-              --source https://api.nuget.org/v3/index.json `
-              --skip-duplicate
-          }
-          if ($LASTEXITCODE -ne 0) { throw "Push failed" }
+        run: ./build/nuget-publish.ps1
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
