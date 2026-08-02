@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using Aero.Core.Entities;
-using Marten;
 
 namespace Aero.Services;
 
@@ -28,9 +27,8 @@ public class AeroUserProfileService<T>(IUserProfileRepository db, ILogger<AeroUs
 
     public async Task<T> GetById(long id)
     {
-        var results = await db.session.Query<T>()
-            .FirstOrDefaultAsync(x => x.Id == id);
-        return results;
+        var result = await db.FindByIdAsync(id);
+        return (T)result;
     }
 
     public async Task<T> GetByEmail(string email)

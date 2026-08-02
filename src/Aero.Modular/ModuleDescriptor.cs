@@ -78,4 +78,10 @@ public sealed class ModuleDescriptor
 
     /// <summary>Module type implements <c>Marten.IAsyncConfigureMarten</c>.</summary>
     public bool IsAsyncMartenConfigurator { get; init; }
+
+    /// <summary>Module type implements <c>AeroDB.Sable.IConfigureAeroDB</c>.</summary>
+    public bool IsAeroDbConfigurator { get; init; }
+
+    /// <summary>Module type implements <c>AeroDB.Sable.IAsyncConfigureAeroDB</c>.</summary>
+    public bool IsAsyncAeroDbConfigurator { get; init; }
 }

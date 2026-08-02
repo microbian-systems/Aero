@@ -33,9 +33,7 @@ namespace Aero.Core.Identity;
 [Table("Roles", Schema = Schemas.Aero)]
 public class AeroRole : AeroRole<long>
 {
-    public new long Id { get; set; } = Snowflake.NewId();
-
-    public AeroRole() => Snowflake.NewId();
+    public AeroRole() => Id = Snowflake.NewId();
 
     public AeroRole(string roleName)
         : this()
