@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <PropertyGroup Label="Package information">
-        <Version>0.0.9.4-alpha</Version>
+        <Version>0.0.9.7-alpha</Version>
         <Authors>Troy Robinson, et al</Authors>
         <Company>Microbians</Company>
         <Copyright>Copyright (c) 2023-2026 Microbians</Copyright>

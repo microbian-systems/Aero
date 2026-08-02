@@ -12,7 +12,7 @@
 1. [Overview](#1-overview)
 2. [Solution Layout & Scope](#2-solution-layout--scope)
 3. [NuGet Package Inventory](#3-nuget-package-inventory)
-   - [3.1 Aero Framework (19 packages)](#31-aero-framework-19-packages)
+   - [3.1 Aero Framework (18 packages)](#31-aero-framework-18-packages)
    - [3.2 Aero.CMS Core Libraries (17 packages)](#32-aerocms-core-libraries-17-packages)
    - [3.3 Individual CMS Modules (60 packages)](#33-individual-cms-modules-60-packages)
    - [3.4 CMS Module Meta-Packages (7 packages)](#34-cms-module-meta-packages-7-packages)
@@ -45,7 +45,7 @@ This document defines the complete plan for producing NuGet pre-release packages
 
 | Solution Root | Path | Project Count | Description |
 |---|---|---|---|
-| **Aero Framework** | `Aero/src/` | 19 library + 12 test | Foundational libraries (git submodule) |
+| **Aero Framework** | `Aero/src/` | 18 library + 11 test | Foundational libraries (git submodule) |
 | **Aero.CMS** | `src/` | ~80 library + module + host + 6 test | CMS application and feature modules |
 | **NeoUI** | `NeoUI/src/` | 5 library + 5 demo | Blazor component library (third-party submodule, already published externally — excluded) |
 
@@ -83,7 +83,6 @@ D:\proj\microbians\AeroCMS\
 │       ├── Aero.EfCore/
 │       ├── Aero.Events/
 │       ├── Aero.Marten/
-│       ├── Aero.MerakiUI/
 │       ├── Aero.Modular/
 │       ├── Aero.Secrets/
 │       ├── Aero.Services/
@@ -137,7 +136,7 @@ D:\proj\microbians\AeroCMS\
 
 ## 3. NuGet Package Inventory
 
-### 3.1 Aero Framework (19 packages)
+### 3.1 Aero Framework (18 packages)
 
 All projects in `Aero/src/` share `Aero/src/Directory.Build.props` with:
 - `Version=0.0.5-alpha`
@@ -158,15 +157,14 @@ All projects in `Aero/src/` share `Aero/src/Directory.Build.props` with:
 | 8 | `Aero.EfCore` | Entity Framework Core persistence | unset → `true` | Aero.Marten, Aero.Models, Aero.Core |
 | 9 | `Aero.Events` | Event foundations (WolverineFx, Azure SB, RabbitMQ) | `false` → `true` | Aero.Core, Aero.Models |
 | 10 | `Aero.Marten` | MartenDB persistence + GenericMartenRepository | `false` → `true` | Aero.Auth, Aero.Caching, Aero.Core, Aero.Models |
-| 11 | `Aero.MerakiUI` | Meraki UI Blazor components | `false` → `true` | (RCL, various component deps) |
-| 12 | `Aero.Modular` | Modular system | unset → `true` | Aero.Cms.Abstractions |
-| 13 | `Aero.Secrets` | Secrets management (Infisical) | unset → `true` | Aero.Core |
-| 14 | `Aero.Services` | Common services (email, JWT, Twilio) | unset → `true` | Aero.Core, Aero.Models |
-| 15 | `Aero.SignalR` | SignalR hubs | `false` → `true` | Aero.Core |
-| 16 | `Aero.Validators` | Validation (FluentValidation) | `false` → `true` | Aero.Core |
-| 17 | `Aero.Web` | Common web services (auth, OAuth, Scalar, Mapster) | `false` → `true` | Aero.Core, Aero.Services, Aero.Validators, Aero.Models |
-| 18 | `Aero.Social` | Social services base | unset → `true` | Aero.Core |
-| 19 | `Aero.Social.Twitter.Client` | Twitter/X API client | unset → `true` | Aero.Core |
+| 11 | `Aero.Modular` | Modular system | unset → `true` | Aero.Cms.Abstractions |
+| 12 | `Aero.Secrets` | Secrets management (Infisical) | unset → `true` | Aero.Core |
+| 13 | `Aero.Services` | Common services (email, JWT, Twilio) | unset → `true` | Aero.Core, Aero.Models |
+| 14 | `Aero.SignalR` | SignalR hubs | `false` → `true` | Aero.Core |
+| 15 | `Aero.Validators` | Validation (FluentValidation) | `false` → `true` | Aero.Core |
+| 16 | `Aero.Web` | Common web services (auth, OAuth, Scalar, Mapster) | `false` → `true` | Aero.Core, Aero.Services, Aero.Validators, Aero.Models |
+| 17 | `Aero.Social` | Social services base | unset → `true` | Aero.Core |
+| 18 | `Aero.Social.Twitter.Client` | Twitter/X API client | unset → `true` | Aero.Core |
 
 **Excluded from Aero Framework:**
 - `Aero.Cloudflare` → `OutputType=Exe`, not a library
@@ -653,7 +651,7 @@ flowchart TD
 
 Each Aero project currently has individual packaging metadata. The changes needed:
 
-**For projects with `IsPackable=false`** (Aero.Core, Aero.Models, Aero.Actors, Aero.Auth, Aero.Caching, Aero.Events, Aero.Marten, Aero.MerakiUI, Aero.SignalR, Aero.Validators, Aero.Web):
+**For projects with `IsPackable=false`** (Aero.Core, Aero.Models, Aero.Actors, Aero.Auth, Aero.Caching, Aero.Events, Aero.Marten, Aero.SignalR, Aero.Validators, Aero.Web):
 
 ```xml
 <!-- Change to: -->
@@ -735,7 +733,6 @@ Several packages to be published are Razor Class Libraries (RCLs) that include R
 | `Aero.Cms.Ui.Hyper` | Check |
 | `Aero.Cms.Jobs` | Check |
 | `Aero.Cms.CookiePolicy` | Check |
-| `Aero.MerakiUI` | Check |
 | All `Aero.Cms.Modules.*` | Check (many have wwwroot for client assets) |
 
 **No changes needed to csproj** — `wwwroot` content is included automatically by the Razor SDK. But verify:
@@ -846,7 +843,6 @@ if ($Group -in @("All", "Aero")) {
     "$RepoRoot/Aero/src/Aero.EfCore"
     "$RepoRoot/Aero/src/Aero.Events"
     "$RepoRoot/Aero/src/Aero.Marten"
-    "$RepoRoot/Aero/src/Aero.MerakiUI"
     "$RepoRoot/Aero/src/Aero.Modular"
     "$RepoRoot/Aero/src/Aero.Secrets"
     "$RepoRoot/Aero/src/Aero.Services"
@@ -1244,7 +1240,7 @@ No API keys, no PATs, no tokens to rotate.
 
 ## 12. Migration Steps
 
-### Step 1: Enable IsPackable on Aero Framework (19 projects)
+### Step 1: Enable IsPackable on Aero Framework (18 projects)
 
 - Edit each csproj in `Aero/src/` to set `<IsPackable>true</IsPackable>` (or remove `<IsPackable>false</IsPackable>`).
 - Remove `<GeneratePackageOnBuild>true</GeneratePackageOnBuild>` from Aero.Core, Aero.EfCore, Aero.Marten.
