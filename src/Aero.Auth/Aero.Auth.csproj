@@ -24,11 +24,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
-    <ProjectReference Include="..\..\..\AeroDB\src\AeroDB.Sable\AeroDB.Sable.csproj" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <PackageReference Include="AeroDB.Sable" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
