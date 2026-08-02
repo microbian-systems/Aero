@@ -1,8 +1,14 @@
-﻿namespace Aero.Web.Extensions;
+namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for EmailServiceExtensions.
+/// </summary>
 public static class EmailServiceExtensions
 {
-    public static IServiceCollection ConfigureEmailServices(this IServiceCollection services, IConfiguration config)
+        /// <summary>
+    /// ConfigureEmailServices method.
+    /// </summary>
+public static IServiceCollection ConfigureEmailServices(this IServiceCollection services, IConfiguration config)
     {
         var apiKey = config["AppSettings:SendGrid:Key"];
         var replyEmail = config["AppSettings:SendGrid:From"];

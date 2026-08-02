@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Clients;
 using Aero.Social.Twitter.Client.Configuration;
@@ -11,12 +11,18 @@ using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Clients;
 
+/// <summary>
+/// Represents a class for TwitterClientTimelineTests.
+/// </summary>
 public class TwitterClientTimelineTests
 {
     private readonly IOptions<TwitterClientOptions> _options;
     private readonly ILogger<TwitterClient> _logger;
 
-    public TwitterClientTimelineTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="TwitterClientTimelineTests"/> class.
+    /// </summary>
+public TwitterClientTimelineTests()
     {
         _options = Options.Create(new TwitterClientOptions
         {
@@ -27,7 +33,10 @@ public class TwitterClientTimelineTests
 
     //#region GetUserTweetsAsync Tests
 
-    [Test]
+        /// <summary>
+    /// GetUserTweetsAsync_WithValidUserId_ReturnsTweets method.
+    /// </summary>
+[Test]
     public async Task GetUserTweetsAsync_WithValidUserId_ReturnsTweets()
     {
         // Arrange
@@ -81,7 +90,10 @@ public class TwitterClientTimelineTests
         await Assert.That(result.Meta.NextToken).IsEqualTo("next_page_token");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserTweetsAsync_WithOptions_IncludesAllParameters method.
+    /// </summary>
+[Test]
     public async Task GetUserTweetsAsync_WithOptions_IncludesAllParameters()
     {
         // Arrange
@@ -138,7 +150,10 @@ public class TwitterClientTimelineTests
         await Assert.That(query).Contains("expansions=author_id");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserTweetsAsync_WithNullUserId_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task GetUserTweetsAsync_WithNullUserId_ThrowsArgumentException()
     {
         // Arrange
@@ -151,7 +166,10 @@ public class TwitterClientTimelineTests
         await Assert.That(exception.Message).Contains("User ID cannot be null or empty");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserTweetsAsync_WithInvalidMaxResults_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task GetUserTweetsAsync_WithInvalidMaxResults_ThrowsArgumentException()
     {
         // Arrange
@@ -169,7 +187,10 @@ public class TwitterClientTimelineTests
         await Assert.That(exception.Message).Contains("MaxResults must be between 5 and 100");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserTweetsAsync_WithNotFound_ThrowsTwitterApiException method.
+    /// </summary>
+[Test]
     public async Task GetUserTweetsAsync_WithNotFound_ThrowsTwitterApiException()
     {
         // Arrange
@@ -204,7 +225,10 @@ public class TwitterClientTimelineTests
 
     //#region GetUserMentionsAsync Tests
 
-    [Test]
+        /// <summary>
+    /// GetUserMentionsAsync_WithValidUserId_ReturnsMentions method.
+    /// </summary>
+[Test]
     public async Task GetUserMentionsAsync_WithValidUserId_ReturnsMentions()
     {
         // Arrange
@@ -255,7 +279,10 @@ public class TwitterClientTimelineTests
         await Assert.That(result.Data[1].Text).Contains("@testuser");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserMentionsAsync_WithOptions_IncludesParameters method.
+    /// </summary>
+[Test]
     public async Task GetUserMentionsAsync_WithOptions_IncludesParameters()
     {
         // Arrange
@@ -300,7 +327,10 @@ public class TwitterClientTimelineTests
         await Assert.That(query).Contains("tweet.fields=public_metrics");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserMentionsAsync_WithNullUserId_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task GetUserMentionsAsync_WithNullUserId_ThrowsArgumentException()
     {
         // Arrange
@@ -313,7 +343,10 @@ public class TwitterClientTimelineTests
         await Assert.That(exception.Message).Contains("User ID cannot be null or empty");
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserMentionsAsync_WithEmptyResult_ReturnsEmptyList method.
+    /// </summary>
+[Test]
     public async Task GetUserMentionsAsync_WithEmptyResult_ReturnsEmptyList()
     {
         // Arrange
@@ -354,12 +387,18 @@ public class TwitterClientTimelineTests
     {
         private readonly Func<HttpRequestMessage, Task<HttpResponseMessage>> _handler;
 
-        public TestHttpMessageHandler(Func<HttpRequestMessage, Task<HttpResponseMessage>> handler)
+                /// <summary>
+        /// Initializes a new instance of the <see cref="TestHttpMessageHandler"/> class.
+        /// </summary>
+public TestHttpMessageHandler(Func<HttpRequestMessage, Task<HttpResponseMessage>> handler)
         {
             _handler = handler;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+                /// <summary>
+        /// SendAsync method.
+        /// </summary>
+protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return await _handler(request);
 }

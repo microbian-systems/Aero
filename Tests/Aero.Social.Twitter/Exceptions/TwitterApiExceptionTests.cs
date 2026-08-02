@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Social.Twitter.Client.Exceptions;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Exceptions;
 
+/// <summary>
+/// Represents a class for TwitterApiExceptionTests.
+/// </summary>
 public class TwitterApiExceptionTests
 {
-    [Test]
+        /// <summary>
+    /// TwitterApiException_DefaultConstructor_ShouldCreateException method.
+    /// </summary>
+[Test]
     public async Task TwitterApiException_DefaultConstructor_ShouldCreateException()
     {
         // Act
@@ -18,7 +24,10 @@ public class TwitterApiExceptionTests
         await Assert.That(exception).IsTypeOf<TwitterApiException>();
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterApiException_MessageConstructor_ShouldSetMessage method.
+    /// </summary>
+[Test]
     public async Task TwitterApiException_MessageConstructor_ShouldSetMessage()
     {
         // Arrange
@@ -31,7 +40,10 @@ public class TwitterApiExceptionTests
         await Assert.That(exception.Message).IsEqualTo(message);
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterApiException_FullConstructor_ShouldSetAllProperties method.
+    /// </summary>
+[Test]
     public async Task TwitterApiException_FullConstructor_ShouldSetAllProperties()
     {
         // Arrange
@@ -48,7 +60,10 @@ public class TwitterApiExceptionTests
         await Assert.That(exception.StatusCode).IsEqualTo(statusCode);
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterApiException_StatusCode_ShouldBeAccessible method.
+    /// </summary>
+[Test]
     public async Task TwitterApiException_StatusCode_ShouldBeAccessible()
     {
         // Arrange
@@ -62,9 +77,15 @@ public class TwitterApiExceptionTests
     }
 }
 
+/// <summary>
+/// Represents a class for TwitterRateLimitExceptionTests.
+/// </summary>
 public class TwitterRateLimitExceptionTests
 {
-    [Test]
+        /// <summary>
+    /// TwitterRateLimitException_ShouldInheritFromTwitterApiException method.
+    /// </summary>
+[Test]
     public async Task TwitterRateLimitException_ShouldInheritFromTwitterApiException()
     {
         // Act
@@ -74,7 +95,10 @@ public class TwitterRateLimitExceptionTests
         await Assert.That(exception).IsAssignableTo<TwitterApiException>();
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterRateLimitException_ShouldHave429StatusCode method.
+    /// </summary>
+[Test]
     public async Task TwitterRateLimitException_ShouldHave429StatusCode()
     {
         // Act
@@ -84,7 +108,10 @@ public class TwitterRateLimitExceptionTests
         await Assert.That(exception.StatusCode).IsEqualTo(HttpStatusCode.TooManyRequests);
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterRateLimitException_ShouldStoreRetryAfter method.
+    /// </summary>
+[Test]
     public async Task TwitterRateLimitException_ShouldStoreRetryAfter()
     {
         // Arrange
@@ -98,9 +125,15 @@ public class TwitterRateLimitExceptionTests
     }
 }
 
+/// <summary>
+/// Represents a class for TwitterAuthenticationExceptionTests.
+/// </summary>
 public class TwitterAuthenticationExceptionTests
 {
-    [Test]
+        /// <summary>
+    /// TwitterAuthenticationException_ShouldInheritFromTwitterApiException method.
+    /// </summary>
+[Test]
     public async Task TwitterAuthenticationException_ShouldInheritFromTwitterApiException()
     {
         // Act
@@ -110,7 +143,10 @@ public class TwitterAuthenticationExceptionTests
         await Assert.That(exception).IsAssignableTo<TwitterApiException>();
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterAuthenticationException_ShouldHave401StatusCode method.
+    /// </summary>
+[Test]
     public async Task TwitterAuthenticationException_ShouldHave401StatusCode()
     {
         // Act

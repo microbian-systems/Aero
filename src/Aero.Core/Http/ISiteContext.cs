@@ -1,7 +1,16 @@
 namespace Aero.Core.Http;
 
+/// <summary>
+/// Defines an interface for ISiteContext.
+/// </summary>
 public interface ISiteContext
 {
-    long SiteId { get; }
-    long TenantId { get; }
+        /// <summary>
+    /// Gets or sets the Site Id.
+    /// </summary>
+long SiteId { get; }
+        /// <summary>
+    /// Gets or sets the Tenant Id.
+    /// </summary>
+long TenantId { get; }
 }

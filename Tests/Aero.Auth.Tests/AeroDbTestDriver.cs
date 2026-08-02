@@ -3,10 +3,16 @@ using JasperFx;
 
 namespace Aero.Auth.Tests;
 
+/// <summary>
+/// Represents a class for AeroDbTestDriver.
+/// </summary>
 public abstract class AeroDbTestDriver : IDisposable
 {
     private static readonly IDocumentStore _sharedStore;
-    protected readonly IDocumentStore store;
+        /// <summary>
+    /// store.
+    /// </summary>
+protected readonly IDocumentStore store;
 
     static AeroDbTestDriver()
     {
@@ -18,7 +24,10 @@ public abstract class AeroDbTestDriver : IDisposable
         });
     }
 
-    protected AeroDbTestDriver()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="AeroDbTestDriver"/> class.
+    /// </summary>
+protected AeroDbTestDriver()
     {
         store = _sharedStore;
         
@@ -26,7 +35,10 @@ public abstract class AeroDbTestDriver : IDisposable
         store.Advanced.Clean.DeleteAllDocumentsAsync().GetAwaiter().GetResult();
     }
 
-    public void Dispose()
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public void Dispose()
     {
         // Don't dispose the shared store here
         GC.SuppressFinalize(this);

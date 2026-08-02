@@ -1,9 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Aero.Events;
 
+/// <summary>
+/// Defines an interface for IAeroEventHandlerBase.
+/// </summary>
 public interface IAeroEventHandlerBase { }
 
+/// <summary>
+/// Represents a class for AeroEventHandlerBase.
+/// </summary>
 public abstract class AeroEventHandlerBase(ILogger<AeroEventHandlerBase> log) : IAeroEventHandlerBase
 {
     /// <summary>

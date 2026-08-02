@@ -1,10 +1,16 @@
-﻿namespace Aero.Web.Middleware;
+namespace Aero.Web.Middleware;
 
+/// <summary>
+/// Represents a class for Custom502Handler.
+/// </summary>
 public class Custom502Handler(RequestDelegate next)
 {
     private readonly RequestDelegate _next = next ?? throw new ArgumentNullException(nameof(next));
 
-    public async Task Invoke(HttpContext context)
+        /// <summary>
+    /// Invoke method.
+    /// </summary>
+public async Task Invoke(HttpContext context)
     {
         await _next(context);
 
@@ -21,9 +27,15 @@ public class Custom502Handler(RequestDelegate next)
     }
 }
 
+/// <summary>
+/// Represents a class for Custom502HandlerExtensions.
+/// </summary>
 public static class Custom502HandlerExtensions
 {
-    public static IApplicationBuilder UseCustom502Handler(this IApplicationBuilder builder)
+        /// <summary>
+    /// UseCustom502Handler method.
+    /// </summary>
+public static IApplicationBuilder UseCustom502Handler(this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<Custom502Handler>();
     }

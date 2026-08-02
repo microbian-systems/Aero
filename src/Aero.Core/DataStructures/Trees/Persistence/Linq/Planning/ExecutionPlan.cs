@@ -6,21 +6,33 @@ using Aero.Core.DataStructures.Trees.Persistence.Linq.Translation;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Linq.Planning;
 
+/// <summary>
+/// Represents a class for ExecutionPlan.
+/// </summary>
 public abstract class ExecutionPlan<TDocument>
     where TDocument : class
 {
-    public abstract IAsyncEnumerable<TDocument> ExecuteAsync(
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public abstract IAsyncEnumerable<TDocument> ExecuteAsync(
         IDocumentCollection<TDocument> collection,
         CancellationToken ct);
 }
 
+/// <summary>
+/// Represents a class for FullScanPlan.
+/// </summary>
 public sealed class FullScanPlan<TDocument>(
     Func<TDocument, bool>? predicate,
     int? take,
     int? skip) : ExecutionPlan<TDocument>
     where TDocument : class
 {
-    public override async IAsyncEnumerable<TDocument> ExecuteAsync(
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public override async IAsyncEnumerable<TDocument> ExecuteAsync(
         IDocumentCollection<TDocument> collection,
         [EnumeratorCancellation] CancellationToken ct)
     {
@@ -41,6 +53,9 @@ public sealed class FullScanPlan<TDocument>(
     }
 }
 
+/// <summary>
+/// Represents a class for IndexPointLookupPlan.
+/// </summary>
 public sealed class IndexPointLookupPlan<TDocument>(
     IIndexExecutor<TDocument> executor,
     IndexScanSpec spec,
@@ -49,7 +64,10 @@ public sealed class IndexPointLookupPlan<TDocument>(
     int? skip) : ExecutionPlan<TDocument>
     where TDocument : class
 {
-    public override async IAsyncEnumerable<TDocument> ExecuteAsync(
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public override async IAsyncEnumerable<TDocument> ExecuteAsync(
         IDocumentCollection<TDocument> collection,
         [EnumeratorCancellation] CancellationToken ct)
     {
@@ -72,6 +90,9 @@ public sealed class IndexPointLookupPlan<TDocument>(
     }
 }
 
+/// <summary>
+/// Represents a class for IndexRangeScanPlan.
+/// </summary>
 public sealed class IndexRangeScanPlan<TDocument>(
     IIndexExecutor<TDocument> executor,
     IndexScanSpec spec,
@@ -81,7 +102,10 @@ public sealed class IndexRangeScanPlan<TDocument>(
     IReadOnlyList<OrderClause> sortClauses) : ExecutionPlan<TDocument>
     where TDocument : class
 {
-    public override async IAsyncEnumerable<TDocument> ExecuteAsync(
+        /// <summary>
+    /// ExecuteAsync method.
+    /// </summary>
+public override async IAsyncEnumerable<TDocument> ExecuteAsync(
         IDocumentCollection<TDocument> collection,
         [EnumeratorCancellation] CancellationToken ct)
     {

@@ -7,9 +7,15 @@ using Serilog.Sinks.OpenTelemetry;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for SerilogExtensions.
+/// </summary>
 public static class SerilogExtensions
 {
-    public static WebApplicationBuilder ConfigureSerilog(this WebApplicationBuilder builder,
+        /// <summary>
+    /// ConfigureSerilog method.
+    /// </summary>
+public static WebApplicationBuilder ConfigureSerilog(this WebApplicationBuilder builder,
         IConfiguration config, string serviceName, string serviceVersion = "1.0.0")
     {
         if (string.IsNullOrEmpty(serviceName))
@@ -19,7 +25,10 @@ public static class SerilogExtensions
         return builder;
     }
 
-    public static IHostBuilder ConfigureSerilog(this HostBuilder builder, IConfiguration configuration, string? serviceName = null)
+        /// <summary>
+    /// ConfigureSerilog method.
+    /// </summary>
+public static IHostBuilder ConfigureSerilog(this HostBuilder builder, IConfiguration configuration, string? serviceName = null)
     {
         serviceName ??= "Aero.Web";
         var serviceVersion = typeof(SerilogExtensions).Assembly.GetName().Version?.ToString() ?? "1.0.0";
@@ -33,7 +42,10 @@ public static class SerilogExtensions
         return builder.UseSerilog(log);
     }
 
-    public static Serilog.ILogger GetBootstrapLogger(IConfiguration configuration, string serviceName, string serviceVersion, string environment)
+        /// <summary>
+    /// GetBootstrapLogger method.
+    /// </summary>
+public static Serilog.ILogger GetBootstrapLogger(IConfiguration configuration, string serviceName, string serviceVersion, string environment)
     {
         var opts = configuration.GetHoneycombOptions();
         opts ??= new HoneycombOptions();

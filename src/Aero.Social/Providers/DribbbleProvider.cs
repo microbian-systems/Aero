@@ -259,43 +259,73 @@ public class DribbbleProvider(
 
     private class DribbbleTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string? Scope { get; set; }
 
-        [JsonPropertyName("token_type")]
+                /// <summary>
+        /// Gets or sets the Token Type.
+        /// </summary>
+[JsonPropertyName("token_type")]
         public string? TokenType { get; set; }
     }
 
     private class DribbbleUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("login")]
+                /// <summary>
+        /// Gets or sets the Login.
+        /// </summary>
+[JsonPropertyName("login")]
         public string? Login { get; set; }
 
-        [JsonPropertyName("avatar_url")]
+                /// <summary>
+        /// Gets or sets the Avatar Url.
+        /// </summary>
+[JsonPropertyName("avatar_url")]
         public string? AvatarUrl { get; set; }
     }
 
     private class DribbbleUserWithTeams : DribbbleUserInfo
     {
-        [JsonPropertyName("teams")]
+                /// <summary>
+        /// Gets or sets the Teams.
+        /// </summary>
+[JsonPropertyName("teams")]
         public List<DribbbleTeamInfo>? Teams { get; set; }
     }
 
     private class DribbbleTeamInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
     }
 

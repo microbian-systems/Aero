@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for RTreeTests.
+/// </summary>
 public class RTreeTests
 {
-    [Test]
+        /// <summary>
+    /// Insert_And_Search_Success method.
+    /// </summary>
+[Test]
     [Skip("R-Tree insert is not fully implemented")]
     public void Insert_And_Search_Success()
     {

@@ -1,11 +1,23 @@
 namespace Aero.Core.Validation;
 
+/// <summary>
+/// Represents a class for ValidationResult.
+/// </summary>
 public sealed class ValidationResult
 {
-    public static readonly ValidationResult Valid = new([]);
+        /// <summary>
+    /// Valid.
+    /// </summary>
+public static readonly ValidationResult Valid = new([]);
 
-    public IReadOnlyList<ValidationError> Errors { get; }
-    public bool IsValid => Errors.Count == 0;
+        /// <summary>
+    /// Gets or sets the Errors.
+    /// </summary>
+public IReadOnlyList<ValidationError> Errors { get; }
+        /// <summary>
+    /// Gets or sets the Is Valid.
+    /// </summary>
+public bool IsValid => Errors.Count == 0;
 
     internal ValidationResult(IEnumerable<ValidationError> errors)
         => Errors = errors.ToList().AsReadOnly();
@@ -17,6 +29,9 @@ public sealed class ValidationResult
         return this;
     }
 
-    public override string ToString()
+        /// <summary>
+    /// ToString method.
+    /// </summary>
+public override string ToString()
         => IsValid ? "Valid" : string.Join("; ", Errors.Select(e => $"{e.Field}: {e.Message}"));
 }

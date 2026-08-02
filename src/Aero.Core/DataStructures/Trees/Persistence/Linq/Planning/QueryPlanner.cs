@@ -4,12 +4,18 @@ using Aero.Core.DataStructures.Trees.Persistence.Linq.Translation;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Linq.Planning;
 
+/// <summary>
+/// Represents a class for QueryPlanner.
+/// </summary>
 public sealed class QueryPlanner<TDocument>(
     IDocumentIndexRegistry<TDocument> registry,
     IQueryDiagnostics? diagnostics = null)
     where TDocument : class
 {
-    public ExecutionPlan<TDocument> Plan(TranslatedQuery<TDocument> query)
+        /// <summary>
+    /// Plan method.
+    /// </summary>
+public ExecutionPlan<TDocument> Plan(TranslatedQuery<TDocument> query)
     {
         var indexSpec = SelectBestIndex(query.Filters);
 
@@ -226,8 +232,17 @@ public sealed class QueryPlanner<TDocument>(
     }
 }
 
+/// <summary>
+/// Defines an interface for IQueryDiagnostics.
+/// </summary>
 public interface IQueryDiagnostics
 {
-    void ReportIndexScan(string collectionName, IndexScanSpec spec, bool hasResidual);
-    void ReportFullScan(string collectionName, object query);
+        /// <summary>
+    /// ReportIndexScan method.
+    /// </summary>
+void ReportIndexScan(string collectionName, IndexScanSpec spec, bool hasResidual);
+        /// <summary>
+    /// ReportFullScan method.
+    /// </summary>
+void ReportFullScan(string collectionName, object query);
 }

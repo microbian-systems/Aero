@@ -1,10 +1,19 @@
-﻿namespace Aero.Core.Converters;
+namespace Aero.Core.Converters;
 
+/// <summary>
+/// Represents a class for StringToLongConverter.
+/// </summary>
 public class StringToLongConverter : JsonConverter<long>
 {
-    public override bool CanConvert(Type t) => t == typeof(long);
+        /// <summary>
+    /// CanConvert method.
+    /// </summary>
+public override bool CanConvert(Type t) => t == typeof(long);
 
-    public override long Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        /// <summary>
+    /// Read method.
+    /// </summary>
+public override long Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var value = reader.GetString();
         long l;
@@ -16,11 +25,17 @@ public class StringToLongConverter : JsonConverter<long>
         throw new Exception("Cannot unmarshal type long");
     }
 
-    public override void Write(Utf8JsonWriter writer, long value, JsonSerializerOptions options)
+        /// <summary>
+    /// Write method.
+    /// </summary>
+public override void Write(Utf8JsonWriter writer, long value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value.ToString(), options);
         return;
     }
 
-    public static readonly StringToLongConverter Singleton = new StringToLongConverter();
+        /// <summary>
+    /// Singleton.
+    /// </summary>
+public static readonly StringToLongConverter Singleton = new StringToLongConverter();
 }

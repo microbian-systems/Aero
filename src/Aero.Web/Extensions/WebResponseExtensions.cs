@@ -1,13 +1,22 @@
-﻿using Aero.Models;
+using Aero.Models;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for WebResponseExtensions.
+/// </summary>
 public static class WebResponseExtensions
 {
-    public static WebResponseModel<T> As<T>(this IWebResponseModel model)
+        /// <summary>
+    /// As method.
+    /// </summary>
+public static WebResponseModel<T> As<T>(this IWebResponseModel model)
         where T : class => (WebResponseModel<T>)model;
 
-    public static Task<WebResponseModel> ToWebResponseModel(this HttpResponseMessage response)
+        /// <summary>
+    /// ToWebResponseModel method.
+    /// </summary>
+public static Task<WebResponseModel> ToWebResponseModel(this HttpResponseMessage response)
     {
         var webResponse = new WebResponseModel
         {
@@ -19,7 +28,10 @@ public static class WebResponseExtensions
         return Task.FromResult(webResponse);
     }
 
-    public static async Task<IWebResponseModel<T>> ToWebResponseModel<T>(this HttpResponseMessage response)
+        /// <summary>
+    /// ToWebResponseModel method.
+    /// </summary>
+public static async Task<IWebResponseModel<T>> ToWebResponseModel<T>(this HttpResponseMessage response)
         where T : class
     {
         return new WebResponseModel<T>
@@ -32,7 +44,10 @@ public static class WebResponseExtensions
     }
 
 
-    public static async Task<IWebResponseCollectionModel<TType>> ToWebResponseCollectionModel<TType>
+        /// <summary>
+    /// ToWebResponseCollectionModel method.
+    /// </summary>
+public static async Task<IWebResponseCollectionModel<TType>> ToWebResponseCollectionModel<TType>
         (this HttpResponseMessage response)
     {
         return new WebResponseCollectionModel<TType>

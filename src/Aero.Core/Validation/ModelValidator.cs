@@ -5,7 +5,10 @@ namespace Aero.Core.Validation;
 /// <summary>Non-generic factory so callers don't have to specify the type explicitly.</summary>
 public static class ModelValidator
 {
-    public static ModelValidator<T> For<T>(T model) => ModelValidator<T>.For(model);
+        /// <summary>
+    /// For method.
+    /// </summary>
+public static ModelValidator<T> For<T>(T model) => ModelValidator<T>.For(model);
 }
 
 /// <summary>
@@ -32,7 +35,10 @@ public sealed class ModelValidator<T>
 
     private ModelValidator(T model) => _model = model;
 
-    public static ModelValidator<T> For(T model) => new(model);
+        /// <summary>
+    /// For method.
+    /// </summary>
+public static ModelValidator<T> For(T model) => new(model);
 
     /// <summary>
     /// Begins a rule chain for the specified string property.

@@ -3,15 +3,24 @@ using Aero.Core;
 namespace Aero.Services;
 
 
+/// <summary>
+/// Represents a class for AeroJwtValidationService.
+/// </summary>
 public class AeroJwtValidationService(
     IOptions<AppSettings> settings,
     ILogger<AeroJwtValidationService> log)
     : ITokenValidationService
 {
-    public readonly AppSettings settings = settings.Value;
+        /// <summary>
+    /// settings.
+    /// </summary>
+public readonly AppSettings settings = settings.Value;
 
 
-    public string GenerateRefreshToken()
+        /// <summary>
+    /// GenerateRefreshToken method.
+    /// </summary>
+public string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
         using var rng = RandomNumberGenerator.Create();
@@ -21,7 +30,10 @@ public class AeroJwtValidationService(
         return Convert.ToBase64String(randomNumber);
     }
 
-    public string GenerateToken<T>(T user, IEnumerable<Claim> roles) where T : AeroUser
+        /// <summary>
+    /// GenerateToken method.
+    /// </summary>
+public string GenerateToken<T>(T user, IEnumerable<Claim> roles) where T : AeroUser
     {
         var claims = new ClaimsIdentity(new Claim[]
         {
@@ -52,7 +64,10 @@ public class AeroJwtValidationService(
         return jwt;
     }
 
-    public WebResponse<bool> ValidateToken(string token)
+        /// <summary>
+    /// ValidateToken method.
+    /// </summary>
+public WebResponse<bool> ValidateToken(string token)
     {
         var message = "token is valid";
 
@@ -87,7 +102,10 @@ public class AeroJwtValidationService(
         return result;
     }
 
-    public (ClaimsPrincipal principle, SecurityToken validated) GetSecurityAndPrinciple(string token)
+        /// <summary>
+    /// GetSecurityAndPrinciple method.
+    /// </summary>
+public (ClaimsPrincipal principle, SecurityToken validated) GetSecurityAndPrinciple(string token)
     {
         var jwtkey = Encoding.UTF8.GetBytes(settings?.Secret);
         var handler = new JwtSecurityTokenHandler();
@@ -114,12 +132,18 @@ public class AeroJwtValidationService(
         return (principle, validated);
     }
 
-    public string GetRefreshToken(string id)
+        /// <summary>
+    /// GetRefreshToken method.
+    /// </summary>
+public string GetRefreshToken(string id)
     {
         return ""; // todo - implement AeroTokenValidator.GetRefreshToken() method
     }
 
-    public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        /// <summary>
+    /// GetPrincipalFromExpiredToken method.
+    /// </summary>
+public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {

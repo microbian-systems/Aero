@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Aero.Core.Extensions;
 using Aero.Core.Helpers;
 using Microsoft.WindowsAzure.Storage;
@@ -6,17 +6,26 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Aero.Core;
 
+/// <summary>
+/// Represents a class for AzureBlobStorageClient.
+/// </summary>
 public class AzureBlobStorageClient(ILogger<AzureBlobStorageClient> log) : IBlobStorageClient
 {
 
     // ?? JobLog.GetLog();
 
     // todo - convert MemorySTream to Stream
-    public void Post(MemoryStream ms, string filename, bool compress = true) =>
+        /// <summary>
+    /// Post method.
+    /// </summary>
+public void Post(MemoryStream ms, string filename, bool compress = true) =>
         PostAsync(ms, filename, Config.GetStorageConnectionString(),
             Config.GetSetting("FeedContainer"), compress).GetAwaiter().GetResult();
 
-    public async Task PostAsync(MemoryStream ms, string filename, string connString, string path, bool compress = true, string contentType = "text/xml", bool forceLowerCase = true)
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public async Task PostAsync(MemoryStream ms, string filename, string connString, string path, bool compress = true, string contentType = "text/xml", bool forceLowerCase = true)
     {
         if (forceLowerCase)
             filename = filename.ToLower(CultureInfo.InvariantCulture); // filenames are case sensitive
@@ -62,7 +71,10 @@ public class AzureBlobStorageClient(ILogger<AzureBlobStorageClient> log) : IBlob
 
 
 
-    protected BlobStoragePath ParseContainerPath(string path)
+        /// <summary>
+    /// ParseContainerPath method.
+    /// </summary>
+protected BlobStoragePath ParseContainerPath(string path)
     {
         var paths = path.Replace("//", "/")
             .StripTrailingBackSlash()

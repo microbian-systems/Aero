@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Providers;
 
+/// <summary>
+/// Represents a class for XProviderTests.
+/// </summary>
 public class XProviderTests : ProviderTestBase
 {
     private readonly Mock<ILogger<XProvider>> _loggerMock = new();
@@ -24,7 +27,10 @@ public class XProviderTests : ProviderTestBase
         return new XProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Test]
+        /// <summary>
+    /// Provider_ShouldHaveCorrectIdentifier method.
+    /// </summary>
+[Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -35,7 +41,10 @@ public class XProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxLength_ShouldReturn200ForFree method.
+    /// </summary>
+[Test]
     public void MaxLength_ShouldReturn200ForFree()
     {
         var provider = CreateProvider();
@@ -43,7 +52,10 @@ public class XProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(200);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxLength_ShouldReturn4000ForPremium method.
+    /// </summary>
+[Test]
     public void MaxLength_ShouldReturn4000ForPremium()
     {
         var provider = CreateProvider();
@@ -51,7 +63,10 @@ public class XProviderTests : ProviderTestBase
         provider.MaxLength(true).ShouldBe(4000);
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_ShouldReturnValidUrl method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         HttpHandler.WhenPost("*request_token*")
@@ -69,7 +84,10 @@ public class XProviderTests : ProviderTestBase
         result.State.ShouldNotBeNullOrEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// AuthenticateAsync_ShouldReturnTokenDetails method.
+    /// </summary>
+[Test]
     public async Task AuthenticateAsync_ShouldReturnTokenDetails()
     {
         HttpHandler.WhenPost("*access_token*")
@@ -89,7 +107,10 @@ public class XProviderTests : ProviderTestBase
         value.Name.ShouldBe("Test User");
     }
 
-    [Test]
+        /// <summary>
+    /// RefreshTokenAsync_ShouldReturnEmptyToken method.
+    /// </summary>
+[Test]
     public async Task RefreshTokenAsync_ShouldReturnEmptyToken()
     {
         var provider = CreateProvider();

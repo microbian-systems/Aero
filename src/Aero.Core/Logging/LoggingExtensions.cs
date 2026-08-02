@@ -1,12 +1,21 @@
-﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Aero.Core.Logging;
 
+/// <summary>
+/// Represents a class for LoggingExtensions.
+/// </summary>
 public static class LoggingExtensions
 {
-    public static string LogOutputTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
-    public static IHostApplicationBuilder AddAeroLogging(this IHostApplicationBuilder builder, string logPrefix = "aero")
+        /// <summary>
+    /// LogOutputTemplate.
+    /// </summary>
+public static string LogOutputTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
+        /// <summary>
+    /// AddAeroLogging method.
+    /// </summary>
+public static IHostApplicationBuilder AddAeroLogging(this IHostApplicationBuilder builder, string logPrefix = "aero")
     {
         // todo - enable the ability to toggle on/off file logging via param via appsettings.json
         // 1. Setup the Serilog Bootstrap logger (same as before)

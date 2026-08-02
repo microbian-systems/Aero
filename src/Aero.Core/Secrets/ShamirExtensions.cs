@@ -1,14 +1,23 @@
-﻿namespace Aero.Core.Secrets;
+namespace Aero.Core.Secrets;
 
+/// <summary>
+/// Represents a class for ShamirExtensions.
+/// </summary>
 public static class ShamirExtensions
 {
-    public static string Deconstruct(this ISecretManager manager, byte[] secret)
+        /// <summary>
+    /// Deconstruct method.
+    /// </summary>
+public static string Deconstruct(this ISecretManager manager, byte[] secret)
     {
         var result = Encoding.UTF8.GetString(secret);
         return result;
     }
 
-    public static string Deconstruct(this IEncryptingSecretManager manager, byte[] secret)
+        /// <summary>
+    /// Deconstruct method.
+    /// </summary>
+public static string Deconstruct(this IEncryptingSecretManager manager, byte[] secret)
     {
         var result = Encoding.UTF8.GetString(secret);
         return result;

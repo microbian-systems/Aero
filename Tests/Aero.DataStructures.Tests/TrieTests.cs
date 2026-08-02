@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for TrieTests.
+/// </summary>
 public class TrieTests
 {
-    [Test]
+        /// <summary>
+    /// Insert_And_Search_Success method.
+    /// </summary>
+[Test]
     public void Insert_And_Search_Success()
     {
         // Arrange
@@ -20,7 +26,10 @@ public class TrieTests
         trie.Search("appl").ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// StartsWith_Success method.
+    /// </summary>
+[Test]
     public void StartsWith_Success()
     {
         // Arrange
@@ -35,7 +44,10 @@ public class TrieTests
         trie.StartsWith("can").ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// Delete_And_Search_Fails method.
+    /// </summary>
+[Test]
     public void Delete_And_Search_Fails()
     {
         // Arrange

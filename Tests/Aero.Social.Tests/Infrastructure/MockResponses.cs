@@ -3,11 +3,20 @@ using System.Text.Json.Serialization;
 
 namespace Aero.Social.Tests.Infrastructure;
 
+/// <summary>
+/// Represents a class for MockResponses.
+/// </summary>
 public static class MockResponses
 {
-    public static class OAuth2
+        /// <summary>
+    /// Represents a class for OAuth2.
+    /// </summary>
+public static class OAuth2
     {
-        public static string TokenResponse(string accessToken, string refreshToken = "mock_refresh_token", int expiresIn = 3600)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string accessToken, string refreshToken = "mock_refresh_token", int expiresIn = 3600)
         {
             return JsonSerializer.Serialize(new
             {
@@ -18,7 +27,10 @@ public static class MockResponses
             });
         }
 
-        public static string ErrorResponse(string error, string description)
+                /// <summary>
+        /// ErrorResponse method.
+        /// </summary>
+public static string ErrorResponse(string error, string description)
         {
             return JsonSerializer.Serialize(new
             {
@@ -28,9 +40,15 @@ public static class MockResponses
         }
     }
 
-    public static class Facebook
+        /// <summary>
+    /// Represents a class for Facebook.
+    /// </summary>
+public static class Facebook
     {
-        public static string TokenResponse(string accessToken)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string accessToken)
         {
             return JsonSerializer.Serialize(new
             {
@@ -40,7 +58,10 @@ public static class MockResponses
             });
         }
 
-        public static string UserInfoResponse(string id, string name, string picture = "https://example.com/pic.jpg")
+                /// <summary>
+        /// UserInfoResponse method.
+        /// </summary>
+public static string UserInfoResponse(string id, string name, string picture = "https://example.com/pic.jpg")
         {
             return JsonSerializer.Serialize(new
             {
@@ -53,7 +74,10 @@ public static class MockResponses
             });
         }
 
-        public static string PagesResponse(params (string Id, string Name, string AccessToken)[] pages)
+                /// <summary>
+        /// PagesResponse method.
+        /// </summary>
+public static string PagesResponse(params (string Id, string Name, string AccessToken)[] pages)
         {
             return JsonSerializer.Serialize(new
             {
@@ -66,7 +90,10 @@ public static class MockResponses
             });
         }
 
-        public static string PermissionsResponse(params string[] granted)
+                /// <summary>
+        /// PermissionsResponse method.
+        /// </summary>
+public static string PermissionsResponse(params string[] granted)
         {
             return JsonSerializer.Serialize(new
             {
@@ -74,12 +101,18 @@ public static class MockResponses
             });
         }
 
-        public static string PostResponse(string postId)
+                /// <summary>
+        /// PostResponse method.
+        /// </summary>
+public static string PostResponse(string postId)
         {
             return JsonSerializer.Serialize(new { id = postId });
         }
 
-        public static string ErrorResponse(int code, string message, string type = "OAuthException")
+                /// <summary>
+        /// ErrorResponse method.
+        /// </summary>
+public static string ErrorResponse(int code, string message, string type = "OAuthException")
         {
             return JsonSerializer.Serialize(new
             {
@@ -93,9 +126,15 @@ public static class MockResponses
         }
     }
 
-    public static class LinkedIn
+        /// <summary>
+    /// Represents a class for LinkedIn.
+    /// </summary>
+public static class LinkedIn
     {
-        public static string TokenResponse(string accessToken)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string accessToken)
         {
             return JsonSerializer.Serialize(new
             {
@@ -106,7 +145,10 @@ public static class MockResponses
             });
         }
 
-        public static string UserProfileResponse(string id, string name, string picture = "")
+                /// <summary>
+        /// UserProfileResponse method.
+        /// </summary>
+public static string UserProfileResponse(string id, string name, string picture = "")
         {
             return JsonSerializer.Serialize(new
             {
@@ -122,7 +164,10 @@ public static class MockResponses
             });
         }
 
-        public static string PostResponse(string postId, string urn)
+                /// <summary>
+        /// PostResponse method.
+        /// </summary>
+public static string PostResponse(string postId, string urn)
         {
             return JsonSerializer.Serialize(new
             {
@@ -132,9 +177,15 @@ public static class MockResponses
         }
     }
 
-    public static class Instagram
+        /// <summary>
+    /// Represents a class for Instagram.
+    /// </summary>
+public static class Instagram
     {
-        public static string TokenResponse(string accessToken, string userId)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string accessToken, string userId)
         {
             return JsonSerializer.Serialize(new
             {
@@ -143,7 +194,10 @@ public static class MockResponses
             });
         }
 
-        public static string UserInfoResponse(string id, string username)
+                /// <summary>
+        /// UserInfoResponse method.
+        /// </summary>
+public static string UserInfoResponse(string id, string username)
         {
             return JsonSerializer.Serialize(new
             {
@@ -153,25 +207,40 @@ public static class MockResponses
             });
         }
 
-        public static string MediaResponse(string containerId)
+                /// <summary>
+        /// MediaResponse method.
+        /// </summary>
+public static string MediaResponse(string containerId)
         {
             return JsonSerializer.Serialize(new { id = containerId });
         }
 
-        public static string PublishResponse(string mediaId)
+                /// <summary>
+        /// PublishResponse method.
+        /// </summary>
+public static string PublishResponse(string mediaId)
         {
             return JsonSerializer.Serialize(new { id = mediaId });
         }
     }
 
-    public static class X
+        /// <summary>
+    /// Represents a class for X.
+    /// </summary>
+public static class X
     {
-        public static string TokenResponse(string token, string tokenSecret)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string token, string tokenSecret)
         {
             return $"oauth_token={token}&oauth_token_secret={tokenSecret}";
         }
 
-        public static string UserInfoResponse(long id, string name, string screenName)
+                /// <summary>
+        /// UserInfoResponse method.
+        /// </summary>
+public static string UserInfoResponse(long id, string name, string screenName)
         {
             return JsonSerializer.Serialize(new
             {
@@ -181,7 +250,10 @@ public static class MockResponses
             });
         }
 
-        public static string TweetResponse(long id, string text)
+                /// <summary>
+        /// TweetResponse method.
+        /// </summary>
+public static string TweetResponse(long id, string text)
         {
             return JsonSerializer.Serialize(new
             {
@@ -194,9 +266,15 @@ public static class MockResponses
         }
     }
 
-    public static class Reddit
+        /// <summary>
+    /// Represents a class for Reddit.
+    /// </summary>
+public static class Reddit
     {
-        public static string TokenResponse(string accessToken)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string accessToken)
         {
             return JsonSerializer.Serialize(new
             {
@@ -207,7 +285,10 @@ public static class MockResponses
             });
         }
 
-        public static string UserInfoResponse(string name, string id)
+                /// <summary>
+        /// UserInfoResponse method.
+        /// </summary>
+public static string UserInfoResponse(string name, string id)
         {
             return JsonSerializer.Serialize(new
             {
@@ -217,7 +298,10 @@ public static class MockResponses
             });
         }
 
-        public static string SubmitResponse(string name, string url)
+                /// <summary>
+        /// SubmitResponse method.
+        /// </summary>
+public static string SubmitResponse(string name, string url)
         {
             return JsonSerializer.Serialize(new
             {
@@ -233,9 +317,15 @@ public static class MockResponses
         }
     }
 
-    public static class TikTok
+        /// <summary>
+    /// Represents a class for TikTok.
+    /// </summary>
+public static class TikTok
     {
-        public static string TokenResponse(string accessToken, string refreshToken)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string accessToken, string refreshToken)
         {
             return JsonSerializer.Serialize(new
             {
@@ -246,7 +336,10 @@ public static class MockResponses
             });
         }
 
-        public static string UserInfoResponse(string openId, string unionId, string displayName)
+                /// <summary>
+        /// UserInfoResponse method.
+        /// </summary>
+public static string UserInfoResponse(string openId, string unionId, string displayName)
         {
             return JsonSerializer.Serialize(new
             {
@@ -263,9 +356,15 @@ public static class MockResponses
         }
     }
 
-    public static class YouTube
+        /// <summary>
+    /// Represents a class for YouTube.
+    /// </summary>
+public static class YouTube
     {
-        public static string ChannelResponse(string id, string title)
+                /// <summary>
+        /// ChannelResponse method.
+        /// </summary>
+public static string ChannelResponse(string id, string title)
         {
             return JsonSerializer.Serialize(new
             {
@@ -284,7 +383,10 @@ public static class MockResponses
             });
         }
 
-        public static string VideoResponse(string id, string title)
+                /// <summary>
+        /// VideoResponse method.
+        /// </summary>
+public static string VideoResponse(string id, string title)
         {
             return JsonSerializer.Serialize(new
             {
@@ -294,9 +396,15 @@ public static class MockResponses
         }
     }
 
-    public static class Discord
+        /// <summary>
+    /// Represents a class for Discord.
+    /// </summary>
+public static class Discord
     {
-        public static string UserInfoResponse(string id, string username, string discriminator = "0001")
+                /// <summary>
+        /// UserInfoResponse method.
+        /// </summary>
+public static string UserInfoResponse(string id, string username, string discriminator = "0001")
         {
             return JsonSerializer.Serialize(new
             {
@@ -307,7 +415,10 @@ public static class MockResponses
             });
         }
 
-        public static string GuildResponse(string id, string name)
+                /// <summary>
+        /// GuildResponse method.
+        /// </summary>
+public static string GuildResponse(string id, string name)
         {
             return JsonSerializer.Serialize(new
             {
@@ -317,12 +428,18 @@ public static class MockResponses
             });
         }
 
-        public static string ChannelResponse(string id, string name)
+                /// <summary>
+        /// ChannelResponse method.
+        /// </summary>
+public static string ChannelResponse(string id, string name)
         {
             return JsonSerializer.Serialize(new { id, name });
         }
 
-        public static string MessageResponse(string id, string content)
+                /// <summary>
+        /// MessageResponse method.
+        /// </summary>
+public static string MessageResponse(string id, string content)
         {
             return JsonSerializer.Serialize(new
             {
@@ -333,9 +450,15 @@ public static class MockResponses
         }
     }
 
-    public static class Telegram
+        /// <summary>
+    /// Represents a class for Telegram.
+    /// </summary>
+public static class Telegram
     {
-        public static string MeResponse(string botUsername)
+                /// <summary>
+        /// MeResponse method.
+        /// </summary>
+public static string MeResponse(string botUsername)
         {
             return JsonSerializer.Serialize(new
             {
@@ -350,7 +473,10 @@ public static class MockResponses
             });
         }
 
-        public static string SendMessageResponse(int messageId, int chatId)
+                /// <summary>
+        /// SendMessageResponse method.
+        /// </summary>
+public static string SendMessageResponse(int messageId, int chatId)
         {
             return JsonSerializer.Serialize(new
             {
@@ -364,7 +490,10 @@ public static class MockResponses
             });
         }
 
-        public static string ErrorResponse(int errorCode, string description)
+                /// <summary>
+        /// ErrorResponse method.
+        /// </summary>
+public static string ErrorResponse(int errorCode, string description)
         {
             return JsonSerializer.Serialize(new
             {
@@ -375,9 +504,15 @@ public static class MockResponses
         }
     }
 
-    public static class Bluesky
+        /// <summary>
+    /// Represents a class for Bluesky.
+    /// </summary>
+public static class Bluesky
     {
-        public static string SessionResponse(string did, string handle, string accessJwt)
+                /// <summary>
+        /// SessionResponse method.
+        /// </summary>
+public static string SessionResponse(string did, string handle, string accessJwt)
         {
             return JsonSerializer.Serialize(new
             {
@@ -387,7 +522,10 @@ public static class MockResponses
             });
         }
 
-        public static string ResolveHandleResponse(string did)
+                /// <summary>
+        /// ResolveHandleResponse method.
+        /// </summary>
+public static string ResolveHandleResponse(string did)
         {
             return JsonSerializer.Serialize(new
             {
@@ -395,7 +533,10 @@ public static class MockResponses
             });
         }
 
-        public static string CreateRecordResponse(string uri, string cid)
+                /// <summary>
+        /// CreateRecordResponse method.
+        /// </summary>
+public static string CreateRecordResponse(string uri, string cid)
         {
             return JsonSerializer.Serialize(new
             {
@@ -405,9 +546,15 @@ public static class MockResponses
         }
     }
 
-    public static class Mastodon
+        /// <summary>
+    /// Represents a class for Mastodon.
+    /// </summary>
+public static class Mastodon
     {
-        public static string InstanceResponse(string domain)
+                /// <summary>
+        /// InstanceResponse method.
+        /// </summary>
+public static string InstanceResponse(string domain)
         {
             return JsonSerializer.Serialize(new
             {
@@ -416,7 +563,10 @@ public static class MockResponses
             });
         }
 
-        public static string TokenResponse(string accessToken)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string accessToken)
         {
             return JsonSerializer.Serialize(new
             {
@@ -427,7 +577,10 @@ public static class MockResponses
             });
         }
 
-        public static string AccountResponse(string id, string username, string displayName)
+                /// <summary>
+        /// AccountResponse method.
+        /// </summary>
+public static string AccountResponse(string id, string username, string displayName)
         {
             return JsonSerializer.Serialize(new
             {
@@ -438,7 +591,10 @@ public static class MockResponses
             });
         }
 
-        public static string StatusResponse(string id, string content)
+                /// <summary>
+        /// StatusResponse method.
+        /// </summary>
+public static string StatusResponse(string id, string content)
         {
             return JsonSerializer.Serialize(new
             {
@@ -449,9 +605,15 @@ public static class MockResponses
         }
     }
 
-    public static class Threads
+        /// <summary>
+    /// Represents a class for Threads.
+    /// </summary>
+public static class Threads
     {
-        public static string TokenResponse(string accessToken)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string accessToken)
         {
             return JsonSerializer.Serialize(new
             {
@@ -460,7 +622,10 @@ public static class MockResponses
             });
         }
 
-        public static string UserInfoResponse(string id, string username)
+                /// <summary>
+        /// UserInfoResponse method.
+        /// </summary>
+public static string UserInfoResponse(string id, string username)
         {
             return JsonSerializer.Serialize(new
             {
@@ -470,20 +635,32 @@ public static class MockResponses
             });
         }
 
-        public static string ContainerResponse(string id)
+                /// <summary>
+        /// ContainerResponse method.
+        /// </summary>
+public static string ContainerResponse(string id)
         {
             return JsonSerializer.Serialize(new { id });
         }
 
-        public static string PublishResponse(string id)
+                /// <summary>
+        /// PublishResponse method.
+        /// </summary>
+public static string PublishResponse(string id)
         {
             return JsonSerializer.Serialize(new { id });
         }
     }
 
-    public static class Pinterest
+        /// <summary>
+    /// Represents a class for Pinterest.
+    /// </summary>
+public static class Pinterest
     {
-        public static string TokenResponse(string accessToken, string refreshToken)
+                /// <summary>
+        /// TokenResponse method.
+        /// </summary>
+public static string TokenResponse(string accessToken, string refreshToken)
         {
             return JsonSerializer.Serialize(new
             {
@@ -494,7 +671,10 @@ public static class MockResponses
             });
         }
 
-        public static string UserResponse(string id, string username)
+                /// <summary>
+        /// UserResponse method.
+        /// </summary>
+public static string UserResponse(string id, string username)
         {
             return JsonSerializer.Serialize(new
             {
@@ -504,7 +684,10 @@ public static class MockResponses
             });
         }
 
-        public static string BoardResponse(string id, string name)
+                /// <summary>
+        /// BoardResponse method.
+        /// </summary>
+public static string BoardResponse(string id, string name)
         {
             return JsonSerializer.Serialize(new
             {
@@ -513,7 +696,10 @@ public static class MockResponses
             });
         }
 
-        public static string PinResponse(string id)
+                /// <summary>
+        /// PinResponse method.
+        /// </summary>
+public static string PinResponse(string id)
         {
             return JsonSerializer.Serialize(new { id });
         }

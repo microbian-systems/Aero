@@ -510,76 +510,121 @@ public class FacebookProvider(
 
     private class FacebookAccessTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int? ExpiresIn { get; set; }
     }
 
     private class FacebookPermissionsResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public List<FacebookPermission> Data { get; set; } = new();
     }
 
     private class FacebookPermission
     {
-        [JsonPropertyName("permission")]
+                /// <summary>
+        /// Gets or sets the Permission.
+        /// </summary>
+[JsonPropertyName("permission")]
         public string Permission { get; set; } = string.Empty;
 
-        [JsonPropertyName("status")]
+                /// <summary>
+        /// Gets or sets the Status.
+        /// </summary>
+[JsonPropertyName("status")]
         public string Status { get; set; } = string.Empty;
     }
 
     private class FacebookUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("picture")]
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+[JsonPropertyName("picture")]
         public FacebookPicture? Picture { get; set; }
     }
 
     private class FacebookPicture
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public FacebookPictureData? Data { get; set; }
     }
 
     private class FacebookPictureData
     {
-        [JsonPropertyName("url")]
+                /// <summary>
+        /// Gets or sets the Url.
+        /// </summary>
+[JsonPropertyName("url")]
         public string? Url { get; set; }
     }
 
     private class FacebookPostResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("permalink_url")]
+                /// <summary>
+        /// Gets or sets the Permalink Url.
+        /// </summary>
+[JsonPropertyName("permalink_url")]
         public string? PermalinkUrl { get; set; }
     }
 
     private class FacebookVideoResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class FacebookPhotoResponse
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
     }
 
     private class FacebookPagesResponse
     {
-        [JsonPropertyName("data")]
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+[JsonPropertyName("data")]
         public List<FacebookPage>? Data { get; set; }
     }
 
@@ -609,10 +654,16 @@ public class FacebookProvider(
 
     private class FacebookPageDetail : FacebookPage
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("picture")]
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+[JsonPropertyName("picture")]
         public FacebookPicture? Picture { get; set; }
     }
 

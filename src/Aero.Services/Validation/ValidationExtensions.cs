@@ -3,9 +3,15 @@ using FluentValidation;
 
 namespace Aero.Services.Validation;
 
+/// <summary>
+/// Represents a class for ValidationExtensions.
+/// </summary>
 public static class ValidationExtensions
 {
-    public static async Task<ValidationOutcome<T>> ValidateCommandAsync<T>(this IValidator<T> validator, T command)
+        /// <summary>
+    /// ValidateCommandAsync method.
+    /// </summary>
+public static async Task<ValidationOutcome<T>> ValidateCommandAsync<T>(this IValidator<T> validator, T command)
     {
         var result = await validator.ValidateAsync(command);
 

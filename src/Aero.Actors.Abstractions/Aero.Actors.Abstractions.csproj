@@ -1,8 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>Aero.Actors.Abstractions</PackageId>
-    <Version>0.0.6-alpha</Version>
     <Authors>Microbians</Authors>
     <Title>Actors Abstractions for the Aero Web Platform</Title>
     <Description>Abstractions for the Aero actor system</Description>

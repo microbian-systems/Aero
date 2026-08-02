@@ -10,26 +10,50 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for GmbProvider.
+/// </summary>
 public class GmbProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<GmbProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "gmb";
-    public override string Name => "Google My Business";
-    public override string[] Scopes => new[]
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "gmb";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Google My Business";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[]
     {
         "https://www.googleapis.com/auth/userinfo.profile",
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/business.manage"
     };
-    public override int MaxConcurrentJobs => 3;
-    public override bool IsBetweenSteps => true;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 3;
+        /// <summary>
+    /// Gets or sets the Is Between Steps.
+    /// </summary>
+public override bool IsBetweenSteps => true;
 
-    public override int MaxLength(object? additionalSettings = null) => 1500;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 1500;
 
-    protected override ErrorHandlingResult? HandleErrors(string responseBody)
+        /// <summary>
+    /// HandleErrors method.
+    /// </summary>
+protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (responseBody.Contains("UNAUTHENTICATED") || responseBody.Contains("invalid_grant"))
             return new ErrorHandlingResult(ErrorHandlingType.RefreshToken, "Please re-authenticate your Google My Business account");
@@ -52,7 +76,10 @@ public class GmbProvider(
         return null;
     }
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -78,7 +105,10 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -115,7 +145,10 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -148,7 +181,10 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -218,7 +254,10 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails?, AeroError>> ReConnectAsync(
+        /// <summary>
+    /// ReConnectAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails?, AeroError>> ReConnectAsync(
         string id,
         string requiredId,
         string accessToken,
@@ -242,7 +281,10 @@ public class GmbProvider(
         };
     }
 
-    public override async Task<Result<FetchPageInformationResult?, AeroError>> FetchPageInformationAsync(
+        /// <summary>
+    /// FetchPageInformationAsync method.
+    /// </summary>
+public override async Task<Result<FetchPageInformationResult?, AeroError>> FetchPageInformationAsync(
         string accessToken,
         object data,
         CancellationToken cancellationToken = default)
@@ -268,7 +310,10 @@ public class GmbProvider(
         };
     }
 
-    public async Task<List<GmbPage>> GetPagesAsync(string accessToken, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetPagesAsync method.
+    /// </summary>
+public async Task<List<GmbPage>> GetPagesAsync(string accessToken, CancellationToken cancellationToken = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "https://mybusinessaccountmanagement.googleapis.com/v1/accounts");
         request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {accessToken}");
@@ -368,81 +413,147 @@ public class GmbProvider(
 
     private class GoogleTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("refresh_token")]
+                /// <summary>
+        /// Gets or sets the Refresh Token.
+        /// </summary>
+[JsonPropertyName("refresh_token")]
         public string? RefreshToken { get; set; }
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int ExpiresIn { get; set; }
     }
 
     private class GmbUserInfo
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string Id { get; set; } = string.Empty;
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string Name { get; set; } = string.Empty;
 
-        [JsonPropertyName("picture")]
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+[JsonPropertyName("picture")]
         public string? Picture { get; set; }
     }
 
     private class GmbPostResponse
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
     }
 
     private class GmbAccountsResponse
     {
-        [JsonPropertyName("accounts")]
+                /// <summary>
+        /// Gets or sets the Accounts.
+        /// </summary>
+[JsonPropertyName("accounts")]
         public List<GmbAccount>? Accounts { get; set; }
     }
 
     private class GmbAccount
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
     }
 
     private class GmbLocationsResponse
     {
-        [JsonPropertyName("locations")]
+                /// <summary>
+        /// Gets or sets the Locations.
+        /// </summary>
+[JsonPropertyName("locations")]
         public List<GmbLocation>? Locations { get; set; }
     }
 
     private class GmbLocation
     {
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
 
-        [JsonPropertyName("title")]
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+[JsonPropertyName("title")]
         public string? Title { get; set; }
     }
 
     private class GmbLocationResponse
     {
-        [JsonPropertyName("title")]
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+[JsonPropertyName("title")]
         public string? Title { get; set; }
     }
 
-    public class GmbPage
+        /// <summary>
+    /// Represents a class for GmbPage.
+    /// </summary>
+public class GmbPage
     {
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string AccountName { get; set; } = string.Empty;
-        public string LocationName { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Account Name.
+        /// </summary>
+public string AccountName { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Location Name.
+        /// </summary>
+public string LocationName { get; set; } = string.Empty;
     }
 
     private class GmbPageInfo
     {
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string AccessToken { get; set; } = string.Empty;
-        public string? Picture { get; set; }
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+public string AccessToken { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Picture.
+        /// </summary>
+public string? Picture { get; set; }
     }
 
     //#endregion

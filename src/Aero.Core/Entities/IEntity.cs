@@ -2,22 +2,43 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Aero.Core.Entities;
 
+/// <summary>
+/// Defines an interface for IEntity.
+/// </summary>
 public interface IEntity : ISnowflakeEntity;
+/// <summary>
+/// Defines an interface for IEntity.
+/// </summary>
 public interface IEntity<TKey> where TKey : IEquatable<TKey>
 {
-    [Key] [JsonPropertyName("id")]
+        /// <summary>
+    /// Gets or sets the Id.
+    /// </summary>
+[Key] [JsonPropertyName("id")]
     TKey Id { get; set; }
 
-    [JsonPropertyName("created_on")]
+        /// <summary>
+    /// Gets or sets the Created On.
+    /// </summary>
+[JsonPropertyName("created_on")]
     public DateTimeOffset CreatedOn { get; set; }
 
-    [JsonPropertyName("modified_on")]
+        /// <summary>
+    /// Gets or sets the Modified On.
+    /// </summary>
+[JsonPropertyName("modified_on")]
     public DateTimeOffset? ModifiedOn { get; set; }
 
-    [JsonPropertyName("created_by")]
+        /// <summary>
+    /// Gets or sets the Created By.
+    /// </summary>
+[JsonPropertyName("created_by")]
     public string CreatedBy { get; set; }
 
-    [JsonPropertyName("modified_by")]
+        /// <summary>
+    /// Gets or sets the Modified By.
+    /// </summary>
+[JsonPropertyName("modified_by")]
     public string ModifiedBy { get; set; }
 }
 
@@ -41,19 +62,34 @@ public abstract class Entity<TKey> : EntityBase<TKey> where TKey : IEquatable<TK
 public abstract class EntityBase<TKey> : IEntity<TKey>
     where TKey : IEquatable<TKey>
 {
-    [Key]
+        /// <summary>
+    /// Gets or sets the Id.
+    /// </summary>
+[Key]
     [JsonPropertyName("id")]
     public TKey Id { get; set; }
 
-    [JsonPropertyName("created_on")]
+        /// <summary>
+    /// Gets or sets the Created On.
+    /// </summary>
+[JsonPropertyName("created_on")]
     public DateTimeOffset CreatedOn { get; set; } = DateTimeOffset.UtcNow;
 
-    [JsonPropertyName("modified_on")]
+        /// <summary>
+    /// Gets or sets the Modified On.
+    /// </summary>
+[JsonPropertyName("modified_on")]
     public DateTimeOffset? ModifiedOn { get; set; }
 
-    [JsonPropertyName("created_by")]
+        /// <summary>
+    /// Gets or sets the Created By.
+    /// </summary>
+[JsonPropertyName("created_by")]
     public string CreatedBy { get; set; }
 
-    [JsonPropertyName("updated_by")]
+        /// <summary>
+    /// Gets or sets the Modified By.
+    /// </summary>
+[JsonPropertyName("updated_by")]
     public string ModifiedBy { get; set; }
 }

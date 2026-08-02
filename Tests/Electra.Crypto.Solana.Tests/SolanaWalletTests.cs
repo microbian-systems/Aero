@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Electra.Crypto.Solana;
 using Electra.Crypto.Solana.Utilities;
 using FluentAssertions;
@@ -17,18 +17,27 @@ using Solnet.Rpc.Types;
 
 namespace Electra.Crypto.Solana.Tests;
 
+/// <summary>
+/// Represents a class for SolanaWalletTests.
+/// </summary>
 public class SolanaWalletTests
 {
     private readonly IRpcClient _mockRpcClient;
     private readonly ITokenMintResolver _mockTokenMintResolver;
 
-    public SolanaWalletTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="SolanaWalletTests"/> class.
+    /// </summary>
+public SolanaWalletTests()
     {
         _mockRpcClient = Substitute.For<IRpcClient>();
         _mockTokenMintResolver = Substitute.For<ITokenMintResolver>();
     }
 
-    [Test]
+        /// <summary>
+    /// Create_WithValidParameters_ShouldReturnWallet method.
+    /// </summary>
+[Test]
     public void Create_WithValidParameters_ShouldReturnWallet()
     {
         // Arrange
@@ -52,7 +61,10 @@ public class SolanaWalletTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// ImportFromMnemonic_WithValidMnemonic_ShouldReturnWallet method.
+    /// </summary>
+[Test]
     public void ImportFromMnemonic_WithValidMnemonic_ShouldReturnWallet()
     {
         // Arrange
@@ -75,7 +87,10 @@ public class SolanaWalletTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// Lock_ShouldLockWallet method.
+    /// </summary>
+[Test]
     public async Task Lock_ShouldLockWallet()
     {
         // Arrange
@@ -90,7 +105,10 @@ public class SolanaWalletTests
         wallet.IsLocked.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// UnlockAsync_WithCorrectPassphrase_ShouldUnlockWallet method.
+    /// </summary>
+[Test]
     public async Task UnlockAsync_WithCorrectPassphrase_ShouldUnlockWallet()
     {
         // Arrange
@@ -106,7 +124,10 @@ public class SolanaWalletTests
         // wallet.IsLocked.Should().BeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// GetSolBalanceAsync_WhenUnlocked_ShouldReturnBalance method.
+    /// </summary>
+[Test]
     public async Task GetSolBalanceAsync_WhenUnlocked_ShouldReturnBalance()
     {
         // Arrange
@@ -132,7 +153,10 @@ public class SolanaWalletTests
         result.IfNone(0).Should().Be(1.0m); // 1 SOL
     }
 
-    [Test]
+        /// <summary>
+    /// GetSolBalanceAsync_WhenLocked_ShouldReturnNone method.
+    /// </summary>
+[Test]
     public async Task GetSolBalanceAsync_WhenLocked_ShouldReturnNone()
     {
         // Arrange
@@ -147,7 +171,10 @@ public class SolanaWalletTests
         result.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// GetMnemonic_WhenUnlocked_ShouldReturnMnemonic method.
+    /// </summary>
+[Test]
     public void GetMnemonic_WhenUnlocked_ShouldReturnMnemonic()
     {
         // Arrange
@@ -167,7 +194,10 @@ public class SolanaWalletTests
         words.Length.Should().Be(12);
     }
 
-    [Test]
+        /// <summary>
+    /// GetMnemonic_WhenLocked_ShouldReturnNone method.
+    /// </summary>
+[Test]
     public void GetMnemonic_WhenLocked_ShouldReturnNone()
     {
         // Arrange
@@ -182,7 +212,10 @@ public class SolanaWalletTests
         result.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// SignMessage_WithValidMessage_ShouldReturnSignature method.
+    /// </summary>
+[Test]
     public void SignMessage_WithValidMessage_ShouldReturnSignature()
     {
         // Arrange
@@ -198,7 +231,10 @@ public class SolanaWalletTests
         result.IfNone(Array.Empty<byte>()).Length.Should().Be(64); // Ed25519 signature length
     }
 
-    [Test]
+        /// <summary>
+    /// VerifyMessage_WithValidSignature_ShouldReturnTrue method.
+    /// </summary>
+[Test]
     public void VerifyMessage_WithValidSignature_ShouldReturnTrue()
     {
         // Arrange
@@ -214,7 +250,10 @@ public class SolanaWalletTests
         result.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// Dispose_ShouldLockWallet method.
+    /// </summary>
+[Test]
     public void Dispose_ShouldLockWallet()
     {
         // Arrange
@@ -229,18 +268,27 @@ public class SolanaWalletTests
     }
 }
 
+/// <summary>
+/// Represents a class for BurnerWalletTests.
+/// </summary>
 public class BurnerWalletTests
 {
     private readonly IRpcClient _mockRpcClient;
     private readonly ITokenMintResolver _mockTokenMintResolver;
 
-    public BurnerWalletTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="BurnerWalletTests"/> class.
+    /// </summary>
+public BurnerWalletTests()
     {
         _mockRpcClient = Substitute.For<IRpcClient>();
         _mockTokenMintResolver = Substitute.For<ITokenMintResolver>();
     }
 
-    [Test]
+        /// <summary>
+    /// Create_ShouldReturnBurnerWallet method.
+    /// </summary>
+[Test]
     public void Create_ShouldReturnBurnerWallet()
     {
         // Arrange
@@ -264,7 +312,10 @@ public class BurnerWalletTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// Create_WithoutName_ShouldGenerateDefaultName method.
+    /// </summary>
+[Test]
     public void Create_WithoutName_ShouldGenerateDefaultName()
     {
         // Act
@@ -281,7 +332,10 @@ public class BurnerWalletTests
         ).Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// ExtendLifetimeAsync_ShouldExtendTimeToLive method.
+    /// </summary>
+[Test]
     public async Task ExtendLifetimeAsync_ShouldExtendTimeToLive()
     {
         // Arrange
@@ -298,7 +352,10 @@ public class BurnerWalletTests
         wallet.TimeToLive.Should().Be(originalTtl.Add(extension));
     }
 
-    [Test]
+        /// <summary>
+    /// BurnAsync_ShouldLockWallet method.
+    /// </summary>
+[Test]
     public async Task BurnAsync_ShouldLockWallet()
     {
         // Arrange
@@ -314,9 +371,15 @@ public class BurnerWalletTests
     }
 }
 
+/// <summary>
+/// Represents a class for WalletHelpersTests.
+/// </summary>
 public class WalletHelpersTests
 {
-    [Test]
+        /// <summary>
+    /// IsValidSolanaAddress_ShouldValidateCorrectly method.
+    /// </summary>
+[Test]
     [Arguments("11111111111111111111111111111112", true)]
     [Arguments("So11111111111111111111111111111111111111112", true)]
     [Arguments("invalid-address", false)]
@@ -339,7 +402,10 @@ public class WalletHelpersTests
         }
     }
 
-    [Test]
+        /// <summary>
+    /// IsValidMnemonic_ShouldValidateCorrectly method.
+    /// </summary>
+[Test]
     [Arguments("abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about", true)]
     [Arguments("invalid mnemonic phrase", false)]
     [Arguments("", false)]
@@ -361,7 +427,10 @@ public class WalletHelpersTests
         }
     }
 
-    [Test]
+        /// <summary>
+    /// IsValidWalletName_ShouldValidateCorrectly method.
+    /// </summary>
+[Test]
     [Arguments("ValidWallet123", true)]
     [Arguments("", false)]
     [Arguments("Wallet/With/Invalid*Chars", false)]
@@ -383,7 +452,10 @@ public class WalletHelpersTests
         }
     }
 
-    [Test]
+        /// <summary>
+    /// LamportsToSol_ShouldConvertCorrectly method.
+    /// </summary>
+[Test]
     public void LamportsToSol_ShouldConvertCorrectly()
     {
         // Arrange
@@ -396,7 +468,10 @@ public class WalletHelpersTests
         result.Should().Be(1.5m);
     }
 
-    [Test]
+        /// <summary>
+    /// SolToLamports_ShouldConvertCorrectly method.
+    /// </summary>
+[Test]
     public void SolToLamports_ShouldConvertCorrectly()
     {
         // Arrange
@@ -409,7 +484,10 @@ public class WalletHelpersTests
         result.Should().Be(2_500_000_000UL);
     }
 
-    [Test]
+        /// <summary>
+    /// FormatTokenAmount_ShouldFormatCorrectly method.
+    /// </summary>
+[Test]
     public void FormatTokenAmount_ShouldFormatCorrectly()
     {
         // Arrange
@@ -424,7 +502,10 @@ public class WalletHelpersTests
         result.Should().Be("123.456789 USDC");
     }
 
-    [Test]
+        /// <summary>
+    /// FormatUsdValue_ShouldFormatCorrectly method.
+    /// </summary>
+[Test]
     [Arguments(1234567.89, "$1.23M")]
     [Arguments(12345.67, "$12.35K")]
     [Arguments(123.45, "$123.45")]
@@ -439,7 +520,10 @@ public class WalletHelpersTests
         result.Should().Be(expected);
     }
 
-    [Test]
+        /// <summary>
+    /// TruncateAddress_ShouldTruncateCorrectly method.
+    /// </summary>
+[Test]
     public void TruncateAddress_ShouldTruncateCorrectly()
     {
         // Arrange
@@ -452,7 +536,10 @@ public class WalletHelpersTests
         result.Should().Be("So11...1112");
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateSecurePassphrase_ShouldGenerateValidPassphrase method.
+    /// </summary>
+[Test]
     public void GenerateSecurePassphrase_ShouldGenerateValidPassphrase()
     {
         // Act

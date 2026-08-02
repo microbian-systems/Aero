@@ -5,8 +5,14 @@ namespace Aero.Core.DataStructures.Trees;
 /// </summary>
 public class TrieWordNode(string value) : ITreeNode<string>
 {
-    public string Value { get; set; } = value;
-    public IEnumerable<ITreeNode<string>> Children => Enumerable.Empty<ITreeNode<string>>();
+        /// <summary>
+    /// Gets or sets the Value.
+    /// </summary>
+public string Value { get; set; } = value;
+        /// <summary>
+    /// Gets or sets the Children.
+    /// </summary>
+public IEnumerable<ITreeNode<string>> Children => Enumerable.Empty<ITreeNode<string>>();
 }
 
 /// <summary>

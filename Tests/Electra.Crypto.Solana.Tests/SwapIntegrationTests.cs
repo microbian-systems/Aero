@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using FluentAssertions;
 using LanguageExt;
 using Solnet.Extensions;
@@ -11,6 +11,9 @@ using System.Threading;
 
 namespace Electra.Crypto.Solana.Tests;
 
+/// <summary>
+/// Represents a class for SwapIntegrationTests.
+/// </summary>
 [Collection("Swap Integration Tests")]
 public class SwapIntegrationTests : IAsyncLifetime
 {
@@ -28,7 +31,10 @@ public class SwapIntegrationTests : IAsyncLifetime
     private const string UsdcMintAddress = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"; // USDC mainnet
     private const string BonkMintAddress = "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"; // BONK
 
-    public SwapIntegrationTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="SwapIntegrationTests"/> class.
+    /// </summary>
+public SwapIntegrationTests()
     {
         // Use mainnet for swap tests as testnet may not have sufficient liquidity
         _rpcClient = ClientFactory.GetClient(Cluster.MainNet);
@@ -38,7 +44,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         _walletManager = new SolanaWalletManager(_rpcClient, _tokenMintResolver, _tokenAssetService);
     }
 
-    public async Task InitializeAsync()
+        /// <summary>
+    /// InitializeAsync method.
+    /// </summary>
+public async Task InitializeAsync()
     {
         // Wait for connection
         await Task.Delay(1000);
@@ -48,7 +57,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         health.WasSuccessful.Should().BeTrue("RPC connection should be healthy");
     }
 
-    public Task DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public Task DisposeAsync()
     {
         //_swapService?.Dispose();
         _walletManager?.Dispose();
@@ -56,7 +68,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    [Test]
+        /// <summary>
+    /// GetSwapQuote_SolToUsdc_ShouldReturnValidQuote method.
+    /// </summary>
+[Test]
     public async Task GetSwapQuote_SolToUsdc_ShouldReturnValidQuote()
     {
         // Arrange
@@ -81,7 +96,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Test]
+        /// <summary>
+    /// GetSwapQuote_UsdcToSol_ShouldReturnValidQuote method.
+    /// </summary>
+[Test]
     public async Task GetSwapQuote_UsdcToSol_ShouldReturnValidQuote()
     {
         // Arrange
@@ -106,7 +124,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Test]
+        /// <summary>
+    /// GetSwapQuote_SolToBonk_ShouldReturnValidQuote method.
+    /// </summary>
+[Test]
     public async Task GetSwapQuote_SolToBonk_ShouldReturnValidQuote()
     {
         // Arrange
@@ -130,7 +151,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Test]
+        /// <summary>
+    /// GetSwapRoutes_SolToUsdc_ShouldReturnAvailableRoutes method.
+    /// </summary>
+[Test]
     public async Task GetSwapRoutes_SolToUsdc_ShouldReturnAvailableRoutes()
     {
         // Arrange
@@ -157,7 +181,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Test]
+        /// <summary>
+    /// CreateSwapWallet_ShouldPrepareForSwapOperations method.
+    /// </summary>
+[Test]
     public async Task CreateSwapWallet_ShouldPrepareForSwapOperations()
     {
         // Arrange & Act
@@ -186,7 +213,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         });
     }
 
-    [Test]
+        /// <summary>
+    /// SimulateSwapExecution_SolToUsdc_ShouldPrepareTransaction method.
+    /// </summary>
+[Test]
     public async Task SimulateSwapExecution_SolToUsdc_ShouldPrepareTransaction()
     {
         // Arrange
@@ -224,7 +254,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         Assert.True(true, "Swap simulation completed - transaction preparation tested");
     }
 
-    [Test]
+        /// <summary>
+    /// ValidateSwapQuoteParams_InvalidInputs_ShouldReturnNone method.
+    /// </summary>
+[Test]
     public async Task ValidateSwapQuoteParams_InvalidInputs_ShouldReturnNone()
     {
         // Test invalid mint addresses
@@ -243,7 +276,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         invalidQuote4.IsNone.Should().BeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// GetMultipleSwapQuotes_DifferentPairs_ShouldReturnConsistentResults method.
+    /// </summary>
+[Test]
     public async Task GetMultipleSwapQuotes_DifferentPairs_ShouldReturnConsistentResults()
     {
         // Arrange
@@ -276,7 +312,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         }
     }
 
-    [Test]
+        /// <summary>
+    /// SwapQuoteConsistency_SameParams_ShouldReturnSimilarResults method.
+    /// </summary>
+[Test]
     public async Task SwapQuoteConsistency_SameParams_ShouldReturnSimilarResults()
     {
         // Arrange
@@ -303,7 +342,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         }
     }
 
-    [Test]
+        /// <summary>
+    /// HighSlippageSwapQuote_ShouldAdjustOutputAmount method.
+    /// </summary>
+[Test]
     public async Task HighSlippageSwapQuote_ShouldAdjustOutputAmount()
     {
         // Arrange
@@ -331,7 +373,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         }
     }
 
-    [Test]
+        /// <summary>
+    /// SwapServiceDisposal_ShouldCleanupResources method.
+    /// </summary>
+[Test]
     public async Task SwapServiceDisposal_ShouldCleanupResources()
     {
         // Arrange
@@ -344,7 +389,10 @@ public class SwapIntegrationTests : IAsyncLifetime
         Assert.True(true, "Swap service disposed successfully");
     }
 
-    [Test]
+        /// <summary>
+    /// SwapQuoteWithVariousSlippage_ShouldAcceptDifferentValues method.
+    /// </summary>
+[Test]
     [Arguments(50)]   // 0.5%
     [Arguments(100)]  // 1%
     [Arguments(300)]  // 3%

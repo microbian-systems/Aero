@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for UserTests.
+/// </summary>
 public class UserTests
 {
-    [Test]
+        /// <summary>
+    /// User_DefaultValues_AreSetCorrectly method.
+    /// </summary>
+[Test]
     public async Task User_DefaultValues_AreSetCorrectly()
     {
         // Arrange & Act
@@ -22,7 +28,10 @@ public class UserTests
         await Assert.That(user.Verified).IsFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// User_Serialization_WithAllProperties_ReturnsCorrectJson method.
+    /// </summary>
+[Test]
     public async Task User_Serialization_WithAllProperties_ReturnsCorrectJson()
     {
         // Arrange
@@ -64,7 +73,10 @@ public class UserTests
         await Assert.That(json).Contains("\"public_metrics\"");
     }
 
-    [Test]
+        /// <summary>
+    /// User_Serialization_WithMinimalProperties_ReturnsCorrectJson method.
+    /// </summary>
+[Test]
     public async Task User_Serialization_WithMinimalProperties_ReturnsCorrectJson()
     {
         // Arrange
@@ -86,7 +98,10 @@ public class UserTests
         await Assert.That(json).Contains("\"verified\":false");
     }
 
-    [Test]
+        /// <summary>
+    /// User_Deserialization_WithAllProperties_PopulatesCorrectly method.
+    /// </summary>
+[Test]
     public async Task User_Deserialization_WithAllProperties_PopulatesCorrectly()
     {
         // Arrange
@@ -128,7 +143,10 @@ public class UserTests
         await Assert.That(user.PublicMetrics.FollowersCount).IsEqualTo(100);
     }
 
-    [Test]
+        /// <summary>
+    /// User_Deserialization_WithMinimalProperties_PopulatesCorrectly method.
+    /// </summary>
+[Test]
     public async Task User_Deserialization_WithMinimalProperties_PopulatesCorrectly()
     {
         // Arrange
@@ -157,7 +175,10 @@ public class UserTests
         Assert.Null(user.PublicMetrics);
     }
 
-    [Test]
+        /// <summary>
+    /// User_Deserialization_WithNullFields_HandlesCorrectly method.
+    /// </summary>
+[Test]
     public async Task User_Deserialization_WithNullFields_HandlesCorrectly()
     {
         // Arrange

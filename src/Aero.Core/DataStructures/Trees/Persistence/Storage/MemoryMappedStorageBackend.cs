@@ -43,12 +43,27 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
     private long _allocatedPages = 0;
     private bool _disposed;
 
-    public int PageSize => (int)_pageSize;
-    public long PageCount => _allocatedPages;
-    public long CapacityInPages => _capacityInPages;
-    public long FreePageCount => _freePages.Count;
+        /// <summary>
+    /// Gets or sets the Page Size.
+    /// </summary>
+public int PageSize => (int)_pageSize;
+        /// <summary>
+    /// Gets or sets the Page Count.
+    /// </summary>
+public long PageCount => _allocatedPages;
+        /// <summary>
+    /// Gets or sets the Capacity In Pages.
+    /// </summary>
+public long CapacityInPages => _capacityInPages;
+        /// <summary>
+    /// Gets or sets the Free Page Count.
+    /// </summary>
+public long FreePageCount => _freePages.Count;
 
-    public MemoryMappedStorageBackend(string path, long initialCapacityBytes = 0, int pageSize = 4096)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="MemoryMappedStorageBackend"/> class.
+    /// </summary>
+public MemoryMappedStorageBackend(string path, long initialCapacityBytes = 0, int pageSize = 4096)
     {
         if (string.IsNullOrEmpty(path))
             throw new ArgumentException("Path cannot be null or empty.", nameof(path));
@@ -179,7 +194,10 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
     private void ReadHeader(byte[] header) => _accessor.ReadArray(0, header, 0, (int)_pageSize);
     private void WriteHeader(byte[] header) => _accessor.WriteArray(0, header, 0, (int)_pageSize);
 
-    public ValueTask<Memory<byte>> ReadPageAsync(long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// ReadPageAsync method.
+    /// </summary>
+public ValueTask<Memory<byte>> ReadPageAsync(long pageId, CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -193,7 +211,10 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
         return ValueTask.FromResult<Memory<byte>>(buffer);
     }
 
-    public ValueTask WritePageAsync(long pageId, ReadOnlyMemory<byte> data, CancellationToken ct = default)
+        /// <summary>
+    /// WritePageAsync method.
+    /// </summary>
+public ValueTask WritePageAsync(long pageId, ReadOnlyMemory<byte> data, CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -212,7 +233,10 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask<long> AllocatePageAsync(CancellationToken ct = default)
+        /// <summary>
+    /// AllocatePageAsync method.
+    /// </summary>
+public ValueTask<long> AllocatePageAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -256,7 +280,10 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
         SaveHeader();
     }
 
-    public ValueTask FreePageAsync(long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// FreePageAsync method.
+    /// </summary>
+public ValueTask FreePageAsync(long pageId, CancellationToken ct = default)
     {
         ThrowIfDisposed();
         
@@ -281,7 +308,10 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask FlushAsync(CancellationToken ct = default)
+        /// <summary>
+    /// FlushAsync method.
+    /// </summary>
+public ValueTask FlushAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
         SaveHeader();
@@ -289,7 +319,10 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask<PageMetadata> GetPageMetadataAsync(long pageId, CancellationToken ct = default)
+        /// <summary>
+    /// GetPageMetadataAsync method.
+    /// </summary>
+public ValueTask<PageMetadata> GetPageMetadataAsync(long pageId, CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -299,7 +332,10 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
         return new ValueTask<PageMetadata>(meta);
     }
 
-    public ValueTask UpdatePageMetadataAsync(
+        /// <summary>
+    /// UpdatePageMetadataAsync method.
+    /// </summary>
+public ValueTask UpdatePageMetadataAsync(
         long pageId,
         int liveDelta,
         int deadDelta,
@@ -320,7 +356,10 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
         return ValueTask.CompletedTask;
     }
 
-    public async IAsyncEnumerable<PageMetadata> GetFragmentedPagesAsync(
+        /// <summary>
+    /// GetFragmentedPagesAsync method.
+    /// </summary>
+public async IAsyncEnumerable<PageMetadata> GetFragmentedPagesAsync(
         double fragmentationThreshold,
         [EnumeratorCancellation] CancellationToken ct = default)
     {
@@ -337,7 +376,10 @@ public sealed class MemoryMappedStorageBackend : IStorageBackend
         }
     }
 
-    public async ValueTask DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public async ValueTask DisposeAsync()
     {
         if (!_disposed)
         {

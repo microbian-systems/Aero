@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -16,14 +16,20 @@ public class EssentialAuthTests
 {
     private readonly HttpClient _client;
 
-    public EssentialAuthTests(TestWebAppFactory factory)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="EssentialAuthTests"/> class.
+    /// </summary>
+public EssentialAuthTests(TestWebAppFactory factory)
     {
         _client = factory.CreateClient();
     }
 
     //#region Registration Tests
 
-    [Test]
+        /// <summary>
+    /// Registration_ShouldRejectInvalidEmail method.
+    /// </summary>
+[Test]
     public async Task Registration_ShouldRejectInvalidEmail()
     {
         // Arrange
@@ -37,7 +43,10 @@ public class EssentialAuthTests
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// Registration_ShouldRejectWeakPassword method.
+    /// </summary>
+[Test]
     public async Task Registration_ShouldRejectWeakPassword()
     {
         // Arrange
@@ -55,7 +64,10 @@ public class EssentialAuthTests
 
     //#region Login Tests
 
-    [Test]
+        /// <summary>
+    /// Login_ShouldRejectInvalidCredentials method.
+    /// </summary>
+[Test]
     public async Task Login_ShouldRejectInvalidCredentials()
     {
         // Arrange
@@ -69,7 +81,10 @@ public class EssentialAuthTests
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// Login_ShouldRejectMalformedEmail method.
+    /// </summary>
+[Test]
     public async Task Login_ShouldRejectMalformedEmail()
     {
         // Arrange
@@ -87,7 +102,10 @@ public class EssentialAuthTests
 
     //#region Token Exchange Tests
 
-    [Test]
+        /// <summary>
+    /// TokenExchange_ShouldRejectUnsupportedGrantType method.
+    /// </summary>
+[Test]
     public async Task TokenExchange_ShouldRejectUnsupportedGrantType()
     {
         // Arrange
@@ -105,7 +123,10 @@ public class EssentialAuthTests
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// TokenExchange_ShouldRejectInvalidPasswordFlow method.
+    /// </summary>
+[Test]
     public async Task TokenExchange_ShouldRejectInvalidPasswordFlow()
     {
         // Arrange
@@ -127,7 +148,10 @@ public class EssentialAuthTests
 
     //#region Passkey/WebAuthn Tests
 
-    [Test]
+        /// <summary>
+    /// Passwordless_ShouldBeAccessible method.
+    /// </summary>
+[Test]
     public async Task Passwordless_ShouldBeAccessible()
     {
         // Act
@@ -137,7 +161,10 @@ public class EssentialAuthTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// Usernameless_ShouldBeAccessible method.
+    /// </summary>
+[Test]
     public async Task Usernameless_ShouldBeAccessible()
     {
         // Act
@@ -147,7 +174,10 @@ public class EssentialAuthTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// PasswordlessAuth_ShouldHandleEmptyRequest method.
+    /// </summary>
+[Test]
     public async Task PasswordlessAuth_ShouldHandleEmptyRequest()
     {
         // Arrange
@@ -168,7 +198,10 @@ public class EssentialAuthTests
 
     //#region Account Management Tests
 
-    [Test]
+        /// <summary>
+    /// AccountList_ShouldRequireAuthentication method.
+    /// </summary>
+[Test]
     public async Task AccountList_ShouldRequireAuthentication()
     {
         // Act
@@ -178,7 +211,10 @@ public class EssentialAuthTests
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// Logout_ShouldRequireAntiForgeryToken method.
+    /// </summary>
+[Test]
     public async Task Logout_ShouldRequireAntiForgeryToken()
     {
         // Arrange
@@ -195,7 +231,10 @@ public class EssentialAuthTests
 
     //#region Security Tests
 
-    [Test]
+        /// <summary>
+    /// UserInfo_ShouldRequireAuthentication method.
+    /// </summary>
+[Test]
     public async Task UserInfo_ShouldRequireAuthentication()
     {
         // Act
@@ -205,7 +244,10 @@ public class EssentialAuthTests
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// TokenRevocation_ShouldHandleInvalidToken method.
+    /// </summary>
+[Test]
     public async Task TokenRevocation_ShouldHandleInvalidToken()
     {
         // Arrange
@@ -221,7 +263,10 @@ public class EssentialAuthTests
         response.StatusCode.ShouldBe(HttpStatusCode.OK); // Per OAuth 2.0 spec
     }
 
-    [Test]
+        /// <summary>
+    /// RegistrationEndpoint_ShouldRejectNonPostMethods method.
+    /// </summary>
+[Test]
     public async Task RegistrationEndpoint_ShouldRejectNonPostMethods()
     {
         // Arrange
@@ -234,7 +279,10 @@ public class EssentialAuthTests
         response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    [Test]
+        /// <summary>
+    /// LoginEndpoint_ShouldRejectNonPostMethods method.
+    /// </summary>
+[Test]
     public async Task LoginEndpoint_ShouldRejectNonPostMethods()
     {
         // Arrange

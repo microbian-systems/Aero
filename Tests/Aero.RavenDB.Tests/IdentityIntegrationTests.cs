@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Core;
 using Aero.Core.Identity;
 using Aero.Models.Entities;
@@ -10,11 +10,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.RavenDB.Tests;
 
+/// <summary>
+/// Represents a class for IdentityIntegrationTests.
+/// </summary>
 public class IdentityIntegrationTests : RavenDbTestBase
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public IdentityIntegrationTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="IdentityIntegrationTests"/> class.
+    /// </summary>
+public IdentityIntegrationTests()
     {
         var services = new ServiceCollection();
 
@@ -53,7 +59,10 @@ public class IdentityIntegrationTests : RavenDbTestBase
         _serviceProvider = services.BuildServiceProvider();
     }
 
-    [Test]
+        /// <summary>
+    /// UserManager_Should_Add_Update_Search_And_Delete_User method.
+    /// </summary>
+[Test]
     public async Task UserManager_Should_Add_Update_Search_And_Delete_User()
     {
         using var scope = _serviceProvider.CreateScope();
@@ -98,7 +107,10 @@ public class IdentityIntegrationTests : RavenDbTestBase
         deletedUser.ShouldBeNull();
     }
 
-    [Test]
+        /// <summary>
+    /// UserManager_And_RoleManager_Integration_Should_Work method.
+    /// </summary>
+[Test]
     public async Task UserManager_And_RoleManager_Integration_Should_Work()
     {
         using var scope = _serviceProvider.CreateScope();

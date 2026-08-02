@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for ExpansionResolverTests.
+/// </summary>
 public class ExpansionResolverTests
 {
     //#region ResolveAuthor Tests
-    [Test]
+        /// <summary>
+    /// ResolveAuthor_WithValidAuthorId_ReturnsUser method.
+    /// </summary>
+[Test]
     public async Task ResolveAuthor_WithValidAuthorId_ReturnsUser()
     {
         // Arrange
@@ -24,7 +30,10 @@ public class ExpansionResolverTests
         await Assert.That(author.Name).IsEqualTo("Test User");
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveAuthor_WithNullTweet_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveAuthor_WithNullTweet_ReturnsNull()
     {
         // Arrange
@@ -38,7 +47,10 @@ public class ExpansionResolverTests
         Assert.Null(author);
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveAuthor_WithNullAuthorId_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveAuthor_WithNullAuthorId_ReturnsNull()
     {
         // Arrange
@@ -52,7 +64,10 @@ public class ExpansionResolverTests
         Assert.Null(author);
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveAuthor_WithNullIncludes_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveAuthor_WithNullIncludes_ReturnsNull()
     {
         // Arrange
@@ -66,7 +81,10 @@ public class ExpansionResolverTests
         Assert.Null(author);
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveAuthor_WithEmptyUsersList_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveAuthor_WithEmptyUsersList_ReturnsNull()
     {
         // Arrange
@@ -80,7 +98,10 @@ public class ExpansionResolverTests
         Assert.Null(author);
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveAuthor_WithUserNotFound_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveAuthor_WithUserNotFound_ReturnsNull()
     {
         // Arrange
@@ -98,7 +119,10 @@ public class ExpansionResolverTests
 
     //#region ResolveUser Tests
 
-    [Test]
+        /// <summary>
+    /// ResolveUser_WithValidUserId_ReturnsUser method.
+    /// </summary>
+[Test]
     public async Task ResolveUser_WithValidUserId_ReturnsUser()
     {
         // Arrange
@@ -112,7 +136,10 @@ public class ExpansionResolverTests
         await Assert.That(user.Username).IsEqualTo("testuser");
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveUser_WithNullIncludes_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveUser_WithNullIncludes_ReturnsNull()
     {
         // Arrange
@@ -125,7 +152,10 @@ public class ExpansionResolverTests
         Assert.Null(user);
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveUser_WithNullUserId_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveUser_WithNullUserId_ReturnsNull()
     {
         // Arrange
@@ -138,7 +168,10 @@ public class ExpansionResolverTests
         Assert.Null(user);
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveUser_WithEmptyUserId_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveUser_WithEmptyUserId_ReturnsNull()
     {
         // Arrange
@@ -155,7 +188,10 @@ public class ExpansionResolverTests
 
     //#region ResolveTweet Tests
 
-    [Test]
+        /// <summary>
+    /// ResolveTweet_WithValidTweetId_ReturnsTweet method.
+    /// </summary>
+[Test]
     public async Task ResolveTweet_WithValidTweetId_ReturnsTweet()
     {
         // Arrange
@@ -169,7 +205,10 @@ public class ExpansionResolverTests
         await Assert.That(tweet.Text).IsEqualTo("Original tweet");
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveTweet_WithNullIncludes_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveTweet_WithNullIncludes_ReturnsNull()
     {
         // Arrange
@@ -182,7 +221,10 @@ public class ExpansionResolverTests
         Assert.Null(tweet);
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveTweet_WithTweetNotFound_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveTweet_WithTweetNotFound_ReturnsNull()
     {
         // Arrange
@@ -199,7 +241,10 @@ public class ExpansionResolverTests
 
     //#region ResolveMedia (Single) Tests
 
-    [Test]
+        /// <summary>
+    /// ResolveMedia_WithValidMediaKey_ReturnsMedia method.
+    /// </summary>
+[Test]
     public async Task ResolveMedia_WithValidMediaKey_ReturnsMedia()
     {
         // Arrange
@@ -213,7 +258,10 @@ public class ExpansionResolverTests
         await Assert.That(media.Type).IsEqualTo("photo");
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveMedia_WithNullMediaKey_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveMedia_WithNullMediaKey_ReturnsNull()
     {
         // Arrange
@@ -226,7 +274,10 @@ public class ExpansionResolverTests
         Assert.Null(media);
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveMedia_WithMediaNotFound_ReturnsNull method.
+    /// </summary>
+[Test]
     public void ResolveMedia_WithMediaNotFound_ReturnsNull()
     {
         // Arrange
@@ -243,7 +294,10 @@ public class ExpansionResolverTests
 
     //#region ResolveMedia (Multiple) Tests
 
-    [Test]
+        /// <summary>
+    /// ResolveMedia_WithMultipleKeys_ReturnsMatchingMedia method.
+    /// </summary>
+[Test]
     public async Task ResolveMedia_WithMultipleKeys_ReturnsMatchingMedia()
     {
         // Arrange
@@ -267,7 +321,10 @@ public class ExpansionResolverTests
         await Assert.That(media).Any(m => m.MediaKey == "media_3");
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveMedia_WithEmptyKeys_ReturnsEmptyList method.
+    /// </summary>
+[Test]
     public async Task ResolveMedia_WithEmptyKeys_ReturnsEmptyList()
     {
         // Arrange
@@ -280,7 +337,10 @@ public class ExpansionResolverTests
         await Assert.That(media).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveMedia_WithNullKeys_ReturnsEmptyList method.
+    /// </summary>
+[Test]
     public async Task ResolveMedia_WithNullKeys_ReturnsEmptyList()
     {
         // Arrange
@@ -293,7 +353,10 @@ public class ExpansionResolverTests
         await Assert.That(media).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveMedia_WithPartialMatch_ReturnsMatchedOnly method.
+    /// </summary>
+[Test]
     public async Task ResolveMedia_WithPartialMatch_ReturnsMatchedOnly()
     {
         // Arrange
@@ -319,7 +382,10 @@ public class ExpansionResolverTests
 
     //#region ResolveUsersByUsername Tests
 
-    [Test]
+        /// <summary>
+    /// ResolveUsersByUsername_WithValidUsernames_ReturnsUsers method.
+    /// </summary>
+[Test]
     public async Task ResolveUsersByUsername_WithValidUsernames_ReturnsUsers()
     {
         // Arrange
@@ -343,7 +409,10 @@ public class ExpansionResolverTests
         await Assert.That(users).Any(u => u.Username == "user3");
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveUsersByUsername_WithNullUsernames_ReturnsEmptyList method.
+    /// </summary>
+[Test]
     public async Task ResolveUsersByUsername_WithNullUsernames_ReturnsEmptyList()
     {
         // Arrange
@@ -356,7 +425,10 @@ public class ExpansionResolverTests
         await Assert.That(users).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveUsersByUsername_WithNullIncludes_ReturnsEmptyList method.
+    /// </summary>
+[Test]
     public async Task ResolveUsersByUsername_WithNullIncludes_ReturnsEmptyList()
     {
         // Arrange
@@ -369,7 +441,10 @@ public class ExpansionResolverTests
         await Assert.That(users).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// ResolveUsersByUsername_CaseSensitive_MatchesExactCase method.
+    /// </summary>
+[Test]
     public async Task ResolveUsersByUsername_CaseSensitive_MatchesExactCase()
     {
         // Arrange
@@ -394,7 +469,10 @@ public class ExpansionResolverTests
 
     //#region Integration Tests
 
-    [Test]
+        /// <summary>
+    /// ExpansionResolver_ResolvesCompleteExpansionScenario method.
+    /// </summary>
+[Test]
     public async Task ExpansionResolver_ResolvesCompleteExpansionScenario()
     {
         // Arrange - simulate a complete response with expansions

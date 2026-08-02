@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for AvlTreeTests.
+/// </summary>
 public class AvlTreeTests
 {
-    [Test]
+        /// <summary>
+    /// Insert_And_Balance_Test method.
+    /// </summary>
+[Test]
     public void Insert_And_Balance_Test()
     {
         // Arrange

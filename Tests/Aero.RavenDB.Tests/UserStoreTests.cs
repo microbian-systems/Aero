@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Security.Claims;
 using Aero.Core;
 using Aero.Core.Identity;
@@ -14,13 +14,19 @@ using Raven.Client;
 
 namespace Aero.RavenDB.Tests;
 
+/// <summary>
+/// Represents a class for UserStoreTests.
+/// </summary>
 public class UserStoreTests : RavenDbTestBase
 {
     private readonly UserStore<AeroUser, AeroRole> _userStore;
     private readonly ILogger<UserStore<AeroUser, AeroRole>> _logger;
     private readonly IOptions<RavenDbIdentityOptions> _options;
 
-    public UserStoreTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="UserStoreTests"/> class.
+    /// </summary>
+public UserStoreTests()
     {
         _logger = A.Fake<ILogger<UserStore<AeroUser, AeroRole>>>();
         _options = Microsoft.Extensions.Options.Options.Create(new RavenDbIdentityOptions
@@ -32,7 +38,10 @@ public class UserStoreTests : RavenDbTestBase
         _userStore = new UserStore<AeroUser, AeroRole>(DocumentStore.LightweightSession(), _logger, _options);
     }
 
-    [Test]
+        /// <summary>
+    /// CreateAsync_Should_Create_User_And_Email_Reservation method.
+    /// </summary>
+[Test]
     public async Task CreateAsync_Should_Create_User_And_Email_Reservation()
     {
         // Arrange
@@ -63,7 +72,10 @@ public class UserStoreTests : RavenDbTestBase
         reservation.Value.ShouldBe(user.Id);
     }
 
-    [Test]
+        /// <summary>
+    /// CreateAsync_Should_Fail_If_Email_Already_Reserved method.
+    /// </summary>
+[Test]
     public async Task CreateAsync_Should_Fail_If_Email_Already_Reserved()
     {
         // Arrange
@@ -96,7 +108,10 @@ public class UserStoreTests : RavenDbTestBase
         result.Errors.ShouldContain(e => e.Code == "DuplicateEmail");
     }
 
-    [Test]
+        /// <summary>
+    /// FindByIdAsync_Should_Return_User method.
+    /// </summary>
+[Test]
     public async Task FindByIdAsync_Should_Return_User()
     {
         // Arrange
@@ -119,7 +134,10 @@ public class UserStoreTests : RavenDbTestBase
         foundUser.Id.ShouldBe(user.Id);
     }
 
-    [Test]
+        /// <summary>
+    /// UpdateAsync_Should_Update_User_And_Sync_Username_If_Match method.
+    /// </summary>
+[Test]
     public async Task UpdateAsync_Should_Update_User_And_Sync_Username_If_Match()
     {
         // Arrange
@@ -162,7 +180,10 @@ public class UserStoreTests : RavenDbTestBase
         newReservation.Value.ShouldBe(user.Id);
     }
 
-    [Test]
+        /// <summary>
+    /// DeleteAsync_Should_Remove_User_And_Reservation method.
+    /// </summary>
+[Test]
     public async Task DeleteAsync_Should_Remove_User_And_Reservation()
     {
         // Arrange
@@ -192,7 +213,10 @@ public class UserStoreTests : RavenDbTestBase
         reservation.ShouldBeNull();
     }
 
-    [Test]
+        /// <summary>
+    /// AddToRoleAsync_Should_Add_Role_To_User_And_User_To_Role method.
+    /// </summary>
+[Test]
     public async Task AddToRoleAsync_Should_Add_Role_To_User_And_User_To_Role()
     {
         // Arrange
@@ -220,7 +244,10 @@ public class UserStoreTests : RavenDbTestBase
         role.Users.ShouldContain(user.Id);
     }
 
-    [Test]
+        /// <summary>
+    /// Claims_Operations_Should_Work method.
+    /// </summary>
+[Test]
     public async Task Claims_Operations_Should_Work()
     {
         // Arrange
@@ -255,7 +282,10 @@ public class UserStoreTests : RavenDbTestBase
         user.Claims.ShouldBeEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// Logins_Operations_Should_Work method.
+    /// </summary>
+[Test]
     public async Task Logins_Operations_Should_Work()
     {
         // Arrange
@@ -282,7 +312,10 @@ public class UserStoreTests : RavenDbTestBase
         user.Logins.ShouldBeEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// Tokens_Operations_Should_Work method.
+    /// </summary>
+[Test]
     public async Task Tokens_Operations_Should_Work()
     {
         // Arrange

@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Security.Claims;
 using Aero.Core.Identity;
 using Aero.MartenDB.Identity;
@@ -7,12 +7,18 @@ using Microsoft.Extensions.Options;
 
 namespace Aero.RavenDB.Tests;
 
+/// <summary>
+/// Represents a class for RoleStoreTests.
+/// </summary>
 public class RoleStoreTests : RavenDbTestBase
 {
     private readonly RoleStore<AeroRole> _roleStore;
     private readonly IOptions<RavenDbIdentityOptions> _options;
 
-    public RoleStoreTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="RoleStoreTests"/> class.
+    /// </summary>
+public RoleStoreTests()
     {
         _options = Microsoft.Extensions.Options.Options.Create(new RavenDbIdentityOptions
         {
@@ -22,7 +28,10 @@ public class RoleStoreTests : RavenDbTestBase
         _roleStore = new RoleStore<AeroRole>(DocumentStore.LightweightSession(), _options);
     }
 
-    [Test]
+        /// <summary>
+    /// CreateAsync_Should_Create_Role method.
+    /// </summary>
+[Test]
     public async Task CreateAsync_Should_Create_Role()
     {
         // Arrange
@@ -40,7 +49,10 @@ public class RoleStoreTests : RavenDbTestBase
         savedRole.Name.ShouldBe("Admin");
     }
 
-    [Test]
+        /// <summary>
+    /// FindByNameAsync_Should_Return_Role method.
+    /// </summary>
+[Test]
     public async Task FindByNameAsync_Should_Return_Role()
     {
         // Arrange
@@ -55,7 +67,10 @@ public class RoleStoreTests : RavenDbTestBase
         foundRole.Name.ShouldBe("Manager");
     }
 
-    [Test]
+        /// <summary>
+    /// UpdateAsync_Should_Update_Role_Properties method.
+    /// </summary>
+[Test]
     public async Task UpdateAsync_Should_Update_Role_Properties()
     {
         // Arrange
@@ -74,7 +89,10 @@ public class RoleStoreTests : RavenDbTestBase
         updatedRole.Name.ShouldBe("NewRole");
     }
 
-    [Test]
+        /// <summary>
+    /// DeleteAsync_Should_Remove_Role method.
+    /// </summary>
+[Test]
     public async Task DeleteAsync_Should_Remove_Role()
     {
         // Arrange
@@ -92,7 +110,10 @@ public class RoleStoreTests : RavenDbTestBase
         deletedRole.ShouldBeNull();
     }
 
-    [Test]
+        /// <summary>
+    /// AddClaimAsync_Should_Add_Claim_To_Role method.
+    /// </summary>
+[Test]
     public async Task AddClaimAsync_Should_Add_Claim_To_Role()
     {
         // Arrange

@@ -13,5 +13,8 @@ public interface IRequest;
 /// <remarks>compatible with orleans serialization</remarks>
 public interface IRequest<T>
 {
-    T Data { get; set; }
+        /// <summary>
+    /// Gets or sets the Data.
+    /// </summary>
+T Data { get; set; }
 }

@@ -1,16 +1,37 @@
-﻿namespace Aero.Core;
+namespace Aero.Core;
 
-    public class JobResponse
+        /// <summary>
+    /// Represents a class for JobResponse.
+    /// </summary>
+public class JobResponse
     {
-        [JsonPropertyName("job_id")]
+                /// <summary>
+        /// Gets or sets the Job Id.
+        /// </summary>
+[JsonPropertyName("job_id")]
         public string JobId { get; } = Guid.NewGuid().ToString().Replace("-", "");
-        [JsonPropertyName("message")]
+                /// <summary>
+        /// Gets or sets the Message.
+        /// </summary>
+[JsonPropertyName("message")]
         public string Message { get; set; } = string.Empty;
-        [JsonPropertyName("info")]
+                /// <summary>
+        /// Gets or sets the Info.
+        /// </summary>
+[JsonPropertyName("info")]
         public List<string> Info { get; } = new();
-        [JsonPropertyName("errors")]
+                /// <summary>
+        /// Gets or sets the Errors.
+        /// </summary>
+[JsonPropertyName("errors")]
         public List<string> Errors { get; } = new();
-        [JsonPropertyName("warnings")]
+                /// <summary>
+        /// Gets or sets the Warnings.
+        /// </summary>
+[JsonPropertyName("warnings")]
         public List<string> Warnings { get; } = new();
-        public override string ToString() => this.ToString(false);
+                /// <summary>
+        /// ToString method.
+        /// </summary>
+public override string ToString() => this.ToString(false);
     }

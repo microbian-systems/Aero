@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for SegmentTreeTests.
+/// </summary>
 public class SegmentTreeTests
 {
-    [Test]
+        /// <summary>
+    /// Query_Returns_Correct_Sum method.
+    /// </summary>
+[Test]
     public void Query_Returns_Correct_Sum()
     {
         // Arrange
@@ -20,7 +26,10 @@ public class SegmentTreeTests
         sum.ShouldBe(15); // 3 + 5 + 7
     }
 
-    [Test]
+        /// <summary>
+    /// Update_And_Query_Returns_Correct_Sum method.
+    /// </summary>
+[Test]
     public void Update_And_Query_Returns_Correct_Sum()
     {
         // Arrange

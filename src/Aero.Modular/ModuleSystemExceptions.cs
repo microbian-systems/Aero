@@ -5,8 +5,14 @@ namespace Aero.Modular;
 /// </summary>
 public abstract class ModuleSystemException : Exception
 {
-    protected ModuleSystemException(string message) : base(message) { }
-    protected ModuleSystemException(string message, Exception inner) : base(message, inner) { }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="ModuleSystemException"/> class.
+    /// </summary>
+protected ModuleSystemException(string message) : base(message) { }
+        /// <summary>
+    /// Initializes a new instance of the <see cref="ModuleSystemException"/> class.
+    /// </summary>
+protected ModuleSystemException(string message, Exception inner) : base(message, inner) { }
 }
 
 /// <summary>
@@ -16,9 +22,18 @@ public sealed class DuplicateModuleNameException(string moduleName, string first
     : ModuleSystemException(
         $"Duplicate module name '{moduleName}' detected. First defined in '{firstAssembly}', then in '{secondAssembly}'.")
 {
-    public string ModuleName { get; } = moduleName;
-    public string FirstAssembly { get; } = firstAssembly;
-    public string SecondAssembly { get; } = secondAssembly;
+        /// <summary>
+    /// Gets or sets the Module Name.
+    /// </summary>
+public string ModuleName { get; } = moduleName;
+        /// <summary>
+    /// Gets or sets the First Assembly.
+    /// </summary>
+public string FirstAssembly { get; } = firstAssembly;
+        /// <summary>
+    /// Gets or sets the Second Assembly.
+    /// </summary>
+public string SecondAssembly { get; } = secondAssembly;
 }
 
 /// <summary>
@@ -31,9 +46,18 @@ public sealed class MissingModuleDependencyException(
     : ModuleSystemException(
         $"Module '{moduleName}' depends on '{missingDependency}' which was not found. Available modules: {string.Join(", ", availableModules)}.")
 {
-    public string ModuleName { get; } = moduleName;
-    public string MissingDependency { get; } = missingDependency;
-    public IReadOnlyList<string> AvailableModules { get; } = availableModules.ToList().AsReadOnly();
+        /// <summary>
+    /// Gets or sets the Module Name.
+    /// </summary>
+public string ModuleName { get; } = moduleName;
+        /// <summary>
+    /// Gets or sets the Missing Dependency.
+    /// </summary>
+public string MissingDependency { get; } = missingDependency;
+        /// <summary>
+    /// Gets or sets the Available Modules.
+    /// </summary>
+public IReadOnlyList<string> AvailableModules { get; } = availableModules.ToList().AsReadOnly();
 }
 
 /// <summary>
@@ -42,7 +66,10 @@ public sealed class MissingModuleDependencyException(
 public sealed class CircularDependencyException(IEnumerable<string> cyclePath) : ModuleSystemException(
     $"Circular dependency detected: {string.Join(" -> ", cyclePath)} -> {cyclePath.FirstOrDefault()}.")
 {
-    public IReadOnlyList<string> CyclePath { get; } = cyclePath.ToList().AsReadOnly();
+        /// <summary>
+    /// Gets or sets the Cycle Path.
+    /// </summary>
+public IReadOnlyList<string> CyclePath { get; } = cyclePath.ToList().AsReadOnly();
 }
 
 /// <summary>
@@ -52,8 +79,14 @@ public sealed class ModuleAssemblyLoadException(string assemblyName, string? ass
     : ModuleSystemException(
         $"Failed to load assembly '{assemblyName}'{(assemblyPath != null ? $" from '{assemblyPath}'" : "")}.", inner)
 {
-    public string AssemblyName { get; } = assemblyName;
-    public string? AssemblyPath { get; } = assemblyPath;
+        /// <summary>
+    /// Gets or sets the Assembly Name.
+    /// </summary>
+public string AssemblyName { get; } = assemblyName;
+        /// <summary>
+    /// Gets or sets the Assembly Path.
+    /// </summary>
+public string? AssemblyPath { get; } = assemblyPath;
 }
 
 /// <summary>
@@ -64,6 +97,12 @@ public sealed class UnknownModuleException(string moduleName, string? tenantId =
         ? $"Tenant '{tenantId}' enabled unknown module '{moduleName}'."
         : $"Unknown module '{moduleName}'.")
 {
-    public string ModuleName { get; } = moduleName;
-    public string? TenantId { get; } = tenantId;
+        /// <summary>
+    /// Gets or sets the Module Name.
+    /// </summary>
+public string ModuleName { get; } = moduleName;
+        /// <summary>
+    /// Gets or sets the Tenant Id.
+    /// </summary>
+public string? TenantId { get; } = tenantId;
 }

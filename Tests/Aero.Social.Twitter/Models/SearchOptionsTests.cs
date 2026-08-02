@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for SearchOptionsTests.
+/// </summary>
 public class SearchOptionsTests
 {
-    [Test]
+        /// <summary>
+    /// SearchOptions_DefaultValues_AreNull method.
+    /// </summary>
+[Test]
     public void SearchOptions_DefaultValues_AreNull()
     {
         // Arrange & Act
@@ -24,7 +30,10 @@ public class SearchOptionsTests
         Assert.Null(options.UserFields);
     }
 
-    [Test]
+        /// <summary>
+    /// SearchOptions_Validate_WithValidMaxResults_DoesNotThrow method.
+    /// </summary>
+[Test]
     [Arguments(10)]   // Minimum valid
     [Arguments(50)]   // Mid-range
     [Arguments(100)]  // Maximum valid
@@ -37,7 +46,10 @@ public class SearchOptionsTests
         options.Validate(); // Should not throw
     }
 
-    [Test]
+        /// <summary>
+    /// SearchOptions_Validate_WithInvalidMaxResults_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     [Arguments(5)]    // Too low
     [Arguments(9)]    // Just below minimum
     [Arguments(101)]  // Just above maximum
@@ -52,7 +64,10 @@ public class SearchOptionsTests
         await Assert.That(exception.Message).Contains("MaxResults must be between 10 and 100");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchOptions_Validate_WithValidTimeRange_DoesNotThrow method.
+    /// </summary>
+[Test]
     public void SearchOptions_Validate_WithValidTimeRange_DoesNotThrow()
     {
         // Arrange
@@ -66,7 +81,10 @@ public class SearchOptionsTests
         options.Validate(); // Should not throw
     }
 
-    [Test]
+        /// <summary>
+    /// SearchOptions_Validate_WithStartTimeAfterEndTime_ThrowsArgumentException method.
+    /// </summary>
+[Test]
     public async Task SearchOptions_Validate_WithStartTimeAfterEndTime_ThrowsArgumentException()
     {
         // Arrange
@@ -81,7 +99,10 @@ public class SearchOptionsTests
         await Assert.That(exception.Message).Contains("StartTime cannot be greater than EndTime");
     }
 
-    [Test]
+        /// <summary>
+    /// SearchOptions_Validate_WithOnlyStartTime_DoesNotThrow method.
+    /// </summary>
+[Test]
     public void SearchOptions_Validate_WithOnlyStartTime_DoesNotThrow()
     {
         // Arrange
@@ -94,7 +115,10 @@ public class SearchOptionsTests
         options.Validate(); // Should not throw
     }
 
-    [Test]
+        /// <summary>
+    /// SearchOptions_Validate_WithOnlyEndTime_DoesNotThrow method.
+    /// </summary>
+[Test]
     public void SearchOptions_Validate_WithOnlyEndTime_DoesNotThrow()
     {
         // Arrange
@@ -107,7 +131,10 @@ public class SearchOptionsTests
         options.Validate(); // Should not throw
     }
 
-    [Test]
+        /// <summary>
+    /// SearchOptions_Validate_WithSameStartAndEndTime_DoesNotThrow method.
+    /// </summary>
+[Test]
     public void SearchOptions_Validate_WithSameStartAndEndTime_DoesNotThrow()
     {
         // Arrange
@@ -122,7 +149,10 @@ public class SearchOptionsTests
         options.Validate(); // Should not throw - they're equal, not greater than
     }
 
-    [Test]
+        /// <summary>
+    /// SearchOptions_Validate_WithAllValidProperties_DoesNotThrow method.
+    /// </summary>
+[Test]
     public void SearchOptions_Validate_WithAllValidProperties_DoesNotThrow()
     {
         // Arrange
@@ -143,7 +173,10 @@ public class SearchOptionsTests
         options.Validate(); // Should not throw
     }
 
-    [Test]
+        /// <summary>
+    /// SearchOptions_Validate_WithNullMaxResults_DoesNotThrow method.
+    /// </summary>
+[Test]
     public void SearchOptions_Validate_WithNullMaxResults_DoesNotThrow()
     {
         // Arrange

@@ -1,4 +1,4 @@
-using Marten;
+using AeroDB.Sable;
 using System.Security.Cryptography;
 using Aero.Core;
 
@@ -18,7 +18,10 @@ public class RefreshTokenService(
     readonly IConfiguration config = config;
     readonly int refreshTokenLifetimeDays = config.GetValue("Auth:RefreshTokenLifetimeDays", 30);
 
-    public async Task<string> GenerateRefreshTokenAsync(
+        /// <summary>
+    /// GenerateRefreshTokenAsync method.
+    /// </summary>
+public async Task<string> GenerateRefreshTokenAsync(
         long userId,
         string clientType,
         string? ipAddress = null,
@@ -51,7 +54,10 @@ public class RefreshTokenService(
         return token;
     }
 
-    public async Task<long?> ValidateRefreshTokenAsync(
+        /// <summary>
+    /// ValidateRefreshTokenAsync method.
+    /// </summary>
+public async Task<long?> ValidateRefreshTokenAsync(
         string token,
         CancellationToken cancellationToken = default)
     {
@@ -81,7 +87,10 @@ public class RefreshTokenService(
         return refreshToken.UserId;
     }
 
-    public async Task<string> RotateRefreshTokenAsync(
+        /// <summary>
+    /// RotateRefreshTokenAsync method.
+    /// </summary>
+public async Task<string> RotateRefreshTokenAsync(
         string oldToken,
         string clientType,
         string? ipAddress = null,
@@ -132,7 +141,10 @@ public class RefreshTokenService(
         throw new InvalidOperationException("Old token record not found");
     }
 
-    public async Task RevokeRefreshTokenAsync(
+        /// <summary>
+    /// RevokeRefreshTokenAsync method.
+    /// </summary>
+public async Task RevokeRefreshTokenAsync(
         string token,
         CancellationToken cancellationToken = default)
     {
@@ -151,7 +163,10 @@ public class RefreshTokenService(
         }
     }
 
-    public async Task RevokeAllUserTokensAsync(
+        /// <summary>
+    /// RevokeAllUserTokensAsync method.
+    /// </summary>
+public async Task RevokeAllUserTokensAsync(
         long userId,
         CancellationToken cancellationToken = default)
     {
@@ -173,7 +188,10 @@ public class RefreshTokenService(
         }
     }
 
-    public async Task<IEnumerable<(long Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
+        /// <summary>
+    /// GetActiveTokensAsync method.
+    /// </summary>
+public async Task<IEnumerable<(long Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
         long userId,
         CancellationToken cancellationToken = default)
     {

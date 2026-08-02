@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Aero.Web.Email;
 
+/// <summary>
+/// Represents a class for SmtpEmailSender.
+/// </summary>
 public class SmtpEmailSender : IEmailSender
 {
     /// <summary>
@@ -50,7 +53,10 @@ public class SmtpEmailSender : IEmailSender
     }
 
     // todo - consider using IOptions<> here
-    public SmtpEmailSender(IOptionsMonitor<SmtpEmailOptions> monitor)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="SmtpEmailSender"/> class.
+    /// </summary>
+public SmtpEmailSender(IOptionsMonitor<SmtpEmailOptions> monitor)
     {
         var opts = monitor.CurrentValue;
         this.host = opts.Host;

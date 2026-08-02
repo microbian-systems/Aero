@@ -73,15 +73,9 @@ public sealed class ModuleDescriptor
     /// <summary>Module implements <see cref="IContentDefinitionModule"/>.</summary>
     public bool IsContentDefinitionModule { get; init; }
 
-    /// <summary>Module type implements <c>Marten.IConfigureMarten</c>.</summary>
-    public bool IsMartenConfigurator { get; init; }
-
-    /// <summary>Module type implements <c>Marten.IAsyncConfigureMarten</c>.</summary>
-    public bool IsAsyncMartenConfigurator { get; init; }
-
-    /// <summary>Module type implements <c>AeroDB.Sable.IConfigureAeroDB</c>.</summary>
+    /// <summary>Module type implements <c>AeroDB.IConfigureAeroDB</c>.</summary>
     public bool IsAeroDbConfigurator { get; init; }
 
-    /// <summary>Module type implements <c>AeroDB.Sable.IAsyncConfigureAeroDB</c>.</summary>
+    /// <summary>Module type implements <c>AeroDB.IAsyncConfigureAeroDB</c>.</summary>
     public bool IsAsyncAeroDbConfigurator { get; init; }
 }

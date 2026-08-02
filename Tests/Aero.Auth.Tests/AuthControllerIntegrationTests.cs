@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -6,13 +6,19 @@ using Shouldly;
 
 namespace Aero.Auth.Tests;
 
+/// <summary>
+/// Represents a class for AuthControllerIntegrationTests.
+/// </summary>
 [ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
 public class AuthControllerIntegrationTests(TestWebAppFactory factory)
 {
     private readonly HttpClient _client = factory.CreateClient();
     private readonly TestWebAppFactory _factory = factory;
 
-    [Test]
+        /// <summary>
+    /// PostRegister_ShouldReturnBadRequest_WhenModelStateInvalid method.
+    /// </summary>
+[Test]
     public async Task PostRegister_ShouldReturnBadRequest_WhenModelStateInvalid()
     {
         // Arrange
@@ -31,7 +37,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRegister_ShouldReturnBadRequest_WhenInvalidEmailFormat method.
+    /// </summary>
+[Test]
     public async Task PostRegister_ShouldReturnBadRequest_WhenInvalidEmailFormat()
     {
         // Arrange
@@ -50,7 +59,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostLogin_ShouldReturnBadRequest_WhenModelStateInvalid method.
+    /// </summary>
+[Test]
     public async Task PostLogin_ShouldReturnBadRequest_WhenModelStateInvalid()
     {
         // Arrange
@@ -69,7 +81,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostLogin_ShouldReturnUnauthorized_WhenInvalidCredentials method.
+    /// </summary>
+[Test]
     public async Task PostLogin_ShouldReturnUnauthorized_WhenInvalidCredentials()
     {
         // Arrange
@@ -88,7 +103,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// PostTokenExchange_ShouldReturnBadRequest_WhenNoRequestData method.
+    /// </summary>
+[Test]
     public async Task PostTokenExchange_ShouldReturnBadRequest_WhenNoRequestData()
     {
         // Arrange
@@ -101,7 +119,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostTokenExchange_ShouldReturnBadRequest_WhenUnsupportedGrantType method.
+    /// </summary>
+[Test]
     public async Task PostTokenExchange_ShouldReturnBadRequest_WhenUnsupportedGrantType()
     {
         // Arrange
@@ -119,7 +140,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostTokenExchange_ShouldReturnForbidden_WhenInvalidPasswordCredentials method.
+    /// </summary>
+[Test]
     public async Task PostTokenExchange_ShouldReturnForbidden_WhenInvalidPasswordCredentials()
     {
         // Arrange
@@ -137,7 +161,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.Forbidden);
     }
 
-    [Test]
+        /// <summary>
+    /// GetUserinfo_ShouldReturnUnauthorized_WhenNotAuthenticated method.
+    /// </summary>
+[Test]
     public async Task GetUserinfo_ShouldReturnUnauthorized_WhenNotAuthenticated()
     {
         // Act
@@ -147,7 +174,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// PostUserinfo_ShouldReturnUnauthorized_WhenNotAuthenticated method.
+    /// </summary>
+[Test]
     public async Task PostUserinfo_ShouldReturnUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
@@ -160,7 +190,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRevoke_ShouldReturnBadRequest_WhenNoTokenProvided method.
+    /// </summary>
+[Test]
     public async Task PostRevoke_ShouldReturnBadRequest_WhenNoTokenProvided()
     {
         // Arrange
@@ -176,7 +209,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRevoke_ShouldReturnOk_WhenValidTokenNotFound method.
+    /// </summary>
+[Test]
     public async Task PostRevoke_ShouldReturnOk_WhenValidTokenNotFound()
     {
         // Arrange
@@ -192,7 +228,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
     }
 
-    [Test]
+        /// <summary>
+    /// Register_ShouldNotAllowNonPostMethods method.
+    /// </summary>
+[Test]
     [Arguments("GET")]
     [Arguments("PUT")]
     [Arguments("PATCH")]
@@ -209,7 +248,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    [Test]
+        /// <summary>
+    /// Login_ShouldNotAllowNonPostMethods method.
+    /// </summary>
+[Test]
     //[Arguments("GET")]
     [Arguments("PUT")]
     [Arguments("PATCH")]
@@ -226,7 +268,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    [Test]
+        /// <summary>
+    /// TokenExchange_ShouldNotAllowNonPostMethods method.
+    /// </summary>
+[Test]
     //[Arguments("GET")]
     [Arguments("PUT")]
     [Arguments("PATCH")]
@@ -243,7 +288,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    [Test]
+        /// <summary>
+    /// Userinfo_ShouldNotAllowInvalidMethods method.
+    /// </summary>
+[Test]
     [Arguments("PUT")]
     [Arguments("PATCH")]
     [Arguments("DELETE")]
@@ -259,7 +307,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.MethodNotAllowed);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRegister_ShouldReturnBadRequest_WhenPasswordTooWeak method.
+    /// </summary>
+[Test]
     public async Task PostRegister_ShouldReturnBadRequest_WhenPasswordTooWeak()
     {
         // Arrange
@@ -278,7 +329,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRegister_ShouldReturnBadRequest_WhenEmailAlreadyExists method.
+    /// </summary>
+[Test]
     public async Task PostRegister_ShouldReturnBadRequest_WhenEmailAlreadyExists()
     {
         // Note: This test assumes no user seeding in test environment
@@ -302,7 +356,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.BadRequest, HttpStatusCode.InternalServerError);
     }
 
-    [Test]
+        /// <summary>
+    /// PostRegister_ShouldReturnUnsupportedMediaType_WhenInvalidContentType method.
+    /// </summary>
+[Test]
     [Arguments("application/xml")]
     [Arguments("text/plain")]
     [Arguments("application/x-www-form-urlencoded")]
@@ -318,7 +375,10 @@ public class AuthControllerIntegrationTests(TestWebAppFactory factory)
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.UnsupportedMediaType, HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// PostLogin_ShouldReturnUnsupportedMediaType_WhenInvalidContentType method.
+    /// </summary>
+[Test]
     [Arguments("application/xml")]
     [Arguments("text/plain")]
     [Arguments("application/x-www-form-urlencoded")]

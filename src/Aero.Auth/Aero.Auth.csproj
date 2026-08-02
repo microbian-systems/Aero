@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <PackageId>Aero.Auth</PackageId>
-    <Version>0.0.6-alpha</Version>
     <Authors>Microbians</Authors>
     <Description>Aero Authentication Services</Description>
     <IsPackable>true</IsPackable>
@@ -25,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
+    <ProjectReference Include="..\..\..\AeroDB\src\AeroDB.Sable\AeroDB.Sable.csproj" />
   </ItemGroup>
 
 

@@ -606,6 +606,9 @@ public class TwitterClient : ITwitterClient
 
     private class TwitterApiResponse<T>
     {
-        public T? Data { get; set; }
+                /// <summary>
+        /// Gets or sets the Data.
+        /// </summary>
+public T? Data { get; set; }
     }
 }

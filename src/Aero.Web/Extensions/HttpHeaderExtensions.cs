@@ -1,8 +1,14 @@
-﻿namespace Aero.Web.Extensions;
+namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for HttpHeaderExtensions.
+/// </summary>
 public static class HttpHeaderExtensions
 {
-    public static WebApplicationBuilder RemoveHeaders(this WebApplicationBuilder builder)
+        /// <summary>
+    /// RemoveHeaders method.
+    /// </summary>
+public static WebApplicationBuilder RemoveHeaders(this WebApplicationBuilder builder)
     {
         builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 

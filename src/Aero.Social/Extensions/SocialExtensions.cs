@@ -3,9 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Aero.Social.Extensions;
 
+/// <summary>
+/// Represents a class for SocialExtensions.
+/// </summary>
 public static class SocialExtensions
 {
-    public static IServiceCollection AddAeroSocials(this IServiceCollection services)
+        /// <summary>
+    /// AddAeroSocials method.
+    /// </summary>
+public static IServiceCollection AddAeroSocials(this IServiceCollection services)
     {
         services.AddForem();
         return services;

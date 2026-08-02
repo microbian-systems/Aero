@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for TweetTests.
+/// </summary>
 public class TweetTests
 {
-    [Test]
+        /// <summary>
+    /// Tweet_ShouldHaveRequiredProperties method.
+    /// </summary>
+[Test]
     public async Task Tweet_ShouldHaveRequiredProperties()
     {
         // Arrange & Act
@@ -25,7 +31,10 @@ public class TweetTests
         await Assert.That(tweet.CreatedAt).IsNotEqualTo(default(DateTimeOffset));
     }
 
-    [Test]
+        /// <summary>
+    /// Tweet_Serialization_ShouldIncludeAllProperties method.
+    /// </summary>
+[Test]
     public async Task Tweet_Serialization_ShouldIncludeAllProperties()
     {
         // Arrange
@@ -54,7 +63,10 @@ public class TweetTests
         await Assert.That(json).Contains("9876543210");
     }
 
-    [Test]
+        /// <summary>
+    /// Tweet_Deserialization_ShouldParseAllProperties method.
+    /// </summary>
+[Test]
     public async Task Tweet_Deserialization_ShouldParseAllProperties()
     {
         // Arrange
@@ -86,7 +98,10 @@ public class TweetTests
         await Assert.That(tweet.PublicMetrics.QuoteCount).IsEqualTo(2);
     }
 
-    [Test]
+        /// <summary>
+    /// Tweet_Deserialization_ShouldHandleNullableFields method.
+    /// </summary>
+[Test]
     public async Task Tweet_Deserialization_ShouldHandleNullableFields()
     {
         // Arrange

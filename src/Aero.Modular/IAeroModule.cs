@@ -63,7 +63,10 @@ public interface IAeroModule
     /// <remarks>users can use this to discover modules</remarks>
     /// </summary>
     IReadOnlyList<string> Tags { get; }
-    void Configure(IAeroModuleBuilder builder);
+        /// <summary>
+    /// Configure method.
+    /// </summary>
+void Configure(IAeroModuleBuilder builder);
     /// <summary>
     /// configure the aspnet core services pipeline
     /// </summary>
@@ -117,4 +120,7 @@ public interface IAdminModule : IAeroModule { }
 /// </summary>
 public interface IFilterModule : IAeroModule { }
 
+/// <summary>
+/// Defines an interface for IContentDefinitionModule.
+/// </summary>
 public interface IContentDefinitionModule : IAeroModule { }

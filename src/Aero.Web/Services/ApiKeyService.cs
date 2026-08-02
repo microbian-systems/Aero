@@ -1,4 +1,4 @@
-﻿using Aero.Auth.Services;
+using Aero.Auth.Services;
 using Aero.Common.Web.Extensions;
 using Aero.Common.Web.Infrastructure;
 using Aero.Common.Web.Jwt;
@@ -9,8 +9,14 @@ using Aero.Web.Services;
 
 namespace Aero.Common.Web.Services;
 
+/// <summary>
+/// Defines an interface for IApiKeyService.
+/// </summary>
 public interface IApiKeyService : IApiService<ApiKeyAuthRequestModel, string> { }
 
+/// <summary>
+/// Represents a class for ApiKeyService.
+/// </summary>
 public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IApiKeyService
 {
     private readonly IApiKeyFactory apiKeyFactory;
@@ -19,14 +25,17 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
     private readonly JwtOptions jwtOptions;
     //private readonly IAeroUnitOfWork uow;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiKeyService"/> class.
+    /// </summary>
     public ApiKeyService(
-        IApiKeyFactory factory,
-        IJwtFactory jwtFactory,
-        IClaimsPrincipalFactory claimsFactory,
-        //IAeroUnitOfWork uow,
-        IOptions<JwtOptions> jwtOptions,
-        ILogger<ApiKeyService> log)
-        : base(log)
+            IApiKeyFactory factory,
+            IJwtFactory jwtFactory,
+            IClaimsPrincipalFactory claimsFactory,
+            //IAeroUnitOfWork uow,
+            IOptions<JwtOptions> jwtOptions,
+            ILogger<ApiKeyService> log)
+            : base(log)
     {
         //this.uow = uow;
         this.apiKeyFactory = factory;
@@ -35,6 +44,9 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
         this.jwtOptions = jwtOptions.Value;
     }
 
+    /// <summary>
+    /// Register method.
+    /// </summary>
     public override async Task<ApiAccountModel> Register(ApiRegistrationRequest request)
     {
         var principle =
@@ -64,7 +76,10 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
         return model;
     }
 
-    // todo - move this out to a facgory or make it private (really belongs in a repository
+    // todo - move this out to a factory or make it private (really belongs in a repository
+    /// <summary>
+    /// Register method.
+    /// </summary>
     [Obsolete("Remove submission of ApiAccountModel directly from service", false)]
     public override async Task<ApiAccountModel> Register(ApiAccountModel model)
     {
@@ -75,6 +90,9 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
     }
 
     // todo - change update method signature to use a UpdateAccountRequest view model
+    /// <summary>
+    /// Update method.
+    /// </summary>
     public override async Task<ApiAccountModel> Update(ApiAccountModel model)
     {
         await uow.AuthRepo.UpdateAsync(model);
@@ -83,6 +101,9 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
         return model;
     }
 
+    /// <summary>
+    /// TryGetRefreshToken method.
+    /// </summary>
     public override bool TryGetRefreshToken(RefreshTokenRequest request, out RefreshTokenResponse response)
     {
         var accessToken = request.AccessToken;
@@ -94,7 +115,7 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
             response = new();
             return false;
         }
-        
+
         var claims = principal.Claims.ToList();
         var id = principal.Claims.FirstOrDefault(x => x.Type == "Id")?.Value;
         var user = GetAccountByApiKey(id!).GetAwaiter().GetResult();
@@ -107,20 +128,23 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
 
         var newAccessToken = jwtFactory.GenerateAccessToken(claims);
         var newRefreshToken = jwtFactory.GenerateRefreshToken();
-        
+
         response = new RefreshTokenResponse()
         {
             AccessToken = newAccessToken.AccessToken,
             Expiration = newAccessToken.Expiry,
             RefreshToken = newRefreshToken
         };
-        
+
         user.RefreshToken = newRefreshToken;
         uow.SaveChangesAsync().GetAwaiter().GetResult();
         return true;
     }
 
 
+    /// <summary>
+    /// Revoke method.
+    /// </summary>
     public override async Task<bool> Revoke(string apiKey)
     {
         var model = await uow.AuthRepo.GetByApiKey(apiKey);
@@ -137,6 +161,9 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
         return true;
     }
 
+    /// <summary>
+    /// RevokeAll method.
+    /// </summary>
     public override async Task RevokeAll(string email)
     {
         var accounts = await uow.AuthRepo.FindAsync(x => x.Email == email);
@@ -150,6 +177,9 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
         await uow.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// GetAccountById method.
+    /// </summary>
     public override async Task<ApiAccountModel?> GetAccountById(string id)
     {
         var account = await uow.AuthRepo.FindByIdAsync(id);
@@ -157,6 +187,9 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
         return account!;
     }
 
+    /// <summary>
+    /// GetAccountByApiKey method.
+    /// </summary>
     public override async Task<ApiAccountModel?> GetAccountByApiKey(string key)
     {
         var account = await uow.AuthRepo.GetByApiKey(key);
@@ -164,6 +197,9 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
         return account!;
     }
 
+    /// <summary>
+    /// GetAccountsByEmail method.
+    /// </summary>
     public override async Task<List<ApiAccountModel>> GetAccountsByEmail(string email)
     {
         var accounts =
@@ -173,6 +209,9 @@ public class ApiKeyService : ApiServiceBase<ApiKeyAuthRequestModel, string>, IAp
         return accounts;
     }
 
+    /// <summary>
+    /// Authenticate method.
+    /// </summary>
     public override async Task<ApiAccountModel?> Authenticate(ApiKeyAuthRequestModel model)
     {
         var account = await uow.AuthRepo.GetByApiKey(model.ApiKey);

@@ -1,10 +1,13 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text.RegularExpressions;
 
 namespace Aero.Core.Helpers;
 
+/// <summary>
+/// Represents a class for AzureFuncsBindingHelper.
+/// </summary>
 public static class AzureFuncsBindingHelper
 {
     private static bool IsStarted = false;
@@ -27,6 +30,9 @@ public static class AzureFuncsBindingHelper
     }
 }
 
+/// <summary>
+/// Represents a class for AssemblyBindingRedirectHelper.
+/// </summary>
 public static class AssemblyBindingRedirectHelper
 {
     ///<summary>
@@ -91,10 +97,22 @@ public static class AssemblyBindingRedirectHelper
         AppDomain.CurrentDomain.AssemblyResolve += handler;
     }
 
-    public class BindingRedirect
+        /// <summary>
+    /// Represents a class for BindingRedirect.
+    /// </summary>
+public class BindingRedirect
     {
-        public string ShortName { get; set; }
-        public string PublicKeyToken { get; set; }
-        public string RedirectToVersion { get; set; }
+                /// <summary>
+        /// Gets or sets the Short Name.
+        /// </summary>
+public string ShortName { get; set; }
+                /// <summary>
+        /// Gets or sets the Public Key Token.
+        /// </summary>
+public string PublicKeyToken { get; set; }
+                /// <summary>
+        /// Gets or sets the Redirect To Version.
+        /// </summary>
+public string RedirectToVersion { get; set; }
     }
 }

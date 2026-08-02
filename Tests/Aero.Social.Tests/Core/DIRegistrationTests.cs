@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social;
 using Aero.Social.Abstractions;
 using Aero.Social.Providers;
@@ -8,11 +8,17 @@ using Moq;
 
 namespace Aero.Social.Tests.Core;
 
+/// <summary>
+/// Represents a class for DIRegistrationTests.
+/// </summary>
 public class DIRegistrationTests
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public DIRegistrationTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="DIRegistrationTests"/> class.
+    /// </summary>
+public DIRegistrationTests()
     {
         var services = new ServiceCollection();
 
@@ -62,7 +68,10 @@ public class DIRegistrationTests
         _serviceProvider = services.BuildServiceProvider();
     }
 
-    [Test]
+        /// <summary>
+    /// AllProviders_ShouldBeRegistered method.
+    /// </summary>
+[Test]
     public void AllProviders_ShouldBeRegistered()
     {
         var providers = _serviceProvider.GetServices<ISocialProvider>().ToList();
@@ -70,7 +79,10 @@ public class DIRegistrationTests
         providers.Count.ShouldBe(29);
     }
 
-    [Test]
+        /// <summary>
+    /// IntegrationManager_ShouldResolveAllProviders method.
+    /// </summary>
+[Test]
     public void IntegrationManager_ShouldResolveAllProviders()
     {
         var manager = _serviceProvider.GetRequiredService<IntegrationManager>();
@@ -80,7 +92,10 @@ public class DIRegistrationTests
         identifiers.Count.ShouldBe(29);
     }
 
-    [Test]
+        /// <summary>
+    /// IntegrationManager_ShouldResolveProvider method.
+    /// </summary>
+[Test]
     [Arguments("discord")]
     [Arguments("slack")]
     [Arguments("telegram")]
@@ -120,7 +135,10 @@ public class DIRegistrationTests
         provider.Identifier.ShouldBe(identifier);
     }
 
-    [Test]
+        /// <summary>
+    /// IntegrationManager_GetAllIntegrationsAsync_ShouldReturnAllProviders method.
+    /// </summary>
+[Test]
     public void IntegrationManager_GetAllIntegrationsAsync_ShouldReturnAllProviders()
     {
         var manager = _serviceProvider.GetRequiredService<IntegrationManager>();

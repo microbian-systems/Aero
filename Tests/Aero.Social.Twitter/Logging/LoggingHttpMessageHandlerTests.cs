@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Microsoft.Extensions.Http.Logging;
 using Microsoft.Extensions.Logging;
@@ -7,9 +7,15 @@ using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Logging;
 
+/// <summary>
+/// Represents a class for LoggingHttpMessageHandlerTests.
+/// </summary>
 public class LoggingHttpMessageHandlerTests
 {
-    [Test]
+        /// <summary>
+    /// SendAsync_WithSuccessfulRequest_ShouldLogRequestAndResponse method.
+    /// </summary>
+[Test]
     public async Task SendAsync_WithSuccessfulRequest_ShouldLogRequestAndResponse()
     {
         // Arrange
@@ -41,7 +47,10 @@ public class LoggingHttpMessageHandlerTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
-    [Test]
+        /// <summary>
+    /// SendAsync_WithErrorResponse_ShouldLogWarning method.
+    /// </summary>
+[Test]
     public async Task SendAsync_WithErrorResponse_ShouldLogWarning()
     {
         // Arrange
@@ -67,7 +76,10 @@ public class LoggingHttpMessageHandlerTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
-    [Test]
+        /// <summary>
+    /// SendAsync_WithException_ShouldLogError method.
+    /// </summary>
+[Test]
     public async Task SendAsync_WithException_ShouldLogError()
     {
         // Arrange
@@ -92,7 +104,10 @@ public class LoggingHttpMessageHandlerTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
-    [Test]
+        /// <summary>
+    /// SendAsync_ShouldRedactAuthorizationHeader method.
+    /// </summary>
+[Test]
     public async Task SendAsync_ShouldRedactAuthorizationHeader()
     {
         // Arrange
@@ -125,13 +140,19 @@ public class LoggingHttpMessageHandlerTests
         private readonly HttpStatusCode _statusCode;
         private readonly string _reasonPhrase;
 
-        public TestHandler(HttpStatusCode statusCode, string reasonPhrase)
+                /// <summary>
+        /// Initializes a new instance of the <see cref="TestHandler"/> class.
+        /// </summary>
+public TestHandler(HttpStatusCode statusCode, string reasonPhrase)
         {
             _statusCode = statusCode;
             _reasonPhrase = reasonPhrase;
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+                /// <summary>
+        /// SendAsync method.
+        /// </summary>
+protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return Task.FromResult(new HttpResponseMessage(_statusCode)
             {
@@ -144,12 +165,18 @@ public class LoggingHttpMessageHandlerTests
     {
         private readonly Exception _exception;
 
-        public ExceptionHandler(Exception exception)
+                /// <summary>
+        /// Initializes a new instance of the <see cref="ExceptionHandler"/> class.
+        /// </summary>
+public ExceptionHandler(Exception exception)
         {
             _exception = exception;
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+                /// <summary>
+        /// SendAsync method.
+        /// </summary>
+protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             throw _exception;
 }

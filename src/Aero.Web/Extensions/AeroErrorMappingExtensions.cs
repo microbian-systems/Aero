@@ -1,9 +1,12 @@
-﻿using Aero.Core;
+using Aero.Core;
 using Aero.Core.Railway;
 
 namespace Aero.Web.Extensions;
 
 
+/// <summary>
+/// Represents a class for MinimalApiResultMappingExtensions.
+/// </summary>
 public static class MinimalApiResultMappingExtensions
 {
     /// <summary>

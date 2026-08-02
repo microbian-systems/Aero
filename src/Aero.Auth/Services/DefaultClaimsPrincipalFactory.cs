@@ -1,4 +1,4 @@
-﻿using Aero.Core.Extensions;
+using Aero.Core.Extensions;
 
 namespace Aero.Auth.Services;
 
@@ -23,7 +23,10 @@ public interface IClaimsPrincipalFactory
 public sealed class ClaimsPrincipalFactory(IApiKeyFactory apiKeyFactory, ILogger<ClaimsPrincipalFactory> log)
     : IClaimsPrincipalFactory
 {
-    public Task<ClaimsPrincipal> CreateClaimsPrincipal(string apiKeyOwnerId, string? apiKey = null)
+        /// <summary>
+    /// CreateClaimsPrincipal method.
+    /// </summary>
+public Task<ClaimsPrincipal> CreateClaimsPrincipal(string apiKeyOwnerId, string? apiKey = null)
     {
         if (string.IsNullOrEmpty(apiKey))
             apiKey = apiKeyFactory.GenerateApiKey();

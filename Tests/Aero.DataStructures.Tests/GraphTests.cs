@@ -1,15 +1,21 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for GraphTests.
+/// </summary>
 public class GraphTests
 {
     private readonly Faker _faker = new();
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldAddVertexToGraph method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldAddVertexToGraph()
     {
         // Arrange
@@ -24,7 +30,10 @@ public class GraphTests
         matrix.GetLength(0).ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldNotDuplicateVertices method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldNotDuplicateVertices()
     {
         // Arrange
@@ -40,7 +49,10 @@ public class GraphTests
         matrix.GetLength(0).ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldAddEdgeCorrectly_Directed method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldAddEdgeCorrectly_Directed()
     {
         // Arrange
@@ -61,7 +73,10 @@ public class GraphTests
         matrix[1, 0].ShouldBeNull();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldAddEdgeCorrectly_Undirected method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldAddEdgeCorrectly_Undirected()
     {
         // Arrange
@@ -80,7 +95,10 @@ public class GraphTests
         matrix[1, 0].ShouldBe(5);
     }
         
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldAutoAddVertices_IfTheyDoNotExist method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldAutoAddVertices_IfTheyDoNotExist()
     {
         // Arrange
@@ -94,7 +112,10 @@ public class GraphTests
         matrix.GetLength(0).ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// Bfs_ShouldTraverseGraphCorrectly method.
+    /// </summary>
+[Test]
     public void Bfs_ShouldTraverseGraphCorrectly()
     {
         // Arrange
@@ -120,7 +141,10 @@ public class GraphTests
         result.Count.ShouldBe(4);
     }
 
-    [Test]
+        /// <summary>
+    /// Dfs_ShouldTraverseGraphCorrectly method.
+    /// </summary>
+[Test]
     public void Dfs_ShouldTraverseGraphCorrectly()
     {
         // Arrange
@@ -146,7 +170,10 @@ public class GraphTests
         result.Count.ShouldBe(4);
     }
 
-    [Test]
+        /// <summary>
+    /// Dijkstra_ShouldFindShortestPaths method.
+    /// </summary>
+[Test]
     public void Dijkstra_ShouldFindShortestPaths()
     {
         // Arrange
@@ -168,7 +195,10 @@ public class GraphTests
         distances["C"].ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// Dijkstra_ShouldHandleUnreachableNodes method.
+    /// </summary>
+[Test]
     public void Dijkstra_ShouldHandleUnreachableNodes()
     {
         // Arrange

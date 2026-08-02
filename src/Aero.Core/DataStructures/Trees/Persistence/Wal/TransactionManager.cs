@@ -2,6 +2,9 @@ using System.Collections.Concurrent;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Wal;
 
+/// <summary>
+/// Represents a class for TransactionManager.
+/// </summary>
 public sealed class TransactionManager(IWalWriter wal) : IAsyncDisposable
 {
     private readonly IWalWriter _wal = wal ?? throw new ArgumentNullException(nameof(wal));
@@ -9,7 +12,10 @@ public sealed class TransactionManager(IWalWriter wal) : IAsyncDisposable
     private readonly ConcurrentDictionary<long, ITransactionContext> _active = new();
     private bool _disposed;
 
-    public async ValueTask<ITransactionContext> BeginAsync(CancellationToken ct = default)
+        /// <summary>
+    /// BeginAsync method.
+    /// </summary>
+public async ValueTask<ITransactionContext> BeginAsync(CancellationToken ct = default)
     {
         ThrowIfDisposed();
 
@@ -37,12 +43,18 @@ public sealed class TransactionManager(IWalWriter wal) : IAsyncDisposable
         _active.TryRemove(transactionId, out _);
     }
 
-    public IEnumerable<Lsn> ActiveTransactionStartLsns =>
+        /// <summary>
+    /// Gets or sets the Active Transaction Start Lsns.
+    /// </summary>
+public IEnumerable<Lsn> ActiveTransactionStartLsns =>
         _active.Values
             .Select(t => ((TransactionContext)t).BeginLsn)
             .OrderBy(l => l);
 
-    public async ValueTask DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public async ValueTask DisposeAsync()
     {
         if (_disposed)
             return;

@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -16,14 +16,20 @@ public class AuthControllerIntegrationTests
 {
     private readonly HttpClient _client;
 
-    public AuthControllerIntegrationTests(TestWebAppFactory factory)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="AuthControllerIntegrationTests"/> class.
+    /// </summary>
+public AuthControllerIntegrationTests(TestWebAppFactory factory)
     {
         _client = factory.CreateClient();
     }
 
     //#region Web Login Tests
 
-    [Test]
+        /// <summary>
+    /// LoginWeb_WithValidCredentials_ShouldReturnSuccess method.
+    /// </summary>
+[Test]
     public async Task LoginWeb_WithValidCredentials_ShouldReturnSuccess()
     {
         // Arrange
@@ -48,7 +54,10 @@ public class AuthControllerIntegrationTests
         body.ShouldContain("success");
     }
 
-    [Test]
+        /// <summary>
+    /// LoginWeb_WithInvalidEmail_ShouldReturnUnauthorized method.
+    /// </summary>
+[Test]
     public async Task LoginWeb_WithInvalidEmail_ShouldReturnUnauthorized()
     {
         // Arrange
@@ -71,7 +80,10 @@ public class AuthControllerIntegrationTests
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// LoginWeb_WithEmptyPassword_ShouldReturnUnauthorized method.
+    /// </summary>
+[Test]
     public async Task LoginWeb_WithEmptyPassword_ShouldReturnUnauthorized()
     {
         // Arrange
@@ -94,7 +106,10 @@ public class AuthControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// LoginWeb_SetsCookie_WhenSuccessful method.
+    /// </summary>
+[Test]
     public async Task LoginWeb_SetsCookie_WhenSuccessful()
     {
         // Arrange
@@ -123,7 +138,10 @@ public class AuthControllerIntegrationTests
 
     //#region App Login Tests
 
-    [Test]
+        /// <summary>
+    /// LoginApp_WithValidCredentials_ShouldReturnTokens method.
+    /// </summary>
+[Test]
     public async Task LoginApp_WithValidCredentials_ShouldReturnTokens()
     {
         // Arrange
@@ -149,7 +167,10 @@ public class AuthControllerIntegrationTests
         body.ShouldContain("refreshToken");
     }
 
-    [Test]
+        /// <summary>
+    /// LoginApp_WithInvalidCredentials_ShouldReturnUnauthorized method.
+    /// </summary>
+[Test]
     public async Task LoginApp_WithInvalidCredentials_ShouldReturnUnauthorized()
     {
         // Arrange
@@ -172,7 +193,10 @@ public class AuthControllerIntegrationTests
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// LoginApp_WithNonexistentUser_ShouldReturnUnauthorized method.
+    /// </summary>
+[Test]
     public async Task LoginApp_WithNonexistentUser_ShouldReturnUnauthorized()
     {
         // Arrange
@@ -195,7 +219,10 @@ public class AuthControllerIntegrationTests
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// LoginApp_ResponseContainsAccessTokenExpiresIn method.
+    /// </summary>
+[Test]
     public async Task LoginApp_ResponseContainsAccessTokenExpiresIn()
     {
         // Arrange
@@ -224,7 +251,10 @@ public class AuthControllerIntegrationTests
 
     //#region Logout Tests
 
-    [Test]
+        /// <summary>
+    /// Logout_RequiresAuthentication method.
+    /// </summary>
+[Test]
     public async Task Logout_RequiresAuthentication()
     {
         // Act
@@ -234,7 +264,10 @@ public class AuthControllerIntegrationTests
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// LogoutApp_WithValidToken_ShouldSucceed method.
+    /// </summary>
+[Test]
     public async Task LogoutApp_WithValidToken_ShouldSucceed()
     {
         // Arrange
@@ -269,7 +302,10 @@ public class AuthControllerIntegrationTests
 
     //#region Sessions Tests
 
-    [Test]
+        /// <summary>
+    /// GetSessions_RequiresAuthentication method.
+    /// </summary>
+[Test]
     public async Task GetSessions_RequiresAuthentication()
     {
         // Act
@@ -279,7 +315,10 @@ public class AuthControllerIntegrationTests
         response.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
     }
 
-    [Test]
+        /// <summary>
+    /// RevokeSessions_RequiresAuthentication method.
+    /// </summary>
+[Test]
     public async Task RevokeSessions_RequiresAuthentication()
     {
         // Act
@@ -293,7 +332,10 @@ public class AuthControllerIntegrationTests
 
     //#region Error Response Format Tests
 
-    [Test]
+        /// <summary>
+    /// LoginWeb_ErrorResponse_HasCorrectFormat method.
+    /// </summary>
+[Test]
     public async Task LoginWeb_ErrorResponse_HasCorrectFormat()
     {
         // Arrange
@@ -318,7 +360,10 @@ public class AuthControllerIntegrationTests
         body.ShouldContain("message");
     }
 
-    [Test]
+        /// <summary>
+    /// LoginApp_ErrorResponse_HasCorrectFormat method.
+    /// </summary>
+[Test]
     public async Task LoginApp_ErrorResponse_HasCorrectFormat()
     {
         // Arrange
@@ -347,7 +392,10 @@ public class AuthControllerIntegrationTests
 
     //#region Request Validation Tests
 
-    [Test]
+        /// <summary>
+    /// LoginWeb_WithNullRequest_ShouldReturnBadRequest method.
+    /// </summary>
+[Test]
     public async Task LoginWeb_WithNullRequest_ShouldReturnBadRequest()
     {
         // Arrange
@@ -363,7 +411,10 @@ public class AuthControllerIntegrationTests
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
 
-    [Test]
+        /// <summary>
+    /// LoginApp_WithNullRequest_ShouldReturnBadRequest method.
+    /// </summary>
+[Test]
     public async Task LoginApp_WithNullRequest_ShouldReturnBadRequest()
     {
         // Arrange

@@ -6,7 +6,6 @@
         <PackageId>Aero.EfCore</PackageId>
 
         <!-- Increment this version every time you push a new update -->
-        <Version>0.0.6-alpha</Version>
 
         <!-- Your name or organization -->
         <Authors>Microbians</Authors>

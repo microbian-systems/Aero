@@ -1,10 +1,16 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 namespace Aero.Core.Converters;
 
+/// <summary>
+/// Represents a class for IsoDateTimeOffsetConverter.
+/// </summary>
 public class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
 {
-    public override bool CanConvert(Type t) => t == typeof(DateTimeOffset);
+        /// <summary>
+    /// CanConvert method.
+    /// </summary>
+public override bool CanConvert(Type t) => t == typeof(DateTimeOffset);
 
     private const string DefaultDateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK";
 
@@ -12,25 +18,37 @@ public class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
     private string? _dateTimeFormat;
     private CultureInfo? _culture;
 
-    public DateTimeStyles DateTimeStyles
+        /// <summary>
+    /// Gets or sets the Date Time Styles.
+    /// </summary>
+public DateTimeStyles DateTimeStyles
     {
         get => _dateTimeStyles;
         set => _dateTimeStyles = value;
     }
 
-    public string? DateTimeFormat
+        /// <summary>
+    /// Gets or sets the Date Time Format.
+    /// </summary>
+public string? DateTimeFormat
     {
         get => _dateTimeFormat ?? string.Empty;
         set => _dateTimeFormat = (string.IsNullOrEmpty(value)) ? null : value;
     }
 
-    public CultureInfo Culture
+        /// <summary>
+    /// Gets or sets the Culture.
+    /// </summary>
+public CultureInfo Culture
     {
         get => _culture ?? CultureInfo.CurrentCulture;
         set => _culture = value;
     }
 
-    public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
+        /// <summary>
+    /// Write method.
+    /// </summary>
+public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
     {
         string text;
 
@@ -46,7 +64,10 @@ public class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
         writer.WriteStringValue(text);
     }
 
-    public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        /// <summary>
+    /// Read method.
+    /// </summary>
+public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         string? dateText = reader.GetString();
 
@@ -68,5 +89,8 @@ public class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
     }
 
 
-    public static readonly IsoDateTimeOffsetConverter Singleton = new IsoDateTimeOffsetConverter();
+        /// <summary>
+    /// Singleton.
+    /// </summary>
+public static readonly IsoDateTimeOffsetConverter Singleton = new IsoDateTimeOffsetConverter();
 }

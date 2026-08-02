@@ -12,7 +12,10 @@ public sealed class TornadoRetryHandler(ILogger<TornadoRetryHandler> logger) : D
     private const int MaxRetries = 2;
     private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(1);
 
-    protected override async Task<HttpResponseMessage> SendAsync(
+        /// <summary>
+    /// SendAsync method.
+    /// </summary>
+protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {

@@ -8,9 +8,15 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Aero.Services.Mail;
 
+/// <summary>
+/// Represents a class for FluentEmailMailtrapBuilderExtensions.
+/// </summary>
 public static class FluentEmailMailtrapBuilderExtensions
 {
-    public static FluentEmailServicesBuilder AddMailtrapSender(this FluentEmailServicesBuilder builder)
+        /// <summary>
+    /// AddMailtrapSender method.
+    /// </summary>
+public static FluentEmailServicesBuilder AddMailtrapSender(this FluentEmailServicesBuilder builder)
     {
         var sp = builder.Services.BuildServiceProvider();
         var opts = sp.GetRequiredService<IOptionsMonitor<SmtpEmailOptions>>().CurrentValue;
@@ -18,7 +24,10 @@ public static class FluentEmailMailtrapBuilderExtensions
         return AddMailtrapSender(builder, opts.Username, opts.Password, opts.Host, opts.Port);
     }
         
-    public static FluentEmailServicesBuilder AddMailtrapSender(this FluentEmailServicesBuilder builder, string userName, string password, string host = null, int? port = null)
+        /// <summary>
+    /// AddMailtrapSender method.
+    /// </summary>
+public static FluentEmailServicesBuilder AddMailtrapSender(this FluentEmailServicesBuilder builder, string userName, string password, string host = null, int? port = null)
     {
         builder.Services.TryAdd(ServiceDescriptor.Scoped<ISender>(x => new MailtrapSender(userName, password, host, port)));
         return builder;
@@ -58,13 +67,19 @@ public class MailtrapSender : ISender
         };
     }
         
-    public SendResponse Send(IFluentEmail email, CancellationToken? token = null)
+        /// <summary>
+    /// Send method.
+    /// </summary>
+public SendResponse Send(IFluentEmail email, CancellationToken? token = null)
     {
         var smtpSender = new SmtpSender(_smtpClient);
         return smtpSender.Send(email, token);
     }
 
-    public async Task<SendResponse> SendAsync(IFluentEmail email, CancellationToken? token = null)
+        /// <summary>
+    /// SendAsync method.
+    /// </summary>
+public async Task<SendResponse> SendAsync(IFluentEmail email, CancellationToken? token = null)
     {
         var smtpSender = new SmtpSender(_smtpClient);
         return await smtpSender.SendAsync(email, token);

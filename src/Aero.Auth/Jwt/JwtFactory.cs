@@ -1,14 +1,20 @@
-﻿using Aero.Core.Extensions;
+using Aero.Core.Extensions;
 
 namespace Aero.Auth.Jwt;
 
+/// <summary>
+/// Represents a class for JwtFactory.
+/// </summary>
 public class JwtFactory(IOptions<JwtOptions> options, ILogger<JwtFactory> log) : JwtFactoryBase(log), IJwtFactory
 {
     private readonly JwtOptions options = options.Value;
 
     // todo - use of type Tuple<,> is not recommended due to positional arguments breaking changes if args are added or order is changed
     // use the newer Tuple type (DateTimeOffset expiry, string token) instead
-    public override JwtResponseModel GenerateAccessToken(List<Claim> claims)
+        /// <summary>
+    /// GenerateAccessToken method.
+    /// </summary>
+public override JwtResponseModel GenerateAccessToken(List<Claim> claims)
     {
         log.LogInformation("generating jwt access token...");
         log.LogDebug("jwt options are: {@options}", options.ToJson());
@@ -43,7 +49,10 @@ public class JwtFactory(IOptions<JwtOptions> options, ILogger<JwtFactory> log) :
         };
     }
     
-    public override bool IsValidToken(string token)
+        /// <summary>
+    /// IsValidToken method.
+    /// </summary>
+public override bool IsValidToken(string token)
     {
         var mySecret = options.Key;
         var mySecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(mySecret));
@@ -68,7 +77,10 @@ public class JwtFactory(IOptions<JwtOptions> options, ILogger<JwtFactory> log) :
         return true;
     }
 
-    public override ClaimsPrincipal? GetPrincipalFromToken(string? token)
+        /// <summary>
+    /// GetPrincipalFromToken method.
+    /// </summary>
+public override ClaimsPrincipal? GetPrincipalFromToken(string? token)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {

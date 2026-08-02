@@ -4,13 +4,19 @@ using Twilio.Rest.Api.V2010.Account;
 
 namespace Aero.Services;
 
+/// <summary>
+/// Represents a class for TwilioSmsService.
+/// </summary>
 public class TwilioSmsService(AppSettings settings, ILogger<TwilioSmsService> log) : ISmsService
 {
     private readonly AppSettings settings = settings;
     private readonly string accountSid = settings.Twilio.AccountSid;
     private readonly string authToken = settings.Twilio.AuthToken;
 
-    public async Task SendSms(string from, string to, string body)
+        /// <summary>
+    /// SendSms method.
+    /// </summary>
+public async Task SendSms(string from, string to, string body)
     {
         log.LogInformation($"sending twilio sms to {to} with {body}");
         TwilioClient.Init(accountSid, authToken);

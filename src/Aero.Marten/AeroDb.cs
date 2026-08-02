@@ -9,9 +9,15 @@ namespace Aero.Marten;
 /// </summary>
 public interface IAeroDb : IAsyncUnitOfWork
 {
-    IDocumentSession Session { get; }
+        /// <summary>
+    /// Gets or sets the Session.
+    /// </summary>
+IDocumentSession Session { get; }
 
-    IQueryable<AeroUser> Users { get; }
+        /// <summary>
+    /// Gets or sets the Users.
+    /// </summary>
+IQueryable<AeroUser> Users { get; }
 
 
     // todo - add all AeroCMS repositories as properties on AeroDb class + IAeroDB interface
@@ -21,18 +27,30 @@ public interface IAeroDb : IAsyncUnitOfWork
 }
 
 
+/// <summary>
+/// Represents a class for AeroDb.
+/// </summary>
 public class AeroDb(
     IDocumentSession session,
     ILogger<AeroDb> log)
     : IAeroDb
 {
-    public IDocumentSession Session => session;
+        /// <summary>
+    /// Gets or sets the Session.
+    /// </summary>
+public IDocumentSession Session => session;
 
     // Lazy initialization ensures the repo is only created when accessed
     // and guarantees it uses the UoW's specific session.
-    public IQueryable<AeroUser> Users => session.Query<AeroUser>();
+        /// <summary>
+    /// Gets or sets the Users.
+    /// </summary>
+public IQueryable<AeroUser> Users => session.Query<AeroUser>();
 
-    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// SaveChangesAsync method.
+    /// </summary>
+public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         // Your existing logic
         // var changes = _session.Advanced.WhatChanged();
@@ -50,7 +68,10 @@ public class AeroDb(
         }
     }
 
-    public Task StartTransactionAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// StartTransactionAsync method.
+    /// </summary>
+public Task StartTransactionAsync(CancellationToken cancellationToken = default)
     {
         // AeroDB sessions are transactional by default. 
         // We could use ClusterTransaction if needed, but for standard session-level transactions,
@@ -58,12 +79,18 @@ public class AeroDb(
         return Task.CompletedTask;
     }
 
-    public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// CommitTransactionAsync method.
+    /// </summary>
+public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
         await SaveChangesAsync(cancellationToken);
     }
 
-    public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// RollbackTransactionAsync method.
+    /// </summary>
+public Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
         // To rollback in AeroDB session, we clear the session state.
         // todo - rollback marten transaction
@@ -71,7 +98,10 @@ public class AeroDb(
         return Task.CompletedTask;
     }
 
-    public void Dispose()
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public void Dispose()
     {
         session.Dispose();
         GC.SuppressFinalize(this);

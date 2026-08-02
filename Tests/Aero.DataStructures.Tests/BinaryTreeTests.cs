@@ -1,15 +1,21 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 using Bogus;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for BinaryTreeTests.
+/// </summary>
 public class BinaryTreeTests
 {
     private readonly Faker _faker = new();
 
-    [Test]
+        /// <summary>
+    /// Insert_SingleValue_RootIsCorrect method.
+    /// </summary>
+[Test]
     public void Insert_SingleValue_RootIsCorrect()
     {
         // Arrange

@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -7,6 +7,9 @@ using Humanizer;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for SimpleGraphTests.
+/// </summary>
 public class SimpleGraphTests
 {
     private readonly Faker _faker = new();
@@ -14,7 +17,10 @@ public class SimpleGraphTests
 
     //#region Constructor Tests
 
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldCreateUndirectedGraph_ByDefault method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldCreateUndirectedGraph_ByDefault()
     {
         var graph = new SimpleGraph<int>();
@@ -22,7 +28,10 @@ public class SimpleGraphTests
         graph.IsDirected.ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_ShouldRespectDirectedParameter method.
+    /// </summary>
+[Test]
     public void Constructor_ShouldRespectDirectedParameter()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -34,7 +43,10 @@ public class SimpleGraphTests
 
     //#region Vertex Tests
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldIncreaseVertexCount method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldIncreaseVertexCount()
     {
         var graph = new SimpleGraph<string>();
@@ -45,7 +57,10 @@ public class SimpleGraphTests
         graph.VertexCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldReturnTrue_WhenNew method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldReturnTrue_WhenNew()
     {
         var graph = new SimpleGraph<int>();
@@ -56,7 +71,10 @@ public class SimpleGraphTests
         result.ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldReturnFalse_WhenExists method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldReturnFalse_WhenExists()
     {
         var graph = new SimpleGraph<string>();
@@ -67,7 +85,10 @@ public class SimpleGraphTests
         result.ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// ContainsVertex_ShouldReturnCorrectResult method.
+    /// </summary>
+[Test]
     public void ContainsVertex_ShouldReturnCorrectResult()
     {
         var graph = new SimpleGraph<string>();
@@ -81,7 +102,10 @@ public class SimpleGraphTests
 
     //#region Edge Tests
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldIncreaseEdgeCount method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldIncreaseEdgeCount()
     {
         var graph = new SimpleGraph<string>();
@@ -91,7 +115,10 @@ public class SimpleGraphTests
         graph.EdgeCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldAutoAddVertices method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldAutoAddVertices()
     {
         var graph = new SimpleGraph<int>();
@@ -104,7 +131,10 @@ public class SimpleGraphTests
         graph.ContainsVertex(v2).ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldThrow_OnSelfLoop method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldThrow_OnSelfLoop()
     {
         var graph = new SimpleGraph<string>();
@@ -113,7 +143,10 @@ public class SimpleGraphTests
         act.ShouldThrow<ArgumentException>();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldReturnFalse_OnDuplicate method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldReturnFalse_OnDuplicate()
     {
         var graph = new SimpleGraph<string>();
@@ -124,7 +157,10 @@ public class SimpleGraphTests
         result.ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_Undirected_ShouldBeSymmetric method.
+    /// </summary>
+[Test]
     public void AddEdge_Undirected_ShouldBeSymmetric()
     {
         var graph = new SimpleGraph<string>(directed: false);
@@ -134,7 +170,10 @@ public class SimpleGraphTests
         graph.ContainsEdge("Y", "X").ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_Directed_ShouldNotBeSymmetric method.
+    /// </summary>
+[Test]
     public void AddEdge_Directed_ShouldNotBeSymmetric()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -144,7 +183,10 @@ public class SimpleGraphTests
         graph.ContainsEdge("Y", "X").ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// GetEdges_ShouldReturnAllEdges method.
+    /// </summary>
+[Test]
     public void GetEdges_ShouldReturnAllEdges()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -161,7 +203,10 @@ public class SimpleGraphTests
 
     //#region Degree Tests
 
-    [Test]
+        /// <summary>
+    /// GetDegree_Undirected_ShouldCountNeighbors method.
+    /// </summary>
+[Test]
     public void GetDegree_Undirected_ShouldCountNeighbors()
     {
         var graph = new SimpleGraph<string>(directed: false);
@@ -172,7 +217,10 @@ public class SimpleGraphTests
         graph.GetDegree("center").ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// GetDegree_Directed_ShouldCountBothDirections method.
+    /// </summary>
+[Test]
     public void GetDegree_Directed_ShouldCountBothDirections()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -183,7 +231,10 @@ public class SimpleGraphTests
         graph.GetDegree("center").ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// GetInDegree_ShouldCountIncoming method.
+    /// </summary>
+[Test]
     public void GetInDegree_ShouldCountIncoming()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -194,7 +245,10 @@ public class SimpleGraphTests
         graph.GetInDegree("target").ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// GetOutDegree_ShouldCountOutgoing method.
+    /// </summary>
+[Test]
     public void GetOutDegree_ShouldCountOutgoing()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -205,7 +259,10 @@ public class SimpleGraphTests
         graph.GetOutDegree("source").ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// GetInDegree_ShouldThrow_ForUndirected method.
+    /// </summary>
+[Test]
     public void GetInDegree_ShouldThrow_ForUndirected()
     {
         var graph = new SimpleGraph<string>(directed: false);
@@ -219,7 +276,10 @@ public class SimpleGraphTests
 
     //#region Neighbor Tests
 
-    [Test]
+        /// <summary>
+    /// GetNeighbors_ShouldReturnAdjacentVertices method.
+    /// </summary>
+[Test]
     public void GetNeighbors_ShouldReturnAdjacentVertices()
     {
         var graph = new SimpleGraph<string>();
@@ -232,7 +292,10 @@ public class SimpleGraphTests
         neighbors.ShouldBe(new[] { "n1", "n2", "n3" }, ignoreOrder: true);
     }
 
-    [Test]
+        /// <summary>
+    /// GetVertices_ShouldReturnAllVertices method.
+    /// </summary>
+[Test]
     public void GetVertices_ShouldReturnAllVertices()
     {
         var graph = new SimpleGraph<int>();
@@ -247,7 +310,10 @@ public class SimpleGraphTests
 
     //#region Traversal Tests
 
-    [Test]
+        /// <summary>
+    /// BreadthFirstSearch_ShouldVisitAllVertices method.
+    /// </summary>
+[Test]
     public void BreadthFirstSearch_ShouldVisitAllVertices()
     {
         var graph = new SimpleGraph<string>();
@@ -261,7 +327,10 @@ public class SimpleGraphTests
         result.First().ShouldBe("A");
     }
 
-    [Test]
+        /// <summary>
+    /// DepthFirstSearch_ShouldVisitAllVertices method.
+    /// </summary>
+[Test]
     public void DepthFirstSearch_ShouldVisitAllVertices()
     {
         var graph = new SimpleGraph<string>();
@@ -275,7 +344,10 @@ public class SimpleGraphTests
         result.First().ShouldBe("1");
     }
 
-    [Test]
+        /// <summary>
+    /// Traversal_ShouldReturnEmpty_ForNonExistentVertex method.
+    /// </summary>
+[Test]
     public void Traversal_ShouldReturnEmpty_ForNonExistentVertex()
     {
         var graph = new SimpleGraph<string>();
@@ -288,7 +360,10 @@ public class SimpleGraphTests
 
     //#region Shortest Path Tests
 
-    [Test]
+        /// <summary>
+    /// GetShortestPath_ShouldFindDirectPath method.
+    /// </summary>
+[Test]
     public void GetShortestPath_ShouldFindDirectPath()
     {
         var graph = new SimpleGraph<string>();
@@ -300,7 +375,10 @@ public class SimpleGraphTests
         path.ShouldContain("B");
     }
 
-    [Test]
+        /// <summary>
+    /// GetShortestPath_ShouldFindMultiHopPath method.
+    /// </summary>
+[Test]
     public void GetShortestPath_ShouldFindMultiHopPath()
     {
         var graph = new SimpleGraph<string>();
@@ -317,7 +395,10 @@ public class SimpleGraphTests
         path.Count.ShouldBe(4);
     }
 
-    [Test]
+        /// <summary>
+    /// GetShortestPath_ShouldReturnEmpty_WhenNoPath method.
+    /// </summary>
+[Test]
     public void GetShortestPath_ShouldReturnEmpty_WhenNoPath()
     {
         var graph = new SimpleGraph<string>();
@@ -329,7 +410,10 @@ public class SimpleGraphTests
         path.ShouldBeEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// GetShortestPath_ShouldReturnSelf_WhenSourceIsTarget method.
+    /// </summary>
+[Test]
     public void GetShortestPath_ShouldReturnSelf_WhenSourceIsTarget()
     {
         var graph = new SimpleGraph<int>();
@@ -346,7 +430,10 @@ public class SimpleGraphTests
 
     //#region Connectivity Tests
 
-    [Test]
+        /// <summary>
+    /// IsConnected_ShouldReturnTrue_ForConnectedGraph method.
+    /// </summary>
+[Test]
     public void IsConnected_ShouldReturnTrue_ForConnectedGraph()
     {
         var graph = new SimpleGraph<string>();
@@ -357,7 +444,10 @@ public class SimpleGraphTests
         graph.IsConnected().ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// IsConnected_ShouldReturnFalse_ForDisconnectedGraph method.
+    /// </summary>
+[Test]
     public void IsConnected_ShouldReturnFalse_ForDisconnectedGraph()
     {
         var graph = new SimpleGraph<string>();
@@ -367,7 +457,10 @@ public class SimpleGraphTests
         graph.IsConnected().ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// IsConnected_ShouldThrow_ForDirectedGraph method.
+    /// </summary>
+[Test]
     public void IsConnected_ShouldThrow_ForDirectedGraph()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -376,7 +469,10 @@ public class SimpleGraphTests
         act.ShouldThrow<InvalidOperationException>();
     }
 
-    [Test]
+        /// <summary>
+    /// IsStronglyConnected_ShouldWork_ForDirectedGraph method.
+    /// </summary>
+[Test]
     public void IsStronglyConnected_ShouldWork_ForDirectedGraph()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -387,7 +483,10 @@ public class SimpleGraphTests
         graph.IsStronglyConnected().ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// IsStronglyConnected_ShouldReturnFalse_WhenNotStronglyConnected method.
+    /// </summary>
+[Test]
     public void IsStronglyConnected_ShouldReturnFalse_WhenNotStronglyConnected()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -401,7 +500,10 @@ public class SimpleGraphTests
 
     //#region Cycle Detection Tests
 
-    [Test]
+        /// <summary>
+    /// HasCycle_ShouldReturnTrue_WhenCycleExists_Undirected method.
+    /// </summary>
+[Test]
     public void HasCycle_ShouldReturnTrue_WhenCycleExists_Undirected()
     {
         var graph = new SimpleGraph<string>(directed: false);
@@ -412,7 +514,10 @@ public class SimpleGraphTests
         graph.HasCycle().ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// HasCycle_ShouldReturnFalse_WhenNoCycle_Undirected method.
+    /// </summary>
+[Test]
     public void HasCycle_ShouldReturnFalse_WhenNoCycle_Undirected()
     {
         var graph = new SimpleGraph<string>(directed: false);
@@ -422,7 +527,10 @@ public class SimpleGraphTests
         graph.HasCycle().ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// HasCycle_ShouldDetectCycles_Directed method.
+    /// </summary>
+[Test]
     public void HasCycle_ShouldDetectCycles_Directed()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -433,7 +541,10 @@ public class SimpleGraphTests
         graph.HasCycle().ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// HasCycle_ShouldReturnFalse_ForTree_Directed method.
+    /// </summary>
+[Test]
     public void HasCycle_ShouldReturnFalse_ForTree_Directed()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -447,7 +558,10 @@ public class SimpleGraphTests
 
     //#region Bipartite Tests
 
-    [Test]
+        /// <summary>
+    /// IsBipartite_ShouldReturnTrue_ForBipartiteGraph method.
+    /// </summary>
+[Test]
     public void IsBipartite_ShouldReturnTrue_ForBipartiteGraph()
     {
         var graph = new SimpleGraph<string>();
@@ -459,7 +573,10 @@ public class SimpleGraphTests
         graph.IsBipartite().ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// IsBipartite_ShouldReturnFalse_ForOddCycle method.
+    /// </summary>
+[Test]
     public void IsBipartite_ShouldReturnFalse_ForOddCycle()
     {
         var graph = new SimpleGraph<string>();
@@ -474,7 +591,10 @@ public class SimpleGraphTests
 
     //#region Connected Components Tests
 
-    [Test]
+        /// <summary>
+    /// GetConnectedComponents_ShouldReturnCorrectCount method.
+    /// </summary>
+[Test]
     public void GetConnectedComponents_ShouldReturnCorrectCount()
     {
         var graph = new SimpleGraph<string>();
@@ -487,7 +607,10 @@ public class SimpleGraphTests
         components.Count().ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// GetConnectedComponents_ShouldThrow_ForDirected method.
+    /// </summary>
+[Test]
     public void GetConnectedComponents_ShouldThrow_ForDirected()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -496,7 +619,10 @@ public class SimpleGraphTests
         act.ShouldThrow<InvalidOperationException>();
     }
 
-    [Test]
+        /// <summary>
+    /// GetStronglyConnectedComponents_ShouldWork_ForDirected method.
+    /// </summary>
+[Test]
     public void GetStronglyConnectedComponents_ShouldWork_ForDirected()
     {
         var graph = new SimpleGraph<string>(directed: true);
@@ -513,7 +639,10 @@ public class SimpleGraphTests
 
     //#region Remove Tests
 
-    [Test]
+        /// <summary>
+    /// RemoveVertex_ShouldRemoveAndReturnTrue method.
+    /// </summary>
+[Test]
     public void RemoveVertex_ShouldRemoveAndReturnTrue()
     {
         var graph = new SimpleGraph<string>();
@@ -525,7 +654,10 @@ public class SimpleGraphTests
         graph.ContainsVertex("remove").ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// RemoveVertex_ShouldRemoveIncidentEdges method.
+    /// </summary>
+[Test]
     public void RemoveVertex_ShouldRemoveIncidentEdges()
     {
         var graph = new SimpleGraph<string>();
@@ -537,7 +669,10 @@ public class SimpleGraphTests
         graph.EdgeCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// RemoveEdge_ShouldRemoveCorrectly method.
+    /// </summary>
+[Test]
     public void RemoveEdge_ShouldRemoveCorrectly()
     {
         var graph = new SimpleGraph<string>();
@@ -553,7 +688,10 @@ public class SimpleGraphTests
 
     //#region Clear Tests
 
-    [Test]
+        /// <summary>
+    /// Clear_ShouldResetGraph method.
+    /// </summary>
+[Test]
     public void Clear_ShouldResetGraph()
     {
         var graph = new SimpleGraph<int>();
@@ -571,7 +709,10 @@ public class SimpleGraphTests
 
     //#region Theory Tests
 
-    [Test]
+        /// <summary>
+    /// VertexCount_ShouldBeAccurate method.
+    /// </summary>
+[Test]
     [Arguments(0)]
     [Arguments(1)]
     [Arguments(5)]
@@ -587,7 +728,10 @@ public class SimpleGraphTests
         graph.VertexCount.ShouldBe(count);
     }
 
-    [Test]
+        /// <summary>
+    /// IsDirected_ShouldMatchConstructor method.
+    /// </summary>
+[Test]
     [Arguments(true)]
     [Arguments(false)]
     public void IsDirected_ShouldMatchConstructor(bool directed)
@@ -601,7 +745,10 @@ public class SimpleGraphTests
 
     //#region Real-World Scenario Tests
 
-    [Test]
+        /// <summary>
+    /// SocialNetworkScenario_ShouldWorkCorrectly method.
+    /// </summary>
+[Test]
     public void SocialNetworkScenario_ShouldWorkCorrectly()
     {
         var graph = new SimpleGraph<string>(directed: false);
@@ -626,7 +773,10 @@ public class SimpleGraphTests
         path.Last().ShouldBe("Diana");
     }
 
-    [Test]
+        /// <summary>
+    /// TwitterFollowScenario_ShouldWorkCorrectly method.
+    /// </summary>
+[Test]
     public void TwitterFollowScenario_ShouldWorkCorrectly()
     {
         var graph = new SimpleGraph<string>(directed: true);

@@ -6,22 +6,16 @@
         <ImplicitUsings>true</ImplicitUsings>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <NoWarn>1701;1702;1591;</NoWarn>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <NoWarn>1701;1702;1591;</NoWarn>
-    </PropertyGroup>
-
     <PropertyGroup Label="Package information">
-        <Version>0.0.5-alpha</Version>
+        <Version>0.0.9.7-alpha</Version>
         <Authors>Troy Robinson, et al</Authors>
         <Company>Microbians</Company>
         <Copyright>Copyright (c) 2023-2026 Microbians</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageTags>asp.net efcore Aero</PackageTags>
-<!--        <PackageIcon>../../assets/Aero2.png</PackageIcon>-->
+        <PackageIcon>aero-logo-new.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageProjectUrl>https://github.com/microbian-systems/Aero</PackageProjectUrl>
         <RepositoryUrl>https://github.com/microbian-systems/Aero</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -31,4 +25,9 @@
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)../assets/aero-logo-new.png" Pack="true" PackagePath="\" />
+        <None Include="$(MSBuildThisFileDirectory)../README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 </Project>

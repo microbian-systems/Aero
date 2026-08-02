@@ -78,4 +78,7 @@ var user = new AeroUser()
 // ... existing setup logic ...
 
 
-    public partial class Program;
+        /// <summary>
+    /// Represents a class for Program.
+    /// </summary>
+public partial class Program;

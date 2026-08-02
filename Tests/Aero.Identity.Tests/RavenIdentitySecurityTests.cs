@@ -1,6 +1,9 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 namespace Aero.Identity.Tests;
 
+/// <summary>
+/// Represents a class for AeroIdentitySecurityTests.
+/// </summary>
 public class AeroIdentitySecurityTests
 {
     // These tests are commented out because AeroIdentitySecurity is currently commented out in the source.

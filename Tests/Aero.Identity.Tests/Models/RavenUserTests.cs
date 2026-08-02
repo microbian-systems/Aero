@@ -1,11 +1,17 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Identity.Models;
 
 namespace Aero.Identity.Tests.Models;
 
+/// <summary>
+/// Represents a class for AeroUserTests.
+/// </summary>
 public class AeroUserTests
 {
-    [Test]
+        /// <summary>
+    /// CanInitializeAeroUser method.
+    /// </summary>
+[Test]
     public void CanInitializeAeroUser()
     {
         // Arrange & Act
@@ -17,7 +23,10 @@ public class AeroUserTests
         Assert.Empty(user.Passkeys);
     }
 
-    [Test]
+        /// <summary>
+    /// CanAddPasskeyToAeroUser method.
+    /// </summary>
+[Test]
     public void CanAddPasskeyToAeroUser()
     {
         // Arrange

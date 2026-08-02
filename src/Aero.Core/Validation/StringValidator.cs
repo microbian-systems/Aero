@@ -21,6 +21,9 @@ public sealed class StringValidator : StringRuleBuilder<StringValidator>
     public static StringValidator For(string? value, string fieldName = "Value")
         => new(fieldName, value);
 
-    public ValidationResult Validate()
+        /// <summary>
+    /// Validate method.
+    /// </summary>
+public ValidationResult Validate()
         => new(GetErrors());
 }

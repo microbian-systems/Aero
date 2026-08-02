@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for PublicMetricsTests.
+/// </summary>
 public class PublicMetricsTests
 {
-    [Test]
+        /// <summary>
+    /// PublicMetrics_ShouldHaveDefaultValues method.
+    /// </summary>
+[Test]
     public async Task PublicMetrics_ShouldHaveDefaultValues()
     {
         // Arrange & Act
@@ -20,7 +26,10 @@ public class PublicMetricsTests
         await Assert.That(metrics.QuoteCount).IsEqualTo(0);
     }
 
-    [Test]
+        /// <summary>
+    /// PublicMetrics_Serialization_ShouldIncludeAllProperties method.
+    /// </summary>
+[Test]
     public async Task PublicMetrics_Serialization_ShouldIncludeAllProperties()
     {
         // Arrange
@@ -42,7 +51,10 @@ public class PublicMetricsTests
         await Assert.That(json).Contains("10");
     }
 
-    [Test]
+        /// <summary>
+    /// PublicMetrics_Deserialization_ShouldParseAllProperties method.
+    /// </summary>
+[Test]
     public async Task PublicMetrics_Deserialization_ShouldParseAllProperties()
     {
         // Arrange

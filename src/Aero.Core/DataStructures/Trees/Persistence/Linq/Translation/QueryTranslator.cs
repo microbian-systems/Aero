@@ -3,6 +3,9 @@ using Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Linq.Translation;
 
+/// <summary>
+/// Represents a class for QueryTranslator.
+/// </summary>
 public sealed class QueryTranslator<TDocument>(IDocumentIndexRegistry<TDocument> registry)
     where TDocument : class
 {
@@ -11,7 +14,10 @@ public sealed class QueryTranslator<TDocument>(IDocumentIndexRegistry<TDocument>
     private int? _take;
     private int? _skip;
 
-    public TranslatedQuery<TDocument> Translate(Expression expression)
+        /// <summary>
+    /// Translate method.
+    /// </summary>
+public TranslatedQuery<TDocument> Translate(Expression expression)
     {
         Visit(expression);
         return new TranslatedQuery<TDocument>

@@ -2,34 +2,67 @@ using System.Runtime.InteropServices;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Nodes;
 
+/// <summary>
+/// Represents a struct for BPlusLeafRecord.
+/// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct BPlusLeafRecord<TKey, TValue>
     where TKey : unmanaged
     where TValue : unmanaged
 {
-    public RecordFlags Flags;
-    public long XMin;
-    public long XMax;
-    public TKey Key;
-    public TValue Value;
+        /// <summary>
+    /// Flags.
+    /// </summary>
+public RecordFlags Flags;
+        /// <summary>
+    /// XMin.
+    /// </summary>
+public long XMin;
+        /// <summary>
+    /// XMax.
+    /// </summary>
+public long XMax;
+        /// <summary>
+    /// Key.
+    /// </summary>
+public TKey Key;
+        /// <summary>
+    /// Value.
+    /// </summary>
+public TValue Value;
 
-    public bool IsLive => (Flags & RecordFlags.Deleted) == 0 && XMax == 0;
-    public bool IsDeleted => (Flags & RecordFlags.Deleted) != 0 || XMax != 0;
+        /// <summary>
+    /// Gets or sets the Is Live.
+    /// </summary>
+public bool IsLive => (Flags & RecordFlags.Deleted) == 0 && XMax == 0;
+        /// <summary>
+    /// Gets or sets the Is Deleted.
+    /// </summary>
+public bool IsDeleted => (Flags & RecordFlags.Deleted) != 0 || XMax != 0;
 
-    public void MarkDeleted(long deleterTxnId)
+        /// <summary>
+    /// MarkDeleted method.
+    /// </summary>
+public void MarkDeleted(long deleterTxnId)
     {
         XMax = deleterTxnId;
         Flags |= RecordFlags.Deleted;
         Value = default;
     }
 
-    public void MarkDeleted()
+        /// <summary>
+    /// MarkDeleted method.
+    /// </summary>
+public void MarkDeleted()
     {
         Flags |= RecordFlags.Deleted;
         Value = default;
     }
 
-    public static BPlusLeafRecord<TKey, TValue> Tombstone(TKey key) => new()
+        /// <summary>
+    /// Tombstone method.
+    /// </summary>
+public static BPlusLeafRecord<TKey, TValue> Tombstone(TKey key) => new()
     {
         Flags = RecordFlags.Deleted,
         XMin = 0,
@@ -38,7 +71,10 @@ public struct BPlusLeafRecord<TKey, TValue>
         Value = default
     };
 
-    public static BPlusLeafRecord<TKey, TValue> Live(TKey key, TValue value) => new()
+        /// <summary>
+    /// Live method.
+    /// </summary>
+public static BPlusLeafRecord<TKey, TValue> Live(TKey key, TValue value) => new()
     {
         Flags = RecordFlags.None,
         XMin = 0,
@@ -47,7 +83,10 @@ public struct BPlusLeafRecord<TKey, TValue>
         Value = value
     };
 
-    public static BPlusLeafRecord<TKey, TValue> Create(TKey key, TValue value, long txnId) => new()
+        /// <summary>
+    /// Create method.
+    /// </summary>
+public static BPlusLeafRecord<TKey, TValue> Create(TKey key, TValue value, long txnId) => new()
     {
         Flags = RecordFlags.None,
         XMin = txnId,

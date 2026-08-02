@@ -1,14 +1,20 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace Aero.Web.Exceptions;
 
+/// <summary>
+/// Represents a class for AeroGlobalExceptionHandler.
+/// </summary>
 public sealed class AeroGlobalExceptionHandler(
     ILogger<AeroGlobalExceptionHandler> logger,
     IHostEnvironment environment,
     IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(
+        /// <summary>
+    /// TryHandleAsync method.
+    /// </summary>
+public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,
         CancellationToken cancellationToken)

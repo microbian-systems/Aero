@@ -10,15 +10,27 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for VkProvider.
+/// </summary>
 public class VkProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<VkProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "vk";
-    public override string Name => "VK";
-    public override string[] Scopes => new[]
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "vk";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "VK";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => new[]
     {
         "vkid.personal_info",
         "email",
@@ -29,10 +41,19 @@ public class VkProvider(
         "video"
     };
 
-    public override int MaxConcurrentJobs => 2;
-    public override int MaxLength(object? additionalSettings = null) => 2048;
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 2;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 2048;
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -63,7 +84,10 @@ public class VkProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -112,7 +136,10 @@ public class VkProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -155,7 +182,10 @@ public class VkProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -202,7 +232,10 @@ public class VkProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -385,118 +418,193 @@ public class VkProvider(
 
     private class VkMedia
     {
-        public string Id { get; set; } = string.Empty;
-        public string Type { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Type.
+        /// </summary>
+public string Type { get; set; } = string.Empty;
     }
 
     private class VkTokenResponse
     {
-        [JsonPropertyName("access_token")]
+                /// <summary>
+        /// Gets or sets the Access Token.
+        /// </summary>
+[JsonPropertyName("access_token")]
         public string AccessToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("refresh_token")]
+                /// <summary>
+        /// Gets or sets the Refresh Token.
+        /// </summary>
+[JsonPropertyName("refresh_token")]
         public string RefreshToken { get; set; } = string.Empty;
 
-        [JsonPropertyName("expires_in")]
+                /// <summary>
+        /// Gets or sets the Expires In.
+        /// </summary>
+[JsonPropertyName("expires_in")]
         public int ExpiresIn { get; set; }
 
-        [JsonPropertyName("scope")]
+                /// <summary>
+        /// Gets or sets the Scope.
+        /// </summary>
+[JsonPropertyName("scope")]
         public string? Scope { get; set; }
     }
 
     private class VkUserInfoResponse
     {
-        [JsonPropertyName("user")]
+                /// <summary>
+        /// Gets or sets the User.
+        /// </summary>
+[JsonPropertyName("user")]
         public VkUserInfo User { get; set; } = new();
     }
 
     private class VkUserInfo
     {
-        [JsonPropertyName("user_id")]
+                /// <summary>
+        /// Gets or sets the User Id.
+        /// </summary>
+[JsonPropertyName("user_id")]
         public string UserId { get; set; } = string.Empty;
 
-        [JsonPropertyName("first_name")]
+                /// <summary>
+        /// Gets or sets the First Name.
+        /// </summary>
+[JsonPropertyName("first_name")]
         public string FirstName { get; set; } = string.Empty;
 
-        [JsonPropertyName("last_name")]
+                /// <summary>
+        /// Gets or sets the Last Name.
+        /// </summary>
+[JsonPropertyName("last_name")]
         public string LastName { get; set; } = string.Empty;
 
-        [JsonPropertyName("avatar")]
+                /// <summary>
+        /// Gets or sets the Avatar.
+        /// </summary>
+[JsonPropertyName("avatar")]
         public string? Avatar { get; set; }
     }
 
     private class VkWallPostResponse
     {
-        [JsonPropertyName("response")]
+                /// <summary>
+        /// Gets or sets the Response.
+        /// </summary>
+[JsonPropertyName("response")]
         public VkWallPostResponseData? Response { get; set; }
     }
 
     private class VkWallPostResponseData
     {
-        [JsonPropertyName("post_id")]
+                /// <summary>
+        /// Gets or sets the Post Id.
+        /// </summary>
+[JsonPropertyName("post_id")]
         public int PostId { get; set; }
     }
 
     private class VkCommentResponse
     {
-        [JsonPropertyName("response")]
+                /// <summary>
+        /// Gets or sets the Response.
+        /// </summary>
+[JsonPropertyName("response")]
         public VkCommentResponseData? Response { get; set; }
     }
 
     private class VkCommentResponseData
     {
-        [JsonPropertyName("comment_id")]
+                /// <summary>
+        /// Gets or sets the Comment Id.
+        /// </summary>
+[JsonPropertyName("comment_id")]
         public int CommentId { get; set; }
     }
 
     private class VkPhotoUploadServerResponse
     {
-        [JsonPropertyName("response")]
+                /// <summary>
+        /// Gets or sets the Response.
+        /// </summary>
+[JsonPropertyName("response")]
         public VkUploadServerData Response { get; set; } = new();
     }
 
     private class VkVideoUploadServerResponse
     {
-        [JsonPropertyName("response")]
+                /// <summary>
+        /// Gets or sets the Response.
+        /// </summary>
+[JsonPropertyName("response")]
         public VkVideoUploadData Response { get; set; } = new();
     }
 
     private class VkUploadServerData
     {
-        [JsonPropertyName("upload_url")]
+                /// <summary>
+        /// Gets or sets the Upload Url.
+        /// </summary>
+[JsonPropertyName("upload_url")]
         public string UploadUrl { get; set; } = string.Empty;
     }
 
     private class VkVideoUploadData
     {
-        [JsonPropertyName("upload_url")]
+                /// <summary>
+        /// Gets or sets the Upload Url.
+        /// </summary>
+[JsonPropertyName("upload_url")]
         public string UploadUrl { get; set; } = string.Empty;
 
-        [JsonPropertyName("video_id")]
+                /// <summary>
+        /// Gets or sets the Video Id.
+        /// </summary>
+[JsonPropertyName("video_id")]
         public string VideoId { get; set; } = string.Empty;
     }
 
     private class VkPhotoUploadResult
     {
-        [JsonPropertyName("photo")]
+                /// <summary>
+        /// Gets or sets the Photo.
+        /// </summary>
+[JsonPropertyName("photo")]
         public string Photo { get; set; } = string.Empty;
 
-        [JsonPropertyName("server")]
+                /// <summary>
+        /// Gets or sets the Server.
+        /// </summary>
+[JsonPropertyName("server")]
         public int Server { get; set; }
 
-        [JsonPropertyName("hash")]
+                /// <summary>
+        /// Gets or sets the Hash.
+        /// </summary>
+[JsonPropertyName("hash")]
         public string Hash { get; set; } = string.Empty;
     }
 
     private class VkSavePhotoResponse
     {
-        [JsonPropertyName("response")]
+                /// <summary>
+        /// Gets or sets the Response.
+        /// </summary>
+[JsonPropertyName("response")]
         public List<VkSavedPhoto>? Response { get; set; }
     }
 
     private class VkSavedPhoto
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public int Id { get; set; }
     }
 

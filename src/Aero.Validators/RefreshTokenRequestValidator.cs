@@ -5,9 +5,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Validators;
 
+/// <summary>
+/// Represents a class for RefreshTokenRequestValidator.
+/// </summary>
 public class RefreshTokenRequestValidator : BaseModelValidator<RefreshTokenRequest>
 {
-    public RefreshTokenRequestValidator(IMemoryCache cache, ILogger<BaseModelValidator<RefreshTokenRequest>> log) 
+        /// <summary>
+    /// Initializes a new instance of the <see cref="RefreshTokenRequestValidator"/> class.
+    /// </summary>
+public RefreshTokenRequestValidator(IMemoryCache cache, ILogger<BaseModelValidator<RefreshTokenRequest>> log) 
         : base(cache, log)
     {
         RuleFor(x => x.AccessToken).NotNullOrEmpty();

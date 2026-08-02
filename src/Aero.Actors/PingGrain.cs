@@ -1,4 +1,4 @@
-﻿
+
 using Aero.Actors.Abstractions;
 using Aero.Core;
 using Orleans.Concurrency;
@@ -6,23 +6,35 @@ using Orleans.Concurrency;
 namespace Aero.Actors;
 
 
+/// <summary>
+/// Represents a class for PingGrain.
+/// </summary>
 [StatelessWorker]
 public class PingGrain(IGrainFactory grainFactory, ILogger<PingGrain> log) 
     : AeroActor(log), IPingGrain
 {
-    public override async Task OnActivateAsync(CancellationToken cancellationToken)
+        /// <summary>
+    /// OnActivateAsync method.
+    /// </summary>
+public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
         log.LogInformation("PingGrain activated.");
         await base.OnActivateAsync(cancellationToken);
     }
 
-    public override async Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
+        /// <summary>
+    /// OnDeactivateAsync method.
+    /// </summary>
+public override async Task OnDeactivateAsync(DeactivationReason reason, CancellationToken cancellationToken)
     {
         log.LogInformation("PingGrain deactivated.");
         await base.OnDeactivateAsync(reason, cancellationToken);
     }
 
-    public async Task<Message> Ping()
+        /// <summary>
+    /// Ping method.
+    /// </summary>
+public async Task<Message> Ping()
     {
         var activity = Span.StartActivity("PingGrain.Ping");
         log.LogInformation("ping received.");

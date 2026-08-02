@@ -5,12 +5,18 @@ using Infisical.Sdk.Model;
 
 namespace Aero.Secrets;
 
+/// <summary>
+/// Represents a class for InfisicalSecretManager.
+/// </summary>
 public sealed class InfisicalSecretManager : SecretManagerBase
 {
     private readonly InfisicalClient _client;
     private readonly InfisicalSecretManagerOptions _options;
 
-    public InfisicalSecretManager(InfisicalSecretManagerOptions? options = null)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="InfisicalSecretManager"/> class.
+    /// </summary>
+public InfisicalSecretManager(InfisicalSecretManagerOptions? options = null)
     {
         _options = options ?? new InfisicalSecretManagerOptions();
         _client = new InfisicalClient(new InfisicalSdkSettingsBuilder()
@@ -18,7 +24,10 @@ public sealed class InfisicalSecretManager : SecretManagerBase
             .Build());
     }
 
-    protected override StoredSecretReference StoreCore(string secret, string name, SecretProviderType providerType)
+        /// <summary>
+    /// StoreCore method.
+    /// </summary>
+protected override StoredSecretReference StoreCore(string secret, string name, SecretProviderType providerType)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(_options.ProjectId);
         ArgumentException.ThrowIfNullOrWhiteSpace(_options.EnvironmentSlug);
@@ -40,7 +49,10 @@ public sealed class InfisicalSecretManager : SecretManagerBase
         return new StoredSecretReference(providerType, name, null, BuildReferenceMetadata(name, providerType, created.Id));
     }
 
-    protected override string ReadCore(StoredSecretReference secretReference)
+        /// <summary>
+    /// ReadCore method.
+    /// </summary>
+protected override string ReadCore(StoredSecretReference secretReference)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(_options.ProjectId);
         ArgumentException.ThrowIfNullOrWhiteSpace(_options.EnvironmentSlug);

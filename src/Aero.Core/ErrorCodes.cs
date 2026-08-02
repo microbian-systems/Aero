@@ -1,5 +1,8 @@
-﻿namespace Aero.Core;
+namespace Aero.Core;
 
+/// <summary>
+/// Defines an enumeration for ErrorCodes.
+/// </summary>
 public enum ErrorCodes
 {
     InputNull = 1000,

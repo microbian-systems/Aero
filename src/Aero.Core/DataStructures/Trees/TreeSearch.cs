@@ -6,7 +6,10 @@ namespace Aero.Core.DataStructures.Trees;
 /// <typeparam name="T">The type of the values in the tree.</typeparam>
 public abstract class TreeSearch<T> : ISearchAlgorithm<T>
 {
-    protected readonly ITree<T> Tree;
+        /// <summary>
+    /// Tree.
+    /// </summary>
+protected readonly ITree<T> Tree;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TreeSearch{T}"/> class.

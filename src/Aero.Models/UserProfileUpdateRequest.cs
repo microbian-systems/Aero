@@ -1,17 +1,32 @@
 namespace Aero.Models;
 
+/// <summary>
+/// Represents a class for UserProfileUpdateRequest.
+/// </summary>
 public class UserProfileUpdateRequest
 {
-    [JsonPropertyName("id")]
+        /// <summary>
+    /// Gets or sets the Id.
+    /// </summary>
+[JsonPropertyName("id")]
     public string? Id {get; set;}
         
-    [JsonPropertyName("name")]
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+[JsonPropertyName("name")]
     public string Name { get; set; }
         
-    [JsonPropertyName("website")]
+        /// <summary>
+    /// Gets or sets the Website.
+    /// </summary>
+[JsonPropertyName("website")]
     public string Website { get; set; }
 
-    [JsonPropertyName("social_media")] 
+        /// <summary>
+    /// Gets or sets the Social Media.
+    /// </summary>
+[JsonPropertyName("social_media")] 
     public Dictionary<string, string> SocialMedia { get; set; } = new();
 
 //        [JsonPropertyName("firstname")] 
@@ -20,12 +35,21 @@ public class UserProfileUpdateRequest
 //        [JsonPropertyName("lastname")]
 //        public string Lastname { get; set; }
         
-    [JsonPropertyName("tagline")]
+        /// <summary>
+    /// Gets or sets the Tagline.
+    /// </summary>
+[JsonPropertyName("tagline")]
     public string Tagline { get; set; }
         
-    [JsonPropertyName("location")]
+        /// <summary>
+    /// Gets or sets the Location.
+    /// </summary>
+[JsonPropertyName("location")]
     public string Location { get; set; }
         
-    [JsonPropertyName("bio")]
+        /// <summary>
+    /// Gets or sets the Bio.
+    /// </summary>
+[JsonPropertyName("bio")]
     public string Bio { get; set; }
 }

@@ -3,6 +3,9 @@ using Aero.Core.DataStructures.Trees.Persistence.Interfaces;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Indexes;
 
+/// <summary>
+/// Represents a class for DocumentIndexRegistry.
+/// </summary>
 public sealed class DocumentIndexRegistry<TDocument> : IDocumentIndexRegistry<TDocument>
     where TDocument : class
 {
@@ -11,23 +14,41 @@ public sealed class DocumentIndexRegistry<TDocument> : IDocumentIndexRegistry<TD
     private readonly Dictionary<string, IIndexUpdater<TDocument>> _updaters = new();
     private readonly List<IndexDefinition> _allIndexes = new();
 
-    public IReadOnlyList<IndexDefinition> AllIndexes => _allIndexes;
+        /// <summary>
+    /// Gets or sets the All Indexes.
+    /// </summary>
+public IReadOnlyList<IndexDefinition> AllIndexes => _allIndexes;
 
-    public IReadOnlyList<IIndexUpdater<TDocument>> AllUpdaters =>
+        /// <summary>
+    /// Gets or sets the All Updaters.
+    /// </summary>
+public IReadOnlyList<IIndexUpdater<TDocument>> AllUpdaters =>
         new List<IIndexUpdater<TDocument>>(_updaters.Values);
 
-    public IndexDefinition? FindByField(string fieldName) =>
+        /// <summary>
+    /// FindByField method.
+    /// </summary>
+public IndexDefinition? FindByField(string fieldName) =>
         _byField.TryGetValue(fieldName, out var def) ? def : null;
 
-    public IIndexExecutor<TDocument> GetExecutor(IndexDefinition definition) =>
+        /// <summary>
+    /// GetExecutor method.
+    /// </summary>
+public IIndexExecutor<TDocument> GetExecutor(IndexDefinition definition) =>
         _executors.TryGetValue(definition.Name, out var executor)
             ? executor
             : throw new InvalidOperationException($"No executor registered for index '{definition.Name}'.");
 
-    public IIndexUpdater<TDocument>? GetUpdater(string fieldName) =>
+        /// <summary>
+    /// GetUpdater method.
+    /// </summary>
+public IIndexUpdater<TDocument>? GetUpdater(string fieldName) =>
         _updaters.TryGetValue(fieldName, out var updater) ? updater : null;
 
-    public void Register<TField>(
+        /// <summary>
+    /// Register method.
+    /// </summary>
+public void Register<TField>(
         IndexDefinition<TDocument, TField> definition,
         IOrderedKeyValueTree<CompositeKey<TField, Guid>, Guid> tree)
         where TField : unmanaged, IComparable<TField>
@@ -39,7 +60,10 @@ public sealed class DocumentIndexRegistry<TDocument> : IDocumentIndexRegistry<TD
         _updaters[definition.FieldName] = new SecondaryIndexUpdater<TDocument, TField>(tree, definition.KeyExtractor);
     }
 
-    public void RegisterUnique<TField>(
+        /// <summary>
+    /// RegisterUnique method.
+    /// </summary>
+public void RegisterUnique<TField>(
         IndexDefinition<TDocument, TField> definition,
         IOrderedKeyValueTree<TField, Guid> tree)
         where TField : unmanaged, IComparable<TField>
@@ -59,9 +83,15 @@ internal sealed class CompositeIndexExecutor<TDocument, TField>(
     where TDocument : class
     where TField : unmanaged, IComparable<TField>
 {
-    public IndexDefinition Definition => definition;
+        /// <summary>
+    /// Gets or sets the Definition.
+    /// </summary>
+public IndexDefinition Definition => definition;
 
-    public async IAsyncEnumerable<Guid> LookupAsync(
+        /// <summary>
+    /// LookupAsync method.
+    /// </summary>
+public async IAsyncEnumerable<Guid> LookupAsync(
         object fieldValue,
         [EnumeratorCancellation] CancellationToken ct = default)
     {
@@ -75,7 +105,10 @@ internal sealed class CompositeIndexExecutor<TDocument, TField>(
         }
     }
 
-    public async IAsyncEnumerable<Guid> ScanRangeAsync(
+        /// <summary>
+    /// ScanRangeAsync method.
+    /// </summary>
+public async IAsyncEnumerable<Guid> ScanRangeAsync(
         object? from,
         object? to,
         [EnumeratorCancellation] CancellationToken ct = default)
@@ -111,9 +144,15 @@ internal sealed class UniqueIndexExecutor<TDocument, TField>(
     where TDocument : class
     where TField : unmanaged, IComparable<TField>
 {
-    public IndexDefinition Definition => definition;
+        /// <summary>
+    /// Gets or sets the Definition.
+    /// </summary>
+public IndexDefinition Definition => definition;
 
-    public async IAsyncEnumerable<Guid> LookupAsync(
+        /// <summary>
+    /// LookupAsync method.
+    /// </summary>
+public async IAsyncEnumerable<Guid> LookupAsync(
         object fieldValue,
         [EnumeratorCancellation] CancellationToken ct = default)
     {
@@ -123,7 +162,10 @@ internal sealed class UniqueIndexExecutor<TDocument, TField>(
             yield return id;
     }
 
-    public async IAsyncEnumerable<Guid> ScanRangeAsync(
+        /// <summary>
+    /// ScanRangeAsync method.
+    /// </summary>
+public async IAsyncEnumerable<Guid> ScanRangeAsync(
         object? from,
         object? to,
         [EnumeratorCancellation] CancellationToken ct = default)

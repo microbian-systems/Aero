@@ -1,10 +1,19 @@
-﻿namespace Aero.Core.Converters;
+namespace Aero.Core.Converters;
 
+/// <summary>
+/// Represents a class for StringToDoubleConverter.
+/// </summary>
 public class StringToDoubleConverter : JsonConverter<double>
 {
-    public override bool CanConvert(Type t) => t == typeof(double);
+        /// <summary>
+    /// CanConvert method.
+    /// </summary>
+public override bool CanConvert(Type t) => t == typeof(double);
 
-    public override double Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        /// <summary>
+    /// Read method.
+    /// </summary>
+public override double Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var value = reader.GetString();
         double l;
@@ -16,11 +25,17 @@ public class StringToDoubleConverter : JsonConverter<double>
         //throw new Exception("Cannot unmarshal type double");
     }
 
-    public override void Write(Utf8JsonWriter writer, double value, JsonSerializerOptions options)
+        /// <summary>
+    /// Write method.
+    /// </summary>
+public override void Write(Utf8JsonWriter writer, double value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value.ToString(), options);
         return;
     }
 
-    public static readonly StringToDoubleConverter Singleton = new StringToDoubleConverter();
+        /// <summary>
+    /// Singleton.
+    /// </summary>
+public static readonly StringToDoubleConverter Singleton = new StringToDoubleConverter();
 }

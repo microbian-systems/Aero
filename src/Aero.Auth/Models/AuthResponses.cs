@@ -108,8 +108,14 @@ public class RefreshTokenResponse
 /// </summary>
 public class LogoutResponse
 {
-    public bool Success { get; set; }
-    public string Message { get; set; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Success.
+    /// </summary>
+public bool Success { get; set; }
+        /// <summary>
+    /// Gets or sets the Message.
+    /// </summary>
+public string Message { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -117,7 +123,16 @@ public class LogoutResponse
 /// </summary>
 public class ExternalLoginChallengeResponse
 {
-    public string AuthorizationUrl { get; set; } = string.Empty;
-    public string State { get; set; } = string.Empty;
-    public string Provider { get; set; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Authorization Url.
+    /// </summary>
+public string AuthorizationUrl { get; set; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the State.
+    /// </summary>
+public string State { get; set; } = string.Empty;
+        /// <summary>
+    /// Gets or sets the Provider.
+    /// </summary>
+public string Provider { get; set; } = string.Empty;
 }

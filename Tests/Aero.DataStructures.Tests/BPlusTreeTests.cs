@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for BPlusTreeTests.
+/// </summary>
 public class BPlusTreeTests
 {
-    [Test]
+        /// <summary>
+    /// Insert_And_Find_Success method.
+    /// </summary>
+[Test]
     public void Insert_And_Find_Success()
     {
         // Arrange
@@ -24,7 +30,10 @@ public class BPlusTreeTests
         found.Value.ShouldBe(30);
     }
 
-    [Test]
+        /// <summary>
+    /// FindRange_Returns_Correct_Range method.
+    /// </summary>
+[Test]
     public void FindRange_Returns_Correct_Range()
     {
         // Arrange

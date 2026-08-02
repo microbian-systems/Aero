@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Errors;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Errors;
 
+/// <summary>
+/// Represents a class for ErrorResponseParserTests.
+/// </summary>
 public class ErrorResponseParserTests
 {
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_V2Format_ReturnsParsedErrors method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_V2Format_ReturnsParsedErrors()
     {
         // Arrange
@@ -31,7 +37,10 @@ public class ErrorResponseParserTests
         Assert.NotNull(errors[0].DocumentationUrl);
     }
 
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_V1ErrorFormat_ReturnsParsedError method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_V1ErrorFormat_ReturnsParsedError()
     {
         // Arrange
@@ -46,7 +55,10 @@ public class ErrorResponseParserTests
         await Assert.That(errors[0].Message).IsEqualTo("Rate limit exceeded");
     }
 
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_V1ErrorObjectFormat_ReturnsParsedError method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_V1ErrorObjectFormat_ReturnsParsedError()
     {
         // Arrange
@@ -61,7 +73,10 @@ public class ErrorResponseParserTests
         await Assert.That(errors[0].Message).IsEqualTo("Rate limit exceeded");
     }
 
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_MultipleErrors_ReturnsAllErrors method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_MultipleErrors_ReturnsAllErrors()
     {
         // Arrange
@@ -87,7 +102,10 @@ public class ErrorResponseParserTests
         await Assert.That(errors[1].Code).IsEqualTo(50);
     }
 
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_V2FormatWithResource_ReturnsResourceInfo method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_V2FormatWithResource_ReturnsResourceInfo()
     {
         // Arrange
@@ -111,7 +129,10 @@ public class ErrorResponseParserTests
         await Assert.That(errors[0].ResourceId).IsEqualTo("12345");
     }
 
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_InvalidJson_ReturnsEmptyList method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_InvalidJson_ReturnsEmptyList()
     {
         // Arrange
@@ -124,7 +145,10 @@ public class ErrorResponseParserTests
         await Assert.That(errors).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_NullResponse_ReturnsEmptyList method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_NullResponse_ReturnsEmptyList()
     {
         // Act
@@ -134,7 +158,10 @@ public class ErrorResponseParserTests
         await Assert.That(errors).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_EmptyResponse_ReturnsEmptyList method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_EmptyResponse_ReturnsEmptyList()
     {
         // Act
@@ -144,7 +171,10 @@ public class ErrorResponseParserTests
         await Assert.That(errors).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_NoErrorsField_ReturnsEmptyList method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_NoErrorsField_ReturnsEmptyList()
     {
         // Arrange
@@ -157,7 +187,10 @@ public class ErrorResponseParserTests
         await Assert.That(errors).IsEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// ParseErrorResponse_V1WithErrorCodeInMessage_ExtractsCode method.
+    /// </summary>
+[Test]
     public async Task ParseErrorResponse_V1WithErrorCodeInMessage_ExtractsCode()
     {
         // Arrange
@@ -172,7 +205,10 @@ public class ErrorResponseParserTests
         await Assert.That(errors[0].Message).IsEqualTo("Could not authenticate you");
     }
 
-    [Test]
+        /// <summary>
+    /// GetPrimaryErrorMessage_SingleError_ReturnsEnhancedMessage method.
+    /// </summary>
+[Test]
     public async Task GetPrimaryErrorMessage_SingleError_ReturnsEnhancedMessage()
     {
         // Arrange
@@ -189,7 +225,10 @@ public class ErrorResponseParserTests
         await Assert.That(message).Contains("Rate limit exceeded");
     }
 
-    [Test]
+        /// <summary>
+    /// GetPrimaryErrorMessage_EmptyList_ReturnsDefaultMessage method.
+    /// </summary>
+[Test]
     public async Task GetPrimaryErrorMessage_EmptyList_ReturnsDefaultMessage()
     {
         // Arrange
@@ -202,7 +241,10 @@ public class ErrorResponseParserTests
         await Assert.That(message).IsEqualTo("An unknown error occurred.");
     }
 
-    [Test]
+        /// <summary>
+    /// GetPrimaryErrorMessage_ErrorWithoutCode_ReturnsMessageOnly method.
+    /// </summary>
+[Test]
     public async Task GetPrimaryErrorMessage_ErrorWithoutCode_ReturnsMessageOnly()
     {
         // Arrange
@@ -218,7 +260,10 @@ public class ErrorResponseParserTests
         await Assert.That(message).IsEqualTo("Some error without code");
     }
 
-    [Test]
+        /// <summary>
+    /// BuildComprehensiveErrorMessage_SingleError_ReturnsEnhancedMessage method.
+    /// </summary>
+[Test]
     public async Task BuildComprehensiveErrorMessage_SingleError_ReturnsEnhancedMessage()
     {
         // Arrange
@@ -234,7 +279,10 @@ public class ErrorResponseParserTests
         await Assert.That(message).Contains("Twitter API Error 88");
     }
 
-    [Test]
+        /// <summary>
+    /// BuildComprehensiveErrorMessage_MultipleErrors_ReturnsAllErrors method.
+    /// </summary>
+[Test]
     public async Task BuildComprehensiveErrorMessage_MultipleErrors_ReturnsAllErrors()
     {
         // Arrange
@@ -258,7 +306,10 @@ public class ErrorResponseParserTests
         await Assert.That(message).Contains("developer.twitter.com");
     }
 
-    [Test]
+        /// <summary>
+    /// BuildComprehensiveErrorMessage_EmptyList_ReturnsDefaultMessage method.
+    /// </summary>
+[Test]
     public async Task BuildComprehensiveErrorMessage_EmptyList_ReturnsDefaultMessage()
     {
         // Arrange

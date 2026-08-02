@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Core;
 using Aero.Core.Railway;
 using System.Net;
@@ -9,11 +9,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Core;
 
+/// <summary>
+/// Represents a class for ErrorHandlingTests.
+/// </summary>
 public class ErrorHandlingTests : ProviderTestBase
 {
     private readonly Mock<ILogger<SocialProviderBase>> _loggerMock = new();
 
-    [Test]
+        /// <summary>
+    /// FetchWithRetryAsync_OnSuccess_ShouldReturnResponse method.
+    /// </summary>
+[Test]
     public async Task FetchWithRetryAsync_OnSuccess_ShouldReturnResponse()
     {
         HttpHandler.WhenPost("*")
@@ -28,7 +34,10 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Ok)response).Value.IsSuccessStatusCode.ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// FetchWithRetryAsync_OnTooManyRequests_ShouldRetry method.
+    /// </summary>
+[Test]
     public async Task FetchWithRetryAsync_OnTooManyRequests_ShouldRetry()
     {
         var callCount = 0;
@@ -51,7 +60,10 @@ public class ErrorHandlingTests : ProviderTestBase
         callCount.ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// FetchWithRetryAsync_OnInternalServerError_ShouldRetry method.
+    /// </summary>
+[Test]
     public async Task FetchWithRetryAsync_OnInternalServerError_ShouldRetry()
     {
         var callCount = 0;
@@ -73,7 +85,10 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Ok)response).Value.IsSuccessStatusCode.ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// FetchWithRetryAsync_OnRateLimitExceeded_ShouldRetry method.
+    /// </summary>
+[Test]
     public async Task FetchWithRetryAsync_OnRateLimitExceeded_ShouldRetry()
     {
         var callCount = 0;
@@ -101,7 +116,10 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Ok)response).Value.IsSuccessStatusCode.ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// FetchWithRetryAsync_OnUnauthorized_ShouldThrowRefreshTokenException method.
+    /// </summary>
+[Test]
     public async Task FetchWithRetryAsync_OnUnauthorized_ShouldThrowRefreshTokenException()
     {
         HttpHandler.WhenPost("*")
@@ -116,7 +134,10 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Failure)response).Error.ShouldBeOfType<AeroError.HttpRequest>();
     }
 
-    [Test]
+        /// <summary>
+    /// FetchWithRetryAsync_OnMaxRetriesExceeded_ShouldThrowBadBodyException method.
+    /// </summary>
+[Test]
     public async Task FetchWithRetryAsync_OnMaxRetriesExceeded_ShouldThrowBadBodyException()
     {
         HttpHandler.WhenPost("*")
@@ -131,7 +152,10 @@ public class ErrorHandlingTests : ProviderTestBase
         ((Result<HttpResponseMessage, AeroError>.Failure)response).Error.ShouldBeOfType<AeroError.HttpRequest>();
     }
 
-    [Test]
+        /// <summary>
+    /// FetchWithRetryAsync_WithCustomErrorHandler_ShouldReturnCorrectErrorType method.
+    /// </summary>
+[Test]
     public async Task FetchWithRetryAsync_WithCustomErrorHandler_ShouldReturnCorrectErrorType()
     {
         HttpHandler.WhenPost("*")
@@ -148,23 +172,35 @@ public class ErrorHandlingTests : ProviderTestBase
     }
 }
 
+/// <summary>
+/// Represents a class for TestErrorHandlingProvider.
+/// </summary>
 public class TestErrorHandlingProvider : SocialProviderBase
 {
     private SocialProviderBase.ErrorHandlingType? _errorHandlingType;
     private string _errorHandlingValue = "";
 
-    public TestErrorHandlingProvider(HttpClient httpClient, ILogger<SocialProviderBase> logger) 
+        /// <summary>
+    /// Initializes a new instance of the <see cref="TestErrorHandlingProvider"/> class.
+    /// </summary>
+public TestErrorHandlingProvider(HttpClient httpClient, ILogger<SocialProviderBase> logger) 
         : base(httpClient, logger)
     {
     }
 
-    public void SetErrorHandlingType(SocialProviderBase.ErrorHandlingType type, string value = "")
+        /// <summary>
+    /// SetErrorHandlingType method.
+    /// </summary>
+public void SetErrorHandlingType(SocialProviderBase.ErrorHandlingType type, string value = "")
     {
         _errorHandlingType = type;
         _errorHandlingValue = value;
     }
 
-    protected override ErrorHandlingResult? HandleErrors(string responseBody)
+        /// <summary>
+    /// HandleErrors method.
+    /// </summary>
+protected override ErrorHandlingResult? HandleErrors(string responseBody)
     {
         if (_errorHandlingType.HasValue)
         {
@@ -173,7 +209,10 @@ public class TestErrorHandlingProvider : SocialProviderBase
         return base.HandleErrors(responseBody);
     }
 
-    public async Task<Result<HttpResponseMessage, AeroError>> TestFetchWithRetryAsync(
+        /// <summary>
+    /// TestFetchWithRetryAsync method.
+    /// </summary>
+public async Task<Result<HttpResponseMessage, AeroError>> TestFetchWithRetryAsync(
         string url, 
         HttpRequestMessage request, 
         string identifier = "", 
@@ -182,28 +221,52 @@ public class TestErrorHandlingProvider : SocialProviderBase
         return await FetchWithRetryAsync(url, request, identifier, maxRetries);
     }
 
-    public override string Identifier => "test-error";
-    public override string Name => "Test Error Provider";
-    public override string[] Scopes => Array.Empty<string>();
-    public override int MaxLength(object? additionalSettings = null) => 1000;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "test-error";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Test Error Provider";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => Array.Empty<string>();
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 1000;
 
-    public override Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override Task<Result<PostResponse[], AeroError>> PostAsync(
         string id, string accessToken, List<PostDetails> posts, 
         Integration integration, CancellationToken cancellationToken = default)
         => Task.FromResult<Result<PostResponse[], AeroError>>(Array.Empty<PostResponse>());
 
-    public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
         => Task.FromResult<Result<GenerateAuthUrlResponse, AeroError>>(new GenerateAuthUrlResponse());
 
-    public override Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
         => Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails());
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
         => Task.FromResult<Result<AuthTokenDetails, AeroError>>(new AuthTokenDetails());

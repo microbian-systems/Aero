@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -7,6 +7,9 @@ using Humanizer;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for KnowledgeGraphTests.
+/// </summary>
 public class KnowledgeGraphTests
 {
     private readonly Faker _faker = new();
@@ -14,7 +17,10 @@ public class KnowledgeGraphTests
 
     //#region Ontology Tests
 
-    [Test]
+        /// <summary>
+    /// DefineClass_ShouldAddToOntology method.
+    /// </summary>
+[Test]
     public void DefineClass_ShouldAddToOntology()
     {
         var kg = new KnowledgeGraph<string>();
@@ -26,7 +32,10 @@ public class KnowledgeGraphTests
         kg.ClassCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// DefineClass_ShouldSupportInheritance method.
+    /// </summary>
+[Test]
     public void DefineClass_ShouldSupportInheritance()
     {
         var kg = new KnowledgeGraph<string>();
@@ -37,7 +46,10 @@ public class KnowledgeGraphTests
         dogClass.ParentClasses.ShouldContain("Animal");
     }
 
-    [Test]
+        /// <summary>
+    /// DefineRelation_ShouldAddToOntology method.
+    /// </summary>
+[Test]
     public void DefineRelation_ShouldAddToOntology()
     {
         var kg = new KnowledgeGraph<string>();
@@ -51,7 +63,10 @@ public class KnowledgeGraphTests
         relation.Range.ShouldContain("City");
     }
 
-    [Test]
+        /// <summary>
+    /// DefineRelation_ShouldSupportProperties method.
+    /// </summary>
+[Test]
     public void DefineRelation_ShouldSupportProperties()
     {
         var kg = new KnowledgeGraph<string>();
@@ -69,7 +84,10 @@ public class KnowledgeGraphTests
 
     //#region Entity Tests
 
-    [Test]
+        /// <summary>
+    /// AddEntity_ShouldCreateEntity method.
+    /// </summary>
+[Test]
     public void AddEntity_ShouldCreateEntity()
     {
         var kg = new KnowledgeGraph<string>();
@@ -82,7 +100,10 @@ public class KnowledgeGraphTests
         entity.Properties["name"].ShouldBe("Albert Einstein");
     }
 
-    [Test]
+        /// <summary>
+    /// AddEntity_ShouldSupportOptionalParameters method.
+    /// </summary>
+[Test]
     public void AddEntity_ShouldSupportOptionalParameters()
     {
         var kg = new KnowledgeGraph<string>();
@@ -98,7 +119,10 @@ public class KnowledgeGraphTests
         entity.Source.ShouldBe("test");
     }
 
-    [Test]
+        /// <summary>
+    /// GetEntity_ShouldReturnEntity method.
+    /// </summary>
+[Test]
     public void GetEntity_ShouldReturnEntity()
     {
         var kg = new KnowledgeGraph<int>();
@@ -112,7 +136,10 @@ public class KnowledgeGraphTests
         entity!.Id.ShouldBe(id);
     }
 
-    [Test]
+        /// <summary>
+    /// GetEntitiesByClass_ShouldFilterCorrectly method.
+    /// </summary>
+[Test]
     public void GetEntitiesByClass_ShouldFilterCorrectly()
     {
         var kg = new KnowledgeGraph<string>();
@@ -132,7 +159,10 @@ public class KnowledgeGraphTests
 
     //#region Fact Tests
 
-    [Test]
+        /// <summary>
+    /// AddFact_ShouldCreateTriple method.
+    /// </summary>
+[Test]
     public void AddFact_ShouldCreateTriple()
     {
         var kg = new KnowledgeGraph<string>();
@@ -149,7 +179,10 @@ public class KnowledgeGraphTests
         kg.TripleCount.ShouldBe(1);
     }
 
-    [Test]
+        /// <summary>
+    /// AddFact_ShouldThrow_WhenEntityDoesNotExist method.
+    /// </summary>
+[Test]
     public void AddFact_ShouldThrow_WhenEntityDoesNotExist()
     {
         var kg = new KnowledgeGraph<string>();
@@ -159,7 +192,10 @@ public class KnowledgeGraphTests
         act.ShouldThrow<ArgumentException>();
     }
 
-    [Test]
+        /// <summary>
+    /// AddFact_ShouldSupportSymmetricRelations method.
+    /// </summary>
+[Test]
     public void AddFact_ShouldSupportSymmetricRelations()
     {
         var kg = new KnowledgeGraph<string>();
@@ -179,7 +215,10 @@ public class KnowledgeGraphTests
 
     //#region Query Tests
 
-    [Test]
+        /// <summary>
+    /// HasFact_ShouldReturnCorrectResult method.
+    /// </summary>
+[Test]
     public void HasFact_ShouldReturnCorrectResult()
     {
         var kg = new KnowledgeGraph<string>();
@@ -192,7 +231,10 @@ public class KnowledgeGraphTests
         kg.HasFact("b", "knows", "a").ShouldBeFalse();
     }
 
-    [Test]
+        /// <summary>
+    /// GetFacts_WithPredicate_ShouldFilter method.
+    /// </summary>
+[Test]
     public void GetFacts_WithPredicate_ShouldFilter()
     {
         var kg = new KnowledgeGraph<string>();
@@ -209,7 +251,10 @@ public class KnowledgeGraphTests
         knowsFacts[0].Object.ShouldBe("b");
     }
 
-    [Test]
+        /// <summary>
+    /// GetFacts_WithSubjectAndPredicate_ShouldFilter method.
+    /// </summary>
+[Test]
     public void GetFacts_WithSubjectAndPredicate_ShouldFilter()
     {
         var kg = new KnowledgeGraph<string>();
@@ -225,7 +270,10 @@ public class KnowledgeGraphTests
         xKnows.ShouldHaveSingleItem();
     }
 
-    [Test]
+        /// <summary>
+    /// GetConnectedEntities_ShouldReturnAllConnected method.
+    /// </summary>
+[Test]
     public void GetConnectedEntities_ShouldReturnAllConnected()
     {
         var kg = new KnowledgeGraph<string>();
@@ -245,7 +293,10 @@ public class KnowledgeGraphTests
 
     //#region Inference Tests
 
-    [Test]
+        /// <summary>
+    /// InferTransitiveFacts_ShouldDeriveNewFacts method.
+    /// </summary>
+[Test]
     public void InferTransitiveFacts_ShouldDeriveNewFacts()
     {
         var kg = new KnowledgeGraph<string>();
@@ -268,7 +319,10 @@ public class KnowledgeGraphTests
 
     //#region Find Entities Tests
 
-    [Test]
+        /// <summary>
+    /// FindEntities_ShouldFindByProperty method.
+    /// </summary>
+[Test]
     public void FindEntities_ShouldFindByProperty()
     {
         var kg = new KnowledgeGraph<string>();
@@ -286,7 +340,10 @@ public class KnowledgeGraphTests
 
     //#region Export Tests
 
-    [Test]
+        /// <summary>
+    /// ExportTriples_ShouldReturnAllFacts method.
+    /// </summary>
+[Test]
     public void ExportTriples_ShouldReturnAllFacts()
     {
         var kg = new KnowledgeGraph<string>();
@@ -307,7 +364,10 @@ public class KnowledgeGraphTests
 
     //#region Clear Tests
 
-    [Test]
+        /// <summary>
+    /// Clear_ShouldRemoveAllData method.
+    /// </summary>
+[Test]
     public void Clear_ShouldRemoveAllData()
     {
         var kg = new KnowledgeGraph<string>();
@@ -328,7 +388,10 @@ public class KnowledgeGraphTests
 
     //#region Real-World Scenario Tests
 
-    [Test]
+        /// <summary>
+    /// ScientificKnowledgeGraph_ShouldModelCorrectly method.
+    /// </summary>
+[Test]
     public void ScientificKnowledgeGraph_ShouldModelCorrectly()
     {
         var kg = new KnowledgeGraph<string>();

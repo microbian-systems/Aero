@@ -1,5 +1,8 @@
 namespace Aero.Core.Ai;
 
+/// <summary>
+/// Represents a record for AiProviderProfile.
+/// </summary>
 public sealed record AiProviderProfile(
     string Id,
     string DisplayName,
@@ -15,9 +18,15 @@ public sealed record AiProviderProfile(
     bool SaveUsageTelemetry,
     bool SupportsContentEnhancement)
 {
-    public bool HasApiKey => !string.IsNullOrWhiteSpace(ProtectedApiKey);
+        /// <summary>
+    /// Gets or sets the Has Api Key.
+    /// </summary>
+public bool HasApiKey => !string.IsNullOrWhiteSpace(ProtectedApiKey);
 }
 
+/// <summary>
+/// Represents a record for AiRuntimeSettings.
+/// </summary>
 public sealed record AiRuntimeSettings(
     string ProviderId,
     string DisplayName,

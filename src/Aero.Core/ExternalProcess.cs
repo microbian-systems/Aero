@@ -1,10 +1,16 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace Aero.Core;
 
+/// <summary>
+/// Represents a class for ExternalProcess.
+/// </summary>
 public static class ExternalProcess
 {
-    public static void ExecuteCommand(string command, string arguments, ILogger log)
+        /// <summary>
+    /// ExecuteCommand method.
+    /// </summary>
+public static void ExecuteCommand(string command, string arguments, ILogger log)
     {
         //var processInfo = new ProcessStartInfo("cmd.exe", "/c " + command)
         var processInfo = new ProcessStartInfo(command, arguments)

@@ -1,8 +1,14 @@
 namespace Aero.Web.Controllers;
 
+/// <summary>
+/// Represents a class for AeroWebBaseController.
+/// </summary>
 [Authorize]
 public abstract class AeroWebBaseController(ILogger<AeroWebBaseController> log)
     : Controller
 {
-    protected readonly ILogger<AeroWebBaseController> log = log;
+        /// <summary>
+    /// log.
+    /// </summary>
+protected readonly ILogger<AeroWebBaseController> log = log;
 }

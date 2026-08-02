@@ -1,37 +1,58 @@
-﻿
+
 namespace Aero.Marten;
 
+/// <summary>
+/// Defines an interface for IMartenReadonlyRepositorySyncOption.
+/// </summary>
 public interface IMartenReadonlyRepositorySyncOption<T, TKey> 
     : IReadonlyRepositorySyncOption<T,TKey> 
     where TKey : IEquatable<TKey>
     where T : IEntity<TKey>;
 
+/// <summary>
+/// Defines an interface for IMartenReadonlyRepositoryAsyncOption.
+/// </summary>
 public interface IMartenReadonlyRepositoryAsyncOption<T, TKey>
     : IReadonlyRepositoryAsyncOption<T, TKey>
     where T : IEntity<TKey>
     where TKey : IEquatable<TKey>;
 
+/// <summary>
+/// Defines an interface for IMartenReadOnlyRepositoryOption.
+/// </summary>
 public interface IMartenReadOnlyRepositoryOption<T, TKey>
     : IMartenReadonlyRepositorySyncOption<T, TKey>, IMartenReadonlyRepositoryAsyncOption<T, TKey>
     where T : IEntity<TKey> 
     where TKey : IEquatable<TKey>;
 
+/// <summary>
+/// Defines an interface for IMartenWriteOnlyRepositorySyncOption.
+/// </summary>
 public interface IMartenWriteOnlyRepositorySyncOption<T, TKey> 
     : IWriteOnlyRepositorySyncOption<T, TKey>
     where T : IEntity<TKey>
     where TKey : IEquatable<TKey>;
 
 
+/// <summary>
+/// Defines an interface for IMartenWriteOnlyRepositoryAsyncOption.
+/// </summary>
 public interface IMartenWriteOnlyRepositoryAsyncOption<T, TKey> 
     : IWriteOnlyRepositoryAsyncOption<T, TKey>
     where T : IEntity<TKey> 
     where TKey : IEquatable<TKey>;
 
+/// <summary>
+/// Defines an interface for IMartenWriteOnlyRepositoryOption.
+/// </summary>
 public interface IMartenWriteOnlyRepositoryOption<T, TKey>
     : IMartenWriteOnlyRepositorySyncOption<T, TKey>, IMartenWriteOnlyRepositoryAsyncOption<T, TKey>
     where T : IEntity<TKey> 
     where TKey : IEquatable<TKey>;
 
+/// <summary>
+/// Defines an interface for IMartenGenericRepositoryOption.
+/// </summary>
 public interface IMartenGenericRepositoryOption<T, TKey>
     : IMartenReadOnlyRepositoryOption<T, TKey>, IMartenWriteOnlyRepositoryOption<T, TKey>
     where T : IEntity<TKey>, new() where TKey : IEquatable<TKey>;
@@ -47,18 +68,27 @@ public interface IMartenGenericRepositoryOption<T, TKey>
 public interface IMartenGenericRepositoryOption<T> : IMartenGenericRepositoryOption<T, long> where T : IEntity<long>, new();
 
 
+/// <summary>
+/// Represents a class for MartenGenericRepositoryOption.
+/// </summary>
 public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<MartenGenericRepositoryOption<T>> log)
     : MartenGenericRepositoryOption<T, long>(session, log), IMartenGenericRepositoryOption<T>
     where T : IEntity<long>, new()
 {
-    public override async Task<long> CountAsync(CancellationToken ct = default)
+        /// <summary>
+    /// CountAsync method.
+    /// </summary>
+public override async Task<long> CountAsync(CancellationToken ct = default)
     {
         var count = await session.Query<T>()
             .LongCountAsync(ct);
         return count;
     }
 
-    public override async Task<bool> DeleteAsync(long id, CancellationToken ct = default)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public override async Task<bool> DeleteAsync(long id, CancellationToken ct = default)
     {
         session.Delete<T>(id);
         var result = await session.SaveChangesAsync(ct)
@@ -66,19 +96,28 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
         return result;
     }
 
-    public override async Task<bool> DeleteAsync(T entity, CancellationToken ct = default)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public override async Task<bool> DeleteAsync(T entity, CancellationToken ct = default)
         => await DeleteAsync(entity.Id, ct);
 
-    public override async Task<bool> ExistsAsync(long id, CancellationToken ct = default)
+        /// <summary>
+    /// ExistsAsync method.
+    /// </summary>
+public override async Task<bool> ExistsAsync(long id, CancellationToken ct = default)
     {
         var exists = await session.Query<T>()
-            .AnyAsync(e => e.Id == id, token: ct);
+            .Where(e => e.Id == id).AnyAsync(ct);
         return exists;
     }
 
 
     // todo - use paging w/ find (add to base interface):
-    public override async Task<IEnumerable<T>> FindAsync(
+        /// <summary>
+    /// FindAsync method.
+    /// </summary>
+public override async Task<IEnumerable<T>> FindAsync(
         Expression<Func<T, bool>> predicate,
         int page = 1,
         int pageSize = 10,
@@ -93,7 +132,10 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
         return results ?? [];
     }
 
-    public override async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+        /// <summary>
+    /// FindAsync method.
+    /// </summary>
+public override async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
     {
         var p = predicate.Compile();
         var results = await session.Query<T>()
@@ -102,7 +144,10 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
         return results ?? [];
     }
 
-    public override async Task<Option<T>> FindByIdAsync(long id, CancellationToken ct = default)
+        /// <summary>
+    /// FindByIdAsync method.
+    /// </summary>
+public override async Task<Option<T>> FindByIdAsync(long id, CancellationToken ct = default)
     {
         var res = await session.LoadAsync<T>(id, ct);
         
@@ -111,7 +156,10 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
             : None;
     }
 
-    public override async Task<IEnumerable<T>> GetAllAsync(int page = 1, int num = 10, CancellationToken ct = default)
+        /// <summary>
+    /// GetAllAsync method.
+    /// </summary>
+public override async Task<IEnumerable<T>> GetAllAsync(int page = 1, int num = 10, CancellationToken ct = default)
     {
         if(page < 1) { 
             page = 1; 
@@ -124,14 +172,20 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
         return records?.AsEnumerable() ?? [];
     }
 
-    public override async Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<long> ids, CancellationToken ct = default)
+        /// <summary>
+    /// GetByIdsAsync method.
+    /// </summary>
+public override async Task<IEnumerable<T>> GetByIdsAsync(IEnumerable<long> ids, CancellationToken ct = default)
     {
         var entities = await session.LoadManyAsync<T>(ct, ids);
 
         return entities ?? [];
     }
 
-    public override async Task<T> InsertAsync(T entity, CancellationToken ct = default)
+        /// <summary>
+    /// InsertAsync method.
+    /// </summary>
+public override async Task<T> InsertAsync(T entity, CancellationToken ct = default)
     {
         session.Store<T>(entity);
         await session.SaveChangesAsync(ct);
@@ -139,7 +193,10 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
         return entity;
     }
 
-    public override async Task<T> UpdateAsync(T entity, CancellationToken ct = default)
+        /// <summary>
+    /// UpdateAsync method.
+    /// </summary>
+public override async Task<T> UpdateAsync(T entity, CancellationToken ct = default)
     {
         session.Store<T>(entity);
         await session.SaveChangesAsync(ct);
@@ -147,7 +204,10 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
         return entity;
     }
 
-    public override async Task<T> UpsertAsync(T entity, CancellationToken ct = default)
+        /// <summary>
+    /// UpsertAsync method.
+    /// </summary>
+public override async Task<T> UpsertAsync(T entity, CancellationToken ct = default)
     {
         var id = entity.Id;
         var exists = session.LoadAsync<T>(id);
@@ -160,6 +220,9 @@ public class MartenGenericRepositoryOption<T>(IDocumentSession session, ILogger<
     }
 }
 
+/// <summary>
+/// Represents a class for MartenGenericRepositoryOption.
+/// </summary>
 public abstract class MartenGenericRepositoryOption<T, TKey>(IDocumentSession session, ILogger<MartenGenericRepositoryOption<T, TKey>> log)
     : GenericRepositoryOption<T, TKey>(log), IMartenGenericRepositoryOption<T, TKey>
     where T : IEntity<TKey>, new()

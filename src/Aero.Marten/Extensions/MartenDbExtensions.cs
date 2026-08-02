@@ -1,5 +1,4 @@
-﻿using Aero.Core.Data;
-using Aero.Core.Identity;
+using Aero.Core.Data;
 using Aero.Models.Entities;
 using JasperFx;
 using JasperFx.Events;
@@ -9,6 +8,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace Aero.Marten.Extensions;
 
+/// <summary>
+/// Represents a class for MartenDbExtensions.
+/// </summary>
 public static class MartenDbExtensions
 {
     /// <summary>

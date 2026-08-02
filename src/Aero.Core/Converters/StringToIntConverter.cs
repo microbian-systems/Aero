@@ -1,10 +1,19 @@
-﻿namespace Aero.Core.Converters;
+namespace Aero.Core.Converters;
 
+/// <summary>
+/// Represents a class for StringToIntConverter.
+/// </summary>
 public class StringToIntConverter : JsonConverter<int>
 {
-    public override bool CanConvert(Type t) => t == typeof(int);
+        /// <summary>
+    /// CanConvert method.
+    /// </summary>
+public override bool CanConvert(Type t) => t == typeof(int);
 
-    public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        /// <summary>
+    /// Read method.
+    /// </summary>
+public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var value = reader.GetString();
         int l;
@@ -16,11 +25,17 @@ public class StringToIntConverter : JsonConverter<int>
         throw new Exception("Cannot unmarshal type int");
     }
 
-    public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
+        /// <summary>
+    /// Write method.
+    /// </summary>
+public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value.ToString(), options);
         return;
     }
 
-    public static readonly StringToIntConverter Singleton = new StringToIntConverter();
+        /// <summary>
+    /// Singleton.
+    /// </summary>
+public static readonly StringToIntConverter Singleton = new StringToIntConverter();
 }

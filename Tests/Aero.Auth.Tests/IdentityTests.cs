@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Bogus;
 using Aero.Core;
 using Aero.Models;
@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
+/// <summary>
+/// Represents a class for IdentityTests.
+/// </summary>
 [ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
 public class IdentityTests : IDisposable
 {
@@ -20,7 +23,10 @@ public class IdentityTests : IDisposable
     readonly Faker faker = new();
     private readonly IDocumentSession db;
 
-    public IdentityTests(TestWebAppFactory factory)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="IdentityTests"/> class.
+    /// </summary>
+public IdentityTests(TestWebAppFactory factory)
     {
         scope = factory.Services.CreateScope();
         client = factory.CreateClient(); 
@@ -28,7 +34,10 @@ public class IdentityTests : IDisposable
         db = scope.ServiceProvider.GetRequiredService<IDocumentSession>();
     }
 
-    [Test]
+        /// <summary>
+    /// CanCreateUser method.
+    /// </summary>
+[Test]
     public async Task CanCreateUser()
     {
         var user = new AeroUser()
@@ -58,7 +67,10 @@ public class IdentityTests : IDisposable
         
     }
 
-    public void Dispose()
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public void Dispose()
     {
         scope.Dispose();
 }

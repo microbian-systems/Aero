@@ -1,10 +1,16 @@
-﻿namespace Aero.Web.Extensions;
+namespace Aero.Web.Extensions;
 
 
 // todo - consolidate the default api extensions w/ the Aero extensions
+/// <summary>
+/// Represents a class for DefaultApiExtensions.
+/// </summary>
 public static class DefaultApiExtensions
 {
-    public static WebApplicationBuilder ConfigureDefaultApi(this WebApplicationBuilder builder)
+        /// <summary>
+    /// ConfigureDefaultApi method.
+    /// </summary>
+public static WebApplicationBuilder ConfigureDefaultApi(this WebApplicationBuilder builder)
     {
         builder.AddDefaultLogging();
         builder.RemoveHeaders();
@@ -58,7 +64,10 @@ public static class DefaultApiExtensions
         return app;
     }
 
-    public static WebApplication UseDefaultApi(this WebApplicationBuilder builder)
+        /// <summary>
+    /// UseDefaultApi method.
+    /// </summary>
+public static WebApplication UseDefaultApi(this WebApplicationBuilder builder)
     {
         var app = builder.Build();
 
@@ -81,7 +90,10 @@ public static class DefaultApiExtensions
         return app;
     }
 
-    public static WebApplicationBuilder ConfigureDefaultApi(
+        /// <summary>
+    /// ConfigureDefaultApi method.
+    /// </summary>
+public static WebApplicationBuilder ConfigureDefaultApi(
         this WebApplicationBuilder builder,
         Action configure,
         bool overrideDefaults = false)
@@ -94,7 +106,10 @@ public static class DefaultApiExtensions
         return builder;
     }
 
-    public static WebApplicationBuilder ConfigureDefaultApi(
+        /// <summary>
+    /// ConfigureDefaultApi method.
+    /// </summary>
+public static WebApplicationBuilder ConfigureDefaultApi(
         this WebApplicationBuilder builder,
         Action<WebApplicationBuilder> configure,
         bool overrideDefaults = false)

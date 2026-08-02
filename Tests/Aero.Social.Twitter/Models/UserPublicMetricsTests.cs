@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for UserPublicMetricsTests.
+/// </summary>
 public class UserPublicMetricsTests
 {
-    [Test]
+        /// <summary>
+    /// UserPublicMetrics_DefaultValues_AreZero method.
+    /// </summary>
+[Test]
     public async Task UserPublicMetrics_DefaultValues_AreZero()
     {
         // Arrange & Act
@@ -20,7 +26,10 @@ public class UserPublicMetricsTests
         await Assert.That(metrics.ListedCount).IsEqualTo(0);
     }
 
-    [Test]
+        /// <summary>
+    /// UserPublicMetrics_Serialization_ReturnsCorrectJson method.
+    /// </summary>
+[Test]
     public async Task UserPublicMetrics_Serialization_ReturnsCorrectJson()
     {
         // Arrange
@@ -42,7 +51,10 @@ public class UserPublicMetricsTests
         await Assert.That(json).Contains("\"listed_count\":50");
     }
 
-    [Test]
+        /// <summary>
+    /// UserPublicMetrics_Deserialization_PopulatesCorrectly method.
+    /// </summary>
+[Test]
     public async Task UserPublicMetrics_Deserialization_PopulatesCorrectly()
     {
         // Arrange
@@ -64,7 +76,10 @@ public class UserPublicMetricsTests
         await Assert.That(metrics.ListedCount).IsEqualTo(50);
     }
 
-    [Test]
+        /// <summary>
+    /// UserPublicMetrics_Deserialization_WithPartialData_PopulatesCorrectly method.
+    /// </summary>
+[Test]
     public async Task UserPublicMetrics_Deserialization_WithPartialData_PopulatesCorrectly()
     {
         // Arrange
@@ -84,7 +99,10 @@ public class UserPublicMetricsTests
         await Assert.That(metrics.ListedCount).IsEqualTo(0);
     }
 
-    [Test]
+        /// <summary>
+    /// UserPublicMetrics_Deserialization_WithZeroValues_HandlesCorrectly method.
+    /// </summary>
+[Test]
     public async Task UserPublicMetrics_Deserialization_WithZeroValues_HandlesCorrectly()
     {
         // Arrange

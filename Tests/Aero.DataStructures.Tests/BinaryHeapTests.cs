@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Trees;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for BinaryHeapTests.
+/// </summary>
 public class BinaryHeapTests
 {
-    [Test]
+        /// <summary>
+    /// MinHeap_Extract_Returns_Minimum method.
+    /// </summary>
+[Test]
     public void MinHeap_Extract_Returns_Minimum()
     {
         // Arrange
@@ -24,7 +30,10 @@ public class BinaryHeapTests
         heap.Peek().ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxHeap_Extract_Returns_Maximum method.
+    /// </summary>
+[Test]
     public void MaxHeap_Extract_Returns_Maximum()
     {
         // Arrange

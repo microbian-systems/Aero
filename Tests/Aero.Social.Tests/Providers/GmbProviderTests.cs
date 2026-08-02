@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Providers;
 
+/// <summary>
+/// Represents a class for GmbProviderTests.
+/// </summary>
 public class GmbProviderTests : ProviderTestBase
 {
     private readonly Mock<ILogger<GmbProvider>> _loggerMock = new();
@@ -24,7 +27,10 @@ public class GmbProviderTests : ProviderTestBase
         return new GmbProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Test]
+        /// <summary>
+    /// Provider_ShouldHaveCorrectIdentifier method.
+    /// </summary>
+[Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -35,7 +41,10 @@ public class GmbProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxLength_ShouldReturn1500 method.
+    /// </summary>
+[Test]
     public void MaxLength_ShouldReturn1500()
     {
         var provider = CreateProvider();
@@ -43,7 +52,10 @@ public class GmbProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(1500);
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_ShouldReturnValidUrl method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnValidUrl()
     {
         var provider = CreateProvider();

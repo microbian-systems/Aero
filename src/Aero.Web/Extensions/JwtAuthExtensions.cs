@@ -1,12 +1,18 @@
-﻿using Aero.Auth.Jwt;
+using Aero.Auth.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for JwtAuthExtensions.
+/// </summary>
 public static class JwtAuthExtensions
 {
-    public static IServiceCollection AddJwtAuthorization(
+        /// <summary>
+    /// AddJwtAuthorization method.
+    /// </summary>
+public static IServiceCollection AddJwtAuthorization(
         this IServiceCollection services,
         IConfiguration config)
     {
@@ -66,7 +72,10 @@ public static class JwtAuthExtensions
         return services;
     }
 
-    public static WebApplicationBuilder AddJwtAuthorization(this WebApplicationBuilder builder)
+        /// <summary>
+    /// AddJwtAuthorization method.
+    /// </summary>
+public static WebApplicationBuilder AddJwtAuthorization(this WebApplicationBuilder builder)
     {
         var config = builder.Configuration;
 

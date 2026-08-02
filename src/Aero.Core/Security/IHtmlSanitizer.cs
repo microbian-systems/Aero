@@ -1,6 +1,12 @@
 namespace Aero.Core.Security;
 
+/// <summary>
+/// Defines an interface for IHtmlSanitizer.
+/// </summary>
 public interface IHtmlSanitizer
 {
-    string Sanitize(string? html);
+        /// <summary>
+    /// Sanitize method.
+    /// </summary>
+string Sanitize(string? html);
 }

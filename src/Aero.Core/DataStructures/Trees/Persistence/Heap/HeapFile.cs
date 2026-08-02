@@ -3,6 +3,9 @@ using Aero.Core.DataStructures.Trees.Persistence.Storage;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Heap;
 
+/// <summary>
+/// Represents a class for HeapFile.
+/// </summary>
 public sealed class HeapFile : IHeapFile
 {
     private readonly IStorageBackend _storage;
@@ -10,10 +13,19 @@ public sealed class HeapFile : IHeapFile
     private bool _disposed;
     private const byte HeapPageType = 0x03;
 
-    public int PageSize => _storage.PageSize;
-    public long PageCount => _storage.PageCount;
+        /// <summary>
+    /// Gets or sets the Page Size.
+    /// </summary>
+public int PageSize => _storage.PageSize;
+        /// <summary>
+    /// Gets or sets the Page Count.
+    /// </summary>
+public long PageCount => _storage.PageCount;
 
-    public HeapFile(IStorageBackend storage)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="HeapFile"/> class.
+    /// </summary>
+public HeapFile(IStorageBackend storage)
     {
         _storage = storage ?? throw new ArgumentNullException(nameof(storage));
         _freeSpaceMap = new FreeSpaceMap();
@@ -49,7 +61,10 @@ public sealed class HeapFile : IHeapFile
         return sp.FreeBytes;
     }
 
-    public async ValueTask<HeapAddress> WriteAsync(
+        /// <summary>
+    /// WriteAsync method.
+    /// </summary>
+public async ValueTask<HeapAddress> WriteAsync(
         ReadOnlyMemory<byte> data,
         CancellationToken ct = default)
     {
@@ -82,7 +97,10 @@ public sealed class HeapFile : IHeapFile
         return (slotIndex, sp.FreeBytes);
     }
 
-    public async ValueTask<Memory<byte>> ReadAsync(
+        /// <summary>
+    /// ReadAsync method.
+    /// </summary>
+public async ValueTask<Memory<byte>> ReadAsync(
         HeapAddress address,
         CancellationToken ct = default)
     {
@@ -106,7 +124,10 @@ public sealed class HeapFile : IHeapFile
         return sp.ReadRecord(slotIndex);
     }
 
-    public async ValueTask DeleteAsync(
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public async ValueTask DeleteAsync(
         HeapAddress address,
         CancellationToken ct = default)
     {
@@ -128,7 +149,10 @@ public sealed class HeapFile : IHeapFile
         return sp.FreeBytes;
     }
 
-    public async ValueTask<HeapAddress> UpdateAsync(
+        /// <summary>
+    /// UpdateAsync method.
+    /// </summary>
+public async ValueTask<HeapAddress> UpdateAsync(
         HeapAddress address,
         ReadOnlyMemory<byte> newData,
         CancellationToken ct = default)
@@ -161,7 +185,10 @@ public sealed class HeapFile : IHeapFile
         return (success, sp.FreeBytes);
     }
 
-    public async ValueTask CompactPageAsync(
+        /// <summary>
+    /// CompactPageAsync method.
+    /// </summary>
+public async ValueTask CompactPageAsync(
         long pageId,
         CancellationToken ct = default)
     {
@@ -180,7 +207,10 @@ public sealed class HeapFile : IHeapFile
         return sp.FreeBytes;
     }
 
-    public async IAsyncEnumerable<(HeapAddress Address, Memory<byte> Data)> ScanAllAsync(
+        /// <summary>
+    /// ScanAllAsync method.
+    /// </summary>
+public async IAsyncEnumerable<(HeapAddress Address, Memory<byte> Data)> ScanAllAsync(
         [EnumeratorCancellation] CancellationToken ct = default)
     {
         ThrowIfDisposed();
@@ -224,7 +254,10 @@ public sealed class HeapFile : IHeapFile
         return result;
     }
 
-    public async ValueTask DisposeAsync()
+        /// <summary>
+    /// DisposeAsync method.
+    /// </summary>
+public async ValueTask DisposeAsync()
     {
         if (!_disposed)
         {

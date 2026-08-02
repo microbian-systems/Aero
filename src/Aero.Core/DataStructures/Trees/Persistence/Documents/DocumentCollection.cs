@@ -8,6 +8,9 @@ using Aero.Core.DataStructures.Trees.Persistence.Wal;
 
 namespace Aero.Core.DataStructures.Trees.Persistence.Documents;
 
+/// <summary>
+/// Represents a class for DocumentCollection.
+/// </summary>
 public sealed class DocumentCollection<TDocument>(
     IWalStorageBackend storage,
     IHeapFile heap,
@@ -20,9 +23,15 @@ public sealed class DocumentCollection<TDocument>(
 {
     private long _approximateCount;
 
-    public long ApproximateCount => Interlocked.Read(ref _approximateCount);
+        /// <summary>
+    /// Gets or sets the Approximate Count.
+    /// </summary>
+public long ApproximateCount => Interlocked.Read(ref _approximateCount);
 
-    public async ValueTask<Guid> InsertAsync(TDocument document, CancellationToken ct = default)
+        /// <summary>
+    /// InsertAsync method.
+    /// </summary>
+public async ValueTask<Guid> InsertAsync(TDocument document, CancellationToken ct = default)
     {
         await using var txn = await storage.BeginTransactionAsync(ct);
 
@@ -53,7 +62,10 @@ public sealed class DocumentCollection<TDocument>(
         }
     }
 
-    public async ValueTask<TDocument?> FindAsync(Guid id, CancellationToken ct = default)
+        /// <summary>
+    /// FindAsync method.
+    /// </summary>
+public async ValueTask<TDocument?> FindAsync(Guid id, CancellationToken ct = default)
     {
         var address = await primaryIndex.FindAsync(id, ct);
         if (address is null || address.Value.IsNull) return null;
@@ -62,7 +74,10 @@ public sealed class DocumentCollection<TDocument>(
         return serializer.Deserialize(bytes);
     }
 
-    public async ValueTask<bool> UpdateAsync(
+        /// <summary>
+    /// UpdateAsync method.
+    /// </summary>
+public async ValueTask<bool> UpdateAsync(
         Guid id, TDocument document, CancellationToken ct = default)
     {
         await using var txn = await storage.BeginTransactionAsync(ct);
@@ -93,7 +108,10 @@ public sealed class DocumentCollection<TDocument>(
         }
     }
 
-    public async ValueTask<bool> DeleteAsync(Guid id, CancellationToken ct = default)
+        /// <summary>
+    /// DeleteAsync method.
+    /// </summary>
+public async ValueTask<bool> DeleteAsync(Guid id, CancellationToken ct = default)
     {
         await using var txn = await storage.BeginTransactionAsync(ct);
 
@@ -122,12 +140,18 @@ public sealed class DocumentCollection<TDocument>(
         }
     }
 
-    public IQueryable<TDocument> AsQueryable()
+        /// <summary>
+    /// AsQueryable method.
+    /// </summary>
+public IQueryable<TDocument> AsQueryable()
     {
         throw new NotImplementedException("Use the LINQ provider from the Linq namespace.");
     }
 
-    public async IAsyncEnumerable<TDocument> ScanIndexAsync<TField>(
+        /// <summary>
+    /// ScanIndexAsync method.
+    /// </summary>
+public async IAsyncEnumerable<TDocument> ScanIndexAsync<TField>(
         Expression<Func<TDocument, TField>> fieldSelector,
         TField from,
         TField to,
@@ -148,7 +172,10 @@ public sealed class DocumentCollection<TDocument>(
         }
     }
 
-    public async IAsyncEnumerable<TDocument> ScanAllAsync(
+        /// <summary>
+    /// ScanAllAsync method.
+    /// </summary>
+public async IAsyncEnumerable<TDocument> ScanAllAsync(
         [EnumeratorCancellation] CancellationToken ct = default)
     {
         await foreach (var (_, data) in heap.ScanAllAsync(ct))

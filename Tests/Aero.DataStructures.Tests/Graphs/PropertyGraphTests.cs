@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Aero.DataStructures.Graphs;
 using Bogus;
@@ -7,6 +7,9 @@ using Humanizer;
 
 namespace Aero.DataStructures.Tests;
 
+/// <summary>
+/// Represents a class for PropertyGraphTests.
+/// </summary>
 public class PropertyGraphTests
 {
     private readonly Faker _faker = new();
@@ -14,7 +17,10 @@ public class PropertyGraphTests
 
     //#region Vertex Tests
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldCreateVertexWithLabel method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldCreateVertexWithLabel()
     {
         var graph = new PropertyGraph<string, long>();
@@ -28,7 +34,10 @@ public class PropertyGraphTests
         vertex.Label.ShouldBe(label);
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldStoreProperties method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldStoreProperties()
     {
         var graph = new PropertyGraph<string, long>();
@@ -44,7 +53,10 @@ public class PropertyGraphTests
         vertex!.Properties["age"].ShouldBe(30);
     }
 
-    [Test]
+        /// <summary>
+    /// AddVertex_ShouldReturnNull_WhenDuplicate method.
+    /// </summary>
+[Test]
     public void AddVertex_ShouldReturnNull_WhenDuplicate()
     {
         var graph = new PropertyGraph<string, long>();
@@ -55,7 +67,10 @@ public class PropertyGraphTests
         result.ShouldBeNull();
     }
 
-    [Test]
+        /// <summary>
+    /// GetVertex_ShouldReturnVertex method.
+    /// </summary>
+[Test]
     public void GetVertex_ShouldReturnVertex()
     {
         var graph = new PropertyGraph<int, long>();
@@ -68,7 +83,10 @@ public class PropertyGraphTests
         vertex!.Id.ShouldBe(id);
     }
 
-    [Test]
+        /// <summary>
+    /// GetVerticesByLabel_ShouldFilterCorrectly method.
+    /// </summary>
+[Test]
     public void GetVerticesByLabel_ShouldFilterCorrectly()
     {
         var graph = new PropertyGraph<string, long>();
@@ -86,7 +104,10 @@ public class PropertyGraphTests
 
     //#region Edge Tests
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldCreateEdgeWithLabel method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldCreateEdgeWithLabel()
     {
         var graph = new PropertyGraph<string, long>();
@@ -101,7 +122,10 @@ public class PropertyGraphTests
         edge.Label.ShouldBe("KNOWS");
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldStoreProperties method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldStoreProperties()
     {
         var graph = new PropertyGraph<string, long>();
@@ -114,7 +138,10 @@ public class PropertyGraphTests
         edge!.Properties["since"].ShouldBe(2020);
     }
 
-    [Test]
+        /// <summary>
+    /// AddEdge_ShouldReturnNull_WhenVerticesNotExist method.
+    /// </summary>
+[Test]
     public void AddEdge_ShouldReturnNull_WhenVerticesNotExist()
     {
         var graph = new PropertyGraph<string, long>();
@@ -124,7 +151,10 @@ public class PropertyGraphTests
         edge.ShouldBeNull();
     }
 
-    [Test]
+        /// <summary>
+    /// GetEdge_ShouldReturnEdge method.
+    /// </summary>
+[Test]
     public void GetEdge_ShouldReturnEdge()
     {
         var graph = new PropertyGraph<string, int>();
@@ -142,7 +172,10 @@ public class PropertyGraphTests
 
     //#region Traversal Tests
 
-    [Test]
+        /// <summary>
+    /// GetOutEdges_ShouldReturnOutgoingEdges method.
+    /// </summary>
+[Test]
     public void GetOutEdges_ShouldReturnOutgoingEdges()
     {
         var graph = new PropertyGraph<string, int>();
@@ -157,7 +190,10 @@ public class PropertyGraphTests
         outEdges.Count().ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// GetOutEdges_WithLabel_ShouldFilter method.
+    /// </summary>
+[Test]
     public void GetOutEdges_WithLabel_ShouldFilter()
     {
         var graph = new PropertyGraph<string, int>();
@@ -173,7 +209,10 @@ public class PropertyGraphTests
         friendEdges[0].TargetId.ShouldBe("b");
     }
 
-    [Test]
+        /// <summary>
+    /// GetInEdges_ShouldReturnIncomingEdges method.
+    /// </summary>
+[Test]
     public void GetInEdges_ShouldReturnIncomingEdges()
     {
         var graph = new PropertyGraph<string, int>();
@@ -188,7 +227,10 @@ public class PropertyGraphTests
         inEdges.Count().ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// GetOutNeighbors_ShouldReturnTargetVertices method.
+    /// </summary>
+[Test]
     public void GetOutNeighbors_ShouldReturnTargetVertices()
     {
         var graph = new PropertyGraph<string, int>();
@@ -207,7 +249,10 @@ public class PropertyGraphTests
 
     //#region Query Tests
 
-    [Test]
+        /// <summary>
+    /// FindVertices_ShouldFindByProperty method.
+    /// </summary>
+[Test]
     public void FindVertices_ShouldFindByProperty()
     {
         var graph = new PropertyGraph<string, int>();
@@ -220,7 +265,10 @@ public class PropertyGraphTests
         nycResidents.Count().ShouldBe(2);
     }
 
-    [Test]
+        /// <summary>
+    /// FindEdges_ShouldFindByProperty method.
+    /// </summary>
+[Test]
     public void FindEdges_ShouldFindByProperty()
     {
         var graph = new PropertyGraph<string, int>();
@@ -240,7 +288,10 @@ public class PropertyGraphTests
 
     //#region Pattern Matching Tests
 
-    [Test]
+        /// <summary>
+    /// MatchPattern_ShouldReturnMatchingTriples method.
+    /// </summary>
+[Test]
     public void MatchPattern_ShouldReturnMatchingTriples()
     {
         var graph = new PropertyGraph<string, int>();
@@ -256,7 +307,10 @@ public class PropertyGraphTests
         patterns.All(p => p.Source.Id == "alice").ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// MatchTwoHop_ShouldFindPaths method.
+    /// </summary>
+[Test]
     public void MatchTwoHop_ShouldFindPaths()
     {
         var graph = new PropertyGraph<string, int>();
@@ -277,7 +331,10 @@ public class PropertyGraphTests
 
     //#region Remove Tests
 
-    [Test]
+        /// <summary>
+    /// RemoveVertex_ShouldRemoveIncidentEdges method.
+    /// </summary>
+[Test]
     public void RemoveVertex_ShouldRemoveIncidentEdges()
     {
         var graph = new PropertyGraph<string, int>();
@@ -291,7 +348,10 @@ public class PropertyGraphTests
         graph.EdgeCount.ShouldBe(0);
     }
 
-    [Test]
+        /// <summary>
+    /// RemoveEdge_ShouldNotRemoveVertices method.
+    /// </summary>
+[Test]
     public void RemoveEdge_ShouldNotRemoveVertices()
     {
         var graph = new PropertyGraph<string, int>();
@@ -309,7 +369,10 @@ public class PropertyGraphTests
 
     //#region Count Tests
 
-    [Test]
+        /// <summary>
+    /// Counts_ShouldBeAccurate method.
+    /// </summary>
+[Test]
     public void Counts_ShouldBeAccurate()
     {
         var graph = new PropertyGraph<int, int>();
@@ -330,7 +393,10 @@ public class PropertyGraphTests
 
     //#region Clear Tests
 
-    [Test]
+        /// <summary>
+    /// Clear_ShouldRemoveAllData method.
+    /// </summary>
+[Test]
     public void Clear_ShouldRemoveAllData()
     {
         var graph = new PropertyGraph<string, int>();

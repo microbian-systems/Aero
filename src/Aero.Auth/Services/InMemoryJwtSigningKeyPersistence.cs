@@ -9,7 +9,10 @@ public class InMemoryJwtSigningKeyPersistence : IJwtSigningKeyPersistence
     private readonly Dictionary<string, JwtSigningKey> _keys = new();
     private string? _currentKeyId;
 
-    public Task<JwtSigningKey?> GetCurrentSigningKeyAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetCurrentSigningKeyAsync method.
+    /// </summary>
+public Task<JwtSigningKey?> GetCurrentSigningKeyAsync(CancellationToken cancellationToken = default)
     {
         if (_currentKeyId is null || !_keys.TryGetValue(_currentKeyId, out var key))
         {
@@ -19,7 +22,10 @@ public class InMemoryJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         return Task.FromResult((JwtSigningKey?)key);
     }
 
-    public Task<IEnumerable<JwtSigningKey>> GetValidSigningKeysAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetValidSigningKeysAsync method.
+    /// </summary>
+public Task<IEnumerable<JwtSigningKey>> GetValidSigningKeysAsync(CancellationToken cancellationToken = default)
     {
         var validKeys = _keys.Values
             .Where(k => k.RevokedAt == null)
@@ -27,7 +33,10 @@ public class InMemoryJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         return Task.FromResult(validKeys);
     }
 
-    public Task<JwtSigningKey?> GetKeyByIdAsync(string keyId, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// GetKeyByIdAsync method.
+    /// </summary>
+public Task<JwtSigningKey?> GetKeyByIdAsync(string keyId, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(keyId, nameof(keyId));
         
@@ -35,7 +44,10 @@ public class InMemoryJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         return Task.FromResult(key);
     }
 
-    public Task<bool> AddKeyAsync(JwtSigningKey key, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// AddKeyAsync method.
+    /// </summary>
+public Task<bool> AddKeyAsync(JwtSigningKey key, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(key, nameof(key));
         ArgumentException.ThrowIfNullOrEmpty(key.KeyId, nameof(key.KeyId));
@@ -49,7 +61,10 @@ public class InMemoryJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         return Task.FromResult(true);
     }
 
-    public Task<bool> UpdateKeyAsync(JwtSigningKey key, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// UpdateKeyAsync method.
+    /// </summary>
+public Task<bool> UpdateKeyAsync(JwtSigningKey key, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(key, nameof(key));
         ArgumentException.ThrowIfNullOrEmpty(key.KeyId, nameof(key.KeyId));
@@ -68,7 +83,10 @@ public class InMemoryJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         return Task.FromResult(true);
     }
 
-    public Task<bool> RevokeKeyAsync(string keyId, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// RevokeKeyAsync method.
+    /// </summary>
+public Task<bool> RevokeKeyAsync(string keyId, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(keyId, nameof(keyId));
 
@@ -83,7 +101,10 @@ public class InMemoryJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         return Task.FromResult(true);
     }
 
-    public Task<bool> DeactivateCurrentKeyAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// DeactivateCurrentKeyAsync method.
+    /// </summary>
+public Task<bool> DeactivateCurrentKeyAsync(CancellationToken cancellationToken = default)
     {
         if (_currentKeyId is null || !_keys.TryGetValue(_currentKeyId, out var key))
         {
@@ -97,7 +118,10 @@ public class InMemoryJwtSigningKeyPersistence : IJwtSigningKeyPersistence
         return Task.FromResult(true);
     }
 
-    public Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+    /// SaveChangesAsync method.
+    /// </summary>
+public Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         // In-memory implementation doesn't need to save
         return Task.FromResult(true);

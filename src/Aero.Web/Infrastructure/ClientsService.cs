@@ -1,19 +1,37 @@
-﻿namespace Aero.Web.Infrastructure;
+namespace Aero.Web.Infrastructure;
 
+/// <summary>
+/// Defines an interface for IClientsService.
+/// </summary>
 public interface IClientsService
 {
-    Task<Dictionary<string, Guid>> GetActiveClients();
-    Task InvalidateApiKey(string apiKey);
+        /// <summary>
+    /// GetActiveClients method.
+    /// </summary>
+Task<Dictionary<string, Guid>> GetActiveClients();
+        /// <summary>
+    /// InvalidateApiKey method.
+    /// </summary>
+Task InvalidateApiKey(string apiKey);
 }
 
+/// <summary>
+/// Represents a class for ClientsService.
+/// </summary>
 public class ClientsService : IClientsService
 {
-    public async Task<Dictionary<string, Guid>> GetActiveClients()
+        /// <summary>
+    /// GetActiveClients method.
+    /// </summary>
+public async Task<Dictionary<string, Guid>> GetActiveClients()
     {
         throw new NotImplementedException();
     }
 
-    public async Task InvalidateApiKey(string apiKey)
+        /// <summary>
+    /// InvalidateApiKey method.
+    /// </summary>
+public async Task InvalidateApiKey(string apiKey)
     {
         throw new NotImplementedException();
     }

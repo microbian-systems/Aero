@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <PackageId>Aero.Core.Ai</PackageId>
-    <Version>0.0.6-alpha</Version>
     <Authors>Microbians</Authors>
     <Title>AI services for the Aero Web Platform</Title>
     <Description>AI and LLM integration components for the Aero platform</Description>
@@ -18,7 +17,6 @@
     <ItemGroup>
       <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
       <ProjectReference Include="..\Aero.Events\Aero.Events.csproj" />
-      <ProjectReference Include="..\Aero.Marten\Aero.Marten.csproj" />
     </ItemGroup>
 
     <ItemGroup>

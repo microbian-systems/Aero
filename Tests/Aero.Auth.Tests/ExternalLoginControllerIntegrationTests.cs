@@ -1,23 +1,32 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Shouldly;
 using System.Threading.Tasks;
 
 namespace Aero.Auth.Tests;
 
+/// <summary>
+/// Represents a class for ExternalLoginControllerIntegrationTests.
+/// </summary>
 [ClassDataSource<TestWebAppFactory>(Shared = SharedType.PerClass)]
 public class ExternalLoginControllerIntegrationTests
 {
     private readonly HttpClient _client;
     private readonly TestWebAppFactory _factory;
 
-    public ExternalLoginControllerIntegrationTests(TestWebAppFactory factory)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="ExternalLoginControllerIntegrationTests"/> class.
+    /// </summary>
+public ExternalLoginControllerIntegrationTests(TestWebAppFactory factory)
     {
         _factory = factory;
         _client = factory.CreateClient();
     }
 
-    [Test]
+        /// <summary>
+    /// GetExternalLogin_ShouldReturnSuccessStatusCode method.
+    /// </summary>
+[Test]
     public async Task GetExternalLogin_ShouldReturnSuccessStatusCode()
     {
         // Act
@@ -27,7 +36,10 @@ public class ExternalLoginControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.OK, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// ExternalLoginProviders_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     [Arguments("/ExternalLogin/google")]
     [Arguments("/ExternalLogin/microsoft")]
     [Arguments("/ExternalLogin/facebook")]
@@ -48,7 +60,10 @@ public class ExternalLoginControllerIntegrationTests
         );
     }
 
-    [Test]
+        /// <summary>
+    /// PostExternalLoginCallback_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     public async Task PostExternalLoginCallback_ShouldReturnValidResponse()
     {
         // Arrange
@@ -66,7 +81,10 @@ public class ExternalLoginControllerIntegrationTests
         );
     }
 
-    [Test]
+        /// <summary>
+    /// ExternalLogin_ShouldNotAllowInvalidMethods method.
+    /// </summary>
+[Test]
     [Arguments("PUT")]
     [Arguments("PATCH")]
     [Arguments("DELETE")]
@@ -82,7 +100,10 @@ public class ExternalLoginControllerIntegrationTests
         response.StatusCode.ShouldBeOneOf(HttpStatusCode.MethodNotAllowed, HttpStatusCode.NotFound);
     }
 
-    [Test]
+        /// <summary>
+    /// ExternalLoginChallenge_ShouldReturnValidResponse method.
+    /// </summary>
+[Test]
     public async Task ExternalLoginChallenge_ShouldReturnValidResponse()
     {
         // Arrange
@@ -101,7 +122,10 @@ public class ExternalLoginControllerIntegrationTests
         );
     }
 
-    [Test]
+        /// <summary>
+    /// ExternalLoginChallenge_ShouldHandleInvalidProviders method.
+    /// </summary>
+[Test]
     [Arguments("invalid-provider")]
     [Arguments("\"<script>alert('xss')</script>\"")]
     [Arguments("../../../etc/passwd")]
@@ -121,7 +145,10 @@ public class ExternalLoginControllerIntegrationTests
         );
     }
 
-    [Test]
+        /// <summary>
+    /// ExternalLoginCallback_ShouldValidateState_Parameter method.
+    /// </summary>
+[Test]
     public async Task ExternalLoginCallback_ShouldValidateState_Parameter()
     {
         // Arrange

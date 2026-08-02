@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Shouldly;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -18,7 +18,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
     private readonly IAeroDb _mockUow;
     private readonly ILogger<MartenJwtSigningKeyPersistence> _mockLogger;
 
-    public MartenJwtSigningKeyPersistenceTests()
+        /// <summary>
+    /// Initializes a new instance of the <see cref="MartenJwtSigningKeyPersistenceTests"/> class.
+    /// </summary>
+public MartenJwtSigningKeyPersistenceTests()
     {
         _mockUow = Substitute.For<IAeroDb>();
         _mockLogger = Substitute.For<ILogger<MartenJwtSigningKeyPersistence>>();
@@ -26,7 +29,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region Constructor Tests
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithValidDependencies_ShouldNotThrow method.
+    /// </summary>
+[Test]
     public void Constructor_WithValidDependencies_ShouldNotThrow()
     {
         // Act
@@ -36,7 +42,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
         act.ShouldNotThrow();
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithNullUow_ShouldThrowArgumentNullException method.
+    /// </summary>
+[Test]
     public void Constructor_WithNullUow_ShouldThrowArgumentNullException()
     {
         // Act
@@ -47,7 +56,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
         ex.ParamName.ShouldBe("uow");
     }
 
-    [Test]
+        /// <summary>
+    /// Constructor_WithNullLogger_ShouldThrowArgumentNullException method.
+    /// </summary>
+[Test]
     public void Constructor_WithNullLogger_ShouldThrowArgumentNullException()
     {
         // Act
@@ -62,7 +74,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region Interface Implementation Tests
 
-    [Test]
+        /// <summary>
+    /// MartenJwtSigningKeyPersistence_ImplementsInterface method.
+    /// </summary>
+[Test]
     public void MartenJwtSigningKeyPersistence_ImplementsInterface()
     {
         // Arrange & Act
@@ -76,7 +91,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region AddKey Tests
 
-    [Test]
+        /// <summary>
+    /// AddKeyAsync_WithValidKey_ShouldReturnTrue method.
+    /// </summary>
+[Test]
     public async Task AddKeyAsync_WithValidKey_ShouldReturnTrue()
     {
         // Arrange
@@ -106,7 +124,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
         savedKey!.IsCurrentSigningKey.ShouldBeTrue();
     }
 
-    [Test]
+        /// <summary>
+    /// AddKeyAsync_WithNullKey_ShouldThrowArgumentNullException method.
+    /// </summary>
+[Test]
     public async Task AddKeyAsync_WithNullKey_ShouldThrowArgumentNullException()
     {
         // Arrange
@@ -123,7 +144,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region UpdateKey Tests
 
-    [Test]
+        /// <summary>
+    /// UpdateKeyAsync_WithValidKey_ShouldReturnTrue method.
+    /// </summary>
+[Test]
     public async Task UpdateKeyAsync_WithValidKey_ShouldReturnTrue()
     {
         // Arrange
@@ -167,7 +191,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region RevokeKey Tests
 
-    [Test]
+        /// <summary>
+    /// RevokeKeyAsync_WithValidKeyId_ShouldReturnTrue method.
+    /// </summary>
+[Test]
     public async Task RevokeKeyAsync_WithValidKeyId_ShouldReturnTrue()
     {
         // Arrange
@@ -202,7 +229,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region GetKeyById Tests
 
-    [Test]
+        /// <summary>
+    /// GetKeyByIdAsync_WithNullKeyId_ShouldThrowArgumentException method.
+    /// </summary>
+[Test]
     public async Task GetKeyByIdAsync_WithNullKeyId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -219,7 +249,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region SaveChanges Tests
 
-    [Test]
+        /// <summary>
+    /// SaveChangesAsync_ShouldCallUowSaveChanges method.
+    /// </summary>
+[Test]
     public async Task SaveChangesAsync_ShouldCallUowSaveChanges()
     {
         // Arrange
@@ -240,7 +273,10 @@ public class MartenJwtSigningKeyPersistenceTests : AeroDbTestDriver
 
     //#region Error Handling Tests
 
-    [Test]
+        /// <summary>
+    /// AddKeyAsync_ShouldReturnFalseOnException method.
+    /// </summary>
+[Test]
     public async Task AddKeyAsync_ShouldReturnFalseOnException()
     {
         // Arrange

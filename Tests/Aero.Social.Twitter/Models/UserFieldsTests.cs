@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for UserFieldsTests.
+/// </summary>
 public class UserFieldsTests
 {
-    [Test]
+        /// <summary>
+    /// UserFields_ToApiString_WithSingleField_ReturnsCorrectString method.
+    /// </summary>
+[Test]
     public async Task UserFields_ToApiString_WithSingleField_ReturnsCorrectString()
     {
         // Arrange
@@ -19,7 +25,10 @@ public class UserFieldsTests
         await Assert.That(result).IsEqualTo("description");
     }
 
-    [Test]
+        /// <summary>
+    /// UserFields_ToApiString_WithMultipleFields_ReturnsCommaSeparatedString method.
+    /// </summary>
+[Test]
     public async Task UserFields_ToApiString_WithMultipleFields_ReturnsCommaSeparatedString()
     {
         // Arrange
@@ -35,7 +44,10 @@ public class UserFieldsTests
         await Assert.That(result).Contains(",");
     }
 
-    [Test]
+        /// <summary>
+    /// UserFields_ToApiString_WithAllFields_ReturnsAllFieldNames method.
+    /// </summary>
+[Test]
     public async Task UserFields_ToApiString_WithAllFields_ReturnsAllFieldNames()
     {
         // Arrange
@@ -53,7 +65,10 @@ public class UserFieldsTests
         await Assert.That(result).Contains("profile_image_url");
     }
 
-    [Test]
+        /// <summary>
+    /// UserFields_ToApiString_WithNone_ReturnsEmptyString method.
+    /// </summary>
+[Test]
     public async Task UserFields_ToApiString_WithNone_ReturnsEmptyString()
     {
         // Arrange
@@ -66,7 +81,10 @@ public class UserFieldsTests
         await Assert.That(result).IsEqualTo(string.Empty);
     }
 
-    [Test]
+        /// <summary>
+    /// UserFields_ToApiString_IndividualFields_ReturnCorrectValues method.
+    /// </summary>
+[Test]
     [Arguments(UserFields.CreatedAt, "created_at")]
     [Arguments(UserFields.Description, "description")]
     [Arguments(UserFields.Location, "location")]

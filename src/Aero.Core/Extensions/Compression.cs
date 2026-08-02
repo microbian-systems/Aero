@@ -1,11 +1,17 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 
 namespace Aero.Core.Extensions;
 
 // todo - create unit tests for Aero.Core.CompressionHelpers
+/// <summary>
+/// Represents a class for Compression.
+/// </summary>
 public static class Compression
 {
-    public static byte[] Compress(byte[] data)
+        /// <summary>
+    /// Compress method.
+    /// </summary>
+public static byte[] Compress(byte[] data)
     {
         byte[] compressArray = null;
 
@@ -19,7 +25,10 @@ public static class Compression
         return compressArray;
     }
 
-    public static byte[] Decompress(byte[] data)
+        /// <summary>
+    /// Decompress method.
+    /// </summary>
+public static byte[] Decompress(byte[] data)
     {
         byte[] decompressedArray = null;
 

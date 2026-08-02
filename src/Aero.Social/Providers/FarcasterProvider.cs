@@ -10,21 +10,45 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Providers;
 
+/// <summary>
+/// Represents a class for FarcasterProvider.
+/// </summary>
 public class FarcasterProvider(
     HttpClient httpClient,
     IConfiguration configuration,
     ILogger<FarcasterProvider> logger)
     : SocialProviderBase(httpClient, logger)
 {
-    public override string Identifier => "wrapcast";
-    public override string Name => "Farcaster";
-    public override string[] Scopes => Array.Empty<string>();
-    public override int MaxConcurrentJobs => 3;
-    public override bool IsWeb3 => true;
+        /// <summary>
+    /// Gets or sets the Identifier.
+    /// </summary>
+public override string Identifier => "wrapcast";
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name => "Farcaster";
+        /// <summary>
+    /// Gets or sets the Scopes.
+    /// </summary>
+public override string[] Scopes => Array.Empty<string>();
+        /// <summary>
+    /// Gets or sets the Max Concurrent Jobs.
+    /// </summary>
+public override int MaxConcurrentJobs => 3;
+        /// <summary>
+    /// Gets or sets the Is Web3.
+    /// </summary>
+public override bool IsWeb3 => true;
 
-    public override int MaxLength(object? additionalSettings = null) => 800;
+        /// <summary>
+    /// MaxLength method.
+    /// </summary>
+public override int MaxLength(object? additionalSettings = null) => 800;
 
-    public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
+        /// <summary>
+    /// GenerateAuthUrlAsync method.
+    /// </summary>
+public override async Task<Result<GenerateAuthUrlResponse, AeroError>> GenerateAuthUrlAsync(
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
     {
@@ -39,7 +63,10 @@ public class FarcasterProvider(
         };
     }
 
-    public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
+        /// <summary>
+    /// AuthenticateAsync method.
+    /// </summary>
+public override async Task<Result<AuthTokenDetails, AeroError>> AuthenticateAsync(
         AuthenticateParams parameters,
         ClientInformation? clientInformation = null,
         CancellationToken cancellationToken = default)
@@ -73,7 +100,10 @@ public class FarcasterProvider(
         };
     }
 
-    public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
+        /// <summary>
+    /// RefreshTokenAsync method.
+    /// </summary>
+public override Task<Result<AuthTokenDetails, AeroError>> RefreshTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
@@ -89,7 +119,10 @@ public class FarcasterProvider(
         });
     }
 
-    public override async Task<Result<PostResponse[], AeroError>> PostAsync(
+        /// <summary>
+    /// PostAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[], AeroError>> PostAsync(
         string id,
         string accessToken,
         List<PostDetails> posts,
@@ -149,7 +182,10 @@ public class FarcasterProvider(
         };
     }
 
-    public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
+        /// <summary>
+    /// CommentAsync method.
+    /// </summary>
+public override async Task<Result<PostResponse[]?, AeroError>> CommentAsync(
         string id,
         string postId,
         string? lastCommentId,
@@ -203,7 +239,10 @@ public class FarcasterProvider(
         };
     }
 
-    public async Task<Result<List<FarcasterChannel>, AeroError>> SearchChannelsAsync(string query, CancellationToken cancellationToken = default)
+        /// <summary>
+    /// SearchChannelsAsync method.
+    /// </summary>
+public async Task<Result<List<FarcasterChannel>, AeroError>> SearchChannelsAsync(string query, CancellationToken cancellationToken = default)
     {
         var apiKey = GetNeynarApiKey();
         var url = $"https://api.neynar.com/v2/farcaster/channel/search?q={Uri.EscapeDataString(query)}&limit=10";
@@ -254,76 +293,142 @@ public class FarcasterProvider(
 
     private class FarcasterAuthData
     {
-        [JsonPropertyName("fid")]
+                /// <summary>
+        /// Gets or sets the Fid.
+        /// </summary>
+[JsonPropertyName("fid")]
         public long? Fid { get; set; }
 
-        [JsonPropertyName("display_name")]
+                /// <summary>
+        /// Gets or sets the Display Name.
+        /// </summary>
+[JsonPropertyName("display_name")]
         public string? DisplayName { get; set; }
 
-        [JsonPropertyName("signer_uuid")]
+                /// <summary>
+        /// Gets or sets the Signer Uuid.
+        /// </summary>
+[JsonPropertyName("signer_uuid")]
         public string? SignerUuid { get; set; }
 
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
 
-        [JsonPropertyName("pfp_url")]
+                /// <summary>
+        /// Gets or sets the Pfp Url.
+        /// </summary>
+[JsonPropertyName("pfp_url")]
         public string? PfpUrl { get; set; }
     }
 
     private class NeynarPublishCastResponse
     {
-        [JsonPropertyName("cast")]
+                /// <summary>
+        /// Gets or sets the Cast.
+        /// </summary>
+[JsonPropertyName("cast")]
         public NeynarCast? Cast { get; set; }
     }
 
     private class NeynarCast
     {
-        [JsonPropertyName("hash")]
+                /// <summary>
+        /// Gets or sets the Hash.
+        /// </summary>
+[JsonPropertyName("hash")]
         public string? Hash { get; set; }
 
-        [JsonPropertyName("author")]
+                /// <summary>
+        /// Gets or sets the Author.
+        /// </summary>
+[JsonPropertyName("author")]
         public NeynarAuthor? Author { get; set; }
     }
 
     private class NeynarAuthor
     {
-        [JsonPropertyName("username")]
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+[JsonPropertyName("username")]
         public string? Username { get; set; }
     }
 
     private class FarcasterCastResponse
     {
-        public string Hash { get; set; } = string.Empty;
-        public string Username { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Hash.
+        /// </summary>
+public string Hash { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Username.
+        /// </summary>
+public string Username { get; set; } = string.Empty;
     }
 
     private class FarcasterChannelSearchResponse
     {
-        [JsonPropertyName("channels")]
+                /// <summary>
+        /// Gets or sets the Channels.
+        /// </summary>
+[JsonPropertyName("channels")]
         public List<FarcasterChannelData>? Channels { get; set; }
     }
 
     private class FarcasterChannelData
     {
-        [JsonPropertyName("id")]
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+[JsonPropertyName("id")]
         public string? Id { get; set; }
 
-        [JsonPropertyName("name")]
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+[JsonPropertyName("name")]
         public string? Name { get; set; }
     }
 
-    public class FarcasterChannel
+        /// <summary>
+    /// Represents a class for FarcasterChannel.
+    /// </summary>
+public class FarcasterChannel
     {
-        public string Title { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Id { get; set; } = string.Empty;
-        public FarcasterChannelValue? Value { get; set; }
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+public string Title { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Name.
+        /// </summary>
+public string Name { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Value.
+        /// </summary>
+public FarcasterChannelValue? Value { get; set; }
     }
 
-    public class FarcasterChannelValue
+        /// <summary>
+    /// Represents a class for FarcasterChannelValue.
+    /// </summary>
+public class FarcasterChannelValue
     {
-        public string Id { get; set; } = string.Empty;
-        public string Title { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Id.
+        /// </summary>
+public string Id { get; set; } = string.Empty;
+                /// <summary>
+        /// Gets or sets the Title.
+        /// </summary>
+public string Title { get; set; } = string.Empty;
     }
 
     //#endregion

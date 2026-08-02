@@ -4,10 +4,19 @@ using IPropertyValidator = FluentValidation.Validators.IPropertyValidator;
 
 namespace Aero.Validators.Extensions;
 
+/// <summary>
+/// Defines an interface for INotNullOrEmpty.
+/// </summary>
 public interface INotNullOrEmpty : IPropertyValidator{}
+/// <summary>
+/// Represents a class for NotEmptyGuid.
+/// </summary>
 public class NotEmptyGuid<T, TProperty> : AsyncPropertyValidator<T, TProperty>, INotEmptyGuidValidator 
 {
-    public override async Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation)
+        /// <summary>
+    /// IsValidAsync method.
+    /// </summary>
+public override async Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation)
     {
         var guid = value as Guid?;
         if (guid != null)
@@ -18,5 +27,8 @@ public class NotEmptyGuid<T, TProperty> : AsyncPropertyValidator<T, TProperty>, 
         return await Task.FromResult(true);
     }
 
-    public override string Name { get; }
+        /// <summary>
+    /// Gets or sets the Name.
+    /// </summary>
+public override string Name { get; }
 }

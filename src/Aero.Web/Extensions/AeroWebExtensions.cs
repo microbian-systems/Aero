@@ -10,15 +10,24 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Aero.Web.Extensions;
 
+/// <summary>
+/// Represents a class for AeroWebExtensions.
+/// </summary>
 public static class AeroWebExtensions
 {
-    public static WebApplicationBuilder AddAeroDefaultServices(this WebApplicationBuilder builder)
+        /// <summary>
+    /// AddAeroDefaultServices method.
+    /// </summary>
+public static WebApplicationBuilder AddAeroDefaultServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddAeroDefaultServices(builder.Configuration, builder.Environment);
         return builder;
     }
 
-    public static IServiceCollection AddAeroDefaultServices(this IServiceCollection services, IConfiguration config, IWebHostEnvironment host, string connString = "")
+        /// <summary>
+    /// AddAeroDefaultServices method.
+    /// </summary>
+public static IServiceCollection AddAeroDefaultServices(this IServiceCollection services, IConfiguration config, IWebHostEnvironment host, string connString = "")
     {
         if (string.IsNullOrEmpty(connString))
             connString = config.GetConnectionString("DefaultConnection")
@@ -31,7 +40,10 @@ public static class AeroWebExtensions
         return services;
     }
 
-    public static IServiceCollection AddAeroCoreServices(
+        /// <summary>
+    /// AddAeroCoreServices method.
+    /// </summary>
+public static IServiceCollection AddAeroCoreServices(
         this IServiceCollection services,
         IConfiguration config,
         IWebHostEnvironment host,
@@ -103,13 +115,19 @@ public static class AeroWebExtensions
         return services;
     }
 
-    public static IApplicationBuilder UseDefaultAeroServices(this IApplicationBuilder app)
+        /// <summary>
+    /// UseDefaultAeroServices method.
+    /// </summary>
+public static IApplicationBuilder UseDefaultAeroServices(this IApplicationBuilder app)
     {
         app.UseAeroMiddleware();
         return app;
     }
 
-    public static IApplicationBuilder UseAeroMiddleware(this IApplicationBuilder app)
+        /// <summary>
+    /// UseAeroMiddleware method.
+    /// </summary>
+public static IApplicationBuilder UseAeroMiddleware(this IApplicationBuilder app)
     {
         // todo - analyzle if we still need any of the middleware here in this library - may move to cms project
         app.UseExceptionHandler();

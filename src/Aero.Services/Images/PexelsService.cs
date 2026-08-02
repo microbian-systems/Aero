@@ -5,6 +5,9 @@ using System.Text.Json;
 
 namespace Aero.Services.Images;
 
+/// <summary>
+/// Represents a class for PexelsService.
+/// </summary>
 public sealed class PexelsService : IPexelsService, IDisposable
 {
     private readonly HttpClient _http;
@@ -18,7 +21,10 @@ public sealed class PexelsService : IPexelsService, IDisposable
     private const string PhotosBase = "https://api.pexels.com/v1/";
     private const string VideosBase = "https://api.pexels.com/videos/";
 
-    public PexelsService(HttpClient http, ILogger<PexelsService> log)
+        /// <summary>
+    /// Initializes a new instance of the <see cref="PexelsService"/> class.
+    /// </summary>
+public PexelsService(HttpClient http, ILogger<PexelsService> log)
     {
         _http = http;
         _log = log;
@@ -37,7 +43,10 @@ public sealed class PexelsService : IPexelsService, IDisposable
 
     // ─── Photos ──────────────────────────────────────────────
 
-    public async Task<IReadOnlyList<PexelsPhoto>> SearchPhotosAsync(string query, int count = 5, string? orientation = null, CancellationToken ct = default)
+        /// <summary>
+    /// SearchPhotosAsync method.
+    /// </summary>
+public async Task<IReadOnlyList<PexelsPhoto>> SearchPhotosAsync(string query, int count = 5, string? orientation = null, CancellationToken ct = default)
     {
         if (!EnsureApiKey()) return [];
 
@@ -70,7 +79,10 @@ public sealed class PexelsService : IPexelsService, IDisposable
         }
     }
 
-    public async Task<PexelsPhoto?> GetPhotoByIdAsync(int id, CancellationToken ct = default)
+        /// <summary>
+    /// GetPhotoByIdAsync method.
+    /// </summary>
+public async Task<PexelsPhoto?> GetPhotoByIdAsync(int id, CancellationToken ct = default)
     {
         if (!EnsureApiKey()) return null;
 
@@ -94,7 +106,10 @@ public sealed class PexelsService : IPexelsService, IDisposable
 
     // ─── Videos ──────────────────────────────────────────────
 
-    public async Task<IReadOnlyList<PexelsVideo>> SearchVideosAsync(string query, int count = 5, CancellationToken ct = default)
+        /// <summary>
+    /// SearchVideosAsync method.
+    /// </summary>
+public async Task<IReadOnlyList<PexelsVideo>> SearchVideosAsync(string query, int count = 5, CancellationToken ct = default)
     {
         if (!EnsureApiKey()) return [];
 
@@ -125,7 +140,10 @@ public sealed class PexelsService : IPexelsService, IDisposable
         }
     }
 
-    public async Task<PexelsVideo?> GetVideoByIdAsync(int id, CancellationToken ct = default)
+        /// <summary>
+    /// GetVideoByIdAsync method.
+    /// </summary>
+public async Task<PexelsVideo?> GetVideoByIdAsync(int id, CancellationToken ct = default)
     {
         if (!EnsureApiKey()) return null;
 
@@ -149,7 +167,10 @@ public sealed class PexelsService : IPexelsService, IDisposable
 
     // ─── Downloads ───────────────────────────────────────────
 
-    public async Task<string> DownloadPhotoAsync(PexelsPhoto photo, string subfolder, string filename, CancellationToken ct = default)
+        /// <summary>
+    /// DownloadPhotoAsync method.
+    /// </summary>
+public async Task<string> DownloadPhotoAsync(PexelsPhoto photo, string subfolder, string filename, CancellationToken ct = default)
     {
         var url = photo.Src.Large2x ?? photo.Src.Large ?? photo.Src.Original;
         var ext = Path.GetExtension(new Uri(url).AbsolutePath);
@@ -158,7 +179,10 @@ public sealed class PexelsService : IPexelsService, IDisposable
         return await DownloadFromUrl(url, subfolder, $"{filename}{ext}", ct);
     }
 
-    public async Task<string> DownloadVideoAsync(PexelsVideo video, string subfolder, string filename, CancellationToken ct = default)
+        /// <summary>
+    /// DownloadVideoAsync method.
+    /// </summary>
+public async Task<string> DownloadVideoAsync(PexelsVideo video, string subfolder, string filename, CancellationToken ct = default)
     {
         // Pick the highest quality HD video file
         var bestFile = video.VideoFiles
@@ -235,5 +259,8 @@ public sealed class PexelsService : IPexelsService, IDisposable
         return true;
     }
 
-    public void Dispose() => _http.Dispose();
+        /// <summary>
+    /// Dispose method.
+    /// </summary>
+public void Dispose() => _http.Dispose();
 }

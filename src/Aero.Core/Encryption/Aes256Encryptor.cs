@@ -3,6 +3,9 @@ using Aero.Core.Extensions;
 
 namespace Aero.Core.Encryption;
 
+/// <summary>
+/// Defines an interface for IEncryptor.
+/// </summary>
 public interface IEncryptor
 {
     /// <summary>
@@ -90,4 +93,7 @@ public class Aes256Encryptor(AesEncryptorOptions settings) : IEncryptor
     }
 }
 
+/// <summary>
+/// Represents a record for AesEncryptorOptions.
+/// </summary>
 public record AesEncryptorOptions(string Key, string IV);

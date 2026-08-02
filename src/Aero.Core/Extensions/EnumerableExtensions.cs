@@ -1,20 +1,35 @@
-﻿namespace Aero.Core.Extensions;
+namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for EnumerableExtensions.
+/// </summary>
 public static class EnumerableExtensions
 {
-    public static string Concatenate(this IEnumerable<string> source, string separator = ", ")
+        /// <summary>
+    /// Concatenate method.
+    /// </summary>
+public static string Concatenate(this IEnumerable<string> source, string separator = ", ")
         => string.Join(separator, source);
 
-    public static string ConcatenateLines(this IEnumerable<string> source)
+        /// <summary>
+    /// ConcatenateLines method.
+    /// </summary>
+public static string ConcatenateLines(this IEnumerable<string> source)
         => string.Join(Environment.NewLine, source);
 
-    public static string Concatenate<T>(
+        /// <summary>
+    /// Concatenate method.
+    /// </summary>
+public static string Concatenate<T>(
         this IEnumerable<T> source,
         Func<T, string> selector,
         string separator = ", ")
         => string.Join(separator, source.Select(selector));
 
-    public static string ConcatenateLines<T>(
+        /// <summary>
+    /// ConcatenateLines method.
+    /// </summary>
+public static string ConcatenateLines<T>(
         this IEnumerable<T> source,
         Func<T, string> selector)
         => string.Join(Environment.NewLine, source.Select(selector));

@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Correlation;
 using Aero.Social.Twitter.Client.Logging;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Correlation;
 
+/// <summary>
+/// Represents a class for CorrelationIdProviderTests.
+/// </summary>
 public class CorrelationIdProviderTests
 {
-    [Test]
+        /// <summary>
+    /// GuidCorrelationIdProvider_ShouldGenerateUniqueIds method.
+    /// </summary>
+[Test]
     public async Task GuidCorrelationIdProvider_ShouldGenerateUniqueIds()
     {
         // Arrange
@@ -22,7 +28,10 @@ public class CorrelationIdProviderTests
         await Assert.That(id1.Length).IsEqualTo(16); // Should be 16 chars
     }
 
-    [Test]
+        /// <summary>
+    /// GuidCorrelationIdProvider_ShouldGenerateValidIds method.
+    /// </summary>
+[Test]
     public async Task GuidCorrelationIdProvider_ShouldGenerateValidIds()
     {
         // Arrange
@@ -38,9 +47,15 @@ public class CorrelationIdProviderTests
     }
 }
 
+/// <summary>
+/// Represents a class for CorrelationIdHandlerTests.
+/// </summary>
 public class CorrelationIdHandlerTests
 {
-    [Test]
+        /// <summary>
+    /// SendAsync_ShouldAddCorrelationIdHeader method.
+    /// </summary>
+[Test]
     public async Task SendAsync_ShouldAddCorrelationIdHeader()
     {
         // Arrange
@@ -63,7 +78,10 @@ public class CorrelationIdHandlerTests
         await Assert.That(correlationId).IsNotEmpty();
     }
 
-    [Test]
+        /// <summary>
+    /// SendAsync_ShouldNotOverwriteExistingCorrelationId method.
+    /// </summary>
+[Test]
     public async Task SendAsync_ShouldNotOverwriteExistingCorrelationId()
     {
         // Arrange
@@ -87,7 +105,10 @@ public class CorrelationIdHandlerTests
 
     private class TestHandler : HttpMessageHandler
     {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+                /// <summary>
+        /// SendAsync method.
+        /// </summary>
+protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
 }

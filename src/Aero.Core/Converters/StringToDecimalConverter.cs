@@ -1,10 +1,19 @@
-﻿namespace Aero.Core.Converters;
+namespace Aero.Core.Converters;
 
+/// <summary>
+/// Represents a class for StringToDecimalConverter.
+/// </summary>
 public class StringToDecimalConverter : JsonConverter<decimal>
 {
-    public override bool CanConvert(Type t) => t == typeof(decimal);
+        /// <summary>
+    /// CanConvert method.
+    /// </summary>
+public override bool CanConvert(Type t) => t == typeof(decimal);
 
-    public override decimal Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        /// <summary>
+    /// Read method.
+    /// </summary>
+public override decimal Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var value = reader.GetString();
         decimal l;
@@ -16,11 +25,17 @@ public class StringToDecimalConverter : JsonConverter<decimal>
         throw new Exception("Cannot unmarshal type decimal");
     }
 
-    public override void Write(Utf8JsonWriter writer, decimal value, JsonSerializerOptions options)
+        /// <summary>
+    /// Write method.
+    /// </summary>
+public override void Write(Utf8JsonWriter writer, decimal value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value.ToString(), options);
         return;
     }
 
-    public static readonly StringToDecimalConverter Singleton = new StringToDecimalConverter();
+        /// <summary>
+    /// Singleton.
+    /// </summary>
+public static readonly StringToDecimalConverter Singleton = new StringToDecimalConverter();
 }

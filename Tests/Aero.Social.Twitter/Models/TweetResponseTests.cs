@@ -1,13 +1,19 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Text.Json;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for TweetResponseTests.
+/// </summary>
 public class TweetResponseTests
 {
-    [Test]
+        /// <summary>
+    /// TweetResponse_Deserialization_WithSingleTweet_PopulatesCorrectly method.
+    /// </summary>
+[Test]
     public async Task TweetResponse_Deserialization_WithSingleTweet_PopulatesCorrectly()
     {
         // Arrange
@@ -40,7 +46,10 @@ public class TweetResponseTests
         await Assert.That(response.Meta.ResultCount).IsEqualTo(1);
     }
 
-    [Test]
+        /// <summary>
+    /// TweetResponse_Deserialization_WithMultipleTweets_PopulatesCorrectly method.
+    /// </summary>
+[Test]
     public async Task TweetResponse_Deserialization_WithMultipleTweets_PopulatesCorrectly()
     {
         // Arrange
@@ -76,7 +85,10 @@ public class TweetResponseTests
         await Assert.That(response.Meta.NextToken).IsEqualTo("next_page_token");
     }
 
-    [Test]
+        /// <summary>
+    /// TweetResponse_Deserialization_WithPaginationTokens_PopulatesCorrectly method.
+    /// </summary>
+[Test]
     public async Task TweetResponse_Deserialization_WithPaginationTokens_PopulatesCorrectly()
     {
         // Arrange

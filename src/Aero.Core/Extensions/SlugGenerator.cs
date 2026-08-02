@@ -1,8 +1,14 @@
 namespace Aero.Core.Extensions;
 
+/// <summary>
+/// Represents a class for SlugGenerator.
+/// </summary>
 public static class SlugGenerator
 {
-    public static string GenerateSlug(this string title)
+        /// <summary>
+    /// GenerateSlug method.
+    /// </summary>
+public static string GenerateSlug(this string title)
     {
         // todo - figure out this logic?!?! 
         if (string.IsNullOrEmpty(title))

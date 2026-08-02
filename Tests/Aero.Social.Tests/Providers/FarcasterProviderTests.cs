@@ -1,4 +1,4 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using System.Net;
 using Aero.Core;
 using Aero.Core.Railway;
@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Aero.Social.Tests.Providers;
 
+/// <summary>
+/// Represents a class for FarcasterProviderTests.
+/// </summary>
 public class FarcasterProviderTests : ProviderTestBase
 {
     private readonly Mock<ILogger<FarcasterProvider>> _loggerMock = new();
@@ -23,7 +26,10 @@ public class FarcasterProviderTests : ProviderTestBase
         return new FarcasterProvider(HttpClient, ConfigurationMock.Object, _loggerMock.Object);
     }
 
-    [Test]
+        /// <summary>
+    /// Provider_ShouldHaveCorrectIdentifier method.
+    /// </summary>
+[Test]
     public void Provider_ShouldHaveCorrectIdentifier()
     {
         var provider = CreateProvider();
@@ -34,7 +40,10 @@ public class FarcasterProviderTests : ProviderTestBase
         provider.MaxConcurrentJobs.ShouldBe(3);
     }
 
-    [Test]
+        /// <summary>
+    /// MaxLength_ShouldReturn800 method.
+    /// </summary>
+[Test]
     public void MaxLength_ShouldReturn800()
     {
         var provider = CreateProvider();
@@ -42,7 +51,10 @@ public class FarcasterProviderTests : ProviderTestBase
         provider.MaxLength().ShouldBe(800);
     }
 
-    [Test]
+        /// <summary>
+    /// GenerateAuthUrlAsync_ShouldReturnClientIdAndState method.
+    /// </summary>
+[Test]
     public async Task GenerateAuthUrlAsync_ShouldReturnClientIdAndState()
     {
         var provider = CreateProvider();

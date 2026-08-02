@@ -1,12 +1,18 @@
-﻿using TUnit.Core;
+using TUnit.Core;
 using Aero.Social.Twitter.Client.Models;
 using System.Threading.Tasks;
 
 namespace Aero.Social.Twitter.Models;
 
+/// <summary>
+/// Represents a class for ExpansionOptionsTests.
+/// </summary>
 public class ExpansionOptionsTests
 {
-    [Test]
+        /// <summary>
+    /// ExpansionOptions_ToApiString_WithNone_ReturnsEmptyString method.
+    /// </summary>
+[Test]
     public async Task ExpansionOptions_ToApiString_WithNone_ReturnsEmptyString()
     {
         // Arrange
@@ -19,7 +25,10 @@ public class ExpansionOptionsTests
         await Assert.That(result).IsEqualTo(string.Empty);
     }
 
-    [Test]
+        /// <summary>
+    /// ExpansionOptions_ToApiString_IndividualOptions_ReturnCorrectValues method.
+    /// </summary>
+[Test]
     [Arguments(ExpansionOptions.AuthorId, "author_id")]
     [Arguments(ExpansionOptions.ReferencedTweetsId, "referenced_tweets.id")]
     [Arguments(ExpansionOptions.ReferencedTweetsIdAuthorId, "referenced_tweets.id.author_id")]
@@ -36,7 +45,10 @@ public class ExpansionOptionsTests
         await Assert.That(result).IsEqualTo(expected);
     }
 
-    [Test]
+        /// <summary>
+    /// ExpansionOptions_ToApiString_WithMultipleOptions_ReturnsCommaSeparatedString method.
+    /// </summary>
+[Test]
     public async Task ExpansionOptions_ToApiString_WithMultipleOptions_ReturnsCommaSeparatedString()
     {
         // Arrange
@@ -51,7 +63,10 @@ public class ExpansionOptionsTests
         await Assert.That(result).Contains(",");
     }
 
-    [Test]
+        /// <summary>
+    /// ExpansionOptions_ToApiString_WithAllOptions_ReturnsAllExpansionNames method.
+    /// </summary>
+[Test]
     public async Task ExpansionOptions_ToApiString_WithAllOptions_ReturnsAllExpansionNames()
     {
         // Arrange
@@ -70,7 +85,10 @@ public class ExpansionOptionsTests
         await Assert.That(result).Contains("entities.note.mentions.username");
     }
 
-    [Test]
+        /// <summary>
+    /// ExpansionOptions_ToApiString_WithComplexCombination_ReturnsCorrectString method.
+    /// </summary>
+[Test]
     public async Task ExpansionOptions_ToApiString_WithComplexCombination_ReturnsCorrectString()
     {
         // Arrange
