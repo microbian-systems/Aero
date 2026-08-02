@@ -16,6 +16,10 @@
 .EXAMPLE
     ./build/nuget-pack.ps1
     Packs all libraries with the version from src/Directory.Build.props.
+.NOTES
+    The develop CI workflow invokes this script for every push and packs all
+    libraries, including when a commit changes only documentation or other
+    non-package files. This remains intentional until path filtering is added.
 #>
 
 param(
