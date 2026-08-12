@@ -13,14 +13,14 @@ public sealed class DataProtectionCertificateSecretManager : SecretManagerBase
     private const string EncryptedPrefix = "enc:";
     private readonly IDataProtector _protector;
 
-        /// <summary>
+    /// <summary>
     /// Initializes a new instance of the <see cref="DataProtectionCertificateSecretManager"/> class.
     /// </summary>
-public DataProtectionCertificateSecretManager(
-        X509Certificate2 certificate,
-        string applicationName = "AeroCMS-Vault",
-        string? keyRingPath = null,
-        string protectorPurpose = "Aero.Secrets.V1")
+    public DataProtectionCertificateSecretManager(
+            X509Certificate2 certificate,
+            string applicationName = "AeroCMS-Vault",
+            string? keyRingPath = null,
+            string protectorPurpose = "Aero.Secrets.V1")
     {
         ArgumentNullException.ThrowIfNull(certificate);
 
@@ -39,16 +39,16 @@ public DataProtectionCertificateSecretManager(
         _protector = provider.GetDataProtector(protectorPurpose);
     }
 
-        /// <summary>
+    /// <summary>
     /// StoreCore method.
     /// </summary>
-protected override StoredSecretReference StoreCore(string secret, string name, SecretProviderType providerType)
-        => new(providerType, name, $"{EncryptedPrefix}{_protector.Protect(secret)}");
+    protected override StoredSecretReference StoreCore(string secret, string name, SecretProviderType providerType)
+            => new(providerType, name, $"{EncryptedPrefix}{_protector.Protect(secret)}");
 
-        /// <summary>
+    /// <summary>
     /// ReadCore method.
     /// </summary>
-protected override string ReadCore(StoredSecretReference secretReference)
+    protected override string ReadCore(StoredSecretReference secretReference)
     {
         if (secretReference.Value is null)
         {
