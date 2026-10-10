@@ -19,8 +19,9 @@ public sealed class SpreadsheetDocumentProcessor : DocumentProcessor
         var part = doc.WorkbookPart ?? throw new InvalidDataException();
         var workbook = part.Workbook ?? throw new InvalidDataException();
         var extraction = new WorkbookExtraction(part, limits, cancellationToken);
-        foreach (var sheet in workbook.Sheets?.Elements<S.Sheet>() ?? [])
-            if (!extraction.ExtractSheet(sheet)) return extraction.Result();
+        var sheets = workbook.Sheets?.Elements<S.Sheet>() ?? [];
+        // Stop at the first exhausted sheet without visiting subsequent sheets.
+        if (sheets.Any(sheet => !extraction.ExtractSheet(sheet))) return extraction.Result();
         return extraction.Complete();
     }
 

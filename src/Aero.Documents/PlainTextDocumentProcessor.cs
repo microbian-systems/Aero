@@ -12,7 +12,7 @@ public sealed class PlainTextDocumentProcessor : DocumentProcessor
     {
         var (encoding, offset) = EncodingFor(content);
         var text = encoding.GetString(content, offset, content.Length - offset);
-        if (text.Any(c => c == '\0' || (char.IsControl(c) && c is not '\n' and not '\r' and not '\t')))
+        if (text.Any(IsInvalidCharacter))
             return Failure("InvalidText", "Text contains binary/control characters.");
         var result = new ExtractionBuffer("txt:1", limits);
         using var reader = new StringReader(text);
@@ -40,6 +40,9 @@ public sealed class PlainTextDocumentProcessor : DocumentProcessor
         FlushParagraph(paragraph, paragraphStart, result);
         return result.Result();
     }
+
+    private static bool IsInvalidCharacter(char character) =>
+        character == '\0' || (char.IsControl(character) && character is not '\n' and not '\r' and not '\t');
 
     private static bool FlushParagraph(List<string> paragraph, int start, ExtractionBuffer result)
     {
