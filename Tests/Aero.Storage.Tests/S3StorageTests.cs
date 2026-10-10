@@ -65,7 +65,8 @@ public sealed class S3StorageTests
             var request = call.Arg<PutObjectRequest>();
             request.DisablePayloadSigning.ShouldBe(true);
             request.DisableDefaultChecksumValidation.ShouldBe(true);
-            request.MD5Digest.ShouldBe(Convert.ToBase64String(MD5.HashData(new byte[] { 1, 2, 3 })));
+            request.ChecksumSHA256.ShouldBe(Convert.ToBase64String(SHA256.HashData(new byte[] { 1, 2, 3 })));
+            request.MD5Digest.ShouldBeNull();
             request.InputStream.Position.ShouldBe(1);
             return Task.FromResult(new PutObjectResponse { HttpStatusCode = HttpStatusCode.OK });
         });

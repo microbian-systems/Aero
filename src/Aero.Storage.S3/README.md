@@ -86,9 +86,9 @@ configuration. Pass credentials explicitly from AeroVault at the composition roo
 
 R2 PUT disables this SDK's streaming SigV4/default checksum framing and chunked
 encoding. To retain server-side transfer verification it computes a bounded-memory
-Content-MD5 over the remaining stream and restores that starting position before
-upload. MD5 is only a transfer checksum, never a security/content-address identity.
-The host still computes and verifies SHA-256. Ordinary AWS S3 profile leaves SDK
+SHA-256 checksum over the remaining stream and restores that starting position before
+upload, using `x-amz-checksum-sha256` rather than MD5 or streaming trailers.
+The host still computes and verifies SHA-256 for content identity. Ordinary AWS S3 profile leaves SDK
 payload/checksum defaults intact. No global SDK settings are changed.
 
 No multipart, presigned URLs, range reads, nonseekable spooling, automated retries

@@ -26,7 +26,9 @@ public sealed class WireProtocolTests
         handler.Path.ShouldBe("/private-test/tenants/123/sha256/abc123.pdf");
         handler.Condition.ShouldBe("*");
         handler.Payload.ShouldBe(new byte[] { 1, 2, 3 });
-        handler.ContentMd5.ShouldBe(MD5.HashData(new byte[] { 1, 2, 3 }));
+        handler.ChecksumSha256.ShouldBe(Convert.ToBase64String(SHA256.HashData(new byte[] { 1, 2, 3 })));
+        handler.ContentMd5.ShouldBeNull();
+        handler.HasStreamingTrailers.ShouldBeFalse();
         handler.Length.ShouldBe(3);
         handler.ContentType.ShouldBe("application/pdf");
         handler.Signature.ShouldContain("/auto/s3/aws4_request");
@@ -49,6 +51,8 @@ public sealed class WireProtocolTests
         public string? Condition { get; private set; }
         public byte[]? Payload { get; private set; }
         public byte[]? ContentMd5 { get; private set; }
+        public string? ChecksumSha256 { get; private set; }
+        public bool HasStreamingTrailers { get; private set; }
         public long? Length { get; private set; }
         public string? ContentType { get; private set; }
         public string Signature { get; private set; } = "";
@@ -61,6 +65,8 @@ public sealed class WireProtocolTests
             Condition = request.Headers.GetValues("If-None-Match").Single();
             Payload = await request.Content!.ReadAsByteArrayAsync(cancellationToken);
             ContentMd5 = request.Content.Headers.ContentMD5;
+            ChecksumSha256 = request.Headers.GetValues("x-amz-checksum-sha256").Single();
+            HasStreamingTrailers = request.Headers.Contains("x-amz-trailer");
             Length = request.Content.Headers.ContentLength;
             ContentType = request.Content.Headers.ContentType?.ToString();
             Signature = request.Headers.GetValues("Authorization").Single();

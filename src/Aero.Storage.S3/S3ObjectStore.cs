@@ -43,11 +43,11 @@ public sealed class S3ObjectStore : IObjectStore
             if (options.UseR2Compatibility)
             {
                 // R2 does not support this SDK's streaming SigV4/checksum framing.
-                // Explicit Content-MD5 restores server-side transfer verification over HTTPS.
+                // Supply a precomputed SHA-256 header without unsupported streaming trailers.
                 byte[] digest;
-                try { digest = await MD5.HashDataAsync(source, cancellationToken); }
+                try { digest = await SHA256.HashDataAsync(source, cancellationToken); }
                 finally { source.Position = start; }
-                request.MD5Digest = Convert.ToBase64String(digest);
+                request.ChecksumSHA256 = Convert.ToBase64String(digest);
                 request.DisablePayloadSigning = true;
                 request.DisableDefaultChecksumValidation = true;
             }
@@ -127,8 +127,13 @@ public sealed class S3ObjectStore : IObjectStore
     {
         if (length < 0) throw new ObjectStorageException(StorageError.InvalidResponse);
         if (length > options.MaxObjectBytes) throw new ObjectStorageException(StorageError.TooLarge);
-        DateTimeOffset? utc = modified is { } date ? new DateTimeOffset(date.Kind == DateTimeKind.Unspecified
-            ? DateTime.SpecifyKind(date, DateTimeKind.Utc) : date.ToUniversalTime()) : null;
+        DateTimeOffset? utc = null;
+        if (modified is { } date)
+        {
+            DateTime normalized = date.Kind == DateTimeKind.Unspecified
+                ? DateTime.SpecifyKind(date, DateTimeKind.Utc) : date.ToUniversalTime();
+            utc = new DateTimeOffset(normalized);
+        }
         return new(key, length, type, etag, utc);
     }
 }
