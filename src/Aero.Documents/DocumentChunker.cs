@@ -26,13 +26,14 @@ public sealed record DocumentChunk(int Ordinal, int BlockOrdinal, int CharacterO
 /// <summary>Bounded chunks preserve processor block boundaries and repeat bounded source context.</summary>
 public sealed class DocumentChunker
 {
+    private readonly ChunkingOptionsValidator validator = new();
     /// <summary>Chunks extracted text without AI calls, embeddings, dropping text or inventing headers.</summary>
     public IReadOnlyList<DocumentChunk> Chunk(ExtractionResult document, ChunkingOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(document);
         options ??= new();
-        new ChunkingOptionsValidator().ValidateAndThrow(options);
+        validator.ValidateAndThrow(options);
         cancellationToken.ThrowIfCancellationRequested();
         var chunks = new List<DocumentChunk>();
         for (int blockIndex = 0; blockIndex < document.Blocks.Count; blockIndex++)

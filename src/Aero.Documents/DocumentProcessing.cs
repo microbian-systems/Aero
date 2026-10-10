@@ -57,8 +57,10 @@ public abstract class DocumentProcessor : IDocumentProcessor
     }
 }
 
-internal sealed class DocumentBoundaryException(string code, string message) : Exception(message)
+/// <summary>An explicit extraction-budget failure converted to a structured issue by DocumentProcessor.</summary>
+public sealed class DocumentBoundaryException(string code, string message) : Exception(message)
 {
+    /// <summary>Stable machine-readable boundary failure code.</summary>
     public string Code { get; } = code;
 }
 
@@ -96,7 +98,7 @@ public sealed class DocumentProcessorRegistry
             if (read == 0) break;
             if (buffer.Length + read > limits.MaxInputBytes)
                 return new(extension + ":1", [], [new("InputLimit", "Input exceeds the configured byte limit.")]);
-            buffer.Write(scratch, 0, read);
+            await buffer.WriteAsync(scratch.AsMemory(0, read), cancellationToken);
         }
         return processor.Process(buffer.ToArray(), limits, cancellationToken);
     }

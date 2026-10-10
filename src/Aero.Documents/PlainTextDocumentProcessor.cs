@@ -19,13 +19,6 @@ public sealed class PlainTextDocumentProcessor : DocumentProcessor
         int lineNumber = 0;
         int paragraphStart = 1;
         var paragraph = new List<string>();
-        bool Flush()
-        {
-            if (paragraph.Count == 0) return true;
-            var added = result.Add(string.Join("\n", paragraph), new($"lines:{paragraphStart}-{paragraphStart + paragraph.Count - 1}"));
-            paragraph.Clear();
-            return added;
-        }
         while (reader.ReadLine() is { } line)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -36,7 +29,7 @@ public sealed class PlainTextDocumentProcessor : DocumentProcessor
             }
             if (string.IsNullOrWhiteSpace(line))
             {
-                if (!Flush()) break;
+                if (!FlushParagraph(paragraph, paragraphStart, result)) break;
             }
             else
             {
@@ -44,8 +37,16 @@ public sealed class PlainTextDocumentProcessor : DocumentProcessor
                 paragraph.Add(line);
             }
         }
-        Flush();
+        FlushParagraph(paragraph, paragraphStart, result);
         return result.Result();
+    }
+
+    private static bool FlushParagraph(List<string> paragraph, int start, ExtractionBuffer result)
+    {
+        if (paragraph.Count == 0) return true;
+        bool added = result.Add(string.Join("\n", paragraph), new($"lines:{start}-{start + paragraph.Count - 1}"));
+        paragraph.Clear();
+        return added;
     }
     private static (Encoding Encoding, int Offset) EncodingFor(byte[] bytes)
     {

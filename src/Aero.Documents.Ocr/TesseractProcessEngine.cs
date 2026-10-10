@@ -54,7 +54,7 @@ public sealed class TesseractProcessEngine : IOcrEngine
             return Failure("InvalidImage", "OCR requires a bounded PNG with matching image dimensions.");
         var workspace = Directory.CreateTempSubdirectory("aero-ocr-");
         OcrResult result;
-        bool cleanupFailed = false;
+        bool cleanupFailed;
         try
         {
             string input = Path.Combine(workspace.FullName, "page.png");
@@ -82,13 +82,18 @@ public sealed class TesseractProcessEngine : IOcrEngine
         }
         finally
         {
-            // This exact directory was exclusively created by this invocation, never a caller path.
-            try { workspace.Delete(recursive: true); }
-            catch (IOException) { cleanupFailed = true; }
-            catch (UnauthorizedAccessException) { cleanupFailed = true; }
+            cleanupFailed = !TryRemoveWorkspace(workspace);
         }
         if (cleanupFailed) result = result with { Issues = [.. result.Issues,
             new("WorkspaceCleanupFailed", "Local temporary image cleanup failed; the host must remove abandoned workspaces.")] };
         return result;
+    }
+
+    private static bool TryRemoveWorkspace(DirectoryInfo workspace)
+    {
+        // This exact directory was exclusively created by this invocation, never a caller path.
+        try { workspace.Delete(recursive: true); return true; }
+        catch (IOException) { return false; }
+        catch (UnauthorizedAccessException) { return false; }
     }
 }

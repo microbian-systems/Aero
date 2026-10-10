@@ -59,15 +59,24 @@ public sealed class LocalProcessRunner : ILocalProcessRunner
         }
         finally
         {
-            deadline.Cancel();
+            await deadline.CancelAsync();
             if (!process.HasExited)
             {
                 try { process.Kill(entireProcessTree: true); }
-                catch (InvalidOperationException) { }
-                catch (Win32Exception) { }
+                catch (InvalidOperationException)
+                {
+                    // The child can exit between HasExited and Kill; preserve the original outcome.
+                }
+                catch (Win32Exception)
+                {
+                    // Best-effort termination failed; worker isolation remains the final containment boundary.
+                }
                 using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 try { await process.WaitForExitAsync(cleanup.Token); }
-                catch (OperationCanceledException) { }
+                catch (OperationCanceledException)
+                {
+                    // Bound cleanup latency without replacing the original cancellation/processing error.
+                }
             }
         }
     }
@@ -85,12 +94,15 @@ public sealed class LocalProcessRunner : ILocalProcessRunner
                 output.Append(scratch, 0, read);
             }
         }
-        catch { deadline.Cancel(); throw; }
+        catch { await deadline.CancelAsync(); throw; }
         return output.ToString();
     }
     private static async Task DiscardOutput(StreamReader reader, CancellationToken cancellationToken)
     {
         char[] scratch = new char[4096];
-        while (await reader.ReadAsync(scratch, cancellationToken) > 0) { }
+        while (await reader.ReadAsync(scratch, cancellationToken) > 0)
+        {
+            // Drain to avoid a full stderr pipe deadlocking the child; never retain private diagnostics.
+        }
     }
 }

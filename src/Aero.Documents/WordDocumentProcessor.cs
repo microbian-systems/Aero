@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using W = DocumentFormat.OpenXml.Wordprocessing;
 
@@ -23,38 +24,69 @@ public sealed class WordDocumentProcessor : DocumentProcessor
         {
             cancellationToken.ThrowIfCancellationRequested();
             elementNumber++;
-            if (element is W.Paragraph paragraph)
-            {
-                if (++units > limits.MaxUnits) { result.Issue("UnitLimit", "Word block limit reached."); break; }
-                var text = string.Concat(paragraph.Descendants<W.Text>().Select(x => x.Text));
-                if (!result.Add(text, new($"body:paragraph:{elementNumber}"), heading)) break;
-                var style = paragraph.ParagraphProperties?.ParagraphStyleId?.Val?.Value;
-                if (style?.StartsWith("Heading", StringComparison.OrdinalIgnoreCase) == true)
-                    heading = text[..Math.Min(text.Length, 1024)];
-            }
-            else if (element is W.Table table)
-            {
-                int rowNumber = 0;
-                string priorRow = "";
-                foreach (var row in table.Elements<W.TableRow>())
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    rowNumber++;
-                    if (++units > limits.MaxUnits) { result.Issue("UnitLimit", "Word block limit reached."); break; }
-                    var cells = row.Elements<W.TableCell>().Select((cell, index) =>
-                        $"Column {index + 1}: " + string.Join(" / ", cell.Descendants<W.Paragraph>()
-                            .Select(p => string.Concat(p.Descendants<W.Text>().Select(t => t.Text)))));
-                    var text = string.Join(" | ", cells);
-                    if (!result.Add(text, new($"body:table:{elementNumber}:row:{rowNumber}"),
-                        heading + (priorRow.Length == 0 ? "" : "\nPrevious row (not inferred headers): " + priorRow))) break;
-                    priorRow = text[..Math.Min(text.Length, 1024)];
-                }
-                if (units > limits.MaxUnits || result.Exhausted) break;
-            }
-            else if (element is not W.SectionProperties)
-                result.Issue("UnsupportedBodyElement", "An unsupported body element was not extracted.");
+            if (!ExtractElement(element, elementNumber, result, limits, cancellationToken, ref units, ref heading)) break;
         }
         result.Issue("BodyCoverage", "Main body only; headers, footnotes, drawings, tracked changes and merged/nested table semantics require further review.");
         return result.Result();
     }
+
+    private static bool ExtractElement(OpenXmlElement element, int number, ExtractionBuffer result,
+        ExtractionLimits limits, CancellationToken cancellationToken, ref int units, ref string heading)
+    {
+        switch (element)
+        {
+            case W.Paragraph paragraph:
+                return ExtractParagraph(paragraph, number, result, limits, ref units, ref heading);
+            case W.Table table:
+                ExtractTable(table, number, heading, result, limits, cancellationToken, ref units);
+                return units <= limits.MaxUnits && !result.Exhausted;
+            case W.SectionProperties:
+                return true;
+            default:
+                result.Issue("UnsupportedBodyElement", "An unsupported body element was not extracted.");
+                return true;
+        }
+    }
+
+    private static bool ExtractParagraph(W.Paragraph paragraph, int number, ExtractionBuffer result,
+        ExtractionLimits limits, ref int units, ref string heading)
+    {
+        if (!TryVisitUnit(result, limits, ref units)) return false;
+        string text = ParagraphText(paragraph);
+        if (!result.Add(text, new($"body:paragraph:{number}"), heading)) return false;
+        var style = paragraph.ParagraphProperties?.ParagraphStyleId?.Val?.Value;
+        if (style?.StartsWith("Heading", StringComparison.OrdinalIgnoreCase) == true)
+            heading = text[..Math.Min(text.Length, 1024)];
+        return true;
+    }
+
+    private static void ExtractTable(W.Table table, int number, string heading, ExtractionBuffer result,
+        ExtractionLimits limits, CancellationToken cancellationToken, ref int units)
+    {
+        int rowNumber = 0;
+        string priorRow = "";
+        foreach (var row in table.Elements<W.TableRow>())
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            rowNumber++;
+            if (!TryVisitUnit(result, limits, ref units)) break;
+            var cells = row.Elements<W.TableCell>().Select((cell, index) =>
+                $"Column {index + 1}: " + string.Join(" / ", cell.Descendants<W.Paragraph>().Select(ParagraphText)));
+            var text = string.Join(" | ", cells);
+            string context = heading;
+            if (priorRow.Length != 0) context += "\nPrevious row (not inferred headers): " + priorRow;
+            if (!result.Add(text, new($"body:table:{number}:row:{rowNumber}"), context)) break;
+            priorRow = text[..Math.Min(text.Length, 1024)];
+        }
+    }
+
+    private static bool TryVisitUnit(ExtractionBuffer result, ExtractionLimits limits, ref int units)
+    {
+        if (++units <= limits.MaxUnits) return true;
+        result.Issue("UnitLimit", "Word block limit reached.");
+        return false;
+    }
+
+    private static string ParagraphText(W.Paragraph paragraph) =>
+        string.Concat(paragraph.Descendants<W.Text>().Select(x => x.Text));
 }
