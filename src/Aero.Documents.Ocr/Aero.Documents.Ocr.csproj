@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Opt-in local OCR orchestration, page selection and bounded process adapters.</Description>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Aero.Documents/Aero.Documents.csproj" />
+  </ItemGroup>
+</Project>

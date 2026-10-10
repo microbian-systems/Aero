@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="TUnit" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="NSubstitute" />
+    <ProjectReference Include="../../src/Aero.Documents/Aero.Documents.csproj" />
+    <ProjectReference Include="../../src/Aero.Documents.PdfToImage/Aero.Documents.PdfToImage.csproj" />
+    <ProjectReference Include="../Aero.Documents.ProcessFixture/Aero.Documents.ProcessFixture.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <Target Name="CopyProcessFixture" AfterTargets="Build">
+    <ItemGroup>
+      <ProcessFixture Include="../Aero.Documents.ProcessFixture/bin/$(Configuration)/net10.0/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ProcessFixture)" DestinationFolder="$(OutDir)process-fixture/" />
+  </Target>
+</Project>

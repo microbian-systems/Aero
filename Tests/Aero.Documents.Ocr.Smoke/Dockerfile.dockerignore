@@ -1,0 +1,11 @@
+**
+!Directory.Packages.props
+!src/
+!src/Directory.Build.props
+!src/Aero.Documents/**
+!src/Aero.Documents.Ocr/**
+!src/Aero.Documents.PdfToImage/**
+!Tests/
+!Tests/Aero.Documents.Ocr.Smoke/**
+**/bin/
+**/obj/

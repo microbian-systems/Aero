@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Bounded, source-anchored text extraction for PDF, Office Open XML and plain text.</Description>
+    <IsPackable>true</IsPackable>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="PdfPig" />
+    <PackageReference Include="DocumentFormat.OpenXml" />
+    <PackageReference Include="FluentValidation" />
+  </ItemGroup>
+</Project>
