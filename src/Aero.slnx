@@ -24,6 +24,9 @@
     <File Path="upgrade.ps1" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="../Tests/Aero.Storage.Tests/Aero.Storage.Tests.csproj" />
+    <Project Path="../Tests/Aero.Documents.Tests/Aero.Documents.Tests.csproj" />
+    <Project Path="../Tests/Aero.Documents.Ocr.Smoke/Aero.Documents.Ocr.Smoke.csproj" />
     <Project Path="../Tests/Aero.Auth.Tests.WebHost/Aero.Auth.Tests.WebHost.csproj" />
     <Project Path="../Tests/Aero.Auth.Tests/Aero.Auth.Tests.csproj" />
     <Project Path="../Tests/Aero.DataStructures.Tests/Aero.DataStructures.Tests.csproj" />
@@ -32,10 +35,15 @@
   </Folder>
   <Project Path="Aero.Actors.Abstractions/Aero.Actors.Abstractions.csproj" Id="d207bb85-9421-4841-b0e9-d86e216f8970" />
   <Project Path="Aero.Actors/Aero.Actors.csproj" />
+  <Project Path="Aero.Documents.Ocr/Aero.Documents.Ocr.csproj" />
+  <Project Path="Aero.Storage.Abstractions/Aero.Storage.Abstractions.csproj" />
+  <Project Path="Aero.Storage.S3/Aero.Storage.S3.csproj" />
+  <Project Path="Aero.Documents.PdfToImage/Aero.Documents.PdfToImage.csproj" />
   <Project Path="Aero.Auth/Aero.Auth.csproj" />
   <Project Path="Aero.Caching/Aero.Caching.csproj" />
   <Project Path="Aero.Core.Ai/Aero.Core.Ai.csproj" />
   <Project Path="Aero.Core/Aero.Core.csproj" />
+  <Project Path="Aero.Documents/Aero.Documents.csproj" />
   <Project Path="Aero.Events/Aero.Events.csproj" />
   <Project Path="Aero.Models/Aero.Models.csproj" />
   <Project Path="Aero.EfCore/Aero.EfCore.csproj" />

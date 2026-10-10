@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Bounded AWS SDK S3 adapter, with explicit Cloudflare R2 compatibility configuration.</Description>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Aero.Storage.Abstractions/Aero.Storage.Abstractions.csproj" />
+    <PackageReference Include="AWSSDK.S3" />
+  </ItemGroup>
+</Project>

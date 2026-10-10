@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Optional MIT PDFtoImage adapter for bounded local PDF rasterization.</Description>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Aero.Documents.Ocr/Aero.Documents.Ocr.csproj" />
+    <PackageReference Include="PDFtoImage" />
+  </ItemGroup>
+</Project>
