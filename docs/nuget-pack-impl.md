@@ -1026,6 +1026,11 @@ The dependency graph is deep but NuGet handles deduplication at the leaf level (
 
 ## 11. CI/CD Integration
 
+> **Current operational setup:** Use
+> [NuGet Trusted Publishing for AeroCMS and AeroDB](nuget-trusted-publishing-runbook.md).
+> The workflow names and credential examples below are part of the original
+> implementation proposal and may not match the live repositories.
+
 ### 11.1 Authentication: NuGet Trusted Publishing (OIDC)
 
 Per [Microsoft Learn's Trusted Publishing guidance](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing), NuGet now supports **keyless authentication** using GitHub OIDC tokens. This eliminates the need for long-lived API keys and secrets.
