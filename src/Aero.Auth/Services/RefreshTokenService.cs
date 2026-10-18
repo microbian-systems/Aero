@@ -1,27 +1,29 @@
+using Aero.Auth.Persistence;
+using Aero.Core;
 using AeroDB.Sable;
 using System.Security.Cryptography;
-using Aero.Core;
 
 namespace Aero.Auth.Services;
 
 /// <summary>
-/// Production-grade refresh token service with rotation and revocation support.
-/// All tokens are stored as SHA-256 hashes for security (plaintext never stored).
-/// Supports token rotation with one-time use enforcement.
+/// Issues, validates, rotates, and revokes hashed refresh tokens.
 /// </summary>
+/// <remarks>
+/// Rotation uses a version-conditional predecessor update and an insert-only
+/// successor in one Sable save. Callers must reconcile a propagated commit
+/// outcome exception rather than retrying a potentially committed rotation.
+/// </remarks>
 public class RefreshTokenService(
     IDocumentSession session,
     ILogger<RefreshTokenService> logger,
     IConfiguration config)
     : IRefreshTokenService
 {
-    readonly IConfiguration config = config;
-    readonly int refreshTokenLifetimeDays = config.GetValue("Auth:RefreshTokenLifetimeDays", 30);
+    private readonly RefreshTokenPersistence persistence = new(session);
+    private readonly int refreshTokenLifetimeDays = config.GetValue("Auth:RefreshTokenLifetimeDays", 30);
 
-        /// <summary>
-    /// GenerateRefreshTokenAsync method.
-    /// </summary>
-public async Task<string> GenerateRefreshTokenAsync(
+    /// <inheritdoc />
+    public async Task<string> GenerateRefreshTokenAsync(
         long userId,
         string clientType,
         string? ipAddress = null,
@@ -29,35 +31,23 @@ public async Task<string> GenerateRefreshTokenAsync(
         CancellationToken cancellationToken = default)
     {
         var token = GenerateRandomToken(64);
-        var tokenHash = HashToken(token);
+        var now = DateTimeOffset.UtcNow;
+        var refreshToken = CreateToken(userId, HashToken(token), clientType, ipAddress, userAgent, now);
 
-        var refreshToken = new RefreshToken
-        {
-            Id = Snowflake.NewId(),
-            UserId = userId,
-            TokenHash = tokenHash,
-            CreatedOn = DateTimeOffset.UtcNow,
-            ExpiresAt = DateTimeOffset.UtcNow.AddDays(refreshTokenLifetimeDays),
-            ClientType = clientType,
-            IssuedFromIpAddress = ipAddress,
-            UserAgent = userAgent
-        };
-
-        
-        session.Store(refreshToken);
-        await session.SaveChangesAsync(cancellationToken);
+        persistence.Insert(refreshToken);
+        await persistence.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation(
             "Generated refresh token for user {UserId} from {IpAddress} ({ClientType})",
-            userId, ipAddress ?? "unknown", clientType);
+            userId,
+            ipAddress ?? "unknown",
+            clientType);
 
         return token;
     }
 
-        /// <summary>
-    /// ValidateRefreshTokenAsync method.
-    /// </summary>
-public async Task<long?> ValidateRefreshTokenAsync(
+    /// <inheritdoc />
+    public async Task<long?> ValidateRefreshTokenAsync(
         string token,
         CancellationToken cancellationToken = default)
     {
@@ -67,148 +57,137 @@ public async Task<long?> ValidateRefreshTokenAsync(
             return null;
         }
 
-        var tokenHash = HashToken(token);
-
-        var refreshToken = await session.Query<RefreshToken>()
-            .FirstOrDefaultAsync(rt => rt.TokenHash == tokenHash, cancellationToken);
-
-        if (refreshToken == null)
+        var refreshToken = await persistence.FindByHashAsync(HashToken(token), cancellationToken);
+        if (refreshToken is null
+            || refreshToken.Version < 1
+            || !refreshToken.IsActiveAt(DateTimeOffset.UtcNow))
         {
-            logger.LogWarning("Refresh token not found (invalid or already rotated)");
-            return null;
-        }
-
-        if (!refreshToken.IsActive)
-        {
-            logger.LogWarning("Refresh token is not active for user {UserId}", refreshToken.UserId);
+            logger.LogWarning("Refresh token not found or is not active");
             return null;
         }
 
         return refreshToken.UserId;
     }
 
-        /// <summary>
-    /// RotateRefreshTokenAsync method.
-    /// </summary>
-public async Task<string> RotateRefreshTokenAsync(
+    /// <inheritdoc />
+    public async Task<string> RotateRefreshTokenAsync(
         string oldToken,
         string clientType,
         string? ipAddress = null,
         string? userAgent = null,
         CancellationToken cancellationToken = default)
     {
-        // Validate and get user ID from old token
-        var userId = await ValidateRefreshTokenAsync(oldToken, cancellationToken);
-        // if (string.IsNullOrEmpty(userId))
-        // {
-        //     throw new InvalidOperationException("Invalid refresh token");
-        // }
+        ArgumentException.ThrowIfNullOrEmpty(oldToken);
 
-        // Mark old token as rotated
-        var oldTokenHash = HashToken(oldToken);
-        
-
-        var oldTokenRecord = await session.Query<RefreshToken>()
-            .FirstOrDefaultAsync(rt => rt.TokenHash == oldTokenHash, cancellationToken);
-
-        if (oldTokenRecord != null)
+        var oldTokenRecord = await persistence.FindByHashAsync(HashToken(oldToken), cancellationToken);
+        var now = DateTimeOffset.UtcNow;
+        if (oldTokenRecord is null || !oldTokenRecord.IsActiveAt(now) || oldTokenRecord.Version < 1)
         {
-            var newToken = GenerateRandomToken(64);
-            var newRefreshToken = new RefreshToken
-            {
-                Id = Snowflake.NewId(),
-                UserId = userId.Value,
-                TokenHash = HashToken(newToken),
-                CreatedOn = DateTimeOffset.UtcNow,
-                ExpiresAt = DateTimeOffset.UtcNow.AddDays(refreshTokenLifetimeDays),
-                ClientType = clientType,
-                IssuedFromIpAddress = ipAddress,
-                UserAgent = userAgent,
-                ReplacedByTokenId = oldTokenRecord.Id
-            };
-
-            oldTokenRecord.ReplacedByTokenId = newRefreshToken.Id;
-            session.Store(newRefreshToken);
-            await session.SaveChangesAsync(cancellationToken);
-
-            logger.LogInformation(
-                "Rotated refresh token for user {UserId}",
-                userId);
-
-            return newToken;
+            throw new InvalidOperationException("Invalid refresh token.");
         }
 
-        throw new InvalidOperationException("Old token record not found");
+        var newToken = GenerateRandomToken(64);
+        var successor = CreateToken(
+            oldTokenRecord.UserId,
+            HashToken(newToken),
+            clientType,
+            ipAddress,
+            userAgent,
+            now);
+
+        oldTokenRecord.ReplacedByTokenId = successor.Id;
+        persistence.UpdateExpectedVersion(oldTokenRecord, oldTokenRecord.Version);
+        persistence.Insert(successor);
+        await persistence.SaveChangesAsync(cancellationToken);
+
+        logger.LogInformation("Rotated refresh token for user {UserId}", oldTokenRecord.UserId);
+        return newToken;
     }
 
-        /// <summary>
-    /// RevokeRefreshTokenAsync method.
-    /// </summary>
-public async Task RevokeRefreshTokenAsync(
+    /// <inheritdoc />
+    public async Task RevokeRefreshTokenAsync(
         string token,
         CancellationToken cancellationToken = default)
     {
-        var tokenHash = HashToken(token);
+        ArgumentNullException.ThrowIfNull(token);
 
-        
-        var refreshToken = await session.Query<RefreshToken>()
-            .FirstOrDefaultAsync(rt => rt.TokenHash == tokenHash, cancellationToken);
-
-        if (refreshToken != null)
+        var refreshToken = await persistence.FindByHashAsync(HashToken(token), cancellationToken);
+        if (refreshToken is null)
         {
-            refreshToken.RevokedAt = DateTimeOffset.UtcNow;
-            await session.SaveChangesAsync(cancellationToken);
-
-            logger.LogInformation("Revoked refresh token for user {UserId}", refreshToken.UserId);
+            return;
         }
+
+        EnsureVersioned(refreshToken);
+        refreshToken.RevokedAt = DateTimeOffset.UtcNow;
+        persistence.UpdateExpectedVersion(refreshToken, refreshToken.Version);
+        await persistence.SaveChangesAsync(cancellationToken);
+
+        logger.LogInformation("Revoked refresh token for user {UserId}", refreshToken.UserId);
     }
 
-        /// <summary>
-    /// RevokeAllUserTokensAsync method.
-    /// </summary>
-public async Task RevokeAllUserTokensAsync(
+    /// <inheritdoc />
+    public async Task RevokeAllUserTokensAsync(
         long userId,
         CancellationToken cancellationToken = default)
     {
-        
-
-        var activeTokens = await session.Query<RefreshToken>()
-            .Where(rt => rt.UserId == userId && rt.RevokedAt == null)
-            .ToListAsync(cancellationToken);
-
+        var now = DateTimeOffset.UtcNow;
+        var activeTokens = await persistence.FindActiveByUserAsync(userId, now, cancellationToken);
         foreach (var token in activeTokens)
         {
-            token.RevokedAt = DateTimeOffset.UtcNow;
+            EnsureVersioned(token);
+            token.RevokedAt = now;
+            persistence.UpdateExpectedVersion(token, token.Version);
         }
 
-        if (activeTokens.Count > 0)
+        if (activeTokens.Count == 0)
         {
-            await session.SaveChangesAsync(cancellationToken);
-            logger.LogInformation("Revoked all refresh tokens for user {UserId} ({Count} tokens)", userId, activeTokens.Count);
+            return;
         }
+
+        await persistence.SaveChangesAsync(cancellationToken);
+        logger.LogInformation("Revoked all refresh tokens for user {UserId} ({Count} tokens)", userId, activeTokens.Count);
     }
 
-        /// <summary>
-    /// GetActiveTokensAsync method.
-    /// </summary>
-public async Task<IEnumerable<(long Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
+    /// <inheritdoc />
+    public async Task<IEnumerable<(long Id, string ClientType, DateTimeOffset CreatedAt, string? IpAddress)>> GetActiveTokensAsync(
         long userId,
         CancellationToken cancellationToken = default)
     {
+        var tokens = await persistence.FindActiveByUserAsync(userId, DateTimeOffset.UtcNow, cancellationToken);
+        return tokens.Select(token => (token.Id, token.ClientType, token.CreatedOn, token.IssuedFromIpAddress));
+    }
 
-        var tokens = await session.Query<RefreshToken>()
-            .Where(rt => rt.UserId == userId && rt.IsActive)
-            .Select(rt => new { rt.Id, rt.ClientType, rt.CreatedOn, rt.IssuedFromIpAddress })
-            .ToListAsync(cancellationToken);
+    private RefreshTokenDocument CreateToken(
+        long userId,
+        string tokenHash,
+        string clientType,
+        string? ipAddress,
+        string? userAgent,
+        DateTimeOffset now) => new()
+        {
+            Id = Snowflake.NewId(),
+            UserId = userId,
+            TokenHash = tokenHash,
+            CreatedOn = now,
+            ExpiresAt = now.AddDays(refreshTokenLifetimeDays),
+            ClientType = clientType,
+            IssuedFromIpAddress = ipAddress,
+            UserAgent = userAgent,
+            Version = 1
+        };
 
-        return tokens.Select(t => (t.Id, t.ClientType, t.CreatedOn, t.IssuedFromIpAddress));
+    private static void EnsureVersioned(RefreshTokenDocument token)
+    {
+        if (token.Version < 1)
+        {
+            throw new InvalidOperationException("Refresh token does not have supported concurrency metadata.");
+        }
     }
 
     private static string HashToken(string token)
     {
         using var sha256 = SHA256.Create();
-        var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(token));
-        return Convert.ToBase64String(hashedBytes);
+        return Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(token)));
     }
 
     private static string GenerateRandomToken(uint length)

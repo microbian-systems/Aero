@@ -19,11 +19,17 @@
 
 <ItemGroup>
   <InternalsVisibleTo Include="Aero.Auth.Tests" />
+  <InternalsVisibleTo Include="Aero.Auth.Sable.Tests" />
 </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Aero.Models\Aero.Models.csproj" />
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />
+  <ProjectReference Include="..\..\..\AeroDB\src\AeroDB.SourceGenerators\AeroDB.SourceGenerators.csproj"
+                    Condition="'$(ContractorAiWolverineBackport)' == 'true' AND '$(ContractorAiCanonicalSourceGraph)' == 'true'"
+                    OutputItemType="Analyzer"
+                    ReferenceOutputAssembly="false"
+                    PrivateAssets="all" />
   </ItemGroup>
 
 

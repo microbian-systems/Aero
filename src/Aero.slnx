@@ -24,8 +24,12 @@
     <File Path="upgrade.ps1" />
   </Folder>
   <Folder Name="/Tests/">
+    <Project Path="../Tests/Aero.Core.AzureStorage.Tests/Aero.Core.AzureStorage.Tests.csproj" />
+    <Project Path="../Tests/Aero.Services.Mail.Tests/Aero.Services.Mail.Tests.csproj" />
+    <Project Path="../Tests/Aero.SignalR.Tests/Aero.SignalR.Tests.csproj" />
     <Project Path="../Tests/Aero.Auth.Tests.WebHost/Aero.Auth.Tests.WebHost.csproj" />
     <Project Path="../Tests/Aero.Auth.Tests/Aero.Auth.Tests.csproj" />
+    <Project Path="../Tests/Aero.Auth.Sable.Tests/Aero.Auth.Sable.Tests.csproj" />
     <Project Path="../Tests/Aero.DataStructures.Tests/Aero.DataStructures.Tests.csproj" />
     <Project Path="../Tests/Aero.SendGrid.Tests/Aero.SendGrid.Tests.csproj" />
     <Project Path="../Tests/Aero.Social.Twitter/Aero.Social.Twitter.csproj" />

@@ -1,4 +1,3 @@
-using Aero.Auth.Controllers;
 using Aero.Models;
 using Aero.Models.Entities;
 using Microsoft.AspNetCore.Identity;

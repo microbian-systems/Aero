@@ -55,6 +55,6 @@ public class RefreshToken : Entity
     /// <summary>
     /// Gets a value indicating whether the item is currently active.
     /// </summary>
-    public bool IsActive => RevokedAt == null && ExpiresAt > DateTimeOffset.UtcNow;
+    public bool IsActive => RevokedAt == null && ReplacedByTokenId == null && ExpiresAt > DateTimeOffset.UtcNow;
 }
 
