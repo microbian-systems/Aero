@@ -1,89 +1,69 @@
 using System.Globalization;
 using Aero.Core.Extensions;
 using Aero.Core.Helpers;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace Aero.Core;
 
-/// <summary>
-/// Represents a class for AzureBlobStorageClient.
-/// </summary>
+/// <summary>Uploads blobs using the historical Aero storage contract.</summary>
+/// <remarks>
+/// This legacy media API enables public blob access and overwrites existing
+/// blobs. It is not suitable for private, create-only attachment originals.
+/// </remarks>
 public class AzureBlobStorageClient(ILogger<AzureBlobStorageClient> log) : IBlobStorageClient
 {
-
-    // ?? JobLog.GetLog();
-
-    // todo - convert MemorySTream to Stream
-        /// <summary>
-    /// Post method.
-    /// </summary>
-public void Post(MemoryStream ms, string filename, bool compress = true) =>
+    /// <summary>Uploads using the application-configured connection and container.</summary>
+    public void Post(MemoryStream ms, string filename, bool compress = true) =>
         PostAsync(ms, filename, Config.GetStorageConnectionString(),
             Config.GetSetting("FeedContainer"), compress).GetAwaiter().GetResult();
 
-        /// <summary>
-    /// PostAsync method.
-    /// </summary>
-public async Task PostAsync(MemoryStream ms, string filename, string connString, string path, bool compress = true, string contentType = "text/xml", bool forceLowerCase = true)
+    /// <summary>Uploads from the current stream position, leaving the stream open.</summary>
+    /// <remarks>
+    /// For compatibility, compress only sets the gzip content-encoding label;
+    /// it does not transform the supplied bytes. Nested paths retain the legacy
+    /// last-directory-only interpretation.
+    /// </remarks>
+    public async Task PostAsync(MemoryStream ms, string filename, string connString,
+        string path, bool compress = true, string contentType = "text/xml", bool forceLowerCase = true)
     {
         if (forceLowerCase)
-            filename = filename.ToLower(CultureInfo.InvariantCulture); // filenames are case sensitive
+            filename = filename.ToLower(CultureInfo.InvariantCulture);
         if (string.IsNullOrEmpty(filename))
             throw new ArgumentException($"{nameof(filename)} argument was not specified. the blob filename must have a value");
 
         if (string.IsNullOrEmpty(path))
         {
-            log.LogInformation($"blob storage container name was null. defaulting to feeds");
+            log.LogInformation("Blob storage container name was null. Defaulting to feeds");
             path = "feeds";
         }
 
-        path = path.ToLower();
-        var acct = CloudStorageAccount.Parse(connString);
-        log.LogInformation($"getting blob storage for {acct.BlobStorageUri} and file {filename} - compressed = {compress}");
-        var cbc = acct.CreateCloudBlobClient();
-        //var blob = cbc.GetBlobReference(container + "/" + filename);
-        var bsp = ParseContainerPath(path);
-
-        var conref = cbc.GetContainerReference(bsp.Container);
-        await conref.CreateIfNotExistsAsync();
-        await conref.SetPermissionsAsync(new BlobContainerPermissions
+        // Preserve the existing current-culture path normalization.
+        var storagePath = ParseContainerPath(path.ToLower());
+        var service = new BlobServiceClient(connString);
+        var container = service.GetBlobContainerClient(storagePath.Container);
+        await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+        // Must also run for existing containers; creation alone is not equivalent.
+        await container.SetAccessPolicyAsync(PublicAccessType.Blob).ConfigureAwait(false);
+        var blob = container.GetLastDirectoryBlobClient(storagePath.FoldersList, filename);
+        await blob.UploadAsync(ms, new BlobUploadOptions
         {
-            PublicAccess = BlobContainerPublicAccessType.Blob
-        });
-
-        var dir = conref.GetLastDirectoryReference(bsp.FoldersList);
-        var blob = dir?.GetBlockBlobReference(filename) ?? conref.GetBlockBlobReference(filename);
-        if (compress)
-            blob.Properties.ContentEncoding = "gzip";
-        blob.Properties.ContentType = contentType;
-
-        //blob.UploadFromStream(ms);
-        //blob.UploadByteArray(ms.ToArray());
-        if (!compress)
-            await blob.UploadFromStreamAsync(ms);
-        else
-            await blob.UploadFromStreamAsync(ms); // todo - make this async compat
-        //blob.UploadFromStream(ms.Compress());
-        //blob.UploadByteArray(ms.Compress().ToArray());
-        log.LogInformation($"successfully uploaded blob storage file {filename} at {acct.BlobStorageUri} @ {path}");
+            HttpHeaders = new BlobHttpHeaders
+            {
+                ContentType = contentType,
+                ContentEncoding = compress ? "gzip" : null
+            }
+        }).ConfigureAwait(false);
+        // Never log the connection string, SAS query, or signed request headers.
+        log.LogInformation("Uploaded blob {Filename} in container {Container}", filename, storagePath.Container);
     }
 
-
-
-        /// <summary>
-    /// ParseContainerPath method.
-    /// </summary>
-protected BlobStoragePath ParseContainerPath(string path)
+    /// <summary>Parses the historical container/folder path format.</summary>
+    protected BlobStoragePath ParseContainerPath(string path)
     {
-        var paths = path.Replace("//", "/")
-            .StripTrailingBackSlash()
-            .Split('/').ToList();
-        var bsp = new BlobStoragePath
-        {
-            Container = paths.FirstOrDefault()
-        };
-        bsp.FoldersList.AddRange(paths.Skip(1));
-        return bsp;
+        var paths = path.Replace("//", "/").StripTrailingBackSlash().Split('/');
+        var storagePath = new BlobStoragePath { Container = paths.FirstOrDefault()! };
+        storagePath.FoldersList.AddRange(paths.Skip(1));
+        return storagePath;
     }
 }

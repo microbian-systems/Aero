@@ -1,24 +1,22 @@
-using Microsoft.WindowsAzure.Storage.Blob;
+using Azure.Storage.Blobs;
 
 namespace Aero.Core.Extensions;
 
-/// <summary>
-/// Represents a class for BlobStorageClientHelpers.
-/// </summary>
+/// <summary>Resolves blob names for the historical Aero media storage API.</summary>
 public static class BlobStorageClientHelpers
 {
-        /// <summary>
-    /// GetLastDirectoryReference method.
+    /// <summary>
+    /// Gets a modern blob client, preserving the old last-directory-only behavior.
     /// </summary>
-public static CloudBlobDirectory GetLastDirectoryReference(this CloudBlobContainer container, List<string> folders)
+    /// <remarks>
+    /// Replaces GetLastDirectoryReference, whose signature exposed removed
+    /// WindowsAzure.Storage types. External callers must migrate and recompile.
+    /// </remarks>
+    public static BlobClient GetLastDirectoryBlobClient(this BlobContainerClient container,
+        IReadOnlyList<string> folders, string filename)
     {
-        var dirs = new List<CloudBlobDirectory>();
-        foreach (var folder in folders)
-        {
-            var directory = container.GetDirectoryReference(folder);
-            dirs.Add(directory);
-        }
-
-        return dirs.Count > 0 ? dirs.Last() : null;
+        var folder = folders.Count == 0 ? "" : folders[^1];
+        var blobName = string.IsNullOrEmpty(folder) ? filename : $"{folder.TrimEnd('/')}/{filename}";
+        return container.GetBlobClient(blobName);
     }
 }

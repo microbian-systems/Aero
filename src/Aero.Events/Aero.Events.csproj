@@ -35,7 +35,6 @@
     <PackageReference Include="WolverineFx.Marten" />
     <PackageReference Include="WolverineFx.Postgresql" />
     <PackageReference Include="WolverineFx.RabbitMQ" />
-    <PackageReference Include="WolverineFx.SqlServer" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aero.Core\Aero.Core.csproj" />

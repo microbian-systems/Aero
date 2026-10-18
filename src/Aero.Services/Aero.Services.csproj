@@ -34,13 +34,17 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentEmail.Core" />
-    <PackageReference Include="FluentEmail.MailKit" />
     <PackageReference Include="FluentEmail.Mailtrap" />
     <PackageReference Include="FluentEmail.Razor" />
     <PackageReference Include="FluentEmail.SendGrid" />
     <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" />
+    <PackageReference Include="MailKit" />
+    <PackageReference Include="MimeKit" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
     <PackageReference Include="PasswordGenerator" />
+    <PackageReference Include="RazorLight" />
     <PackageReference Include="starkbank-ecdsa" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     <PackageReference Include="Twilio.AspNet.Common" />

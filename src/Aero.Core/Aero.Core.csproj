@@ -56,7 +56,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Configuration.ConfigurationManager" />
-    <PackageReference Include="WindowsAzure.Storage" />
+    <PackageReference Include="Azure.Storage.Blobs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\aero-logo-new.png" Pack="true" PackagePath="\" />

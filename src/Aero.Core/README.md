@@ -123,7 +123,7 @@ public interface IGenericRepository<T, TKey>
 | SnowflakeGuid | Distributed ID generation |
 | System.Text.Json | JSON serialization |
 | ThrowGuard | Guard clause utilities |
-| WindowsAzure.Storage | Azure Storage integration |
+| Azure.Storage.Blobs | Azure Storage integration |
 | Microsoft.Extensions.Configuration | Configuration abstractions |
 | Microsoft.Extensions.Identity.Stores | Identity store interfaces |
 

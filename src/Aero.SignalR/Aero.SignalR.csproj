@@ -28,7 +28,7 @@
     <!-- Optional: Automatically creates a package on every build -->
 </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
 
